@@ -1,25 +1,36 @@
-# Portfolio--Joao_Garcao
+🇵🇹 Bem-vindo ao meu portfólio
 
-🇵🇹
-Seja bem-vindo(a) ao meu Portfólio.
-Este espaço reúne uma seleção do meu trabalho académico e profissional, para lhe dar uma visão clara e abrangente das minhas competências e qualificações.
+Sou estudante na área de Humanidades Digitais, com foco em linguagem, tecnologia e análise textual.
 
----
-🇬🇧
-Welcome to my Portfolio.
-This space brings together a selection of my academic and professional work, to give you a clear and comprehensive overview of my skills and qualifications.
-
----
-🇫🇷
-Bienvenue dans mon Portfolio.
-Cet espace rassemble une sélection de mes travaux académiques et professionnels, afin de vous offrir un aperçu clair et complet de mes compétences et qualifications.
+Neste espaço reúno projetos nas áreas de:
+- processamento de texto
+- linguística e filologia
+- desenvolvimento web (HTML / UX/UI)
+- tradução e tecnologias linguísticas
+- ferramentas computacionais (regex, NLP)
 
 ---
-🇳🇱
-Welkom bij mijn Portfolio.
-Deze ruimte bundelt een selectie van mijn academische en professionele werk, zodat u een duidelijk en volledig overzicht krijgt van mijn vaardigheden en kwalificaties.
+
+🇬🇧 Welcome to my portfolio
+
+I work at the intersection of digital humanities, language, and computational text analysis.
+
+This portfolio includes projects in:
+- text processing
+- linguistics and philology
+- web development (HTML / UX/UI)
+- translation and language technologies
+- computational tools (regex, NLP)
 
 ---
-🇮🇹
-Benvenuti nel mio Portfolio.
-Questo spazio raccoglie una selezione dei miei lavori accademici e professionali, per offrirvi una panoramica chiara e completa delle mie competenze e qualifiche.
+
+🇫🇷 Bienvenue dans mon portfolio
+
+Je travaille à l’intersection des humanités numériques, du langage et de l’analyse textuelle computationnelle.
+
+Ce portfolio présente des projets dans les domaines suivants :
+- traitement de texte
+- linguistique et philologie
+- développement web (HTML / UX/UI)
+- traduction et technologies linguistiques
+- outils computationnels (regex, NLP)
