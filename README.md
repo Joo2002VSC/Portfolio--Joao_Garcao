@@ -1,36 +1,39 @@
-🇵🇹 Bem-vindo ao meu portfólio
+# João Garção
 
-Sou estudante na área de Humanidades Digitais, com foco em linguagem, tecnologia e análise textual.
-
-Neste espaço reúno projetos nas áreas de:
-- processamento de texto
-- linguística e filologia
-- desenvolvimento web (HTML / UX/UI)
-- tradução e tecnologias linguísticas
-- ferramentas computacionais (regex, NLP)
+## Digital Humanities · Language Technologies · Text Analysis
 
 ---
 
-🇬🇧 Welcome to my portfolio
+## 🇵🇹
 
-I work at the intersection of digital humanities, language, and computational text analysis.
+Sou licenciado em **Línguas Aplicadas** e atualmente mestrando em **Humanidades Digitais** na Universidade do Minho.
 
-This portfolio includes projects in:
-- text processing
-- linguistics and philology
-- web development (HTML / UX/UI)
-- translation and language technologies
-- computational tools (regex, NLP)
+Trabalho na interseção entre a linguagem, a cultura e a tecnologia, com ênfase em:
+- Processamento de Linguagem Natural (PLN)
+- Tradução e Tecnologias Linguísticas
+- Filologia e Património Textual
+- Desenvolvimento Web (UX/UI, HTML)
 
 ---
 
-🇫🇷 Bienvenue dans mon portfolio
+## 🇬🇧
 
-Je travaille à l’intersection des humanités numériques, du langage et de l’analyse textuelle computationnelle.
+I hold a degree in **Applied Languages** and I am currently a Master's student in **Digital Humanities** at the University of Minho.
 
-Ce portfolio présente des projets dans les domaines suivants :
-- traitement de texte
-- linguistique et philologie
-- développement web (HTML / UX/UI)
-- traduction et technologies linguistiques
-- outils computationnels (regex, NLP)
+My work focuses on the intersection of language, culture, and technology, particularly:
+- Text Processing
+- Translation and Language Technologies
+- Philology and Textual Heritage
+- Web Development (UX/UI, HTML)
+
+---
+
+## 🇫🇷
+
+Je suis diplômé en **Langues Appliquées** et actuellement étudiant en **Humanités Numériques** à l’Université du Minho.
+
+Mon travail se situe à l’intersection entre langue, culture et technologie, notamment :
+- Traitement de Texte
+- Traduction et Technologies Linguistiques
+- Philologie et Patrimoine Textuel
+- Développement Web (UX/UI, HTML)
