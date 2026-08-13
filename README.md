@@ -64,3 +64,27 @@ Organized by area — each folder will grow as projects are added.
 | Français | Fluent (C1/C2) |
 | Nederlands | Basic (A1/A2) |
 | Italiano | Basic (A1/A2) |
+
+---
+
+## 🌍 Languages
+
+| Language | Level |
+|---|---|
+| Português | Nativo |
+| English | C2 |
+| Français | B2 |
+| Nederlands | A2 (self-assessed, uncertified) |
+| Italiano | A2 |
+
+---
+
+## 🌍 Languages
+
+| Language | Level |
+|---|---|
+| Português | Nativo |
+| English | C2 |
+| Français | B2 |
+| Nederlands | A2 (self-assessed, uncertified) |
+| Italiano | A2 |
