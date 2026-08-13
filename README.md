@@ -48,7 +48,7 @@ Organizado por área — cada pasta vai crescer à medida que se adicionam proje
 | [`digital-humanities`](./projects/digital-humanities) | Património, filologia, lexicografia |
 | [`text-processing`](./projects/text-processing) | PLN, regex, análise textual computacional |
 | [`language-services`](./projects/language-services) | Tradução, ferramentas CAT, legendagem |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Literário ↗](https://joo2002vsc.github.io/blog-literario/) · [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Explorações e protótipos menores |
 
 *A preencher cada categoria — volta para ver atualizações, ou consulta [About](./about/README.md) para saberes mais sobre o meu percurso.*
@@ -62,7 +62,7 @@ Organized by area — each folder will grow as projects are added.
 | [`digital-humanities`](./projects/digital-humanities) | Heritage, philology, lexicography |
 | [`text-processing`](./projects/text-processing) | NLP, regex, computational text analysis |
 | [`language-services`](./projects/language-services) | Translation, CAT tools, subtitling |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Literary Blog](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Smaller explorations and prototypes |
 
 *Currently populating each category — check back for updates, or see [About](./about/README.md) for more on my background.*
@@ -76,7 +76,7 @@ Organisé par domaine — chaque dossier s'enrichira au fur et à mesure de l'aj
 | [`digital-humanities`](./projects/digital-humanities) | Patrimoine, philologie, lexicographie |
 | [`text-processing`](./projects/text-processing) | TAL, regex, analyse textuelle computationnelle |
 | [`language-services`](./projects/language-services) | Traduction, outils TAO, sous-titrage |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Litteraire](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Petites explorations et prototypes |
 
 *Remplissage en cours de chaque catégorie — revenez pour voir les mises à jour, ou consultez [About](./about/README.md) pour en savoir plus sur mon parcours.*
