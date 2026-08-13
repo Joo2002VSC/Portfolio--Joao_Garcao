@@ -37,3 +37,18 @@ Mon travail se situe à l’intersection entre langue, culture et technologie, n
 - Traduction et Technologies Linguistiques
 - Philologie et Patrimoine Textuel
 - Développement Web (UX/UI, HTML)
+---
+
+## 📂 Projects
+
+Organized by area — each folder will grow as projects are added.
+
+| Category | Focus |
+|---|---|
+| [`digital-humanities`](./projects/digital-humanities) | Heritage, philology, lexicography |
+| [`text-processing`](./projects/text-processing) | NLP, regex, computational text analysis |
+| [`language-services`](./projects/language-services) | Translation, CAT tools, subtitling |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI |
+| [`experiments`](./projects/experiments) | Smaller explorations and prototypes |
+
+*Currently populating each category — check back for updates, or see [About](./about/README.md) for more on my background.*
