@@ -52,3 +52,15 @@ Organized by area — each folder will grow as projects are added.
 | [`experiments`](./projects/experiments) | Smaller explorations and prototypes |
 
 *Currently populating each category — check back for updates, or see [About](./about/README.md) for more on my background.*
+
+---
+
+## 🌍 Languages
+
+| Language | Level |
+|---|---|
+| Português | Nativo |
+| English | Fluent (C1/C2) |
+| Français | Fluent (C1/C2) |
+| Nederlands | Basic (A1/A2) |
+| Italiano | Basic (A1/A2) |
