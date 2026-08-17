@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml SYSTEM 'DTD do xml (estrutura definitiva).dtd'>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    
+
+    <fileDesc> 
+        <titleStmt> 
+            <title>Memorial DeVarios Simplices</title>
+        </titleStmt>
+        <publicationStmt>
+            <p>Obra publicada pela primeira vez na 3.ª edição da Polyantheia Medicinal em 1716</p>
+            <p>Versão eletrónica disponível através do site: </p>
+        </publicationStmt>
+        <sourceDesc>
+            <title>Memorial De Varios Simplices</title>
+            <title type="sub"> Que da Índia Oriental...</title>
+        </sourceDesc>
+        </fileDesc>
+    
+        <teiHeader>    
+            <title>Memorial DeVarios Simplices</title>
+            <author>Curvo Semmedo</author>
+        </teiHeader>
+    <teiHeader>
+        <author>Curvo Semmedo</author>
+        <title>Memorial DeVarios Simplices</title>
+    </teiHeader>
+
+    <text>   
+        <pb n="10"/> 
+            <div>
+                <subtitle><ingredient>Dente de peixe mulher virgem</ingredient>, e [s]uas virtudes.</subtitle>
+   
+                    <p>Serve para <intervention>e[s]tancar os fluxos de [s]angue da boca</intervention> <locus>po[s]to [s]obre o peito</locus>, e para <intervention>e[s]tancar<lb/> 
+                    o fluxos baixos</intervention>, <locus>po[s]ta pela parte baixa.</locus><lb/>
+                    Serve trazido atado no <locus>braço e[s]querdo, chegado à carne</locus><lb/>
+                    cõtra o ar, accidétes, e vágados.</p>
+            </div>
+            <div>
+                <subtitle>Co[s]tella de peixe mulher virgem, e suas virtudes.</subtitle>
+
+                    <p>Serve, <prep_med>preparada em <ingredient>agua</ingredient></prep_med>, <intervention>e bebida</intervention>, <condition>para as febres, e para as dores de Pleurizes</condition><lb/>
+                    pontadas, e e[s]tupores, <precaution>advertindo que naõ [s]endo virgem, naõ tem virtude.</precaution></p>
+            </div>
+            <div>
+                <subtitle>Priapo, ou genital do cavallo marinho, e [s]uas virtudes.</subtitle>
+        
+                    <p><intervention>Dando a beber</intervention> <dosage>meya oitava do <ingredient>pò do priapo do cavallo marinho</ingredient></dosage> <prep_med><dosage>mi[s]turado com<lb/>
+                    [s]eis onças de agua commua</dosage> <dosage>cozida com hum pao de faveira sec(a), ou com duas oitava<lb/>
+                    de <ingredient>raiz de Eroca Marinha</ingredient>, ou com ca[s]cas de rabãos</dosage></prep_med>, <condition>provoca muito a ourina [s]upprimida</condition>,<lb/>
+                    com duas condiçoens: a primeira, que o doente tenha tomado primeiro que tudo<lb/> 
+                    <dosage><ingredient>hum vomitorio</ingredient></dosage> de <dosage>[s]eis grãos de Tartaro emético,</dosage> ou <dosage>duas onças de agua Benedicta,</dosage><lb/> 
+                    <duration>[s]angrando-se ao outro dia quatro vezes</duration><locus>nos braços</locus>, <duration>e a outro dia tres</duration>, e ob[s]ervando estes<lb/> 
+                    con[s]elhos certamente ourin(ar)à muito o doente.</p>
+                    <p>He remedio e[s]tupendo para os <condition>pleurizes, e camaras de [s]angue</condition>, como se tem sabido por<lb/> 
+                    innumeraveis experiencias, com tal condiçaõ, que <intervention>[s]e darà para cada vez <dosage>meya oitava do<lb/> 
+                    dito pò mi[s]turado</dosage> para os Pleurizes em <ingredient>agua cozida com flores de papoulas, ou com a ca[s]ca<lb/>  
+                    da raiz de bardana</ingredient>; e para <condition>camaras</condition> em <ingredient>agua cozida com alquitira</ingredient>, <dosage>repetindo<pc>-</pc>se e[s]te<lb/>  
+                    remedio tres vezes cada dia</dosage>, a[ss]eguro he grande remedio.</intervention></p>
+            <div>
+            </div>
+                <subtitle>Priapo, ou genital do Veado.</subtitle>
+        
+                    <p>Tem maravilho[s]a virtude para as <condition>camaras de [s]angue, e para as pontadas do Pleuriz</condition>,<lb/> 
+                    <intervention><dosage>dando meya oitava do [s]eu pò</dosage>, mi[s]turado com <ingredient>agua cozida com papoulas</ingredient>, <duration>continuando<pc>-</pc>o<lb/>  
+                    tres , ou quatro dias pela manhâa em jejum, e às noites tres horas antes de cear</duration></intervention>.</p>
+            </div>
+            <div>
+                <subtitle>Dente de cavallo marinho, e suas virtudes.</subtitle>
+            
+                    <p><ingredient>O Pò fustili[ss]imo de[s]te dente</ingredient> tem grande virtude para <condition>[s]upre[ss]oens da ourina</condition>; com<lb/>  
+                    tal condiçaõ que <intervention>se darà para cada vez <dosage>huma oitava delle mi[s]turado cõ meyo quartilho<lb/> 
+                    de <ingredient>agua cozida com raiz de e[s]p(a)rgo</ingredient>, ou com <ingredient>raiz de rilha boy</ingredient></dosage>, chamada dos latinos<lb/>  
+                    <citation>Ononis, ou Remora aratri</citation>, ou com <ingredient>pao de virga aurca</ingredient></intervention>: aproveita muito para as <condition>febres</condition>, <intervention><dosage>dado<lb/>  
+                    na me[s]ma quantidade</dosage>, <prep_med>mi[s]turado na <ingredient>agua das tisanas</ingredient></prep_med>, <locus>trazido junto da carne</locus></intervention>, tem certa<lb/>  
+                    qualidade occulta contra o ar. E[s]te dente tem as me[s]mas virtudes, que o dente de Engala;<lb/>  
+                    <locus>po[s]to sobre as cadeiras</locus>, aprove(i)ta muito para as <condition>almorreimas</condition>, <intervention>e[s]tanca o [s]angue: de qualquer<lb/>  
+                    parte que [s]ahir por modo de milagre: hum anel feito de[s]te dente, [s]u[s]p(e)nde o [s]angue</intervention><lb/>  
+                    das <condition>almorreimas</condition>, e <intervention><duration>tira as dores dellas em menos de huma hora</duration></intervention>.</p>  
+                    <ew>Dente</ew>
+            </div>                           
+        <pb n="11"/> 
+            <div>
+                <subtitle><ingredient>Dente de dentro da <locus>boca</locus> do Elefante</ingredient>, e [s]uas virtudes.</subtitle>
+                    
+                    <p><condition>Serve para toda a e[s]pecie de febre, para as dores de co[s]tado, para as dores de rheumati[s]m(o)</condition>,<lb/>  
+                    e <prep_med>preparando<pc>-</pc>o tambem em fórma que [s]e cubra com a ma[ss]a, ou polme do<lb/>  
+                    dente preparado em <ingredient>agua</ingredient>, e [s]e for ro[s]ada, [s]erá melhor, mas <precaution>deve [s]er morna</precaution></prep_med>.</p>
+            </div>
+            <div>
+                <subtitle>Unha do graõ Be[s]ta, e [s]uas virtudes.</subtitle>
+                            
+                    <p><animal_description>O Graõ Be[s]ta he hum animal, que na língua dos Etiopes Mouros [s]e chama Nhumbo<lb/> 
+                    e na língua Portugueza val o me[s]mo que animal fermo[s]o. A [s]ua fórma he de hum<lb/> 
+                    perfeito cavallo em tudo menos: [s]ua cauda tem muy pouco pello, e o ca[s]co he fendido<lb/> 
+                    como unha de cabra; ordinariamente naqueles contornos [s]aõ manchados como Tigres;<lb/> 
+                    alguns, que [s]aõ raros, de cor ca[s]tanho claro.</animal_description></p>
+                    <p><precaution>Só as unhas do pè e[s]querdo [s]aõ  as que tem virtudes; as outras, [s]endo do me[s]mo animal,<lb/>  
+                    naõ tem [s]erventia, e muitas vezes [s]e dà qualquer das ditas unhas, ou vende, e [s]endo do<lb/>  
+                    me[s]mo animal não tem pre[s]timo; e tem a circun[s]tancia de que hade [s]er tirada a unha [s]em<lb/>  
+                    [s]er metida no fogo, nem em agua quente, porque perde a virtude.</precaution></p>
+                    <p><animal_description>O animal he [s]ugeito a accidentes repetidos, e tem tal in[s]tincto, que a[ss]im como [s]e vê<lb/> 
+                    ameaçado do accidente, mete a unha do pè e[s]querdo no ouvido, e a[ss]im que lhe passa logo a<lb/> 
+                    força delle.</animal_description></p>
+                    <p>Serve a unha do grão be[s]ta, <intervention>trazendo<pc>-</pc>a <locus>junto à carne do um[s]culo do braço e[s]querdo</locus></intervention>, <locus>ou<lb/> 
+                    ao pe[s]coço, e ainda [s]obre o peito, ou no dedo da maõ e[s]querda</locus>, <intervention>enga[s]toada em ouro, de<lb/> 
+                    forte <locus>que a unha toque na carne</locus></intervention>; <condition>[s]erve contra os accidentes de gotta coral, e vàgados, e<lb/> 
+                    contra o ar</condition>. <intervention><prep_med>Preparada em <ingredient>agua</ingredient>, e bebida</prep_med> <condition>[s]erve contra o veneno</condition>, e contra as febres<lb/> 
+                    intermitentes</intervention>.</p>
+                    <p>Nos <condition>accidentes de a[s]thma</condition> <intervention>[s]e darà <dosage>hum escrúpulo de pó da dita unha mi[s]turado com<lb/> 
+                    huma chicara de agua de cereijas negras</dosage></intervention>: por quanto a <condition>a[s]thma</condition> he hum acidente [de gotta<lb/> 
+                    coral do bese, <citation>como diz Vanelmoncio: Asthma est caducum pulmonis.</citation></p>
+            </div>
+            <div>
+                <subtitle><ingredient>O[ss]os do e[s]pinhaço da Cobra Zuchi</ingredient>, ou Zuichi, e [s]uas virtudes.</subtitle>
+                
+                    <p><animal_description><place_name>Em Angola</place_name> [s]e criaõ humas cobras, a que os naturaes chamaõ Zuchi, que quer dizer<lb/>  
+                    cu[s]pidora; e[s]ta quando [s]e vè perseguida dos que a querem matar, e[s]guicha da boca<lb/>  
+                    hum cu[s]pinho taõ delgado, e taõ alvo, que em qualquer parte que cahe, a faz log(o) muito<lb/> 
+                    branca, e para deitar o tal cu[s]pinho ergue o collo, e enche o papo, e deita o cu[s]pinho<lb/>  
+                    aos olhos de quem a per[s]egue, e selhe naõ acodem logo com o leite, penetra o [s]eu veneno<lb/>  
+                    pelos olhos de sorte, que os cega, e muitas vezes os mata.</animal_description></p>
+                    <p>Sem embargo porèm da dita cobra ter e[s]ta maldade, pozlhe Deos nos o[ss]os do seu e[s]pinhaço<lb/>  
+                    huma grande virtude, <intervention>que [s]ecaõ, e curaõ as <condition>alporcas</condition></intervention>, com tal condiçaõ, <locus>que o doente<lb/>  
+                    os traga ao pe[s]coço junto da carne</locus><intervention><duration>por tempo de hum anno.</duration></intervention></p>
+                    <p><prep_med>Para [s]e tirarem estes ossos, depois de morta a cobra, [s]e enterra, e como pa[ss]aõ quinze<lb/> 
+                    dias apodrece a carne, e com facilidade [s]e de[s]pegaõ, e [s]e alimpaõ muito bem de alguma<lb/> 
+                    carne, [s]e lhe ficou pegada, e [s]e guardaõ; e <intervention>quando quizerem applicallos a algum doente<lb/> 
+                    de[s]ta enfermidade, ou q' tenhaõ dores de garganta, [s]e infiaõ em hum fio de retroz, e<lb/> 
+                    <locus>penduraõ ao pe[s]coço</locus> a modo de huma gargantilha</intervention>. Muitas [s]aõ as pe[ss]oas que tem vi[s]to,<lb/> 
+                    e experimentado a grande virtude de[s]tes o[ss]os para as [s]obreditas enfermidades.</prep_med></p>
+            </div>
+            <div>
+                <subtitle><ingredient>Dentes de Engala</ingredient>, e [s]uas virtudes.</subtitle>
+        
+                    <p><place_name>Em Angola</place_name> [s]e criaõ huns animaes da corpulencia de hum <animal>porco</animal>, na boca de[s]tes [s]e achaõ<lb/>
+                    dous dentes fortes á maneira de dentes de porco javali; [s]aõ  do comprimento de<lb/> 
+                    1 ú palmo, pouco mais, ou menos, <condition>o pò de[s]tes dentes tem grandi[ss]ima virtude para rebater<lb/> 
+                    as febres malignas</condition>, e naõ falta quem diga que he melhor que a pedra Bazar verdadeira: <intervention>faz<lb/> 
+                    madurar, e abrir os <condition>apo[s]temas</condition></intervention>, e leicentos, <intervention>applicando<pc>-</pc>o [s]obres elles em forma de polme<lb/> 
+                    <duration>tres, ou quatro vezes cada dia</duration>: ajuda muito a [s]ahirem as <condition>bexigas</condition>, e os <condition>[s]arampãos</condition></intervention>; con[s]ta d'<lb/> 
+                    muito tal volatil, e por i[ss]o <condition>nos Pleurizes faz tão boens effeitos como o dente de porco</condition><lb/> 
+                    montez, com tal condiçaõ, <intervention>que se dè de cada vez <dosage>meya oitava</dosage> do [s]eu pó lubrili[ss]imo mistu<pc>-</pc><lb/><ew>rado</ew>
+                    
+                    <pb n="12"/> 
+                    
+                    rado com <dosage>huma onça</dosage> de <ingredient>lambedor de papoulas</ingredient> morno, bebndolhe em firma <dosage>meyo quar<pc>-</pc>tilho<lb/>
+                    tilho</dosage>de agua cozida com <ingredient>flores de papoulas</ingredient>, e com calcas de <ingredient>raiz de Bardana.</ingredient></intervention> Po[s]to a[ss]e<pc>-</pc>gurar<lb/>
+                    gurar com a experiência de 58.annos, que nos Pleurizes he grande remedio, com tal com<pc>-</pc>diçaõ<lb/>
+                    diçaõ, que [s]e aplique <duration> duas, ou três vezes cada dia  atè que o doente acabe de <cure>[s]arar</cure></duration>. No<lb/>
+                    meu Peculio revelo hum grande remedio para <condition>Pleurizes</condition>, no capitulo, Pleurizes.</p>
+            </div>
+            <div>
+                <subtitle><ingredient>Raiz da <place_name>Manica</place_name></ingredient>, e [s]uas virtudes.</subtitle>
+
+                    <p>ESta raiz he de grandi[ss]ima e[s]timaçaõ, a[ss]im por [s]er creada entre o ouro no <place_name>Reyno de<lb/>
+                    Manica</place_name>, donde tomou o nome, como também por [s]uas admiráveis virtudes.</p>
+                    <p>Serve e[s]ta raiz para <condition>febres</condition>, <prep_med>dando [s]e bem moida em quantidade de hum e[s]erupulo mi[s]<pc>-</pc>turada<lb/>
+                    turada com <dosage>[s]eis onças</dosage> de <ingredient>ti[s]ana</ingredient></prep_med>: <intervention>da<pc>-</pc>[s]e no principio do frio</intervention>, do me[s]mo modo que [s]e dá<lb/>
+                    a <ingredient>agua de <place_name>Inglaterra</place_name></ingredient>; e [s]e a <condition>febre</condition> entrar [s]em frio, <intervention>[s]e dará do me[s]mo modo no fim da fe<pc>-</pc>bre<lb/>
+                    bre para fazer [s]uar.</intervention></p>
+                    <p>He admirável <intervention>contraveneno</intervention>, porque o rebate eficazmente.</p>
+                    <p>Serve para toda a [s]orte de <condition>fraqueza do <locus>e[s]tomago</locus></condition>, para com[s]ervar o comer nelle, de<lb/>
+                    [s]orte que [s] naõ <condition>vomite</condition>.</p>
+                    <p>Serve para desfazer as <condition>vento[s]idades procedidas de cau[s]a fria</condition>.</p>
+                    <p>Serve para quem tem <condition>fa[s]tio</condition>, <intervention>tomada <duration>duas horas</duration> antes de comer</intervention>, porque comforta o<lb/>
+                    e[s]tomago, excita a vontade de comer, e he grande remedio para impedir os <condition>vomitos</condition>.</p>
+                    <p>Serve para <condition>feridas fre[s]cas</condition>, <prep_med>moida com <ingredient>agua</ingredient>, de modo que fique como polme</prep_med>, applican<pc>-</pc>do<lb/>
+                    do<pc>-</pc>o <duration>cada vinte e quatro horas</duration>, <intervention>enchendo o vaõ da ferida com elle</intervention>, e brevemente ficarà<lb/>
+                    o doente [s]aõ.</p>
+                    <p>Serve para <condition>chagas podres</condition> <prep_med>moida do me[s]mo modo</prep_med>, e <intervention>aplicada á <locus>chaga em lugar de<lb/>
+                    ungento</locus>; e i[s]to [s]e fará <duration>huma vez cada dia</duration></intervention>, e [s]arara em breve tempo, [s]em nesse[ss]itar de<lb/>
+                    outra cura, ou remedio humano.</p>
+                    <p>Tambem a dita Manica he hum <intervention>remedio</intervention>, ou <intervention>antidoto</intervention> muy eficaz contra <condition>herpes</condition>, <prep_med>mo<pc>-</pc>endo<lb/>
+                    endo<pc>-</pc>[s]e</prep_med>, e <intervention>pondo [s]e os pos <locus>[s]obre a ferida</locus>, e aplicando<pc>-</pc>[s]e também da <locus>parte de [s]ima</locus></intervention>,<lb/>
+                    para que os <condition>herpes</condition> naõ [s]ubaõ, nem vaõ por diante.</p>
+                    <p>Serve para <condition>dor de colica</condition> chamada nas terras da <place_name>India</place_name>, xeringola, <prep_med>roçada em pedra<lb/>
+                    com <ingredient>çumo de limaõ</ingredient>, e lançada por ajuda</prep_med>.</p>
+                    <p>He grande contrapeçonha, <prep_med>moida [s]ubtili[ss]imamente</prep_med>, e <intervention>dada a beber com <ingredient>çumo de<lb/>
+                    limaõ galego</ingredient></intervention>.</p>
+                    <p>Serve para mal de <place_name>Loanda</place_name> <prep_med>moida, e dada com <ingredient>agua</ingredient></prep_med>, e untando com aquelle <ingredient>polme</ingredient><lb/>
+                    as <locus>gengivas</locus> <duration>muitas vezes no dia</duration>, fararà o enfermo <condition>maravilho[s]amente</condition>.</p>
+                    <p>Serve da me[s]ma [s]orte <prep_med>moida</prep_med>, e aplicando o dito <ingredient>polme</ingredient> na <locus>face, e na cova do dente,<lb/>
+                    que doer</locus>, porque <condition>tira todo a dor</condition> delle.</p>
+                    <p>S(e)rve para <condition>dor de ouvidos</condition>, <prep_med>moendo-a com <ingredient>agua</ingredient> aquentada em huma colher de pra<pc>-</pc>ta<lb/>
+                    ta</prep_med>, e <intervention>laçando <dosage>três, ou quatro gottas</dosage> no <locus>ouvido</locus> [s]aõ primeiro, e depois no que tiver a /dor</intervention>.</p>
+                    <p>Pe[ss]oas fidedignas, que e[s]tiveraõ na <place_name>India</place_name> affirmaõ que <prep_med>o <ingredient>pò de[s]ta raiz</ingredient> [s]ubtili[ss]imamten<pc>-</pc>te<lb/>
+                    te pulverizado, e mi[s]turado com o que for nesse[ss]ario de <ingredient>agua ro[s]ada</ingredient>, para fazer hum<lb/>
+                    polme</prep_med>, <intervention>barrando a <locus>te[s]ta</locus>, e <locus>fontes da cabeça</locus> com elle</intervention>, abranda muito as ditas <condition>dores</condition>.</p>
+                    <p>Serve para <condition>e[s]tancar os fluxos de [s]angue</condition>, ou [s] já <intervention>tomada pela <locus>boca</locus></intervention> <prep_med>mi[s]iturada em <ingredient>agua<lb/>
+                    de tranchagem</ingredient></prep_med>, ou [s]eja deitada por ajuda.</p>
+                    <p>Pe[ss]oa houve taõ confiada, que [s]e atreveo a dizer que o <ingredient>pò</ingredient> [s]ubtili[ss]imo de[s]ta raiz, <intervention>to<pc>-</pc>mado<lb/>
+                    mado <duration>muitos dias</duration> em jejum com <ingredient>xarope de hera terre[s]tre</ingredient>, ou de <ingredient>unguka cabalina</ingredient>, curava<lb/>
+                    cerramente as <condition>chagas do bofe</condition></intervention>; eu lhe naõ dou inteiro credito, mas em doença, em que<lb/>
+                    a certeza da <condition>morte</condition> (por cau[s]a da <condition>chaga do bofe</condition>) he infalivel, naõ duvidaria eu de fazer<lb/>
+                    o <intervention>remedio</intervention>, porque [s]e naõ aproveitar, naõ [s]ara damno.</p>
+                    <p>Para as <condition>feridas fre[s]cas com [s]angue</condition>, <intervention>enchendo o <locus>caõ da ferida</locus> com o <ingredient>pò fino de[s]ta raiz</ingredient>,<lb/>
+                    e curando<pc>-</pc>as abertas, obra taõ maravilho[s]amente como o <ingredient>óleo de ouro</ingredient></intervention>.</p>
+                    <p>Finalmente he a <ingredient>raiz da <place_name>M(a)niaca</place_name></ingredient> remedio [s]upremo para rebater todo o g(e)nero de ve<pc>-</pc>neno<lb/>
+                    neno; advertindo, <precaution>que [s]e tenha grande cuidado, e cautela, que quem tomar e[s]ta raiz naõ<lb/>
+                    toque qualque género de <ingredient>óleo</ingredient>, ou <ingredient>azeite</ingredient>, porque intallivelmente [s]e converterà em ve<pc>-</pc>neno<lb/>
+                    neno pre[s]entaneo</precaution>.</p> <ew>Raiz</ew>
+            </div>
+        <pb n="13"/>
+            <div>
+                <subtitle><ingredient>Raiz da Madre de Deos</ingredient>, e [s]uas virtudes.</subtitle>
+
+                    <p><prep_med><ingredient><dosage>VInte grãos</dosage> de pó de[s]ta <drug>raiz</drug></ingredient> mi[s]turados com <ingredient><dosage>quatro onças</dosage> de agua cozida</ingredient> com o <ingredient>páo</ingredient><lb/>
+                    da faveira [s]eca, ou com <ingredient><dosage>hum molho</dosage> de <drug>folhas de cesfelio</drug></ingredient></prep_med>, provoca a <condition>ourina [s]uppri<pc>-</pc>mia<lb/>
+                    mia</condition>. Serve o <ingredient>pò de[s]ta <drug>raiz</drug></ingredient> para <condition>todo o género de febre</condition>, principalmete para as que en<pc>-</pc>trarem<lb/>
+                    trarem com frio, <dosage>dando<pc>-</pc>se duas vezes cada dia</dosage>: para <condition>grandes dores de cabeça</condition> <intervention>[s]e appli<pc>-</pc>ca<lb/>
+                    ca o polme de[s]ta raizfeito com <ingredient>çumo de limaõ galego</ingredient> nas <locus>capelladas dos olhos</locus>, e nas<lb/>
+                    <locus>fontes</locus></intervention> : [s]erve e[s]ta raiz para <condition>inflammaçoens do bofe</condition>, como he a <condition>Peripneumonia</condition>; contra<lb/>
+                    qualquer <condition>outras inflammaçoens interiores</condition>: he e[s]ta raiz muito cordeal e re[s]i[s]te ao <condition>ve<pc>-</pc>neno<lb/>
+                    neno</condition> das <condition>febres malignas</condition>, e as <condition>mordeduras</condition> das <animal>cobras veneno[s]as</animal>.</p>
+            </div>
+            <div>
+                <subtitle><ingredient>Raiz do <place_name>Cypò</place_name></ingredient>, e [s]uas virtudes.</subtitle>
+
+                    <p>AE[s]ta raiz, a quem os Portuguezes chamaõ <ingredient><place_name>Cypò</place_name></ingredient>, chama o Gentio da America Piea<pc>-</pc>quanha<lb/>
+                    quanha que he o me[s]mo, que dizer pica de caõ: há duas fortes de Cypò, <description_plant>hum he<lb/>
+                    mais gro[ss]o, mais branco, e mais forte</description_plant>, outro <description_plant>hem asi delgado, mais e[s]curo, e mais be<pc>-</pc>nigno<lb/>
+                    nigno no obrar</description_plant>: ambas e[s]tas raizes tem virtude taõ maravilho[s]a para curar <condition>camaras de<lb/>
+                    [s]angue</condition>, que rari[ss]imas vezes faltaõ com o efeito de[s]ejado, <precaution>advertindo, que as tacs raizes<lb/>
+                    tem virtude de provocar vomito, a branca o provoca com mais violenvia</precaution>, o remedio para<lb/>
+                    que o naõ provoque, <prep_med>he deitallas <duration>vinte e quatro horas</duration> de <ingredient>infu[s]aõ</ingredient> em <ingredient>vinagre forte</ingredient>; a<lb/>
+                    quantidade que [s]e dá de <ingredient>pò de qualder de[s]tas raizes</ingredient>, he de <dosage>dous e[s]erupulos atè huma<lb/>
+                    citava</dosage>, toma<pc>-</pc>[s]e em caldo de galinha</prep_med>, e [s]e repete <duration>quatro, ou [s]eis dias</duration>.</p>
+            </div>
+            <div>
+                <subtitle><ingredient>Raiz de <place_name>Solor</place_name></ingredient>, e [s]uas virtudes.</subtitle>
+
+                    <p>ESta raiz com as outras fobreditas também he de [s]inguar e[s]timaçaõ; <intervention>u[s]a<pc>-</pc>[s]e della para<lb/>
+                    toda a e[s]pecie de <condition>febres</condition>, e <condition>pontadas</condition>, e para o <condition>veneno</condition>, e para <condition>dores Nephriticas</condition></intervention>.<lb/>
+                    Tambem serve tomando <ingredient>bochechas</ingredient>, para <condition>alimpar a limgua gro[ss]a</condition>, e para <condition>abrir a vontade<lb/>
+                    de comer</condition>, quando o enfermo tem fa[s]tio levando algumas bochechas para baixo.</p>
+           </div>
+    </text>
+</TEI>
