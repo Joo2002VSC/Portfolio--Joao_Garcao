@@ -48,7 +48,7 @@ Organizado por área — cada pasta vai crescer à medida que se adicionam proje
 | [`digital-humanities`](./projects/digital-humanities) | Património, filologia, lexicografia |
 | [`text-processing`](./projects/text-processing) | PLN, regex, análise textual computacional |
 | [`language-services`](./projects/language-services) | Tradução, ferramentas CAT, legendagem |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Literário ↗](https://joo2002vsc.github.io/blog-literario/) · [repo](https://github.com/Joo2002VSC/blog-literario) |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Literário ↗ (projeto pessoal, autodidata)](https://joo2002vsc.github.io/blog-literario/) · [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Explorações e protótipos menores |
 | [`data-analysis`](./projects/data-analysis) | Análise e visualização de dados, PLN quantitativo |
 
@@ -63,7 +63,7 @@ Organized by area — each folder will grow as projects are added.
 | [`digital-humanities`](./projects/digital-humanities) | Heritage, philology, lexicography |
 | [`text-processing`](./projects/text-processing) | NLP, regex, computational text analysis |
 | [`language-services`](./projects/language-services) | Translation, CAT tools, subtitling |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Literary Blog](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Literary Blog ↗ (personal, self-taught project)](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Smaller explorations and prototypes |
 | [`data-analysis`](./projects/data-analysis) | Data analysis and visualization, quantitative NLP |
 
@@ -78,7 +78,7 @@ Organisé par domaine — chaque dossier s'enrichira au fur et à mesure de l'aj
 | [`digital-humanities`](./projects/digital-humanities) | Patrimoine, philologie, lexicographie |
 | [`text-processing`](./projects/text-processing) | TAL, regex, analyse textuelle computationnelle |
 | [`language-services`](./projects/language-services) | Traduction, outils TAO, sous-titrage |
-| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Litteraire](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
+| [`web-development`](./projects/web-development) | HTML/CSS, UX/UI — [Blog Littéraire ↗ (projet personnel, autodidacte)](https://joo2002vsc.github.io/blog-literario/) / [repo](https://github.com/Joo2002VSC/blog-literario) |
 | [`experiments`](./projects/experiments) | Petites explorations et prototypes |
 | [`data-analysis`](./projects/data-analysis) | Analyse et visualisation de données, TAL quantitatif |
 
