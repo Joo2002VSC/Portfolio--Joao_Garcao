@@ -1,10 +1,12 @@
-<img src="assets/foto.jpg" alt="João Garção" width="150" align="right">
-
 # João Garção
+
+<img src="assets/foto.jpg" alt="João Garção" width="150" align="right">
 
 **Digital Humanities · Language Technologies · Text Analysis**
 
 [🇵🇹 Português](README.md) · [🇬🇧 English](README.en.md) · [🇫🇷 Français](README.fr.md)
+
+<br clear="right">
 
 ---
 
