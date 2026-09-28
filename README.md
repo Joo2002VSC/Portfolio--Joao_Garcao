@@ -2,11 +2,13 @@
 
 ## Digital Humanities · Language Technologies · Text Analysis
 
+<img src="assets/foto.jpg" alt="João Garção" width="180">
+
 ---
 
 ## 🇵🇹
 
-Sou licenciado em **Línguas Aplicadas** e atualmente mestrando em **Humanidades Digitais** na Universidade do Minho.
+O meu nome é João Garção, tenho 24 anos e sou licenciado em Línguas Aplicadas, pela Universidade do Minho, e mestrando em Humanidades Digitais, pela mesma Universidade. Com formação em línguas e programação, ao longo dos últimos cinco anos, pude consolidar uma formação abrangente e transversal, conjugando conhecimentos de linguística e tradução com a área da programação e da conservação de património.
 
 Trabalho na interseção entre a linguagem, a cultura e a tecnologia, com ênfase em:
 - Processamento de Linguagem Natural (PLN)
@@ -18,7 +20,7 @@ Trabalho na interseção entre a linguagem, a cultura e a tecnologia, com ênfas
 
 ## 🇬🇧
 
-I hold a degree in **Applied Languages** and I am currently a Master's student in **Digital Humanities** at the University of Minho.
+My name is João Garção, I am 24 years old, and I hold a bachelor's degree in Applied Languages and am currently completing a master's degree in Digital Humanities, both at the University of Minho. With a background in languages and programming, over the last five years I have built a broad, cross-disciplinary education, combining linguistics and translation with programming and heritage preservation.
 
 My work focuses on the intersection of language, culture, and technology, particularly:
 - Text Processing
@@ -30,7 +32,7 @@ My work focuses on the intersection of language, culture, and technology, partic
 
 ## 🇫🇷
 
-Je suis diplômé en **Langues Appliquées** et actuellement étudiant en **Humanités Numériques** à l’Université du Minho.
+Je m'appelle João Garção, j'ai 24 ans et je suis titulaire d'une licence en Langues Appliquées et étudiant en master en Humanités Numériques, tous deux à l'Université du Minho. Avec une formation en langues et en programmation, j'ai consolidé au cours des cinq dernières années une formation large et transversale, alliant linguistique et traduction à la programmation et à la conservation du patrimoine.
 
 Mon travail se situe à l’intersection entre langue, culture et technologie, notamment :
 - Traitement de Texte
