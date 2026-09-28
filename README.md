@@ -117,3 +117,11 @@ Organisé par domaine — chaque dossier s'enrichira au fur et à mesure de l'aj
 | Français | B2 |
 | Néerlandais | A2 (auto-évalué, non certifié) |
 | Italien | A2 |
+
+---
+
+## 📄 CV
+
+- 🇵🇹 [Descarregar o meu CV (PDF)](./about/CV-Joao-Garcao.pdf)
+- 🇬🇧 [Download my CV (PDF)](./about/CV-Joao-Garcao.pdf)
+- 🇫🇷 [Télécharger mon CV (PDF)](./about/CV-Joao-Garcao.pdf)
