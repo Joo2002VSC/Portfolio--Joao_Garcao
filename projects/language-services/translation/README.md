@@ -1,23 +1,17 @@
-# Tradução Automática · Machine Translation
+# Tradução · Translation
 
 ## 🇵🇹
 
-Trabalho individual da cadeira de **Linguística Descritiva 2** (Licenciatura em Línguas Aplicadas, Universidade do Minho).
+Trabalhos de tradução realizados em diferentes cadeiras da Licenciatura em Línguas Aplicadas (Universidade do Minho).
 
-Compara dois motores de tradução automática, **DeepL** e **Google Tradutor**, na tradução de um texto jornalístico de inglês para português. Os erros encontrados são classificados por tipologia (pragmático, ortográfico, lexico-semântico, sintático e de combinatória lexical restrita) e explicados em duas tabelas, uma por motor.
-
-Conclusões principais: o DeepL usou a norma do português europeu e o Google Tradutor a do português do Brasil. O Google lidou melhor com polissemia e idiomatismos, e o DeepL com a ortografia. Nenhum dos dois é fiável para tradução profissional.
-
-- **Trabalho:** [`erros-traducao-automatica.pdf`](./erros-traducao-automatica.pdf)
+- **[`metodologias/`](./metodologias)**: exercícios práticos de tradução (BD, texto turístico, receita, bricolage) e projeto final em grupo, da cadeira de Metodologias de Tradução e Redação Multilíngue.
+- **Erros de Tradução Automática** (cadeira de Linguística Descritiva 2): comparação entre **DeepL** e **Google Tradutor** na tradução de um texto jornalístico de inglês para português, com os erros classificados por tipologia. Conclui que o DeepL segue a norma do português europeu e o Google Tradutor a do português do Brasil, e que nenhum dos dois é fiável para tradução profissional. [`erros-traducao-automatica.pdf`](./erros-traducao-automatica.pdf)
 
 ---
 
 ## 🇬🇧
 
-Individual paper for the **Descriptive Linguistics 2** course (Bachelor's in Applied Languages, University of Minho).
+Translation work from different courses of the Bachelor's in Applied Languages (University of Minho).
 
-It compares two machine translation engines, **DeepL** and **Google Translate**, on an English-to-Portuguese translation of a news text. The errors found are classified by type (pragmatic, orthographic, lexico-semantic, syntactic and restricted lexical collocation) and explained in two tables, one per engine.
-
-Main findings: DeepL used European Portuguese and Google Translate Brazilian Portuguese. Google handled polysemy and idioms better, while DeepL was stronger on orthography. Neither is reliable for professional translation.
-
-- **Paper:** [`erros-traducao-automatica.pdf`](./erros-traducao-automatica.pdf)
+- **[`metodologias/`](./metodologias)**: practical translation exercises (graphic novel, tourism text, recipe, DIY) and a group final project, from the Translation Methodologies and Multilingual Writing course.
+- **Machine Translation Errors** (Descriptive Linguistics 2 course): comparison between **DeepL** and **Google Translate** on an English-to-Portuguese translation of a news text, with errors classified by type. Finds that DeepL followed European Portuguese norms and Google Translate Brazilian Portuguese, and that neither is reliable for professional translation. [`erros-traducao-automatica.pdf`](./erros-traducao-automatica.pdf)
