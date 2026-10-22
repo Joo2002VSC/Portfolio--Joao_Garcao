@@ -25,6 +25,7 @@ Je suis titulaire d'une licence en Langues Appliquées et étudiant en master en
 | [`digital-humanities`](./projects/digital-humanities) | Philologie, annotation de documents (XML, LaTeX) |
 | [`text-processing`](./projects/text-processing) | TAL et analyse de texte |
 | [`language-services`](./projects/language-services) | Traduction et traduction automatique |
+| [`literary-studies`](./projects/literary-studies) | Analyse et critique littéraire |
 | [`data-analysis`](./projects/data-analysis) | Analyse et visualisation de données |
 | [`web-development`](./projects/web-development) | UX/UI et développement web |
 

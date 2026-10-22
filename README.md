@@ -25,6 +25,7 @@ Sou licenciado em Línguas Aplicadas e mestrando em Humanidades Digitais, ambos 
 | [`digital-humanities`](./projects/digital-humanities) | Filologia, anotação de documentos (XML, LaTeX) |
 | [`text-processing`](./projects/text-processing) | PLN e análise de texto |
 | [`language-services`](./projects/language-services) | Tradução e tradução automática |
+| [`literary-studies`](./projects/literary-studies) | Análise e crítica literária |
 | [`data-analysis`](./projects/data-analysis) | Análise e visualização de dados |
 | [`web-development`](./projects/web-development) | UX/UI e desenvolvimento web |
 
