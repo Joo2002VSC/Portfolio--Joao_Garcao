@@ -28,6 +28,7 @@ Je suis titulaire d'une licence en Langues Appliquées et étudiant en master en
 | [`literary-studies`](./projects/literary-studies) | Analyse et critique littéraire |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologies et représentation des connaissances |
 | [`digital-innovation`](./projects/digital-innovation) | Innovation, entrepreneuriat et validation d'idées d'affaires |
+| [`artificial-intelligence`](./projects/artificial-intelligence) | Chatbot institutionnel basé sur RAG et notes théoriques, du cours Introduction à l'Intelligence Artificielle |
 | [`data-analysis`](./projects/data-analysis) | Analyse et visualisation de données |
 | [`web-development`](./projects/web-development) | UX/UI et développement web |
 

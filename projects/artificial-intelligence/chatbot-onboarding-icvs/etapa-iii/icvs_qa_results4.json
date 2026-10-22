@@ -1,0 +1,161 @@
+[
+  {
+    "question": "Who should I contact about safety training?",
+    "tfidf": {
+      "method": "tfidf",
+      "question": "Who should I contact about safety training?",
+      "hits": [
+        {
+          "idx": 98,
+          "score": 0.4109304206541671,
+          "section": "Access to Specialized Facilities",
+          "text": "If you are unsure whether a facility requires extra training, please contact training.icvs@med.uminho.pt"
+        },
+        {
+          "idx": 94,
+          "score": 0.3938225320120899,
+          "section": "Access to Specialized Facilities",
+          "text": "Facility Safety Training – Process Flow"
+        },
+        {
+          "idx": 41,
+          "score": 0.3914252341683825,
+          "section": "Mandatory Safety Training",
+          "text": "If at any point you have questions or doubts, please contact us at safety.icvs@med.uminho.pt"
+        }
+      ],
+      "answer": "Context retrieved (evidence):\nIf you are unsure whether a facility requires extra training, please contact training.icvs@med.uminho.pt\n\nFacility Safety Training – Process Flow\n\nIf at any point you have questions or doubts, please contact us at safety.icvs@med.uminho.pt"
+    },
+    "rag": {
+      "method": "rag_ollama",
+      "question": "Who should I contact about safety training?",
+      "hits": [
+        {
+          "idx": 98,
+          "score": 0.4109304206541671,
+          "section": "Access to Specialized Facilities",
+          "text": "If you are unsure whether a facility requires extra training, please contact training.icvs@med.uminho.pt"
+        },
+        {
+          "idx": 94,
+          "score": 0.3938225320120899,
+          "section": "Access to Specialized Facilities",
+          "text": "Facility Safety Training – Process Flow"
+        },
+        {
+          "idx": 41,
+          "score": 0.3914252341683825,
+          "section": "Mandatory Safety Training",
+          "text": "If at any point you have questions or doubts, please contact us at safety.icvs@med.uminho.pt"
+        }
+      ],
+      "answer": "You should contact training.icvs@med.uminho.pt.\n\n[Section: Access to Specialized Facilities]\nIf you are unsure whether a facility requires extra training, please contact training.icvs@med.uminho.pt\n\n[Section: Mandatory Safety Training]\nIf at any point you have questions or doubts, please contact us at safety.icvs@med.uminho.pt\n\nEvidence:\n- Section 1: \"If you are unsure...\"\n- Section 2: \"...contact training.icvs@med.uminho.pt\""
+    }
+  },
+  {
+    "question": "What do I need to do to obtain the ICVS ID card?",
+    "tfidf": {
+      "method": "tfidf",
+      "question": "What do I need to do to obtain the ICVS ID card?",
+      "hits": [
+        {
+          "idx": 35,
+          "score": 0.4557982378349682,
+          "section": "Administrative and Technical Units",
+          "text": "For instance, by filling in this form you will get information about how to schedule your institutional photograph and request the ICVS Identification Card. The ICVS ID Card serves not only as an official ID within the EMED/ICVS building but also grants you access to restricted areas within the ICVS."
+        },
+        {
+          "idx": 138,
+          "score": 0.38227938558131613,
+          "section": "ICVS Identification Card",
+          "text": "The ICVS ID Card serves not only as an official identification within the EMED/ICVS facilities but also grants access to restricted areas of ICVS."
+        },
+        {
+          "idx": 9,
+          "score": 0.29518191093264146,
+          "section": "Introduction",
+          "text": "ICVS, who we are"
+        }
+      ],
+      "answer": "Context retrieved (evidence):\nFor instance, by filling in this form you will get information about how to schedule your institutional photograph and request the ICVS Identification Card. The ICVS ID Card serves not only as an official ID within the EMED/ICVS building but also grants you access to restricted areas within the ICVS.\n\nThe ICVS ID Card serves not only as an official identification within the EMED/ICVS facilities but also grants access to restricted areas of ICVS.\n\nICVS, who we are"
+    },
+    "rag": {
+      "method": "rag_ollama",
+      "question": "What do I need to do to obtain the ICVS ID card?",
+      "hits": [
+        {
+          "idx": 35,
+          "score": 0.4557982378349682,
+          "section": "Administrative and Technical Units",
+          "text": "For instance, by filling in this form you will get information about how to schedule your institutional photograph and request the ICVS Identification Card. The ICVS ID Card serves not only as an official ID within the EMED/ICVS building but also grants you access to restricted areas within the ICVS."
+        },
+        {
+          "idx": 138,
+          "score": 0.38227938558131613,
+          "section": "ICVS Identification Card",
+          "text": "The ICVS ID Card serves not only as an official identification within the EMED/ICVS facilities but also grants access to restricted areas of ICVS."
+        },
+        {
+          "idx": 9,
+          "score": 0.29518191093264146,
+          "section": "Introduction",
+          "text": "ICVS, who we are"
+        }
+      ],
+      "answer": "To obtain the ICVS ID card, you need to:\n\n1. Fill in this form\n2. Request an institutional photograph (for scheduling)\n3. Get information about how to request the ICVS Identification Card.\n\nEvidence:\n- Section 1: \"For instance...\"\n- Section 4: \"The ICVS ID Card serves not only as an official identification...\"\n\nNote: The document does not provide sufficient information to answer this question."
+    }
+  },
+  {
+    "question": "How do I request access to the microscopy facility??",
+    "tfidf": {
+      "method": "tfidf",
+      "question": "How do I request access to the microscopy facility??",
+      "hits": [
+        {
+          "idx": 25,
+          "score": 0.3961927076805304,
+          "section": "Facilities and Scientific Platforms",
+          "text": "Microscopy facility (Optical, Confocal, 2-photon, Stereology)"
+        },
+        {
+          "idx": 157,
+          "score": 0.3157849164414897,
+          "section": "How to Request Extraordinary Access to EMED Building",
+          "text": "Access to the Animal Facility follows the specific procedures defined for that facility."
+        },
+        {
+          "idx": 95,
+          "score": 0.2759491351346479,
+          "section": "Access to Specialized Facilities",
+          "text": " Identify Facility Needs →  Indicate in Onboarding Form →  Complete Specific Facility Training →  Demonstrate Competence (if required) →  Sign Facility Rules/Documentation →  Access Granted"
+        }
+      ],
+      "answer": "Context retrieved (evidence):\nMicroscopy facility (Optical, Confocal, 2-photon, Stereology)\n\nAccess to the Animal Facility follows the specific procedures defined for that facility.\n\n Identify Facility Needs →  Indicate in Onboarding Form →  Complete Specific Facility Training →  Demonstrate Competence (if required) →  Sign Facility Rules/Documentation →  Access Granted"
+    },
+    "rag": {
+      "method": "rag_ollama",
+      "question": "How do I request access to the microscopy facility??",
+      "hits": [
+        {
+          "idx": 25,
+          "score": 0.3961927076805304,
+          "section": "Facilities and Scientific Platforms",
+          "text": "Microscopy facility (Optical, Confocal, 2-photon, Stereology)"
+        },
+        {
+          "idx": 157,
+          "score": 0.3157849164414897,
+          "section": "How to Request Extraordinary Access to EMED Building",
+          "text": "Access to the Animal Facility follows the specific procedures defined for that facility."
+        },
+        {
+          "idx": 95,
+          "score": 0.2759491351346479,
+          "section": "Access to Specialized Facilities",
+          "text": " Identify Facility Needs →  Indicate in Onboarding Form →  Complete Specific Facility Training →  Demonstrate Competence (if required) →  Sign Facility Rules/Documentation →  Access Granted"
+        }
+      ],
+      "answer": "To request access to the microscopy facility, follow these steps:\n\n1. Identify your facility needs.\n2. Indicate them on the Onboarding Form.\n3. Complete specific facility training (if required).\n4. Demonstrate competence (if required).\n5. Sign Facility Rules/Documentation.\n\nEvidence:\n- [Section: Facilities and Scientific Platforms]\n- [Section: How to Request Extraordinary Access to EMED Building]\n- [Section: Access to Specialized Facilities]"
+    }
+  }
+]

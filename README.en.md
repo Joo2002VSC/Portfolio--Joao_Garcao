@@ -28,6 +28,7 @@ I hold a bachelor's degree in Applied Languages and am completing a master's in 
 | [`literary-studies`](./projects/literary-studies) | Literary analysis and criticism |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologies and knowledge representation |
 | [`digital-innovation`](./projects/digital-innovation) | Innovation, entrepreneurship, and business idea validation |
+| [`artificial-intelligence`](./projects/artificial-intelligence) | Institutional RAG-based chatbot and theoretical course notes, from the Introduction to Artificial Intelligence course |
 | [`data-analysis`](./projects/data-analysis) | Data analysis and visualization |
 | [`web-development`](./projects/web-development) | UX/UI and web development |
 

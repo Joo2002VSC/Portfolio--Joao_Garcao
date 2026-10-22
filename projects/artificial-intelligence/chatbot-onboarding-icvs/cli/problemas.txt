@@ -1,0 +1,17 @@
+Review of Problems
+This RAG chatbot is a solid proof-of-concept for ICVS Q&A, but it has notable limitations that stem from the model's size, retrieval method, and prompt handling:
+
+Hallucinations: The biggest issue—llama3.2:1b often adds unstated details (e.g., inventing steps or sections) despite strict prompts. This happens on complex/vague questions where context is incomplete, as the model "fills gaps" with assumptions. Temperature adjustments (0.1) help but don't eliminate it.
+
+Retrieval Inconsistencies: TF-IDF works for keyword matches but struggles with semantic queries or scattered info. Increasing TOP_K to 5 improves context volume, but irrelevant hits still appear, confusing the model.
+
+Prompt Adherence: Even with detailed rules, the small model ignores "only use context" for inferences. Larger models follow better, but this one prioritizes fluency over accuracy.
+
+Dataset Structure: The CSV has rich info, but fragmented sections (e.g., onboarding spread across units) lead to partial retrieval. Preprocessing (e.g., chunking by topic) could help, but wasn't done here.
+
+Scalability: For a real app, add vector search (e.g., FAISS) for better retrieval, and fine-tune the model on ICVS data.
+
+Overall, it's great for direct questions and demonstrates RAG effectively. For production, upgrade the model and refine retrieval—it's 80% there!
+
+Recommended Ollama Model
+Switch to llama3.1:8b (if available in Ollama)—it's larger, better at following prompts, and reduces hallucinations while keeping speed. If not, try mistral:7b for similar gains. Update MODEL_NAME in config.py and test. Larger models handle context better without major slowdowns.

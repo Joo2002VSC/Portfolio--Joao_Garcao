@@ -28,6 +28,7 @@ Sou licenciado em Línguas Aplicadas e mestrando em Humanidades Digitais, ambos 
 | [`literary-studies`](./projects/literary-studies) | Análise e crítica literária |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologias e representação de conhecimento |
 | [`digital-innovation`](./projects/digital-innovation) | Inovação, empreendedorismo e validação de ideias de negócio |
+| [`artificial-intelligence`](./projects/artificial-intelligence) | Chatbot institucional baseado em RAG e resumos teóricos, da cadeira de Introdução à Inteligência Artificial |
 | [`data-analysis`](./projects/data-analysis) | Análise e visualização de dados |
 | [`web-development`](./projects/web-development) | UX/UI e desenvolvimento web |
 

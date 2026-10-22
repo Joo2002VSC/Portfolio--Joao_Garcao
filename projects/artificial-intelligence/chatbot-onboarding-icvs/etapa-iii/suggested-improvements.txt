@@ -1,0 +1,60 @@
+
+Suggested Improvements for the QA System
+Based on the JSON results, here are targeted enhancements to boost accuracy, consistency, and usability. These address issues like evidence mislabeling, contradictions, and raw TF-IDF output.
+
+1. Refine the Ollama Prompt for Consistency
+Issue: Evidence sections are misnumbered (e.g., "Section 1" vs. full names) and sometimes contradictory (e.g., providing steps but claiming insufficient info).
+Improvement: Update the user_prompt in answer_with_ollama_rag to enforce full section names and stricter rules. Example tweak:
+
+user_prompt = (
+    f"Context:\n{context}\n\n"
+    f"Question: {question}\n\n"
+    "Answer briefly using only the context. If insufficient, say so without listing steps.\n"
+    "After the answer, include:\n"
+    "Evidence: list of full section names used (e.g., 'Administrative and Technical Units')."
+)
+
+Lower temperature to 0.1 for less variability and fewer contradictions.
+
+
+2. Enhance TF-IDF Baseline Answer
+Issue: Just concatenates text without summarization, leading to noisy, irrelevant output (e.g., including "ICVS, who we are").
+Improvement: Modify answer_with_tfidf to summarize or filter. Add a simple post-processing step:
+
+def answer_with_tfidf(question, k=TOP_K):
+    hits = retrieve_top_k(question, k)
+    # Filter low-score hits (e.g., below 0.3) to reduce noise
+    filtered_hits = [h for h in hits if h['score'] > 0.3]
+    context = "\n\n".join([h['text'] for h in filtered_hits])
+    summary = f"Retrieved context (top {len(filtered_hits)} relevant sections):\n{context}"
+    return {"method": "tfidf", "question": question, "hits": filtered_hits, "answer": summary}
+
+This keeps it simple but more focused.
+
+3. Add Automated Evaluation Metrics
+Issue: Manual judgment only; no quantitative scores.
+Improvement: Integrate metrics after the loop. Install rouge-score and add:
+
+!pip install rouge-score
+from rouge_score import rouge_scorer
+scorer = rouge_scorer.RougeScorer(['rouge1'], use_stemmer=True)
+for r in results:
+    context = "\n".join([h['text'] for h in r['rag']['hits']])
+    scores = scorer.score(context, r['rag']['answer'])
+    r['rouge1_f'] = scores['rouge1'].fmeasure  # Add to JSON
+
+Saves scores for comparison; aim for >0.5 as a baseline.
+
+4. Improve Retrieval Quality
+Issue: Some hits are tangential (e.g., Animal Facility for microscopy).
+Improvement: Experiment with BM25 (via rank_bm25) instead of TF-IDF for better term weighting. Or preprocess corpus to remove short/irrelevant sections.
+
+
+5. General System Tweaks
+Increase TOP_K to 5 for more context, but test for over-retrieval.
+Add error handling in Ollama calls (e.g., retry on stream failure).
+For production, log and A/B test prompts.
+
+
+
+These changes would make answers more reliable and traceable. Test iteratively—rerun the notebook and compare JSON outputs. If you need code snippets or help implementing, provide details! See QA_RAG_hibrido.ipynb for the functions.
