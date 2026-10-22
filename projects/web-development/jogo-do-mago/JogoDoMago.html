@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Jogo do Mago</title>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      canvas {
+        display: block;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let playerName = "";
+      let currentQuestion = 0;
+      let score = 0;
+
+      const questions = [
+        {
+          question: "Qual destas plantas é usada para problemas digestivos?",
+          options: ["Camomila", "Alecrim", "Lavanda", "Sálvia"],
+          correct: 0,
+        },
+        {
+          question: "Qual tem propriedades calmantes?",
+          options: ["Hortelã", "Camomila", "Urtiga", "Tomilho"],
+          correct: 1,
+        },
+        {
+          question: "Qual destas é usada para tosse?",
+          options: ["Eucalipto", "Manjericão", "Orégãos", "Salsa"],
+          correct: 0,
+        },
+        {
+          question: "Qual ajuda na digestão?",
+          options: ["Funcho", "Alecrim", "Louro", "Cebola"],
+          correct: 0,
+        },
+        {
+          question: "Qual destas tem propriedades anti-inflamatórias?",
+          options: ["Gengibre", "Pimenta", "Cenoura", "Batata"],
+          correct: 0,
+        },
+        {
+          question: "Qual é um bom antioxidante?",
+          options: ["Mirtilo", "Maçã", "Banana", "Laranja"],
+          correct: 0,
+        },
+        {
+          question: "Qual destas é usada em infusões relaxantes?",
+          options: ["Valeriana", "Tomate", "Alface", "Couve"],
+          correct: 0,
+        },
+        {
+          question: "Qual tem propriedades antissépticas?",
+          options: ["Tomilho", "Salsa", "Aipo", "Rúcula"],
+          correct: 0,
+        },
+        {
+          question: "Qual é boa para gripes?",
+          options: ["Sabugueiro", "Espinafre", "Cenoura", "Beterraba"],
+          correct: 0,
+        },
+        {
+          question: "Qual pode ajudar a baixar febres?",
+          options: ["Tília", "Pera", "Limão", "Figo"],
+          correct: 0,
+        },
+      ];
+
+      class MenuScene extends Phaser.Scene {
+        constructor() {
+          super("MenuScene");
+        }
+
+        preload() {}
+
+        create() {
+          this.add.text(100, 100, "Bem-vindo ao Jogo do Mago!", {
+            fontSize: "24px",
+            fill: "#fff",
+          });
+
+          this.add.text(100, 150, "Insere o teu nome:", {
+            fontSize: "18px",
+            fill: "#fff",
+          });
+
+          const input = document.createElement("input");
+          input.type = "text";
+          input.placeholder = "Nome do jogador";
+          input.style.position = "absolute";
+          input.style.top = "200px";
+          input.style.left = "100px";
+          input.style.fontSize = "16px";
+          document.body.appendChild(input);
+
+          const startButton = this.add.text(100, 250, "Começar", {
+            fontSize: "22px",
+            backgroundColor: "#00ff00",
+            padding: { x: 10, y: 5 },
+          }).setInteractive();
+
+          startButton.on("pointerdown", () => {
+            playerName = input.value || "Jogador";
+            input.remove();
+            this.scene.start("QuizScene");
+          });
+        }
+      }
+
+      class QuizScene extends Phaser.Scene {
+        constructor() {
+          super("QuizScene");
+        }
+
+        create() {
+          this.optionTexts = [];
+          this.showQuestion();
+        }
+
+        showQuestion() {
+          this.clearScene();
+
+          if (currentQuestion >= questions.length) {
+            this.showFinalScore();
+            return;
+          }
+
+          const q = questions[currentQuestion];
+          this.add.text(50, 50, `Pergunta ${currentQuestion + 1}/10`, {
+            fontSize: "20px",
+            fill: "#fff",
+          });
+
+          this.add.text(50, 90, q.question, {
+            fontSize: "18px",
+            fill: "#fff",
+          });
+
+          q.options.forEach((opt, idx) => {
+            const option = this.add
+              .text(70, 150 + idx * 40, opt, {
+                fontSize: "18px",
+                backgroundColor: "#ffffff",
+                color: "#000",
+                padding: { x: 10, y: 5 },
+              })
+              .setInteractive();
+
+            option.on("pointerdown", () => {
+              if (idx === q.correct) {
+                score++;
+                option.setStyle({ backgroundColor: "#00cc00" });
+              } else {
+                option.setStyle({ backgroundColor: "#cc0000" });
+              }
+
+              this.time.delayedCall(800, () => {
+                currentQuestion++;
+                this.showQuestion();
+              });
+            });
+
+            this.optionTexts.push(option);
+          });
+        }
+
+        clearScene() {
+          this.children.removeAll();
+        }
+
+        showFinalScore() {
+          this.add.text(50, 100, `${playerName}, o teu resultado: ${score}/10`, {
+            fontSize: "22px",
+            fill: "#fff",
+          });
+
+          const restart = this.add.text(50, 160, "Jogar outra vez", {
+            fontSize: "20px",
+            backgroundColor: "#00aaff",
+            padding: { x: 10, y: 5 },
+          }).setInteractive();
+
+          restart.on("pointerdown", () => {
+            currentQuestion = 0;
+            score = 0;
+            this.scene.start("MenuScene");
+          });
+        }
+      }
+
+      const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        backgroundColor: "#222",
+        scene: [MenuScene, QuizScene],
+      };
+
+      const game = new Phaser.Game(config);
+    </script>
+  </body>
+</html>
