@@ -27,6 +27,7 @@ I hold a bachelor's degree in Applied Languages and am completing a master's in 
 | [`language-services`](./projects/language-services) | Translation and machine translation |
 | [`literary-studies`](./projects/literary-studies) | Literary analysis and criticism |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologies and knowledge representation |
+| [`digital-innovation`](./projects/digital-innovation) | Innovation, entrepreneurship, and business idea validation |
 | [`data-analysis`](./projects/data-analysis) | Data analysis and visualization |
 | [`web-development`](./projects/web-development) | UX/UI and web development |
 

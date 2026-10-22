@@ -27,6 +27,7 @@ Je suis titulaire d'une licence en Langues Appliquées et étudiant en master en
 | [`language-services`](./projects/language-services) | Traduction et traduction automatique |
 | [`literary-studies`](./projects/literary-studies) | Analyse et critique littéraire |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologies et représentation des connaissances |
+| [`digital-innovation`](./projects/digital-innovation) | Innovation, entrepreneuriat et validation d'idées d'affaires |
 | [`data-analysis`](./projects/data-analysis) | Analyse et visualisation de données |
 | [`web-development`](./projects/web-development) | UX/UI et développement web |
 

@@ -27,6 +27,7 @@ Sou licenciado em Línguas Aplicadas e mestrando em Humanidades Digitais, ambos 
 | [`language-services`](./projects/language-services) | Tradução e tradução automática |
 | [`literary-studies`](./projects/literary-studies) | Análise e crítica literária |
 | [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologias e representação de conhecimento |
+| [`digital-innovation`](./projects/digital-innovation) | Inovação, empreendedorismo e validação de ideias de negócio |
 | [`data-analysis`](./projects/data-analysis) | Análise e visualização de dados |
 | [`web-development`](./projects/web-development) | UX/UI e desenvolvimento web |
 
