@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Edição Digital do documento nº21 da obra <ex>História do Galego-Português</ex></title>
+            <respStmt>
+               <resp>Transcrito e editado por</resp>
+               <name>Joana Lucas Fernandes Azevedo</name>
+               <name>João Francisco Reis Garção</name>
+            </respStmt>
+         </titleStmt>
+         <publicationStmt>
+            <p>Publication Information</p>
+         </publicationStmt>
+         <sourceDesc>
+            <msDesc>
+               <msIdentifier>
+                  <repository>Archivo Histórico Nacional</repository>
+                  <collection>Institución - Monasterio de Santa María de Ferreira de Pallares (Guntín, Lugo, España)</collection>
+                  <idno>Pasta 1088, N.1</idno>
+                  <msName>Mandas testamentarias otorgadas por Fernando Nuñez de San Cibrao.</msName>
+               </msIdentifier>
+               <msContents>
+                  <p>Fernão Nunes, de San Cibrao, faz testamento de todos os seus bens.</p>
+               </msContents>
+               <physDesc>
+                  <objectDesc>
+                     <supportDesc>
+                        <extent>105 X 245 mm</extent>
+                     </supportDesc>
+                  </objectDesc>
+               </physDesc>
+               <history>
+                  <origin>
+                     <origPlace>San Cibrao</origPlace>
+                     <origDate>1258</origDate>
+                  </origin>
+               </history>
+            </msDesc>
+         </sourceDesc>
+      </fileDesc>
+  </teiHeader>
+  <text>
+      <body>
+         <figure>
+            <graphic url= "pagina_1_San_Cibrao.jpg"/>
+         </figure>
+         <p>
+            <lb n ="1"/>Sub era M.a CCa LXLa vja &amp; <expan>q<ex>uo</ex>t<ex>um</ex></expan> vj <expan>idu<ex>s</ex></expan> Aprilis.<lb/>
+            <lb n ="2"/>Sabuda cousa seia como eu, <persName>Ffernam Nunez de San Ci<lb/>
+            <lb n ="3"/>brão</persName>, <expan>ag<ex>r</ex>auado</expan> per <expan>g<ex>r</ex>aue</expan> ifirmidade, <expan>pe<ex>ro</ex></expan> <choice><sic>podero</sic><corr>poderoso</corr></choice> de meu<lb/>
+            <lb n ="4"/>siso, fazo mia mãda: mãdo mia carne a <persName>Sancta Maria de Fer<lb/>
+            <lb n ="5"/>reyra</persName> &amp; mãdo y <expan><ex>con</ex>migo</expan> un leyto &amp; j.a cozedra &amp; un<lb/>
+            <lb n ="6"/>feltro &amp; j.a colcha &amp; ij. fazeyróós &amp; ij lenzóós &amp; La <expan>s<ex>oldo</ex>s</expan> para<lb/>
+            <lb n ="7"/>pitãza; &amp; mãdo a essa obra de y XX <expan>sol<ex>dos</ex></expan>, áá obra de <persName>Lugo XX</persName><lb/>
+            <lb n ="8"/><expan>s<ex>oldo</ex>s</expan>, áás albergarias de <persName>Lugo X</persName>. <expan>sol<ex>dos</ex></expan>; mãdo <expan><ex>con</ex>prir</expan> un livro bri<lb/>
+            <lb n ="9"/>uial ĩ <placeName>San Cibrão</placeName> &amp; <expan>faz<ex>er</ex></expan> un caliz de arẽto de un uaso de<lb/>
+            <lb n ="10"/>arẽto <expan>q<ex>ue</ex></expan> ten un marco aos malatea de <placeName>Lugo</placeName>; V <expan>s<ex>oldo</ex>s</expan> a <persName>Johã<lb/>
+            <lb n ="11"/>Uermũez</persName>, <expan>cl<ex>er</ex>igo</expan> de <placeName>San Martinno</placeName>; XXX.a <expan>soldo<ex>s</ex></expan> <expan>q<ex>ue</ex></expan> dé ĩ un lugar que lle<lb/>
+            <lb n ="12"/>eu dizi &amp; ij <expan>sol<ex>dos</ex></expan> ĩ <expan>out<ex>r</ex>o</expan> &amp; V <expan>d<ex>i</ex>ne<ex>y</ex>ros</expan> &amp; de estes deuẽ se a dar iiij<lb/>
+            <lb n ="13"/>soldos ĩ algũa obra u el <expan>q<ex>ui</ex>ser</expan>; ĩ <expan>out<ex>r</ex>o</expan> lugar j. ouella; a <persName>Diego<lb/>
+               <lb n ="14"/><expan>P<ex>ere</ex>z</expan> de Treylan</persName> .j. <expan>sol<ex>do</ex></expan>; a <persName>Pedro Mũtouto</persName> iij <expan>t<ex>er</ex>zas</expan> de pan; a partes<lb/>
+            <lb n ="15"/>de <expan>Ma<ex>r</ex>tĩ</expan> Casado .vij. <expan>sol<ex>do</ex>s</expan>; a <expan>Fe<ex>r</ex>nam</expan> Paez do Outeyro .vij. <expan>sol<ex>dos</ex></expan>; a <placeName>San<lb/>
+            <lb n ="16"/>Saluador d’Ouedo</placeName> .j. <expan>sol<ex>do</ex></expan>; a <placeName>San Tiago</placeName> .j. <expan>sol<ex>do</ex></expan> ; a <placeName><expan>Sa<ex>n</ex>cta</expan> <expan>Ma<ex>ri</ex>na</expan> d’<expan>Ag<ex>u</ex>as</expan> <expan>Sa<ex>n</ex>ctas</expan></placeName><lb/>
+            <lb n ="17"/>j <expan>sol<ex>do</ex></expan>; áá <placeName>ponte d’Ouréés</placeName> .j. <expan>sol<ex>do</ex></expan>; <expan>pan<ex>os</ex></expan> de meu corpo, os meos<lb/>
+            <lb n ="18"/>ao arcipreste &amp; os meos ĩtre <persName>Johã <expan>U<ex>er</ex>mũez</expan></persName> &amp; <persName>Martĩ <expan>Ioha<ex>nis</ex></expan></persName> , meu ca<lb/>
+            <lb n ="19"/>pelan. Et fabã os <expan>q<ex>ue</ex></expan> fũ <expan>herdeyr<ex>os</ex></expan> ĩ <placeName>San Cibrão</placeName> <expan>q<ex>ue</ex></expan> esto <expan>q<ex>ue</ex></expan><lb/>
+            <lb n ="20"/>eu mãdo todo é de meu patrimonio: mãdo toda mia heredade<lb/>
+            <lb n ="21"/>a <placeName>Sancha Uermũez</placeName> su tal condizũ <expan>q<ex>ue</ex></expan> lle de <expan>seu<ex>s</ex></expan> fillos <expan>sẽpr<ex>e</ex></expan><lb/> 
+            <lb n ="22"/><expan>pe<ex>r</ex></expan> ela <expan>g<ex>u</ex>arime<ex>n</ex>to</expan> ĩ <expan>seu<ex>s</ex></expan> dias &amp; esto por seu auer <expan>q<ex>ue</ex></expan> lle eu despedi.<lb/>
+         </p>
+      </body>
+  </text>
+</TEI>
