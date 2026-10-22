@@ -1,0 +1,2 @@
+Sentiment(polarity=0.1267857142857143, subjectivity=0.525)
+

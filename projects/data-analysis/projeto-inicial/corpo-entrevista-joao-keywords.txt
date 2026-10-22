@@ -1,0 +1,31 @@
+   1 # CorpoEntrevistaJoao.txt
+   1 Angola
+   1 Avenida D. Afonso Henriques
+   1 Avenida D. João IV
+   1 Banco Santander
+   1 Banco Totta Standard
+   1 Cabinda Golf
+   1 Crédito Predial Português
+   1 Dr. João Afonso
+   1 Guimarães
+   1 Portugal
+   1 Santander Empresas
+   1 altura
+   1 anos
+   1 balcão
+   1 cidade bonita
+   1 cidade histórica
+   1 cidade pequena
+   1 cidade rica
+   1 cidade típica
+   1 clínicas privadas
+   1 computador diferente
+   1 consultórios médicos
+   1 dinheiro físico
+   1 gente
+   1 moeda estrangeira
+   1 médico X
+   1 pessoas pobres
+   1 rua Gil Vicente
+   1 trabalho administrativo
+   1 vida familiar

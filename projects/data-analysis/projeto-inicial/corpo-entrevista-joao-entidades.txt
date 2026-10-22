@@ -1,0 +1,117 @@
+   1 Angola	PROPN	LOC	conj	4427
+   1 Angola	PROPN	LOC	nsubj	4427
+   1 Angola	PROPN	LOC	obj	4427
+   1 Antas	PROPN	LOC	nmod	44194
+   1 Avenida D. Afonso Henriques	PROPN	LOC	nsubj	500022
+   1 Avenida D. João IV	PROPN	LOC	obl	500017
+   1 Azurém	PROPN	LOC	acl:relcl	187415
+   1 Azurém	PROPN	LOC	obl	187415
+   1 Açores	PROPN	LOC	conj	6396
+   1 Baixa da Banheira	PROPN	LOC	conj	500021
+   1 Banco	PROPN	Banco	nmod	1590
+   1 Banco Santander	PROPN	ORG	dep	500007
+   1 Banco Santander	PROPN	ORG	obl	500007
+   1 Banco Totta	PROPN	ORG	conj	500014
+   1 Banco Totta & Açores	PROPN	ORG	obl	500008
+   1 Banco Totta Standard	PROPN	ORG	conj	500005
+   1 Cabeleireiras	PROPN	LOC	ROOT	500024
+   1 Cabinda	PROPN	LOC	dep	42860
+   1 Cabinda	PROPN	LOC	nmod	42860
+   1 Cabinda	PROPN	LOC	nsubj	42860
+   1 Cabinda	PROPN	LOC	obl:agent	42860
+   1 Casei	PROPN	Casei	nsubj	99000
+   1 Casei-me	PROPN	ORG	ROOT	215101
+   1 Centro de Saúde	PROPN	LOC	conj	500026
+   1 Comunidade Europeia	PROPN	ORG	nmod	500015
+   1 Cruz Verde	PROPN	ORG	obj	500028
+   1 Crédito Predial Português	PROPN	MISC	obj	500016
+   1 Cuito	PROPN	LOC	dep	167661
+   1 Douro	PROPN	LOC	nmod	9660
+   1 Douro	PROPN	LOC	obl	9660
+   1 EUA	PROPN	LOC	obl	1108
+   1 Europa	PROPN	LOC	obl	1018
+   1 Farmácia	PROPN	LOC	conj	10445
+   1 França	PROPN	LOC	obl	1274
+   1 Gil Vicente	PROPN	LOC	flat:name	500034
+   1 Golf	PROPN	Golf	flat:name	17362
+   1 Guimarães	PROPN	LOC	ccomp	4549
+   1 Guimarães	PROPN	LOC	nmod	4549
+   1 Hospital Novo	PROPN	LOC	obl	500030
+   1 Hospital Novo	PROPN	ORG	nsubj	500030
+   1 Hospital Velho	PROPN	LOC	obj	500029
+   1 Hospital Velho	PROPN	LOC	obl	500029
+   1 Hospital da Luz	PROPN	LOC	obj	500037
+   1 Hospital do Estado	PROPN	LOC	obj	500036
+   1 Iam	PROPN	Iam	ROOT	93670
+   1 Itália	PROPN	LOC	nmod	1958
+   1 João	PROPN	João	nmod	426
+   1 João	PROPN	LOC	nmod	500019
+   1 João	PROPN	PER	appos	426
+   1 João:	PROPN	MISC	nmod	500012
+   1 Laboratório de Análises	PROPN	ORG	conj	500025
+   1 Lobito	PROPN	LOC	nmod	79936
+   1 Malas	PROPN	LOC	nsubj	52566
+   1 Marine Service	PROPN	ORG	dep	500003
+   1 Misericórdia	PROPN	LOC	nmod	11113
+   1 Monte Largo	PROPN	LOC	obl	500023
+   1 NCR	PROPN	ORG	ROOT	140342
+   1 Nasceste	PROPN	LOC	ROOT	345049
+   1 Netbanco	PROPN	LOC	obl	500018
+   1 Nixdorf	PROPN	ORG	ROOT	419999
+   1 Nixdorf	PROPN	ORG	obl	419999
+   1 Norte de Angola	PROPN	LOC	nmod	500002
+   1 Nossa Senhora de Oliveira	PROPN	LOC	obl	500031
+   1 Osvaldinho	PROPN	PER	ROOT	176071
+   1 Osvaldinho	PROPN	PER	nmod	176071
+   1 Pastelarias	PROPN	LOC	conj	221319
+   1 Pevidém	PROPN	LOC	acl:relcl	210320
+   1 Pevidém	PROPN	LOC	conj	210320
+   1 Porto	PROPN	LOC	obl	668
+   1 Portugal	PROPN	LOC	acl:relcl	463
+   1 Portugal	PROPN	LOC	nsubj	463
+   1 Portugal	PROPN	LOC	obj	463
+   1 Rosa Reis	PROPN	PER	appos	500000
+   1 Rosa Reis	PROPN	PER	nsubj	500000
+   1 Santander	PROPN	LOC	nsubj	13016
+   1 Santander	PROPN	ORG	ROOT	13016
+   1 Santander	PROPN	ORG	nsubj	13016
+   1 Santander	PROPN	PER	nmod	13016
+   1 Santander Empresas	PROPN	ORG	acl:relcl	500013
+   1 Saíam	PROPN	Saíam	ROOT	315580
+   1 Senhora de Oliveira	PROPN	LOC	ROOT	500032
+   1 Silva Porto	PROPN	LOC	obl	500009
+   1 Silva Porto	PROPN	PER	obl	500009
+   1 Supermercados	PROPN	LOC	conj	25858
+   1 Tarabalhaste	PROPN	LOC	appos	500010
+   1 Toural	PROPN	LOC	obj	211705
+   1 X	PROPN	PER	dep	1994
+   1 rua	PROPN	rua	obl	997
+   1 tu	PROPN	tu	conj	2642
+   1 tu	PROPN	tu	obj	2642
+   1 unidos	PROPN	Unidos	nsubj	9202
+   2 Angola	PROPN	LOC	nmod	4427
+   2 Banco Totta Standard	PROPN	ORG	obl	500005
+   2 Banco de Crédito	PROPN	ORG	obl	500004
+   2 Benguela	PROPN	LOC	nmod	42119
+   2 Cidade Europeia da Cultura	PROPN	LOC	appos	500020
+   2 Guimarães	PROPN	LOC	obj	4549
+   2 Gémeos Castro	PROPN	PER	appos	500027
+   2 Internet	PROPN	MISC	obl	1473
+   2 João	PROPN	João	nsubj	426
+   2 João	PROPN	PER	nsubj	426
+   2 Porto	PROPN	LOC	nmod	668
+   2 Santander	PROPN	LOC	nmod	13016
+   2 Santander Empresas	PROPN	ORG	obj	500013
+   2 Silva Porto	PROPN	LOC	nmod	500009
+   2 em Portugal	PROPN	LOC	nmod	500001
+   3 em Portugal	PROPN	LOC	obl	500001
+   4 Cabinda	PROPN	LOC	obl	42860
+   4 Guimarães	PROPN	LOC	nsubj	4549
+   4 Lobito	PROPN	LOC	obl	79936
+   4 Portugal	PROPN	LOC	nmod	463
+   6 Guimarães	PROPN	LOC	obl	4549
+   6 Portugal	PROPN	LOC	obl	463
+   8 Angola	PROPN	LOC	obl	4427
+  18 João	PROPN	João	ROOT	426
+  30 João	PROPN	PER	ROOT	426
+  54 Rosa Reis	PROPN	PER	ROOT	500000
