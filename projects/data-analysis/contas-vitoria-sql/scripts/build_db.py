@@ -167,6 +167,13 @@ def main():
              {"valor_original", "valor_reexpresso"})
     carregar("treinadores.csv", "treinador", ["periodo", "treinador", "tipo"], set())
 
+    for r in ler_csv("taxas_referencia.csv"):
+        con.execute("INSERT INTO taxa_referencia VALUES (?, ?, ?, ?)",
+                    (r["data"], r["indicador"], float(r["taxa_pct"]), r["fonte"]))
+    for r in ler_csv("bce_taxas.csv"):
+        con.execute("INSERT INTO bce_taxa VALUES (?, ?, ?)",
+                    (r["data_efeito"], float(r["facilidade_deposito"]), float(r["refinanciamento"])))
+
     con.executescript((SQL / "03_vistas.sql").read_text(encoding="utf-8"))
     con.commit()
 

@@ -25,7 +25,7 @@
 
 Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.
 
-Sobre essa base, **50 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
 
 **✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
@@ -71,9 +71,9 @@ Sobre essa base, **50 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Composição das receitas](graficos/04_composicao_receitas.png)
 
-**6. Gastar mais em salários não garantiu melhores classificações.** A correlação entre gastos com pessoal e lugar na Liga é fraca (−0,3). O 4.º lugar de 2016/17 custou 6,8 M€ em pessoal; o 7.º lugar de 2020/21 custou 20,7 M€.
+**6. Gastar mais não garantiu melhores classificações.** Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.
 
-![Salários vs. classificação](graficos/06_salarios_vs_classificacao.png)
+![Despesas vs. classificação](graficos/16_despesas_vs_classificacao.png)
 
 **7. A estrutura cresceu mais depressa do que a equipa.** A SAD passou de 59 funcionários em 2012/13 para **229 em 2024/25**, um recorde. Os jogadores quase duplicaram (42 → 82), mas o restante pessoal (treinadores, staff e apoio) multiplicou-se por mais de 8 (17 → 147). Hoje há 1,8 não-jogadores por cada jogador, contra 0,4 em 2012/13. A remuneração média por jogador subiu de 80 mil € (2016/17) para 134 mil € (2024/25).
 
@@ -83,7 +83,21 @@ Sobre essa base, **50 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
 
-Os resultados completos das 50 consultas estão em [`resultados.md`](resultados.md).
+**9. O Vitória paga juros muito acima do mercado.** Em 2024/25, a taxa implícita da dívida foi de 14,6%, contra 2,6% da Euribor a 12 meses e 3,0% das obrigações do Estado português: um spread de 12 pontos percentuais. Em 2019/20, com juros negativos na zona euro, a SAD pagou 9,6%, 21 vezes a taxa do Estado. À taxa média do crédito às empresas em Portugal, os juros seriam 3,1 a 3,5 M€ mais baixos por ano.
+
+![Taxas de juro](graficos/15_taxas_de_juro.png)
+
+**10. A SAD vende sempre mais em jogadores do que fatura na operação.** Em todas as épocas desde 2017/18, as vendas brutas de jogadores superaram as receitas de bilheteira, TV, patrocínios e sócios. Em 2024/25 foram 2,19 € de vendas por cada euro de receita, e a média de três épocas subiu de 1,09 € para 1,89 €.
+
+![Vendas vs. receitas](graficos/17_vendas_vs_receitas.png)
+
+**11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.** O défice antes de vendas foi de 20,9 M€ por época (média 2022/23–2024/25). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quarto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 21 M€ para 13 M€ por época.
+
+![Centralização e equilíbrio](graficos/18_centralizacao_equilibrio.png)
+
+O [painel de indicadores](analise-tecnica.md#18-painel-de-indicadores-financeiros) junta a margem corrente (negativa em todas as épocas), a rendibilidade do ativo, a dívida face às receitas e o cash flow operacional.
+
+Os resultados completos das 55 consultas estão em [`resultados.md`](resultados.md).
 
 <a id="relatórios"></a>
 <img src="graficos/cabecalhos/04_relatorios.png" alt="Relatórios" width="100%">
@@ -91,13 +105,14 @@ Os resultados completos das 50 consultas estão em [`resultados.md`](resultados.
 | Relatório | O que contém |
 |:---|:---|
 | **[Análise estratégica](analise-estrategica.md)** | Diagnóstico, finanças vs. desempenho desportivo, enquadramento económico e 12 recomendações com cenários |
-| **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva |
+| **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas |
 | **[Verificação das fontes](verificacao-fontes.md)** | Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias |
 
 | | |
 |:---:|:---:|
 | ![Reservas ocultas](graficos/10_reservas_ocultas.png) | ![Rácio de custos do plantel](graficos/12_racio_custos_plantel_uefa.png) |
 | ![Centralização por lugar](graficos/13_centralizacao_por_lugar.png) | ![Custo por ponto](graficos/14_custo_por_ponto.png) |
+| ![Painel de indicadores](graficos/19_painel_indicadores.png) | ![Salários vs. classificação](graficos/06_salarios_vs_classificacao.png) |
 
 <a id="modelo-de-dados"></a>
 <img src="graficos/cabecalhos/05_modelo-de-dados.png" alt="Modelo de dados" width="100%">
@@ -158,6 +173,7 @@ erDiagram
 | `auditoria` | Opinião do auditor, ênfases e incertezas materiais por época |
 | `reexpressao` | Valores originais e reexpressos de 2024/25 |
 | `treinador` | Treinadores principais e interinos desde 2015 |
+| `taxa_referencia` · `bce_taxa` | Euribor a 12 meses, obrigações do Estado a 10 anos, crédito a empresas em Portugal e taxas diretoras do BCE |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
 | `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho (SAD: valores dos R&C) |
 | `cash_flow` | Fluxos operacional, de investimento e de financiamento (SAD) |
@@ -168,6 +184,7 @@ erDiagram
 | `divida` | Dívida da SAD por credor e maturidade (30/06/2025) |
 | `fonte` · `evento` | Proveniência dos dados e acontecimentos de cada época |
 | `v_dr` · `v_kpis` · `v_resultado_por_entidade` | Vistas: pivot da DR, indicadores e comparação entre entidades |
+| `v_taxas_epoca` | Vista: taxas de referência e taxa implícita do Vitória por época (julho a junho) |
 
 Os gastos são guardados com sinal negativo, tal como nas demonstrações financeiras. Valores não disponíveis ficam como `NULL`.
 
@@ -190,6 +207,9 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Prazos médios e fundo de maneio | consulta 38 |
 | Simulação de repartição com CTE recursiva (1.º a 18.º lugar) | consulta 48 |
 | Agregação condicional (`SUM(CASE …)`, `COUNT(DISTINCT)`) | consultas 44 e 50 |
+| Média ponderada por dias com `LEAD` e `julianday` (taxa do BCE por época) | vista `v_taxas_epoca` |
+| Regressão linear por mínimos quadrados, R² e resíduos em SQL | consulta 53 |
+| Cenários cruzados (`VALUES` × `VALUES`) | consulta 55 |
 
 <a id="como-usar"></a>
 <img src="graficos/cabecalhos/06_como-usar.png" alt="Como usar" width="100%">
@@ -202,7 +222,7 @@ Para reconstruir tudo do zero:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 50 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
@@ -230,7 +250,7 @@ contas-vitoria-sql/
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     50 consultas de análise
+│   └── 04_analises.sql     55 consultas de análise
 ├── scripts/
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
@@ -244,7 +264,7 @@ contas-vitoria-sql/
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
-├── analise-tecnica.md      17 conceitos financeiros e desportivos
+├── analise-tecnica.md      17 conceitos, indicadores, juros e cenários
 ├── verificacao-fontes.md   Conferência com os Relatórios e Contas
 └── vsc_contas.db           Base de dados pronta a usar
 ```
@@ -252,7 +272,7 @@ contas-vitoria-sql/
 <a id="fontes-e-limitações"></a>
 <img src="graficos/cabecalhos/07_fontes-e-limitacoes.png" alt="Fontes e limitações" width="100%">
 
-Os dados vêm de duas fontes:
+Os dados financeiros vêm de duas fontes:
 
 - **Relatórios e Contas da Vitória SC – Futebol, SAD de 2012/13 a 2024/25** ([vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/)): balanço, dívida financeira, juros, número de funcionários e gastos com pessoal da SAD, verificados documento a documento (ver [verificação das fontes](verificacao-fontes.md)).
 - **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial: demonstração de resultados detalhada, composição das receitas, transferências, Clube e consolidado. Os balanços da SAD de 2014/15 a 2016/17 publicados no site estavam errados e foram substituídos pelos dos R&C.
@@ -268,6 +288,7 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 - **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `reexpressao` (consulta 36). Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
 - **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.
 - **Juros.** A tabela `balanco_sad_rc` guarda os juros suportados brutos, tal como nos R&C. A rubrica "juros" da demonstração de resultados (origem: VSC Contas) é, nalgumas épocas, líquida dos juros obtidos. A taxa de juro implícita inclui encargos de factoring e de antecipação de receitas, por isso fica acima da taxa nominal dos empréstimos.
+- **Taxas de referência.** BCE (taxas diretoras), euribor-rates.eu (Euribor a 12 meses, primeiro dia útil de cada mês), OCDE via FRED (obrigações do Estado português a 10 anos) e Banco de Portugal (crédito novo a empresas, só os meses que foi possível recolher). A taxa implícita do Vitória não é diretamente comparável a uma taxa nominal, porque inclui comissões de factoring e antecipação.
 - **Funcionários.** São números médios anuais. Em 2012/13 são os funcionários transferidos para a SAD em abril de 2013 (época parcial). A categoria "pessoal de apoio ao futebol profissional" só existe desde 2021/22.
 
 <a id="identidade-visual"></a>

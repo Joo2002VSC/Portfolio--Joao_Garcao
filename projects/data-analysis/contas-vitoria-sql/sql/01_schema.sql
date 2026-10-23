@@ -302,4 +302,20 @@ CREATE TABLE treinador (
     tipo         TEXT NOT NULL CHECK (tipo IN ('principal', 'interino'))
 );
 
+-- Taxas de juro de referência (mercado e crédito), em percentagem.
+CREATE TABLE taxa_referencia (
+    data       TEXT NOT NULL,                  -- AAAA-MM-DD (mês da observação)
+    indicador  TEXT NOT NULL CHECK (indicador IN ('euribor_12m', 'ot_portugal_10a', 'credito_empresas_pt')),
+    taxa_pct   REAL NOT NULL,
+    fonte      TEXT NOT NULL,
+    PRIMARY KEY (data, indicador)
+);
+
+-- Alterações das taxas diretoras do BCE (em vigor a partir de data_efeito).
+CREATE TABLE bce_taxa (
+    data_efeito          TEXT PRIMARY KEY,
+    facilidade_deposito  REAL NOT NULL,
+    refinanciamento      REAL NOT NULL
+);
+
 CREATE INDEX idx_dr_rubrica ON demonstracao_resultados (rubrica_id, epoca_id);

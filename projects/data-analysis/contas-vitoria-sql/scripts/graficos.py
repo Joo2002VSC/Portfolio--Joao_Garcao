@@ -87,10 +87,10 @@ def figura(titulo, subtitulo, altura=5.6, base=0.14):
     return fig, ax
 
 
-def guardar(fig, nome):
+def guardar(fig, nome, fonte=FONTE):
     fig.patches.append(Rectangle((0, 0), 1, 0.006, transform=fig.transFigure,
                                  color=AMARELO, zorder=0))
-    fig.text(0.035, 0.03, FONTE, fontsize=8, color=CINZA_ESCURO)
+    fig.text(0.035, 0.03, fonte, fontsize=8, color=CINZA_ESCURO)
     fig.savefig(OUT / nome, dpi=170)
     plt.close(fig)
     print(f"  {nome}")
@@ -513,6 +513,189 @@ def custo_por_ponto(con):
     guardar(fig, "14_custo_por_ponto.png")
 
 
+def pct(v, casas=1):
+    return f"{v:.{casas}f}".replace(".", ",").replace("-", "−") + "%"
+
+
+def taxas_juro(con):
+    rows = q(con, """SELECT epoca_id, bce_deposito, euribor_12m, ot_portugal_10a,
+                            credito_empresas_pt, vitoria_implicita
+                     FROM v_taxas_epoca WHERE epoca_id BETWEEN '2016/17' AND '2025/26'
+                     ORDER BY epoca_id""")
+    ep = [r[0] for r in rows]
+    xs = range(len(ep))
+    fig, ax = figura("O Vitória paga juros muito acima do mercado",
+                     "Médias por época (julho a junho) · Taxa implícita da SAD = juros suportados ÷ dívida financeira média")
+    ax.plot(xs, [r[1] for r in rows], color=CINZA, linewidth=2, label="BCE · facilidade de depósito")
+    ax.plot(xs, [r[2] for r in rows], color=CINZA_ESCURO, linewidth=2, linestyle=(0, (4, 2)),
+            label="Euribor a 12 meses")
+    ax.plot(xs, [r[3] for r in rows], color=PRETO, linewidth=1.6, linestyle=(0, (1, 1.6)),
+            label="Estado português · obrigações a 10 anos")
+    pts = [(i, r[4]) for i, r in enumerate(rows) if r[4] is not None]
+    ax.scatter([p[0] for p in pts], [p[1] for p in pts], marker="s", s=46, color=BRANCO,
+               edgecolor=PRETO, linewidth=1.4, zorder=4,
+               label="Empresas em Portugal · crédito novo (meses disponíveis)")
+    vi = [(i, r[5]) for i, r in enumerate(rows) if r[5] is not None]
+    ax.plot([p[0] for p in vi], [p[1] for p in vi], color=PRETO, linewidth=3.2, zorder=5)
+    ax.scatter([p[0] for p in vi], [p[1] for p in vi], s=90, color=AMARELO, edgecolor=PRETO,
+               linewidth=1.6, zorder=6, label="Vitória SC SAD · taxa implícita")
+    for i, v in vi:
+        ax.annotate(pct(v), (i, v), xytext=(0, 10), textcoords="offset points", ha="center",
+                    fontsize=9, fontweight="bold")
+    ax.axhline(0, color=PRETO, linewidth=0.8)
+    ax.set_xticks(list(xs), ep)
+    ax.set_ylim(-1.5, 17.5)
+    ax.set_yticks(range(0, 18, 3))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.legend(loc="upper left", fontsize=9, ncol=2)
+    guardar(fig, "15_taxas_de_juro.png",
+            "Fontes: R&C da Vitória SC SAD · BCE · euribor-rates.eu · OCDE/FRED · Banco de Portugal · Análise: João Garção")
+
+
+def dispersao_regressao(con):
+    rows = q(con, """SELECT d.epoca_id, -(d.gastos_pessoal + d.fse + d.depreciacoes) / 1e6, s.posicao_liga,
+                            s.fase_europeia
+                     FROM v_dr d JOIN desempenho_desportivo s ON s.epoca_id = d.epoca_id
+                     WHERE d.entidade_id = 'SAD' AND d.gastos_pessoal IS NOT NULL AND d.fse IS NOT NULL
+                     ORDER BY d.epoca_id""")
+    xs = [r[1] for r in rows]
+    ys = [r[2] for r in rows]
+    n = len(xs)
+    mx, my = sum(xs) / n, sum(ys) / n
+    b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
+    a = my - b * mx
+    r2 = 1 - sum((y - (a + b * x)) ** 2 for x, y in zip(xs, ys)) / sum((y - my) ** 2 for y in ys)
+    fig, ax = figura("Despesas da SAD vs. classificação",
+                     "Despesas = pessoal + FSE + depreciações e amortizações · Reta de regressão linear (mínimos quadrados), 12 épocas")
+    lim = (5, 40)
+    ax.plot(lim, [a + b * lim[0], a + b * lim[1]], color=PRETO, linewidth=2, zorder=2)
+    for ep, x, y, fase in rows:
+        europa = fase in ("Fase de grupos", "Oitavos de final")
+        ax.scatter(x, y, s=150, color=AMARELO if europa else BRANCO, edgecolor=PRETO,
+                   linewidth=1.6, zorder=3)
+        desvio = {"2021/22": (0, 13), "2024/25": (0, 13), "2019/20": (0, -19),
+                  "2013/14": (14, -3), "2015/16": (-14, -3)}.get(ep, (0, -17))
+        ha = "left" if desvio[0] > 0 else "right" if desvio[0] < 0 else "center"
+        ax.annotate(ep, (x, y), xytext=desvio, textcoords="offset points",
+                    ha=ha, va="center", fontsize=8.5, color=TEXTO_2)
+    num = lambda v, c: f"{v:.{c}f}".replace(".", ",")
+    eq = (f"Lugar previsto = {num(a, 2)} {'−' if b < 0 else '+'} {num(abs(b), 3)} × despesas (M€)\n"
+          f"R² = {num(r2, 2)}: as despesas explicam só {r2 * 100:.0f}% das diferenças de lugar.\n"
+          f"Cada 10 M€ a mais valem, em média, {num(abs(b) * 10, 1)} lugares.")
+    ax.text(0.985, 0.05, eq, transform=ax.transAxes, ha="right", va="bottom", fontsize=9.5,
+            bbox=dict(boxstyle="square,pad=0.6", facecolor=CINZA_CLARO, edgecolor="none"))
+    ax.scatter([], [], s=110, color=AMARELO, edgecolor=PRETO, label="Fase de grupos europeia ou mais")
+    ax.scatter([], [], s=110, color=BRANCO, edgecolor=PRETO, label="Restantes épocas")
+    ax.legend(loc="upper left")
+    ax.invert_yaxis()
+    ax.set_ylim(11.2, 2.8)
+    ax.set_yticks(range(3, 12), [f"{i}.º" for i in range(3, 12)])
+    ax.set_xlim(*lim)
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f} M€"))
+    ax.grid(axis="both")
+    ax.set_xlabel("Despesas da SAD na época")
+    ax.set_ylabel("Lugar na Liga")
+    guardar(fig, "16_despesas_vs_classificacao.png")
+
+
+def vendas_vs_receitas(con):
+    rows = q(con, """SELECT t.epoca_id, d.vendas_servicos, t.vendas_brutas
+                     FROM transferencias t JOIN v_dr d ON d.epoca_id = t.epoca_id AND d.entidade_id = 'SAD'
+                     WHERE t.entidade_id = 'SAD' AND d.vendas_servicos IS NOT NULL ORDER BY t.epoca_id""")
+    ep = [r[0] for r in rows]
+    fig, ax = figura("A SAD vende mais em jogadores do que fatura na operação",
+                     "Receitas da operação (vendas e serviços) vs. vendas brutas de jogadores · Rótulo: euros de vendas por cada euro de receita")
+    barras_agrupadas(ax, ep, [("Receitas da operação", [r[1] for r in rows], CINZA),
+                              ("Vendas brutas de jogadores", [r[2] for r in rows], AMARELO)])
+    for i, (e, rec, ven) in enumerate(rows):
+        ax.text(i, max(rec, ven) + 1.3e6, f"{ven / rec:.2f}×".replace(".", ","), ha="center",
+                fontsize=10, fontweight="bold", **{"family": FAMILIA_TITULO})
+    ax.set_ylim(0, 56e6)
+    ax.legend(loc="upper left")
+    guardar(fig, "17_vendas_vs_receitas.png")
+
+
+def centralizacao_equilibrio(con):
+    defice = q(con, """SELECT AVG(rl_sem_mais_valias) FROM v_kpis
+                       WHERE entidade_id = 'SAD' AND epoca_id BETWEEN '2022/23' AND '2024/25'""")[0][0]
+    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos TV' AND epoca_id='2024/25'")[0][0]
+    cen = []
+    for contrato in (200e6, 250e6, 300e6):
+        for n in (4, 6, 9):
+            novo = contrato * 0.9 * 0.332 / 18 + contrato * 0.9 * 0.442 * (19 - n) / 171
+            cen.append((f"{contrato / 1e6:.0f} M€ · {n}.º lugar", novo - tv))
+    fig, ax = figura("Centralização: ajuda, mas não fecha o défice sozinha",
+                     f"Défice antes de vendas de jogadores: {euros_m(defice, 1)} por época (média 2022/23–2024/25) · Ganho face aos {euros_m(tv, 1)} de TV atuais",
+                     altura=6.2, base=0.2)
+    pos = ax.get_position()
+    ax.set_position([0.17, pos.y0, 0.8, pos.height])
+    ys = range(len(cen))[::-1]
+    total = -defice
+    for y, (rot, ganho) in zip(ys, cen):
+        ax.barh(y, ganho, color=AMARELO, edgecolor=PRETO, linewidth=0.8, height=0.62)
+        ax.barh(y, total - ganho, left=ganho, color=CINZA_CLARO, height=0.62)
+        ax.text(ganho + 0.3e6, y, f"+{euros_m(ganho, 1)} · {ganho / total * 100:.0f}%".replace(".", ","),
+                va="center", fontsize=9, fontweight="bold")
+        ax.text(total - 0.3e6, y, f"faltam {euros_m(total - ganho, 1)}", va="center", ha="right",
+                fontsize=9, color=TEXTO_2)
+    ax.set_yticks(list(ys), [c[0] for c in cen], fontsize=9.5)
+    ax.set_xlim(0, total)
+    ax.set_xticks([0, 4e6, 8e6, 12e6, 16e6, 20e6])
+    ax.xaxis.set_major_formatter(eixo_m)
+    ax.grid(axis="x")
+    ax.set_axisbelow(True)
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(facecolor=AMARELO, edgecolor=PRETO, label="Coberto pela centralização"),
+                       Patch(facecolor=CINZA_CLARO, label="Ainda a cobrir com vendas de jogadores ou cortes")],
+              loc="upper center", bbox_to_anchor=(0.42, -0.08), ncol=2)
+    guardar(fig, "18_centralizacao_equilibrio.png")
+
+
+def painel_indicadores(con):
+    rows = q(con, """SELECT d.epoca_id,
+                       100.0 * (d.vendas_servicos + d.fse + d.gastos_pessoal) / d.vendas_servicos,
+                       100.0 * d.resultado_liquido / b.ativo_total,
+                       1.0 * (r.financiamentos_nc + r.financiamentos_c) / d.vendas_servicos,
+                       100.0 * c.operacional / d.vendas_servicos
+                     FROM v_dr d
+                     JOIN balanco b ON b.entidade_id = 'SAD' AND b.epoca_id = d.epoca_id
+                     LEFT JOIN balanco_sad_rc r ON r.epoca_id = d.epoca_id
+                     LEFT JOIN cash_flow c ON c.entidade_id = 'SAD' AND c.epoca_id = d.epoca_id
+                     WHERE d.entidade_id = 'SAD' AND d.vendas_servicos IS NOT NULL AND d.epoca_id >= '2016/17'
+                     ORDER BY d.epoca_id""")
+    ep = [r[0][2:] for r in rows]
+    fig, ax0 = figura("Painel de indicadores financeiros",
+                      "SAD · 2016/17 a 2024/25 · Percentagens sobre as receitas da operação (vendas e serviços), salvo indicação",
+                      altura=7.4, base=0.1)
+    ax0.remove()
+    paineis = [
+        ("Margem corrente sem vendas", "(receitas − pessoal − FSE) ÷ receitas", 1, "%"),
+        ("Rendibilidade do ativo", "resultado líquido ÷ ativo", 2, "%"),
+        ("Dívida financeira ÷ receitas", "vezes as receitas anuais", 3, "x"),
+        ("Cash flow operacional", "fluxo de caixa da operação ÷ receitas", 4, "%"),
+    ]
+    pos = [(0.07, 0.5), (0.56, 0.5), (0.07, 0.1), (0.56, 0.1)]
+    for (tit, sub, col, un), (x0, y0) in zip(paineis, pos):
+        ax = fig.add_axes([x0, y0, 0.4, 0.25])
+        vals = [r[col] for r in rows]
+        cores = [AMARELO if (v or 0) >= 0 else PRETO for v in vals] if un == "%" else [PRETO] * len(vals)
+        if un == "x":
+            cores = [AMARELO if v < 1 else PRETO for v in vals]
+        ax.bar(range(len(vals)), vals, color=cores, edgecolor=PRETO, linewidth=0.6, width=0.7)
+        ax.axhline(0, color=PRETO, linewidth=1)
+        ax.set_xticks(range(len(ep)), ep, fontsize=8.5)
+        ax.tick_params(axis="y", labelsize=8.5)
+        fmt = (lambda v, _: f"{v:.0f}%") if un == "%" else (lambda v, _: f"{v:.1f}×".replace(".", ","))
+        ax.yaxis.set_major_formatter(FuncFormatter(fmt))
+        ax.set_title(tit.upper(), loc="left", fontsize=10.5, pad=20, **TITULO)
+        ax.text(0, 1.04, sub, transform=ax.transAxes, fontsize=8.5, color=TEXTO_2)
+        ultimo = vals[-1]
+        ax.annotate(pct(ultimo, 0) if un == "%" else f"{ultimo:.1f}×".replace(".", ","),
+                    (len(vals) - 1, ultimo), xytext=(0, 5 if ultimo >= 0 else -12),
+                    textcoords="offset points", ha="center", fontsize=8.5, fontweight="bold")
+    guardar(fig, "19_painel_indicadores.png")
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     con = sqlite3.connect(DB)
@@ -532,6 +715,11 @@ def main():
     racio_uefa(con)
     centralizacao(con)
     custo_por_ponto(con)
+    taxas_juro(con)
+    dispersao_regressao(con)
+    vendas_vs_receitas(con)
+    centralizacao_equilibrio(con)
+    painel_indicadores(con)
 
 
 if __name__ == "__main__":

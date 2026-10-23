@@ -803,3 +803,129 @@ SELECT
     ROUND(COUNT(*) / 11.0, 1)                            AS media_por_epoca_2015_16_a_2025_26
 FROM treinador
 WHERE periodo NOT LIKE '2011%';
+
+
+-- @q 51. Painel de indicadores financeiros da SAD
+-- Margem corrente sem vendas = (receitas - pessoal - FSE) / receitas: o que a operação
+-- gera antes de vender jogadores. A margem operacional já inclui as mais-valias.
+SELECT
+    d.epoca_id                                                                  AS epoca,
+    ROUND(100.0 * (d.vendas_servicos + d.fse + d.gastos_pessoal) / d.vendas_servicos, 1) AS margem_corrente_sem_vendas_pct,
+    ROUND(100.0 * d.resultado_operacional / d.vendas_servicos, 1)               AS margem_operacional_com_vendas_pct,
+    ROUND(100.0 * d.resultado_liquido / b.ativo_total, 1)                       AS rendibilidade_ativo_pct,
+    ROUND(1.0 * d.vendas_servicos / b.ativo_total, 2)                           AS rotacao_ativo,
+    ROUND(100.0 * -d.fse / d.vendas_servicos, 1)                                AS fse_receitas_pct,
+    ROUND(1.0 * (r.financiamentos_nc + r.financiamentos_c) / d.vendas_servicos, 2) AS divida_fin_receitas,
+    ROUND(100.0 * c.operacional / d.vendas_servicos, 1)                         AS cash_flow_operacional_pct
+FROM v_dr d
+JOIN balanco b         ON b.entidade_id = 'SAD' AND b.epoca_id = d.epoca_id
+LEFT JOIN balanco_sad_rc r ON r.epoca_id = d.epoca_id
+LEFT JOIN cash_flow c  ON c.entidade_id = 'SAD' AND c.epoca_id = d.epoca_id
+WHERE d.entidade_id = 'SAD' AND d.vendas_servicos IS NOT NULL AND d.epoca_id >= '2016/17'
+ORDER BY d.epoca_id;
+
+
+-- @q 52. Taxas de juro: o que o Vitória paga vs. referências de mercado
+-- Médias por época (julho a junho). Spread = taxa implícita do Vitória - referência.
+SELECT
+    epoca_id                                            AS epoca,
+    bce_deposito,
+    euribor_12m,
+    ot_portugal_10a,
+    credito_empresas_pt,
+    vitoria_implicita,
+    ROUND(vitoria_implicita - euribor_12m, 1)           AS spread_vs_euribor,
+    ROUND(vitoria_implicita - ot_portugal_10a, 1)       AS spread_vs_estado_portugues,
+    ROUND(vitoria_implicita / NULLIF(ot_portugal_10a, 0), 1) AS vezes_estado_portugues
+FROM v_taxas_epoca
+WHERE epoca_id BETWEEN '2016/17' AND '2025/26'
+ORDER BY epoca_id;
+
+
+-- @q 53. Despesas da SAD vs. classificação: regressão linear (mínimos quadrados)
+-- Despesas = gastos com pessoal + FSE + depreciações e amortizações.
+-- Lugar previsto = a + b × despesas (em M€). O resíduo mostra quem ficou acima
+-- (negativo = melhor lugar do que o previsto) ou abaixo do esperado.
+WITH x AS (
+    SELECT d.epoca_id,
+           -(d.gastos_pessoal + d.fse + d.depreciacoes) / 1e6 AS despesas_m,
+           s.posicao_liga AS lugar
+    FROM v_dr d
+    JOIN desempenho_desportivo s ON s.epoca_id = d.epoca_id
+    WHERE d.entidade_id = 'SAD' AND d.gastos_pessoal IS NOT NULL AND d.fse IS NOT NULL
+),
+m AS (SELECT AVG(despesas_m) mx, AVG(lugar) my, COUNT(*) n FROM x),
+reta AS (
+    SELECT SUM((despesas_m - mx) * (lugar - my)) / SUM((despesas_m - mx) * (despesas_m - mx)) AS b,
+           mx, my, n
+    FROM x, m
+),
+ajuste AS (
+    SELECT x.*, r.my - r.b * r.mx + r.b * x.despesas_m AS previsto, r.b, r.mx, r.my, r.n
+    FROM x, reta r
+),
+r2 AS (
+    SELECT 1 - SUM((lugar - previsto) * (lugar - previsto)) / SUM((lugar - my) * (lugar - my)) AS r2
+    FROM ajuste
+)
+SELECT
+    a.epoca_id                                   AS epoca,
+    ROUND(a.despesas_m, 1)                       AS despesas_m,
+    a.lugar,
+    ROUND(a.previsto, 1)                         AS lugar_previsto,
+    ROUND(a.lugar - a.previsto, 1)               AS residuo,
+    ROUND(a.my - a.b * a.mx, 2)                  AS a_ordenada,
+    ROUND(a.b, 3)                                AS b_declive_por_m,
+    ROUND(r2.r2, 2)                              AS r_quadrado,
+    a.n
+FROM ajuste a, r2
+ORDER BY a.epoca_id;
+
+
+-- @q 54. Vendas de jogadores face às receitas, ao longo do tempo
+-- Quanto valem as vendas (brutas) e as mais-valias em comparação com as receitas
+-- da operação (vendas e serviços).
+SELECT
+    t.epoca_id                                                         AS epoca,
+    d.vendas_servicos                                                  AS receitas_operacao,
+    t.vendas_brutas,
+    t.mais_valias_liquidas,
+    ROUND(1.0 * t.vendas_brutas / d.vendas_servicos, 2)                AS vendas_por_euro_de_receita,
+    ROUND(100.0 * t.mais_valias_liquidas
+          / (d.vendas_servicos + t.mais_valias_liquidas), 1)           AS peso_mais_valias_no_total_pct,
+    ROUND(AVG(1.0 * t.vendas_brutas / d.vendas_servicos)
+          OVER (ORDER BY t.epoca_id ROWS BETWEEN 2 PRECEDING AND CURRENT ROW), 2) AS media_movel_3_epocas
+FROM transferencias t
+JOIN v_dr d ON d.epoca_id = t.epoca_id AND d.entidade_id = 'SAD'
+WHERE t.entidade_id = 'SAD' AND d.vendas_servicos IS NOT NULL
+ORDER BY t.epoca_id;
+
+
+-- @q 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
+-- Défice antes de vendas = média das três últimas épocas (2022/23 a 2024/25) do
+-- resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
+-- lugar (4.º, 6.º, 9.º), com a mesma repartição ilustrativa da consulta 48.
+WITH base AS (
+    SELECT AVG(rl_sem_mais_valias) AS defice
+    FROM v_kpis
+    WHERE entidade_id = 'SAD' AND epoca_id BETWEEN '2022/23' AND '2024/25'
+),
+tv AS (SELECT valor AS tv_atual FROM receitas_composicao
+       WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'),
+cenario(contrato) AS (VALUES (200000000), (250000000), (300000000)),
+lugar(n) AS (VALUES (4), (6), (9)),
+sim AS (
+    SELECT contrato, n,
+           contrato * 0.90 * 0.332 / 18 + contrato * 0.90 * 0.442 * (19 - n) / 171.0 AS tv_centralizada
+    FROM cenario, lugar
+)
+SELECT
+    CAST(contrato / 1e6 AS INTEGER) || ' M€'                       AS contrato,
+    n || '.º'                                                      AS lugar,
+    CAST(tv_centralizada AS INTEGER)                               AS tv_centralizada,
+    CAST(tv_centralizada - tv_atual AS INTEGER)                    AS ganho_vs_atual,
+    CAST(base.defice AS INTEGER)                                   AS defice_antes_vendas,
+    CAST(-(base.defice + tv_centralizada - tv_atual) AS INTEGER)   AS mais_valias_necessarias,
+    ROUND(100.0 * (tv_centralizada - tv_atual) / -base.defice, 1)  AS pct_do_defice_coberto
+FROM sim, base, tv
+ORDER BY contrato, n;

@@ -4,7 +4,7 @@
 
 # Análise técnica: conceitos financeiros e política desportiva
 
-Este documento aprofunda **17 conceitos**: nove de análise financeira e oito de política e regulação desportiva. Para cada um, explica o que significa e o que os números mostram no caso do Vitória SC – Futebol, SAD. Indica também que consulta SQL o calcula (ver [`resultados.md`](resultados.md)).
+Este documento aprofunda **17 conceitos**, nove de análise financeira e oito de política e regulação desportiva, e junta uma terceira parte com **indicadores, juros e cenários**: painel de rácios, comparação com as taxas de juro de mercado, regressão entre despesas e classificação, peso das vendas de jogadores e o efeito da centralização no equilíbrio das contas. Para cada um, explica o que significa e o que os números mostram no caso do Vitória SC – Futebol, SAD. Indica também que consulta SQL o calcula (ver [`resultados.md`](resultados.md)).
 
 > Os valores do balanço, da dívida, dos passes e do pessoal vêm dos Relatórios e Contas (R&C) de 2012/13 a 2024/25, verificados documento a documento ([verificação das fontes](verificacao-fontes.md)). A interpretação é do autor. Valores negativos entre parênteses.
 
@@ -28,6 +28,13 @@ Este documento aprofunda **17 conceitos**: nove de análise financeira e oito de
 [15. Solidariedade e formação](#15-mecanismo-de-solidariedade-e-formação) ·
 [16. Centralização dos direitos TV](#16-centralização-dos-direitos-tv-simulação-por-lugar) ·
 [17. Eficiência desportiva](#17-eficiência-desportiva)
+
+**Indicadores, juros e cenários**
+[18. Painel de indicadores](#18-painel-de-indicadores-financeiros) ·
+[19. Taxas de juro](#19-o-vitória-e-as-taxas-de-juro-de-mercado) ·
+[20. Despesas vs. classificação](#20-despesas-vs-classificação-regressão-linear) ·
+[21. Vendas vs. receitas](#21-vendas-de-jogadores-face-às-receitas) ·
+[22. Centralização e equilíbrio](#22-centralização-e-equilíbrio-das-contas)
 
 ---
 
@@ -293,6 +300,126 @@ A 30/06/2025, a SAD devia **21,2 M€ a intermediários**, três vezes mais do q
 
 ---
 
+# Parte III · Indicadores, juros e cenários
+
+## 18. Painel de indicadores financeiros
+
+**O conceito.** Quatro rácios que resumem a saúde financeira de uma empresa: quanto a operação gera antes de vendas extraordinárias, que rendimento tira dos ativos, quanto pesa a dívida face às receitas e se a atividade gera ou consome dinheiro.
+
+**No Vitória** (consulta 51):
+
+![Painel de indicadores financeiros](graficos/19_painel_indicadores.png)
+
+| Época | Margem corrente sem vendas | Rendibilidade do ativo | Dívida financeira ÷ receitas | Cash flow operacional ÷ receitas |
+|:---|---:|---:|---:|---:|
+| 2016/17 | (10%) | 18% | 0,3× | (34%) |
+| 2019/20 | (35%) | 1% | 0,1× | (38%) |
+| 2020/21 | **(149%)** | (14%) | 2,0× | **(163%)** |
+| 2023/24 | (91%) | **(41%)** | **2,6×** | (49%) |
+| 2024/25 | (35%) | 17% | 1,5× | 4% |
+
+<sub>Margem corrente sem vendas = (receitas − pessoal − FSE) ÷ receitas. Receitas = vendas e serviços.</sub>
+
+**Leitura.**
+- A margem corrente é negativa em **todas** as épocas: os salários e os fornecimentos custam sempre mais do que a operação fatura. Em 2024/25, por cada 100 € de receitas, faltaram 35 € antes de qualquer venda de jogadores.
+- A rendibilidade do ativo oscila entre +18% e −41%. Sem vendas não há rendibilidade, e com vendas ela é muito volátil.
+- A dívida financeira passou de 0,1× as receitas (2019/20) para 2,6× (2023/24). Hoje equivale a 18 meses de receitas.
+- A operação só gerou caixa em duas épocas (2022/23 e 2024/25), e mesmo aí pouco: 4% a 5% das receitas.
+
+## 19. O Vitória e as taxas de juro de mercado
+
+**O conceito.** O custo da dívida de uma empresa compara-se com taxas de referência:
+- a **taxa de depósito do BCE**, que orienta todas as outras;
+- a **Euribor a 12 meses**, a base dos empréstimos a taxa variável;
+- a taxa das **obrigações do Estado português a 10 anos**, o devedor de menor risco no país;
+- a **taxa média do crédito novo às empresas em Portugal**, publicada pelo Banco de Portugal.
+
+A diferença face à referência é o **spread**: o prémio que o mercado cobra pelo risco do devedor.
+
+**No Vitória** (consulta 52, vista `v_taxas_epoca`):
+
+![Taxas de juro](graficos/15_taxas_de_juro.png)
+
+| Época | BCE (depósito) | Euribor 12m | Estado PT 10 anos | Crédito a empresas PT | **Vitória (implícita)** | Spread vs. Euribor |
+|:---|---:|---:|---:|---:|---:|---:|
+| 2017/18 | (0,40%) | (0,18%) | 2,14% | — | **6,3%** | 6,4 p.p. |
+| 2019/20 | (0,48%) | (0,25%) | 0,45% | 2,12% | **9,6%** | 9,8 p.p. |
+| 2021/22 | (0,50%) | (0,31%) | 0,93% | — | **8,3%** | 8,6 p.p. |
+| 2023/24 | 3,91% | 3,86% | 3,19% | 5,54% | **13,0%** | 9,1 p.p. |
+| 2024/25 | 3,01% | 2,62% | 2,95% | — | **14,6%** | **12,0 p.p.** |
+| 2025/26 | 2,01% | 2,35% | 3,20% | 3,67% | — | — |
+
+<sub>Médias por época (julho a junho). A taxa do BCE é ponderada pelos dias em que cada taxa esteve em vigor; a Euribor usa o primeiro dia útil de cada mês; as obrigações do Estado, a média mensal (OCDE). O crédito a empresas só tem os meses publicados que foi possível recolher (dezembro de 2018 a 2020, maio e junho de 2024, outubro de 2025). A taxa implícita do Vitória inclui os encargos de factoring e de antecipação de receitas.</sub>
+
+**Leitura.**
+- Entre 2016 e 2022, com juros negativos na zona euro, o Vitória pagou entre 6% e 10%. Em 2019/20, a SAD pagou **21 vezes** a taxa do Estado português.
+- Com a subida dos juros do BCE (2022–2023), o spread não diminuiu: aumentou. Em 2024/25, quando o BCE já estava a descer as taxas, o Vitória pagou o valor mais alto da série, 14,6%.
+- **O custo do risco.** Se a SAD pagasse a taxa média do crédito às empresas (entre 4,5% e 5,5%) sobre a dívida média de 2024/25 (34,3 M€), os juros seriam de 1,5 a 1,9 M€, em vez de 5,0 M€. São **3,1 a 3,5 M€ por ano**, quase o mesmo que a centralização dos direitos TV pode trazer (ver ponto 22).
+- O spread reflete o risco que os credores veem: capital próprio negativo, incerteza sobre a continuidade, dívida de curto prazo e receitas já antecipadas. Reduzi-lo depende de melhorar esses indicadores, não de negociar melhor.
+
+## 20. Despesas vs. classificação: regressão linear
+
+**O conceito.** Uma regressão linear por mínimos quadrados mede quanto uma variável explica outra. O **declive** diz quanto muda o lugar por cada milhão gasto, e o **R²** (de 0 a 1) diz que parte das diferenças de classificação é explicada pelas despesas.
+
+**No Vitória** (consulta 53). Despesas = pessoal + FSE + depreciações e amortizações, 12 épocas (2013/14 a 2024/25):
+
+![Despesas vs. classificação](graficos/16_despesas_vs_classificacao.png)
+
+- **Reta:** lugar previsto = 8,05 − 0,060 × despesas (M€).
+- **Declive:** cada 10 M€ a mais de despesas valem, em média, **0,6 lugares** na tabela.
+- **R² = 0,09:** as despesas explicam só **9%** das diferenças de classificação.
+- **Acima do esperado:** 2016/17 (4.º lugar com 13,3 M€, 3,3 lugares melhor do que o previsto) e 2014/15 (5.º com 8,9 M€).
+- **Abaixo do esperado:** 2013/14 e 2015/16 (10.º lugar) e 2017/18 (9.º com 18,4 M€).
+
+**Leitura.** As despesas triplicaram (de cerca de 11 M€ para 36 M€) e o Vitória continua entre o 5.º e o 7.º lugar. A classificação depende mais de outros fatores (qualidade do recrutamento, estabilidade técnica, formação) do que do orçamento. Com 12 observações, a relação não é estatisticamente sólida: o resultado deve ler-se como "gastar mais não garantiu nada", não como uma lei.
+
+## 21. Vendas de jogadores face às receitas
+
+**O conceito.** Compara o que a SAD encaixa com transferências com o que fatura na operação (bilheteira, TV, patrocínios, sócios, prémios). Num clube com um modelo de negócio estável, as vendas são um complemento. Num clube vendedor, são a principal fonte de rendimento.
+
+**No Vitória** (consulta 54):
+
+![Vendas vs. receitas](graficos/17_vendas_vs_receitas.png)
+
+| Época | Receitas da operação | Vendas brutas | Vendas por 1 € de receita | Mais-valias no rendimento total |
+|:---|---:|---:|---:|---:|
+| 2017/18 | 9,8 M€ | 10,7 M€ | 1,09 € | 41% |
+| 2019/20 | 17,0 M€ | 21,3 M€ | 1,25 € | 47% |
+| 2022/23 | 13,2 M€ | 30,9 M€ | **2,35 €** | **64%** |
+| 2023/24 | 12,9 M€ | 14,6 M€ | 1,13 € | 34% |
+| 2024/25 | 22,6 M€ | 49,5 M€ | 2,19 € | 55% |
+
+<sub>Rendimento total = receitas da operação + mais-valias. Em 2020/21, a fonte só indica as mais-valias (17,0 M€), usadas também como vendas brutas.</sub>
+
+**Leitura.**
+- Em **todas** as épocas, a SAD vendeu mais em jogadores do que faturou na operação.
+- A média móvel de três épocas subiu de 1,09 € para **1,89 €** de vendas por cada euro de receita: a dependência aumentou.
+- As mais-valias valem entre um terço e dois terços do rendimento total. As épocas com poucas vendas (2017/18, 2023/24) coincidem com os piores resultados.
+
+## 22. Centralização e equilíbrio das contas
+
+**O conceito.** Hoje, cada clube negoceia sozinho os direitos TV. A partir de 2028/29, a Liga vende-os em conjunto e reparte o valor (ver ponto 16). Para o Vitória, isto pode ser a primeira receita **estrutural** nova em muitos anos: não depende de ir à Europa nem de vender jogadores.
+
+**No Vitória** (consulta 55). O défice antes de vendas de jogadores foi, em média, de **20,9 M€ por época** entre 2022/23 e 2024/25. A simulação cruza três valores de contrato com três lugares na tabela:
+
+![Centralização e equilíbrio](graficos/18_centralizacao_equilibrio.png)
+
+| Contrato | 4.º lugar | 6.º lugar | 9.º lugar |
+|:---|---:|---:|---:|
+| 200 M€ | +3,4 M€ (16%) | +2,4 M€ (12%) | +1,1 M€ (5%) |
+| 250 M€ | +6,0 M€ (28%) | **+4,8 M€ (23%)** | +3,0 M€ (15%) |
+| 300 M€ | +8,5 M€ (41%) | +7,1 M€ (34%) | +5,0 M€ (24%) |
+
+<sub>Ganho face aos 6,9 M€ atuais de direitos TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub>
+
+**Leitura.**
+- **Sozinha, a centralização não equilibra as contas.** No cenário central (250 M€, 6.º lugar), cobre cerca de um quarto do défice.
+- **Combinada, muda o modelo.** Centralização (+4,8 M€) e juros ao nível do mercado (+3,1 a 3,5 M€, ponto 19) somam cerca de 8 M€, perto de 40% do défice. As mais-valias necessárias para o equilíbrio desceriam de cerca de 21 M€ para cerca de 13 M€ por época, abaixo da média recente (19,1 M€). As vendas deixariam de ser uma questão de sobrevivência e passariam a ser uma margem.
+- **O lugar na tabela passa a valer dinheiro todos os anos.** Entre o 4.º e o 9.º lugar há 3,0 M€ de diferença (contrato de 250 M€). Isto reforça a importância de gastar com eficiência (ponto 20): a centralização premeia a classificação, e a classificação depende pouco do orçamento.
+- **Os números são uma ordem de grandeza.** O valor do contrato, a fórmula do mérito (que deverá incluir o histórico e o *ranking* UEFA) e a componente de audiências ainda não são conhecidos. As audiências tendem a favorecer clubes com grandes massas adeptas, o que pode beneficiar o Vitória acima destes valores.
+
+---
+
 ## Síntese
 
 | Área | Diagnóstico | Indicador-chave |
@@ -305,6 +432,11 @@ A 30/06/2025, a SAD devia **21,2 M€ a intermediários**, três vezes mais do q
 | Regras da UEFA | Cumpre os 70% só graças às vendas | 45% com vendas, 83% sem |
 | Fuga de valor | Intermediários e terceiros levam uma fatia crescente | 35% das vendas brutas |
 | Eficiência | Cada ponto custa cada vez mais | 380 mil € por ponto |
+| Operação | Margem corrente negativa em todas as épocas | (35%) em 2024/25 |
+| Custo do risco | Juros muito acima do mercado | 12 p.p. acima da Euribor; 3,1 a 3,5 M€/ano de excesso |
+| Orçamento e resultados | Gastar mais quase não melhora a classificação | R² = 0,09 |
+| Dependência das vendas | Vende sempre mais do que fatura | 2,19 € de vendas por 1 € de receita |
+| Centralização | Ajuda muito, mas não chega sozinha | 23% do défice no cenário central |
 
 ## Fontes
 
@@ -316,4 +448,8 @@ A 30/06/2025, a SAD devia **21,2 M€ a intermediários**, três vezes mais do q
 - [A Bola: critérios da proposta de centralização dos direitos televisivos](https://www.abola.pt/noticias/os-criterios-da-proposta-de-centralizacao-dos-direitos-televisivos-em-portugal-2026042115383323343)
 - [A Bola: valorização recorde do plantel do Vitória (Transfermarkt)](https://www.abola.pt/noticias/vitoria-de-guimaraes-valorizacao-recorde-pode-rechear-os-cofres-2026060116502684560)
 - [Flashscore: acordo com a V Sports prevê entrada de 3,8 M€ na SAD](https://www.flashscore.pt/noticias/acordo-com-v-sports-preve-entrada-de-3-8-me-na-sad-do-vitoria-sc/6Zv0gKsn/)
+- [BCE: taxas de juro diretoras](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html)
+- [Euribor por ano (euribor-rates.eu)](https://www.euribor-rates.eu/en/euribor-rates-by-year/2024/)
+- [OCDE via FRED: obrigações do Estado português a 10 anos](https://fred.stlouisfed.org/series/IRLTLT01PTM156N)
+- Banco de Portugal: taxas de juro de novos empréstimos a sociedades não financeiras ([nota de 2020](https://www.bportugal.pt/sites/default/files/anexos/10-taxas_juro_bancarias.pdf), [ECO, julho de 2024](https://eco.sapo.pt/2024/07/31/taxa-de-juro-do-credito-as-empresas-renova-minimos-de-um-ano/), [DGE, outubro de 2025](https://estatistica.dgeconomia.gov.pt/taxa-de-juro-dos-novos-emprestimos-banco-de-portugal-46/))
 - [Wikipédia: Vitória S.C.](https://en.wikipedia.org/wiki/Vit%C3%B3ria_S.C.) (treinadores e pontos por época)
