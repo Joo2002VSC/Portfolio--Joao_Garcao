@@ -1,17 +1,17 @@
 entidade,epoca,estado,documentos
 SAD,2012/13,Apenas resultado líquido (gráfico histórico),Gráfico da página SAD
-SAD,2013/14,Dados totais via Excel; R&C digitalizado sem OCR,vsc_evolucao.xlsx | R&C SAD 2014/15 (comparativos)
-SAD,2014/15,Dados via Excel + comparativos; R&C digitalizado,vsc_evolucao.xlsx | R&C 16/17 (comparativos)
-SAD,2015/16,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos)
-SAD,2016/17,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos)
-SAD,2017/18,R&C extraível; DR e balanço completos,R&C SAD 2017/18 | R&C SAD 2018/19 (comparativos)
-SAD,2018/19,R&C extraível + consolidado; completo,R&C SAD 2018/19 | Contas Consolidadas 18/19
-SAD,2019/20,Completo,R&C SAD 2019/20 | Contas Consolidadas 19/20
-SAD,2020/21,Completo; inclui ajustamentos FC Porto,R&C SAD 2020/21 | Contas Consolidadas 20/21
-SAD,2021/22,Completo; EBITDA s/ transferências disponível,R&C SAD 2021/22
-SAD,2022/23,R&C digitalizado; dados via consolidado + CF,Contas Consolidadas 22/23 | CF VSC 22/23
-SAD,2023/24,R&C parcialmente digitalizado; dados via consolidado e CF,R&C SAD 2023/24 | Contas Consolidadas 23/24
-SAD,2024/25,Completo,R&C SAD 2024/25 | Contas Consolidadas 24/25
+SAD,2013/14,Dados totais via Excel; R&C digitalizado sem OCR,vsc_evolucao.xlsx | R&C SAD 2014/15 (comparativos) | Balanço, juros e pessoal verificados nos R&C
+SAD,2014/15,Dados via Excel + comparativos; R&C digitalizado,vsc_evolucao.xlsx | R&C 16/17 (comparativos) | Balanço, juros e pessoal verificados nos R&C
+SAD,2015/16,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos) | Balanço, juros e pessoal verificados nos R&C
+SAD,2016/17,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos) | Balanço, juros e pessoal verificados nos R&C
+SAD,2017/18,R&C extraível; DR e balanço completos,R&C SAD 2017/18 | R&C SAD 2018/19 (comparativos) | Balanço, juros e pessoal verificados nos R&C
+SAD,2018/19,R&C extraível + consolidado; completo,R&C SAD 2018/19 | Contas Consolidadas 18/19 | Balanço, juros e pessoal verificados nos R&C
+SAD,2019/20,Completo,R&C SAD 2019/20 | Contas Consolidadas 19/20 | Balanço, juros e pessoal verificados nos R&C
+SAD,2020/21,Completo; inclui ajustamentos FC Porto,R&C SAD 2020/21 | Contas Consolidadas 20/21 | Balanço, juros e pessoal verificados nos R&C
+SAD,2021/22,Completo; EBITDA s/ transferências disponível,R&C SAD 2021/22 | Balanço, juros e pessoal verificados nos R&C
+SAD,2022/23,R&C digitalizado; dados via consolidado + CF,Contas Consolidadas 22/23 | CF VSC 22/23 | Balanço, juros e pessoal verificados nos R&C
+SAD,2023/24,R&C parcialmente digitalizado; dados via consolidado e CF,R&C SAD 2023/24 | Contas Consolidadas 23/24 | Balanço, juros e pessoal verificados nos R&C
+SAD,2024/25,Completo,R&C SAD 2024/25 | Contas Consolidadas 24/25 | Balanço, juros e pessoal verificados nos R&C
 CLUBE,2013/14,Limitado: apenas passivo,vsc_evolucao.xlsx
 CLUBE,2014/15,Resumo,CF VSC 2014/2015
 CLUBE,2015/16,Resumo,CF VSC 2015/2016

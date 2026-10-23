@@ -16,7 +16,8 @@
 - **As vendas de jogadores tapam o buraco, mas não chegam.** Para fechar 2025/26 sem prejuízo, a SAD precisava de ganhar **23,7 M€ líquidos com jogadores** num só ano. Só esteve perto disso uma vez (2024/25, com o recorde de 49,5 M€ em vendas brutas).
 - **A Europa é a variável que mais mexe nas contas.** A diferença entre 2024/25 e 2025/26 explica-se quase toda pelas receitas UEFA: 9,4 M€ contra 1,2 M€. O resultado passou de +7,4 M€ para (11,1 M€).
 - **Gastar mais em salários não comprou classificações.** A correlação entre gastos com pessoal e lugar na Liga é fraca (−0,3). As duas épocas mais caras (2020/21 e 2024/25) acabaram em 7.º e 6.º lugar. O 4.º lugar de 2016/17 custou um terço disso.
-- **A dívida é cara e de curto prazo.** 92% da dívida financeira vencia a menos de um ano (30/06/2025), com o principal empréstimo a 11% fixos. O capital próprio da SAD chegou a **(36,8 M€)**. O auditor sinaliza incerteza material sobre a continuidade.
+- **A dívida é cara e de curto prazo.** A taxa de juro implícita subiu de cerca de 6% para **15%** e os juros já pesam 22% das receitas. 92% da dívida financeira vencia a menos de um ano (30/06/2025). O capital próprio da SAD chegou a **(36,8 M€)**. O auditor sinaliza incerteza material sobre a continuidade.
+- **A estrutura cresceu mais depressa do que a equipa.** De 59 funcionários (2012/13) para **229** (2024/25). Os jogadores quase duplicaram, mas o restante pessoal multiplicou-se por mais de 8.
 - **Nenhuma medida isolada resolve.** Só a combinação de corte de custos, refinanciamento, receitas comerciais e uma política de vendas planeada torna o modelo sustentável. A Europa deve ser tratada como um bónus, não como base do orçamento.
 
 ---
@@ -77,6 +78,23 @@ Cair nas pré-eliminatórias **não melhora as contas**: os custos sobem (viagen
 - A SAD devia **21,2 M€ a intermediários** a 30/06/2025, três vezes mais do que a clubes vendedores.
 - O Presidente reconheceu no R&C 2024/25 a "obrigação de vender importantes ativos em janeiro". Vender por necessidade de tesouraria baixa o preço.
 
+### 2.4 A estrutura cresceu mais depressa do que a equipa
+
+![Funcionários da SAD](graficos/09_funcionarios.png)
+
+| Época | Funcionários | Jogadores | Não-jogadores por jogador | Remuneração média por jogador | Lugar |
+|:---|---:|---:|---:|---:|:---:|
+| 2016/17 | 95 | 56 | 0,7 | 80 446 € | 4.º |
+| 2019/20 | 175 | 105 | 0,7 | 99 740 € | 7.º |
+| 2020/21 | 210 | 110 | 0,9 | 126 015 € | 7.º |
+| 2024/25 | **229** | 82 | **1,8** | **134 494 €** | 6.º |
+
+<sub>Consultas 31 a 33. Nº médio de funcionários e gastos com pessoal das notas "Benefícios dos empregados" dos R&C.</sub>
+
+- O pico de jogadores (110 em 2020/21) coincidiu com o pico de gastos com pessoal e com o pior período financeiro. Desde então, o plantel encolheu para 79–82 jogadores, mas o restante pessoal continuou a crescer: de 100 para 147 pessoas.
+- Parte deste crescimento é investimento com retorno esperado (departamentos médico, de nutrição e de *performance*, reorganizados em 2023/24, segundo o R&C). Mas uma estrutura de 147 não-jogadores é um custo fixo que não desce quando a Europa falha.
+- A remuneração média por jogador subiu 67% entre 2016/17 e 2024/25, sem melhoria na classificação média.
+
 ## 3. Enquadramento de política económica e desportiva
 
 ### 3.1 Regras financeiras da UEFA
@@ -113,7 +131,21 @@ Com um contrato de 250 M€, a **parte igual** seria de cerca de **4,2 M€ por 
 
 ### 3.3 Custo do dinheiro e fiscalidade
 
-- **Juros:** o principal empréstimo (26,3 M€) paga **11% fixos**, cerca de 2,9 M€ por ano, num período em que o BCE desceu as taxas de referência a partir de 2024. Os resultados financeiros totais chegaram a (5,6 M€) em 2025/26.
+![Dívida financeira e juros](graficos/07_divida_e_juros.png)
+
+| Época | Dívida financeira | Juros suportados | Taxa implícita | Juros / receitas | Liquidez geral |
+|:---|---:|---:|---:|---:|---:|
+| 2019/20 | 1,2 M€ | 0,1 M€ | 10% | 1% | 0,77 |
+| 2020/21 | 20,8 M€ | 0,7 M€ | 6% | 7% | 0,68 |
+| 2022/23 | 23,8 M€ | 2,0 M€ | 9% | 15% | 0,46 |
+| 2023/24 | 34,0 M€ | 3,7 M€ | 13% | 29% | 0,34 |
+| 2024/25 | 34,6 M€ | 5,0 M€ | **15%** | 22% | 0,40 |
+
+<sub>Consultas 27 a 29, com dados dos R&C. A taxa implícita (juros ÷ dívida média do ano) inclui encargos de factoring e de antecipação de receitas.</sub>
+
+- **Juros:** o principal empréstimo (26,3 M€) paga **11% fixos**, cerca de 2,9 M€ por ano, num período em que o BCE desceu as taxas de referência a partir de 2024. Somando factoring e antecipação de receitas de vendas, o custo efetivo chega aos 15%. O R&C atribui a subida "essencialmente" à antecipação de receitas e aos empréstimos da Apollo e da MSD. Os resultados financeiros totais chegaram a (5,6 M€) em 2025/26.
+- **Liquidez:** desde 2021/22, o ativo corrente cobre menos de metade do passivo corrente (liquidez geral entre 0,25 e 0,46). A 30/06/2024, a caixa cobria 0,15% das dívidas de curto prazo.
+- **Cobertura:** o EBITDA foi negativo em 2020/21, 2021/22 e 2023/24, ou seja, a operação nem sequer pagou os juros. Em 2024/25 cobriu-os 3,7 vezes, mas só graças às vendas de jogadores (consulta 30).
 - **Fisco:** quatro passes de jogadores estavam penhorados à Autoridade Tributária, há 855 mil € de reembolso de IVA por receber e processos de 2014–2016 ainda abertos (provisão de 1,5 M€).
 
 ### 3.4 Comparação: o SC Braga
@@ -131,7 +163,7 @@ Em 2024/25, a SAD do SC Braga também teve prejuízo, (11,0 M€). A diferença 
 
 ### Médio prazo (1–3 anos): ajustar o modelo
 
-5. **Teto para os custos do plantel.** Reduzir os gastos com pessoal para um máximo de **100% das receitas recorrentes em dois anos e 85% em quatro**, e cumprir os 70% da UEFA sem depender de vendas.
+5. **Teto para os custos do plantel e revisão da estrutura.** Reduzir os gastos com pessoal para um máximo de **100% das receitas recorrentes em dois anos e 85% em quatro**, e cumprir os 70% da UEFA sem depender de vendas. Isto inclui rever os 147 postos não-jogadores, mantendo os que provam retorno (*performance*, *scouting*, formação).
 6. **Plantel mais curto e menos dependente de terceiros.** Menos jogadores emprestados e em co-propriedade, mais jogadores 100% do clube. Subir a retenção nas vendas de 56% para 70% teria valido **mais 7,1 M€** em 2024/25.
 7. **Vender no momento certo.** Um calendário de vendas planeado (no verão, com 2–3 ativos preparados por época) em vez de vendas de emergência a meio da época.
 8. **Estabilidade técnica.** Um modelo de jogo e um perfil de treinador definidos pela estrutura, para que as contratações sirvam o projeto e não cada treinador.
@@ -140,7 +172,7 @@ Em 2024/25, a SAD do SC Braga também teve prejuízo, (11,0 M€). A diferença 
 ### Longo prazo (3+ anos): reconstruir o balanço
 
 10. **Recapitalizar a SAD.** A entrada prevista de 3,8 M€ no acordo com a V Sports cobre cerca de 10% do capital próprio negativo. É preciso um plano de capital mais amplo: conversão de dívida em capital, novos investidores (dentro das regras multiclube da UEFA) ou outras soluções, como o empréstimo obrigacionista proposto numa das candidaturas de 2026. Cada opção tem custos de controlo e de juros que os sócios devem avaliar.
-11. **Formação como fonte de valor.** Jogadores formados no clube têm custo de aquisição zero e ficam 100% do clube na venda, o que melhora a retenção e o rácio da UEFA.
+11. **Formação como fonte de valor.** Jogadores formados no clube têm custo de aquisição zero e ficam 100% do clube na venda, o que melhora a retenção e o rácio da UEFA. Os minutos jogados por atletas que passaram pela formação caíram de cerca de 29 mil (2015/16) para 13 mil (2024/25), segundo a compilação do autor.
 12. **Preparar a centralização.** Com mérito e audiências a valer mais de 60% da distribuição, a estabilidade no top 6 e o estádio cheio tornam-se objetivos financeiros, não só desportivos.
 
 ## 5. Cenários: quanto é preciso ganhar com jogadores?
@@ -164,6 +196,7 @@ Para comparação: o resultado com jogadores foi de **12,6 M€ em 2025/26** e d
 ## Fontes
 
 **Dados financeiros**
+- Relatórios e Contas da Vitória SC – Futebol, SAD, 2012/13 a 2024/25 (balanço, juros, dívida e pessoal; ver [verificação das fontes](verificacao-fontes.md))
 - [VSC Contas: dashboard de transparência financeira](https://vitoriasempre.net/contas-vsc/) e a sua [análise crítica](https://vitoriasempre.net/contas-vsc/analise-critica.php)
 - [Relatórios e Contas do Vitória SC](https://vitoriasc.pt/documentos/)
 - Comunicado de contas da SAD a 30/06/2026 (demonstração de resultados e balanço simplificados)

@@ -415,3 +415,143 @@ SELECT
     tv_atual                                     AS tv_vitoria_2024_25,
     ROUND(100.0 * (total * 0.90 * 0.332 / 18) / tv_atual, 1) AS parte_igual_em_pct_do_atual
 FROM cenarios, atual;
+
+
+-- =====================================================================
+-- DÍVIDA, JUROS, RÁCIOS E FUNCIONÁRIOS (dados verificados nos R&C)
+-- =====================================================================
+
+
+-- @q 27. Custo da dívida: financiamentos, juros e taxa de juro implícita
+-- Taxa implícita = juros suportados / média dos financiamentos no início e no fim.
+-- Os juros incluem encargos de factoring e antecipação de receitas.
+WITH f AS (
+    SELECT epoca_id,
+           financiamentos_nc + financiamentos_c                       AS financiamentos,
+           juros_suportados,
+           LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS fin_anterior
+    FROM balanco_sad_rc
+    WHERE financiamentos_nc IS NOT NULL
+)
+SELECT
+    f.epoca_id                                           AS epoca,
+    f.financiamentos,
+    f.juros_suportados                                   AS juros,
+    ROUND(100.0 * f.juros_suportados / ((f.financiamentos + f.fin_anterior) / 2.0), 1) AS taxa_implicita_pct,
+    ROUND(100.0 * f.juros_suportados / k.vendas_servicos, 1)                          AS juros_em_pct_receitas
+FROM f
+LEFT JOIN v_kpis k ON k.epoca_id = f.epoca_id AND k.entidade_id = 'SAD'
+ORDER BY f.epoca_id;
+
+
+-- @q 28. Estrutura da dívida financeira: curto prazo e dívida líquida
+SELECT
+    epoca_id                                                     AS epoca,
+    financiamentos_nc + financiamentos_c                         AS divida_financeira,
+    ROUND(100.0 * financiamentos_c / (financiamentos_nc + financiamentos_c), 1) AS pct_curto_prazo,
+    caixa,
+    financiamentos_nc + financiamentos_c - caixa                 AS divida_financeira_liquida,
+    passivo_total - (financiamentos_nc + financiamentos_c)       AS outro_passivo
+FROM balanco_sad_rc
+WHERE financiamentos_nc IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 29. Rácios de balanço da SAD (12 épocas)
+-- Endividamento = passivo / ativo · Autonomia = capital próprio / ativo
+-- Liquidez geral = ativo corrente / passivo corrente · Imediata = caixa / passivo corrente
+SELECT
+    epoca_id                                                 AS epoca,
+    ROUND(1.0 * passivo_total / ativo_total, 2)              AS endividamento,
+    ROUND(100.0 * capital_proprio / ativo_total, 1)          AS autonomia_pct,
+    ROUND(1.0 * ativo_corrente / passivo_corrente, 2)        AS liquidez_geral,
+    ROUND(100.0 * caixa / passivo_corrente, 1)               AS liquidez_imediata_pct,
+    RANK() OVER (ORDER BY 1.0 * passivo_total / ativo_total DESC) AS ranking_endividamento
+FROM balanco_sad_rc
+ORDER BY epoca_id;
+
+
+-- @q 30. Cobertura de juros: quantas vezes o EBITDA paga os juros
+-- EBITDA = resultado operacional + depreciações (com vendas de jogadores).
+SELECT
+    b.epoca_id                                          AS epoca,
+    r.resultado_operacional - r.depreciacoes            AS ebitda,
+    b.juros_suportados                                  AS juros,
+    ROUND(1.0 * (r.resultado_operacional - r.depreciacoes) / NULLIF(b.juros_suportados, 0), 1) AS cobertura,
+    CASE
+        WHEN b.juros_suportados IS NULL OR b.juros_suportados = 0 THEN 'sem juros'
+        WHEN (r.resultado_operacional - r.depreciacoes) < 0       THEN 'EBITDA negativo'
+        WHEN (r.resultado_operacional - r.depreciacoes) < 3 * b.juros_suportados THEN 'fraca (< 3x)'
+        ELSE 'confortável'
+    END                                                 AS leitura
+FROM balanco_sad_rc b
+JOIN v_dr r ON r.epoca_id = b.epoca_id AND r.entidade_id = 'SAD'
+WHERE r.resultado_operacional IS NOT NULL
+ORDER BY b.epoca_id;
+
+
+-- @q 31. Funcionários da SAD por categoria
+SELECT
+    epoca_id                                             AS epoca,
+    funcionarios,
+    jogadores,
+    COALESCE(treinadores_profissional, 0) + COALESCE(treinadores_formacao, 0) AS treinadores,
+    COALESCE(apoio_futebol_profissional, 0) + COALESCE(outro_pessoal, 0)      AS staff,
+    ROUND(100.0 * jogadores / funcionarios, 1)           AS pct_jogadores,
+    funcionarios - LAG(funcionarios) OVER (ORDER BY epoca_id) AS variacao
+FROM pessoal_sad
+ORDER BY epoca_id;
+
+
+-- @q 32. Custo médio por funcionário e por jogador
+SELECT
+    epoca_id                                                    AS epoca,
+    CAST(total_gastos_pessoal / funcionarios AS INTEGER)        AS custo_por_funcionario,
+    CAST(rem_jogadores / jogadores AS INTEGER)                  AS remuneracao_media_jogador,
+    CAST(rem_treinadores /
+         (treinadores_profissional + treinadores_formacao) AS INTEGER) AS remuneracao_media_treinador,
+    ROUND(1.0 * total_gastos_pessoal /
+          FIRST_VALUE(total_gastos_pessoal) OVER (ORDER BY epoca_id), 1) AS indice_gastos
+FROM pessoal_sad
+WHERE epoca_id >= '2013/14'
+ORDER BY epoca_id;
+
+
+-- @q 33. Estrutura cresceu mais do que a equipa? Staff não-jogador vs jogadores
+WITH p AS (
+    SELECT epoca_id, jogadores,
+           funcionarios - jogadores AS nao_jogadores
+    FROM pessoal_sad
+)
+SELECT
+    epoca_id                                       AS epoca,
+    jogadores,
+    nao_jogadores,
+    ROUND(1.0 * nao_jogadores / jogadores, 2)      AS nao_jogadores_por_jogador
+FROM p
+ORDER BY epoca_id;
+
+
+-- @q 34. Funcionários, salários, espectadores e classificação
+SELECT
+    d.epoca_id                    AS epoca,
+    d.posicao_liga                AS lugar,
+    d.media_espectadores          AS espectadores,
+    p.funcionarios,
+    p.total_gastos_pessoal        AS gastos_pessoal,
+    CAST(p.total_gastos_pessoal / NULLIF(d.media_espectadores, 0) AS INTEGER) AS gasto_pessoal_por_espectador
+FROM desempenho_desportivo d
+JOIN pessoal_sad p ON p.epoca_id = d.epoca_id
+ORDER BY d.epoca_id;
+
+
+-- @q 35. Auditoria das fontes: divergências face aos Relatórios e Contas
+SELECT
+    fonte,
+    COUNT(*)                          AS divergencias,
+    COUNT(DISTINCT epoca_id)          AS epocas_afetadas,
+    GROUP_CONCAT(DISTINCT epoca_id)   AS epocas,
+    CAST(MAX(ABS(diferenca)) AS INTEGER) AS maior_diferenca
+FROM divergencia
+GROUP BY fonte
+ORDER BY divergencias DESC;

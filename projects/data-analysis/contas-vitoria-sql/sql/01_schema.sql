@@ -7,6 +7,9 @@
 
 PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS divergencia;
+DROP TABLE IF EXISTS pessoal_sad;
+DROP TABLE IF EXISTS balanco_sad_rc;
 DROP TABLE IF EXISTS desempenho_desportivo;
 DROP TABLE IF EXISTS evento;
 DROP TABLE IF EXISTS fonte;
@@ -158,11 +161,67 @@ CREATE TABLE desempenho_desportivo (
     epoca_id            TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
     posicao_liga        INTEGER NOT NULL CHECK (posicao_liga BETWEEN 1 AND 18),
     pontos              INTEGER,
+    media_espectadores  INTEGER,                -- média em casa na Liga (0 = COVID)
     competicao_europeia TEXT,                   -- NULL = sem Europa
     fase_europeia       TEXT CHECK (fase_europeia IN
                         ('Pré-eliminatória', 'Fase de grupos', 'Oitavos de final')),
     trofeu              TEXT,
     nota                TEXT
+);
+
+-- Balanço detalhado da SAD tal como publicado nos Relatórios e Contas,
+-- com dívida financeira e juros (verificado documento a documento)
+CREATE TABLE balanco_sad_rc (
+    epoca_id             TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
+    ativo_nao_corrente   INTEGER NOT NULL,
+    ativo_corrente       INTEGER NOT NULL,
+    ativo_total          INTEGER NOT NULL,
+    passivo_nao_corrente INTEGER NOT NULL,
+    passivo_corrente     INTEGER NOT NULL,
+    passivo_total        INTEGER NOT NULL,
+    capital_proprio      INTEGER NOT NULL,
+    caixa                INTEGER,
+    financiamentos_nc    INTEGER,               -- financiamentos obtidos não correntes
+    financiamentos_c     INTEGER,               -- financiamentos obtidos correntes
+    juros_suportados     INTEGER,               -- valor bruto, positivo
+    juros_obtidos        INTEGER,
+    documento            TEXT,
+    CHECK (ABS(ativo_total - ativo_nao_corrente - ativo_corrente) <= 1),
+    CHECK (ABS(passivo_total - passivo_nao_corrente - passivo_corrente) <= 1),
+    CHECK (ABS(ativo_total - passivo_total - capital_proprio) <= 1)
+);
+
+-- Número médio de funcionários e gastos com pessoal da SAD (nota "Benefícios dos empregados")
+CREATE TABLE pessoal_sad (
+    epoca_id                   TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
+    funcionarios               INTEGER NOT NULL,
+    jogadores                  INTEGER,
+    treinadores_profissional   INTEGER,
+    treinadores_formacao       INTEGER,
+    apoio_futebol_profissional INTEGER,          -- categoria autónoma desde 2021/22
+    outro_pessoal              INTEGER,
+    rem_administracao          INTEGER,
+    rem_pessoal_administrativo INTEGER,
+    rem_treinadores            INTEGER,
+    rem_jogadores              INTEGER,
+    rem_apoio_futebol          INTEGER,
+    encargos_remuneracoes      INTEGER,
+    seguro_acidentes           INTEGER,
+    outros_gastos              INTEGER,
+    total_gastos_pessoal       INTEGER NOT NULL,
+    documento                  TEXT
+);
+
+-- Divergências encontradas entre fontes secundárias e os Relatórios e Contas
+CREATE TABLE divergencia (
+    divergencia_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fonte          TEXT NOT NULL,
+    epoca_id       TEXT NOT NULL REFERENCES epoca(epoca_id),
+    indicador      TEXT NOT NULL,
+    valor_fonte    REAL NOT NULL,
+    valor_rc       REAL NOT NULL,
+    diferenca      REAL NOT NULL,
+    nota           TEXT
 );
 
 CREATE INDEX idx_dr_rubrica ON demonstracao_resultados (rubrica_id, epoca_id);

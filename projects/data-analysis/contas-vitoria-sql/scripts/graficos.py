@@ -34,7 +34,7 @@ CINZA_CLARO = "#EBEBEB"    # cinzento das linhas de subtotal
 BRANCO = "#FFFFFF"
 TEXTO_2 = "#4A4949"
 
-FONTE = "Fonte: VSC Contas (vitoriasempre.net), a partir dos Relatórios e Contas auditados · Análise: João Garção"
+FONTE = "Fontes: Relatórios e Contas da Vitória SC SAD e VSC Contas (vitoriasempre.net) · Análise: João Garção"
 
 from matplotlib import font_manager
 
@@ -313,6 +313,94 @@ def posicao_vs_pessoal(con):
     guardar(fig, "06_salarios_vs_classificacao.png")
 
 
+def divida_e_juros(con):
+    rows = q(con, """SELECT epoca_id, financiamentos_nc, financiamentos_c, juros_suportados
+                     FROM balanco_sad_rc WHERE financiamentos_nc IS NOT NULL ORDER BY epoca_id""")
+    taxas = dict(q(con, """WITH f AS (SELECT epoca_id, financiamentos_nc + financiamentos_c AS fin,
+                                juros_suportados AS j,
+                                LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS ant
+                                FROM balanco_sad_rc WHERE financiamentos_nc IS NOT NULL)
+                           SELECT epoca_id, 100.0 * j / ((fin + ant) / 2.0) FROM f WHERE ant IS NOT NULL"""))
+    epocas = [r[0] for r in rows]
+    x = range(len(epocas))
+    fig, ax = figura("Dívida financeira e juros da SAD",
+                     "Financiamentos obtidos a 30 de junho (esquerda) e juros suportados na época (direita) · Fonte: R&C da SAD")
+    fig.delaxes(ax)
+    topo = 1 - 0.62 / 5.6 - 0.95 / 5.6
+    ax1 = fig.add_axes([0.085, 0.14, 0.40, topo - 0.14])
+    ax2 = fig.add_axes([0.57, 0.14, 0.40, topo - 0.14])
+    ax1.bar(x, [r[1] for r in rows], color=CINZA, width=0.68, label="Médio e longo prazo")
+    ax1.bar(x, [r[2] for r in rows], bottom=[r[1] for r in rows], color=PRETO, width=0.68,
+            label="Curto prazo (< 1 ano)")
+    for i, r in enumerate(rows):
+        ax1.text(i, r[1] + r[2] + 0.6e6, euros_m(r[1] + r[2], 1), ha="center", fontsize=7.5)
+    ax1.set_xticks(list(x), [e[2:] for e in epocas], fontsize=8.5)
+    ax1.yaxis.set_major_formatter(eixo_m)
+    ax1.set_ylim(0, 40e6)
+    ax1.legend(loc="upper left", fontsize=8.5)
+    ax1.set_title("Financiamentos obtidos", loc="left", fontsize=10.5, fontweight="bold")
+    ax2.bar(x, [r[3] or 0 for r in rows], color=AMARELO, edgecolor=PRETO, linewidth=0.6, width=0.68)
+    for i, r in enumerate(rows):
+        t = taxas.get(r[0])
+        rot = (euros_m(r[3], 1) if r[3] else "0") + (f"\n{t:.0f}%".replace(".", ",") if t else "")
+        ax2.text(i, (r[3] or 0) + 0.1e6, rot, ha="center", fontsize=7.5, linespacing=1.1)
+    ax2.set_xticks(list(x), [e[2:] for e in epocas], fontsize=8.5)
+    ax2.yaxis.set_major_formatter(eixo_m)
+    ax2.set_ylim(0, 6.2e6)
+    ax2.set_title("Juros suportados · % = taxa de juro implícita", loc="left", fontsize=10.5, fontweight="bold")
+    guardar(fig, "07_divida_e_juros.png")
+
+
+def racios_balanco(con):
+    rows = q(con, """SELECT epoca_id, 1.0 * passivo_total / ativo_total, 1.0 * ativo_corrente / passivo_corrente
+                     FROM balanco_sad_rc ORDER BY epoca_id""")
+    epocas = [r[0] for r in rows]
+    x = range(len(epocas))
+    fig, ax = figura("Endividamento e liquidez da SAD",
+                     "Acima de 1, o passivo supera o ativo (falência técnica) · Abaixo de 1, as dívidas de curto prazo superam o ativo de curto prazo")
+    ax.axhline(1, color=PRETO, linewidth=1, linestyle=(0, (4, 3)))
+    ax.text(len(epocas) - 0.6, 1.03, "limiar = 1", fontsize=8.5, color=TEXTO_2, ha="right")
+    ax.fill_between(x, 1, [r[1] for r in rows], where=[r[1] > 1 for r in rows], interpolate=True,
+                    color=AMARELO, alpha=0.45, linewidth=0)
+    ax.plot(x, [r[1] for r in rows], color=PRETO, linewidth=2.4, marker="o", markersize=6,
+            label="Endividamento (passivo / ativo)")
+    ax.plot(x, [r[2] for r in rows], color=CINZA_ESCURO, linewidth=2.4, marker="o", markersize=6,
+            markerfacecolor=BRANCO, markeredgewidth=2, label="Liquidez geral (ativo corrente / passivo corrente)")
+    for i, r in enumerate(rows):
+        if r[0] in ("2013/14", "2023/24", "2018/19"):
+            ax.annotate(f"{r[1]:.2f}".replace(".", ","), (i, r[1]), xytext=(0, 9), textcoords="offset points",
+                        ha="center", fontsize=9, fontweight="bold")
+    ax.set_xticks(list(x), epocas, fontsize=9)
+    ax.set_ylim(0, 2.2)
+    ax.set_yticks([0, 0.5, 1, 1.5, 2], ["0", "0,5", "1,0", "1,5", "2,0"])
+    ax.legend(loc="upper center", ncols=2, fontsize=9)
+    guardar(fig, "08_endividamento_liquidez.png")
+
+
+def funcionarios(con):
+    rows = q(con, """SELECT epoca_id, jogadores,
+                            COALESCE(treinadores_profissional,0) + COALESCE(treinadores_formacao,0),
+                            COALESCE(apoio_futebol_profissional,0) + COALESCE(outro_pessoal,0),
+                            funcionarios, total_gastos_pessoal / funcionarios
+                     FROM pessoal_sad ORDER BY epoca_id""")
+    epocas = [r[0] for r in rows]
+    x = range(len(epocas))
+    fig, ax = figura("Funcionários da SAD",
+                     "Número médio de funcionários por categoria · Desde 2012/13, os jogadores quase duplicaram e o restante pessoal multiplicou-se por mais de 8")
+    base = [0] * len(rows)
+    for idx, nome, cor in [(1, "Jogadores", PRETO), (2, "Treinadores", CINZA_ESCURO), (3, "Staff e apoio", AMARELO)]:
+        vals = [r[idx] for r in rows]
+        ax.bar(x, vals, bottom=base, color=cor, width=0.68, label=nome, edgecolor=BRANCO, linewidth=1.2)
+        base = [b + v for b, v in zip(base, vals)]
+    for i, r in enumerate(rows):
+        ax.text(i, r[4] + 4, str(r[4]), ha="center", fontsize=9, fontweight="bold")
+    ax.set_xticks(list(x), epocas, fontsize=9)
+    ax.set_ylim(0, 255)
+    ax.set_ylabel("Funcionários")
+    ax.legend(loc="upper left")
+    guardar(fig, "09_funcionarios.png")
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     con = sqlite3.connect(DB)
@@ -324,6 +412,9 @@ def main():
     composicao_receitas(con)
     balanco_sad(con)
     posicao_vs_pessoal(con)
+    divida_e_juros(con)
+    racios_balanco(con)
+    funcionarios(con)
 
 
 if __name__ == "__main__":

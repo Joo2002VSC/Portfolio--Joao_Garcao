@@ -19,7 +19,8 @@ def formatar(v):
     if isinstance(v, int):
         return f"{v:,}".replace(",", " ")
     if isinstance(v, float):
-        return f"{v:.1f}".replace(".", ",")
+        casas = 2 if abs(v) < 10 else 1
+        return f"{v:.{casas}f}".replace(".", ",")
     return str(v)
 
 

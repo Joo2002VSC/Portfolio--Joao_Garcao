@@ -13,6 +13,7 @@
   <a href="#resumo">Resumo</a> ·
   <a href="#principais-conclusões">Conclusões</a> ·
   <a href="analise-estrategica.md">Análise estratégica</a> ·
+  <a href="verificacao-fontes.md">Verificação das fontes</a> ·
   <a href="#modelo-de-dados">Modelo de dados</a> ·
   <a href="#como-usar">Como usar</a> ·
   <a href="#fontes-e-limitações">Fontes e limitações</a>
@@ -24,9 +25,11 @@
 
 Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.
 
-Sobre essa base, **26 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+Sobre essa base, **35 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
 
 **→ Lê a [análise estratégica](analise-estrategica.md)**: diagnóstico, comparação com o desempenho desportivo, enquadramento (regras da UEFA, centralização dos direitos TV, custo da dívida) e 12 recomendações com cenários.
+
+**✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
 > Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
 
@@ -54,11 +57,15 @@ Sobre essa base, **26 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Receitas vs. gastos com pessoal](graficos/02_receitas_vs_pessoal_sad.png)
 
-**3. A SAD tem capital próprio negativo desde 2020/21.** O passivo ultrapassa o ativo há seis épocas seguidas: o capital próprio chegou a (36,8 M€) a 30/06/2026, e o passivo a 85,3 M€.
+**3. A SAD só teve capital próprio positivo em 4 das 14 épocas** (2016/17 a 2019/20). Desde 2020/21, o passivo supera o ativo: o capital próprio chegou a (36,8 M€) a 30/06/2026, e o passivo a 85,3 M€. O rácio de endividamento de 2023/24 (1,87) foi o mais alto da história da SAD.
 
 ![Ativo vs. passivo da SAD](graficos/05_balanco_sad.png)
 
-**4. Os juros foram multiplicados por cerca de 34 em cinco anos.** Passaram de 149 mil € em 2019/20 para 5,0 M€ em 2024/25. A 30/06/2025, 92% da dívida financeira vencia em menos de um ano.
+**4. A dívida ficou mais cara e mais curta.** A dívida financeira passou de 1,2 M€ (2019/20) para 34,6 M€ (2024/25), e os juros de 149 mil € para 5,0 M€, cerca de 34 vezes mais. A taxa de juro implícita subiu de cerca de 6% para **15%**, e os juros já pesam 22% das receitas. A 30/06/2025, 92% da dívida financeira vencia em menos de um ano, e a liquidez geral está abaixo de 0,5 desde 2021/22.
+
+![Dívida financeira e juros](graficos/07_divida_e_juros.png)
+
+![Endividamento e liquidez](graficos/08_endividamento_liquidez.png)
 
 **5. Uma época europeia muda tudo.** Com fase de grupos UEFA, as receitas operacionais médias foram de 21,3 M€, contra 14,0 M€ nas restantes épocas.
 
@@ -68,11 +75,15 @@ Sobre essa base, **26 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Salários vs. classificação](graficos/06_salarios_vs_classificacao.png)
 
-**7. O Clube e a SAD têm perfis opostos.** O Clube tem pouco passivo e património valioso (Estádio e Academia), mas prejuízos recorrentes, perto de 1 M€ por ano nas duas últimas épocas. A SAD concentra a dívida e a volatilidade.
+**7. A estrutura cresceu mais depressa do que a equipa.** A SAD passou de 59 funcionários em 2012/13 para **229 em 2024/25**, um recorde. Os jogadores quase duplicaram (42 → 82), mas o restante pessoal (treinadores, staff e apoio) multiplicou-se por mais de 8 (17 → 147). Hoje há 1,8 não-jogadores por cada jogador, contra 0,4 em 2012/13. A remuneração média por jogador subiu de 80 mil € (2016/17) para 134 mil € (2024/25).
+
+![Funcionários da SAD](graficos/09_funcionarios.png)
+
+**8. O Clube e a SAD têm perfis opostos.** O Clube tem pouco passivo e património valioso (Estádio e Academia), mas prejuízos recorrentes, perto de 1 M€ por ano nas duas últimas épocas. A SAD concentra a dívida e a volatilidade.
 
 ![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
 
-Os resultados completos das 26 consultas estão em [`resultados.md`](resultados.md). A leitura estratégica está em [`analise-estrategica.md`](analise-estrategica.md).
+Os resultados completos das 35 consultas estão em [`resultados.md`](resultados.md). A leitura estratégica está em [`analise-estrategica.md`](analise-estrategica.md).
 
 ## Modelo de dados
 
@@ -91,6 +102,9 @@ erDiagram
     EPOCA ||--o{ EVENTO : ""
     EPOCA ||--o{ FONTE : ""
     EPOCA ||--|| DESEMPENHO_DESPORTIVO : ""
+    EPOCA ||--|| BALANCO_SAD_RC : ""
+    EPOCA ||--|| PESSOAL_SAD : ""
+    EPOCA ||--o{ DIVERGENCIA : ""
 
     DEMONSTRACAO_RESULTADOS {
         text entidade_id PK
@@ -118,9 +132,12 @@ erDiagram
 | Tabela | Conteúdo |
 |:---|:---|
 | `epoca` · `entidade` · `rubrica` | Dimensões: 14 épocas, 3 entidades, 20 rubricas |
-| `desempenho_desportivo` | Lugar na Liga, pontos, campanha europeia e troféus de cada época |
+| `desempenho_desportivo` | Lugar na Liga, pontos, média de espectadores, campanha europeia e troféus |
+| `balanco_sad_rc` | Balanço detalhado da SAD, dívida financeira e juros, tal como publicados nos R&C |
+| `pessoal_sad` | Nº médio de funcionários por categoria e decomposição dos gastos com pessoal |
+| `divergencia` | Diferenças entre fontes secundárias e os R&C (auditoria) |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
-| `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho |
+| `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho (SAD: valores dos R&C) |
 | `cash_flow` | Fluxos operacional, de investimento e de financiamento (SAD) |
 | `receitas_composicao` | Receitas operacionais por fonte (TV, UEFA, sócios…) |
 | `gastos_pessoal_composicao` | Atletas, treinadores e outro pessoal |
@@ -142,9 +159,11 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Pivot com `CASE` | vistas `v_dr` e `v_resultado_por_entidade` |
 | Self-join e `UNION ALL` | consultas 11, 14 e 19 |
 | Restrições `CHECK` e chaves estrangeiras | `01_schema.sql` |
-| Auditoria de qualidade dos dados | consultas 17 a 19 |
+| Auditoria de qualidade dos dados | consultas 17 a 19 e 35 |
 | Correlação de Pearson em SQL (`sqrt`) | consulta 22 |
 | Cenários com `VALUES` e parâmetros | consulta 26 |
+| Taxa de juro implícita com `LAG` e médias | consulta 27 |
+| Rácios financeiros e classificação com `CASE` | consultas 29 e 30 |
 
 ## Como usar
 
@@ -154,7 +173,7 @@ Para reconstruir tudo do zero:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 26 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 35 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 ```
@@ -180,7 +199,7 @@ contas-vitoria-sql/
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     26 consultas de análise
+│   └── 04_analises.sql     35 consultas de análise
 ├── scripts/
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
@@ -189,12 +208,16 @@ contas-vitoria-sql/
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
+├── verificacao-fontes.md   Conferência com os Relatórios e Contas
 └── vsc_contas.db           Base de dados pronta a usar
 ```
 
 ## Fontes e limitações
 
-Os dados foram recolhidos em outubro de 2026 do site **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial que extrai os números dos Relatórios e Contas auditados publicados em [vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/). Para uso sério, os valores devem ser confirmados nos documentos originais.
+Os dados vêm de duas fontes:
+
+- **Relatórios e Contas da Vitória SC – Futebol, SAD de 2012/13 a 2024/25** ([vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/)): balanço, dívida financeira, juros, número de funcionários e gastos com pessoal da SAD, verificados documento a documento (ver [verificação das fontes](verificacao-fontes.md)).
+- **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial: demonstração de resultados detalhada, composição das receitas, transferências, Clube e consolidado. Os balanços da SAD de 2014/15 a 2016/17 publicados no site estavam errados e foram substituídos pelos dos R&C.
 
 As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 
@@ -204,7 +227,9 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
 - **Rácio pessoal/receitas.** É uma aproximação simples. A regra de custos do plantel da UEFA usa outra base de cálculo.
 - **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `evento`. Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
-- **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas.
+- **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.
+- **Juros.** A tabela `balanco_sad_rc` guarda os juros suportados brutos, tal como nos R&C. A rubrica "juros" da demonstração de resultados (origem: VSC Contas) é, nalgumas épocas, líquida dos juros obtidos. A taxa de juro implícita inclui encargos de factoring e de antecipação de receitas, por isso fica acima da taxa nominal dos empréstimos.
+- **Funcionários.** São números médios anuais. Em 2012/13 são os funcionários transferidos para a SAD em abril de 2013 (época parcial). A categoria "pessoal de apoio ao futebol profissional" só existe desde 2021/22.
 
 ## Identidade visual
 
