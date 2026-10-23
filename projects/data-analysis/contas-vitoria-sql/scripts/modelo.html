@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contas do Vitória SC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+@font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url(data:font/ttf;base64,{{FONTE_TITULO}}) format("truetype"); }
+@font-face { font-family: "Archivo"; font-weight: 400; src: url(data:font/ttf;base64,{{FONTE_TEXTO}}) format("truetype"); }
+@font-face { font-family: "Archivo"; font-weight: 700; src: url(data:font/ttf;base64,{{FONTE_NEGRITO}}) format("truetype"); }
+
+:root {
+  --amarelo: #F5D510; --amarelo-claro: #FAEB8A; --preto: #111111;
+  --cinza-escuro: #6F6D6E; --cinza: #A9A7A8; --cinza-claro: #EBEBEB;
+  --fundo: #FFFFFF; --texto: #111111; --suave: #6F6D6E; --linha: #E2E2E2; --zebra: #F7F7F5; --erro: #B03A2E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #161616; --texto: #EDEDED; --suave: #A9A7A8; --linha: #333; --zebra: #1E1E1E; --erro: #F07B6E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] { --fundo: #161616; --texto: #EDEDED; --suave: #A9A7A8; --linha: #333; --zebra: #1E1E1E; --erro: #F07B6E; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--fundo); color: var(--texto);
+       font: 400 16px/1.6 "Archivo", system-ui, sans-serif; }
+
+header.topo { background: var(--preto); color: #fff; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 11; background: var(--preto); }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.topo .marca { max-width: 1040px; margin: 0 auto; padding-block: 22px 0;
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+header.topo h1 { margin: 0; font: 800 clamp(20px, 3.4vw, 30px)/1.1 "Archivo Expanded", sans-serif;
+  color: var(--amarelo); text-transform: uppercase; letter-spacing: .01em; }
+header.topo .sub { color: var(--cinza); font-size: 14px; }
+nav.abas { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--preto);
+  border-bottom: 4px solid var(--amarelo); }
+nav.abas .dentro { max-width: 1040px; margin: 0 auto; padding-block: 14px 0;
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+nav.abas a { color: #ddd; text-decoration: none; white-space: nowrap; padding: 9px 14px 8px;
+  font: 700 14px "Archivo", sans-serif; border-radius: 3px 3px 0 0; }
+nav.abas a:hover { color: #fff; }
+nav.abas a.ativa { background: var(--amarelo); color: var(--preto); }
+
+main { max-width: 1040px; margin: 0 auto; padding-block: 28px 64px; }
+.pagina { display: none; }
+.pagina.ativa { display: block; }
+
+h1, h2 { font-family: "Archivo Expanded", sans-serif; font-weight: 800; text-transform: uppercase; }
+.pagina h1 { font-size: clamp(20px, 3vw, 28px); line-height: 1.2; margin: 8px 0 18px;
+  border-left: 10px solid var(--amarelo); padding-left: 14px; text-transform: none; }
+.pagina h2 { background: var(--amarelo); color: var(--preto); font-size: clamp(15px, 2.2vw, 20px);
+  padding: 12px 16px; margin: 44px 0 18px; letter-spacing: .01em; line-height: 1.25; }
+.pagina h3 { font: 700 18px "Archivo", sans-serif; margin: 28px 0 10px;
+  border-bottom: 2px solid var(--amarelo); padding-bottom: 4px; display: inline-block; }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.pagina h1, .pagina h2 { text-wrap: balance; }
+a { color: inherit; text-decoration-color: var(--amarelo); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+img { max-width: 100%; height: auto; }
+.pagina p img, .pagina td img { border: 1px solid var(--linha); background: #fff; }
+blockquote { margin: 18px 0; padding: 10px 16px; border-left: 4px solid var(--amarelo); background: var(--zebra); color: var(--suave); }
+blockquote p { margin: 4px 0; }
+hr { border: 0; border-top: 1px solid var(--linha); margin: 32px 0; }
+sub { color: var(--suave); font-size: 13px; vertical-align: baseline; }
+code { font: 13.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--zebra); padding: 1px 5px; border-radius: 3px; }
+pre { background: var(--preto); color: #f2f2f2; padding: 14px 16px; overflow-x: auto; border-radius: 3px; }
+pre code { background: none; padding: 0; color: inherit; }
+pre.mermaid { background: #fff; color: var(--preto); text-align: center; }
+
+.tabela { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+th { background: var(--preto); color: #fff; text-align: left; font-weight: 700; padding: 8px 10px; white-space: nowrap; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+
+/* Consola SQL */
+.consola .barra { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.consola select { flex: 1 1 320px; min-width: 0; font: 15px "Archivo", sans-serif; padding: 9px 10px;
+  border: 2px solid var(--preto); background: var(--fundo); color: var(--texto); border-radius: 3px; }
+.consola textarea { width: 100%; min-height: 240px; resize: vertical; font: 13.5px/1.5 ui-monospace, Menlo, monospace;
+  padding: 14px; background: var(--preto); color: #f2f2f2; border: 0; border-radius: 3px; }
+.consola button { font: 700 15px "Archivo", sans-serif; padding: 10px 20px; border: 0; border-radius: 3px; cursor: pointer;
+  background: var(--amarelo); color: var(--preto); }
+.consola button.secundario { background: transparent; color: var(--texto); border: 2px solid var(--linha); }
+.consola .estado { color: var(--suave); font-size: 14px; margin: 8px 0; min-height: 1.4em; }
+.consola .erro { color: var(--erro); }
+.consola .tabelas { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 18px; }
+.consola .tabelas button { font: 13px ui-monospace, Menlo, monospace; padding: 4px 9px; background: var(--zebra);
+  color: var(--texto); border: 1px solid var(--linha); }
+td.num { text-align: right; }
+footer { text-align: center; color: var(--suave); font-size: 13px; padding-block: 24px 40px; border-top: 1px solid var(--linha); }
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="marca gutter"><h1>As contas do Vitória SC</h1><span class="sub">Análise financeira em SQL · 2012/13 – 2025/26</span></div>
+</header>
+<nav class="abas"><div class="dentro gutter">{{ABAS}}</div></nav>
+
+<main class="gutter">
+  {{PAGINAS}}
+
+  <article class="pagina consola" id="p-sql" data-pagina="sql">
+    <h1>Consola SQL</h1>
+    <p>A base de dados <code>vsc_contas.db</code> e o SQLite (<a href="https://sql.js.org" target="_blank" rel="noopener">sql.js</a>, compilado para WebAssembly) vão embutidos nesta página e correm no teu browser, sem internet. Escolhe uma das 50 consultas do projeto, clica numa tabela ou escreve a tua consulta. <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> também corre.</p>
+    <div class="barra">
+      <select id="lista"><option value="">Escolhe uma consulta…</option></select>
+    </div>
+    <div class="tabelas" id="tabelas"></div>
+    <textarea id="sql" spellcheck="false">SELECT * FROM v_kpis WHERE entidade_id = 'SAD' ORDER BY epoca_id;</textarea>
+    <div class="barra">
+      <button id="correr">Correr consulta</button>
+      <button id="copiar" class="secundario">Copiar resultado</button>
+      {{BOTAO_CSV}}
+    </div>
+    <div class="estado" id="estado" role="status">A carregar o SQLite…</div>
+    <div class="tabela" id="resultado"></div>
+  </article>
+</main>
+
+<footer class="gutter">Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho · Sem ligação oficial ao Vitória Sport Clube</footer>
+
+<script>{{SQLJS}}</script>
+<script>
+const CARREGAR_MERMAID = {{MERMAID}};
+const WASM_B64 = "{{WASM}}";
+const CONSULTAS = {{CONSULTAS}};
+const DB_B64 = "{{DB}}";
+
+/* ---------- Separadores ---------- */
+const abas = [...document.querySelectorAll("nav.abas a")];
+const paginas = [...document.querySelectorAll(".pagina")];
+function mostrar() {
+  const hash = decodeURIComponent(location.hash.slice(1)) || "projeto";
+  const [pid] = hash.split(":");
+  const existe = paginas.some(p => p.dataset.pagina === pid);
+  const atual = existe ? pid : "projeto";
+  paginas.forEach(p => p.classList.toggle("ativa", p.dataset.pagina === atual));
+  abas.forEach(a => a.classList.toggle("ativa", a.dataset.aba === atual));
+  const alvo = hash.includes(":") ? document.getElementById(hash) : null;
+  if (alvo) alvo.scrollIntoView(); else window.scrollTo(0, 0);
+  if (atual === "sql") iniciarSQL();
+  if (atual === "projeto") desenharMermaid();
+}
+window.addEventListener("hashchange", mostrar);
+
+/* ---------- Diagrama ---------- */
+let mermaidFeito = false;
+function desenharMermaid() {
+  if (!CARREGAR_MERMAID || mermaidFeito || !document.querySelector("pre.mermaid")) return;
+  mermaidFeito = true;
+  import("https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs")
+    .then(m => { m.default.initialize({ startOnLoad: false, theme: "neutral" }); m.default.run(); })
+    .catch(() => {});
+}
+
+/* ---------- Consola SQL ---------- */
+const lista = document.getElementById("lista");
+CONSULTAS.forEach((c, i) => lista.add(new Option(c.titulo, i)));
+lista.addEventListener("change", () => {
+  if (lista.value === "") return;
+  document.getElementById("sql").value = CONSULTAS[lista.value].sql;
+  correr();
+});
+
+let db = null, iniciado = false, ultimo = null;
+function estado(txt, erro = false) {
+  const e = document.getElementById("estado");
+  e.textContent = txt; e.classList.toggle("erro", erro);
+}
+function iniciarSQL() {
+  if (iniciado) return;
+  iniciado = true;
+  const wasm = Uint8Array.from(atob(WASM_B64), c => c.charCodeAt(0));
+  initSqlJs({ wasmBinary: wasm }).then(SQL => {
+    const bytes = Uint8Array.from(atob(DB_B64), c => c.charCodeAt(0));
+    db = new SQL.Database(bytes);
+    const t = db.exec("SELECT name FROM sqlite_master WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%' ORDER BY type, name")[0];
+    const caixa = document.getElementById("tabelas");
+    t.values.forEach(([n]) => {
+      const b = document.createElement("button");
+      b.textContent = n;
+      b.onclick = () => { document.getElementById("sql").value = `SELECT * FROM ${n} LIMIT 100;`; correr(); };
+      caixa.appendChild(b);
+    });
+    estado("Pronto. " + t.values.length + " tabelas e vistas carregadas.");
+    correr();
+  }).catch(e => estado("Não foi possível iniciar o SQLite: " + e.message, true));
+}
+function formatar(v) {
+  if (v === null) return "—";
+  if (typeof v === "number") {
+    return Number.isInteger(v) ? v.toLocaleString("pt-PT") : v.toLocaleString("pt-PT", { maximumFractionDigits: 2 });
+  }
+  return String(v);
+}
+function correr() {
+  if (!db) return;
+  const sql = document.getElementById("sql").value;
+  const caixa = document.getElementById("resultado");
+  caixa.innerHTML = "";
+  try {
+    const t0 = performance.now();
+    const res = db.exec(sql);
+    const ms = (performance.now() - t0).toFixed(0);
+    if (!res.length) { ultimo = null; estado(`Consulta executada em ${ms} ms, sem linhas devolvidas.`); return; }
+    const r = res[res.length - 1];
+    ultimo = r;
+    const tabela = document.createElement("table");
+    const cab = tabela.createTHead().insertRow();
+    r.columns.forEach(c => { const th = document.createElement("th"); th.textContent = c; cab.appendChild(th); });
+    const corpo = tabela.createTBody();
+    r.values.forEach(linha => {
+      const tr = corpo.insertRow();
+      linha.forEach(v => { const td = tr.insertCell(); td.textContent = formatar(v); if (typeof v === "number") td.className = "num"; });
+    });
+    caixa.appendChild(tabela);
+    estado(`${r.values.length} linha(s) em ${ms} ms.`);
+  } catch (e) { ultimo = null; estado("Erro: " + e.message, true); }
+}
+document.getElementById("correr").onclick = correr;
+document.getElementById("sql").addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); correr(); }
+});
+function textoCSV() {
+  const esc = v => v === null ? "" : /[",;\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+  return [ultimo.columns, ...ultimo.values].map(l => l.map(esc).join(",")).join("\n");
+}
+document.getElementById("copiar").onclick = () => {
+  if (!ultimo) return estado("Corre uma consulta primeiro.", true);
+  const tsv = [ultimo.columns, ...ultimo.values].map(l => l.map(v => v === null ? "" : v).join("\t")).join("\n");
+  navigator.clipboard.writeText(tsv)
+    .then(() => estado("Resultado copiado. Podes colá-lo no Excel."))
+    .catch(() => estado("O browser não deixou copiar. Seleciona a tabela e usa Ctrl/⌘ + C.", true));
+};
+const botaoCSV = document.getElementById("csv");
+if (botaoCSV) botaoCSV.onclick = () => {
+  if (!ultimo) return estado("Corre uma consulta primeiro.", true);
+  const esc = v => v === null ? "" : /[",;\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+  const linhas = [ultimo.columns, ...ultimo.values].map(l => l.map(esc).join(","));
+  const url = URL.createObjectURL(new Blob(["﻿" + linhas.join("\n")], { type: "text/csv" }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: "consulta.csv" });
+  a.click(); URL.revokeObjectURL(url);
+};
+
+mostrar();
+</script>
+</body>
+</html>

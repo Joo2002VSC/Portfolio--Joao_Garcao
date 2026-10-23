@@ -194,6 +194,8 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 <a id="como-usar"></a>
 <img src="graficos/cabecalhos/06_como-usar.png" alt="Como usar" width="100%">
 
+**Versão HTML.** O ficheiro [`html/contas-vitoria.html`](html/contas-vitoria.html) junta o README, as três análises, os gráficos e uma consola SQL que corre a base de dados no browser. Descarrega-o e abre-o num browser (Chrome, Safari, Firefox ou Edge). Funciona sem internet: o SQLite também vai embutido. Só o diagrama do modelo de dados precisa de ligação.
+
 A base de dados `vsc_contas.db` já vem incluída e abre diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
 
 Para reconstruir tudo do zero:
@@ -204,6 +206,7 @@ python scripts/correr_analises.py   # corre as 50 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
+python scripts/gerar_html.py        # gera html/contas-vitoria.html
 ```
 
 Exemplo: o resultado da SAD com e sem vendas de jogadores.
@@ -232,8 +235,12 @@ contas-vitoria-sql/
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
 │   ├── graficos.py         Gera os gráficos
-│   └── cabecalhos.py       Gera as faixas de título do README
+│   ├── cabecalhos.py       Gera as faixas de título do README
+│   ├── gerar_html.py       Gera a versão HTML
+│   ├── modelo.html         Modelo da versão HTML
+│   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
+├── html/                   Versão HTML autónoma, com consola SQL
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
