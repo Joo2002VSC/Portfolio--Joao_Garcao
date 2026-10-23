@@ -19,6 +19,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 739 904 | 15 469 598 | lucro |
 | 2023/24 | -14 723 467 | -16 463 371 | prejuízo |
 | 2024/25 | 7 610 319 | 22 333 786 | lucro |
+| 2025/26 | -11 063 044 | -18 673 363 | prejuízo |
 
 ## 2. Dependência das vendas de jogadores: resultado da SAD sem mais-valias
 
@@ -58,6 +59,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | -10 224 059 |
 | 2023/24 | -12 933 523 |
 | 2024/25 | -8 882 727 |
+| 2025/26 | -17 206 178 |
 
 ## 5. Composição das receitas operacionais: peso de cada fonte (%)
 
@@ -94,6 +96,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 36 487 875 | 52 957 514 | -16 469 640 | negativo | 4 | 1,4 |
 | 2023/24 | 35 823 548 | 67 016 655 | -31 193 107 | negativo | 5 | 1,9 |
 | 2024/25 | 45 426 643 | 69 452 913 | -24 026 270 | negativo | 6 | 1,5 |
+| 2025/26 | 48 466 756 | 85 298 806 | -36 832 050 | negativo | 7 | 1,8 |
 
 ## 8. Peso dos juros nas receitas da SAD
 
@@ -135,6 +138,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 739 904 | -354 034 | 6 365 870 | 4 980 000 |
 | 2023/24 | -14 723 467 | -1 134 830 | -15 858 297 | 0 |
 | 2024/25 | 7 610 319 | -1 036 024 | 6 574 295 | 0 |
+| 2025/26 | -11 063 044 | — | — | — |
 
 ## 11. Passivo do Clube vs passivo da SAD
 
@@ -220,7 +224,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 |---|---|---|---|
 | CLUBE | 11 | 48 | 4,4 |
 | CONSOLIDADO | 8 | 65 | 8,1 |
-| SAD | 13 | 176 | 13,5 |
+| SAD | 14 | 180 | 12,9 |
 
 ## 18. Qualidade dos dados: valores repetidos de época para época
 
@@ -239,3 +243,80 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2021/22 | 11 542 768 | 3 927 125 | 7 615 643 |
 | 2022/23 | 23 216 097 | 14 265 148 | 8 950 949 |
 | 2023/24 | 6 665 467 | 2 910 879 | 3 754 588 |
+
+## 20. Finanças e resultados desportivos da SAD, época a época
+
+| epoca | lugar | europa | trofeu | receitas | pessoal | rl |
+|---|---|---|---|---|---|---|
+| 2012/13 | 9 | — | Taça de Portugal | — | — | -4 028 960 |
+| 2013/14 | 10 | Liga Europa · Fase de grupos |  | 8 900 528 | 4 621 871 | -2 613 518 |
+| 2014/15 | 5 | — |  | 6 786 697 | 4 413 612 | 1 253 617 |
+| 2015/16 | 10 | Liga Europa · Pré-eliminatória |  | 6 226 662 | 5 278 997 | 363 894 |
+| 2016/17 | 4 | — |  | 10 535 891 | 6 758 553 | 2 787 463 |
+| 2017/18 | 9 | Liga Europa · Fase de grupos |  | 9 822 148 | 8 843 968 | 809 585 |
+| 2018/19 | 5 | — |  | 12 558 787 | 11 559 940 | 1 207 980 |
+| 2019/20 | 7 | Liga Europa · Fase de grupos |  | 17 014 051 | 16 100 077 | 274 480 |
+| 2020/21 | 7 | — |  | 10 334 411 | 20 655 205 | -8 246 496 |
+| 2021/22 | 6 | — |  | 11 285 014 | 19 627 255 | -13 729 694 |
+| 2022/23 | 6 | Liga Conferência · Pré-eliminatória |  | 13 159 010 | 15 602 700 | 1 739 904 |
+| 2023/24 | 5 | Liga Conferência · Pré-eliminatória |  | 12 900 965 | 16 946 060 | -14 723 467 |
+| 2024/25 | 6 | Liga Conferência · Oitavos de final |  | 22 584 987 | 20 526 758 | 7 610 319 |
+| 2025/26 | 9 | — | Taça da Liga | 15 102 461 | — | -11 063 044 |
+
+## 21. Quanto vale a Europa: receitas e resultado médios por tipo de época
+
+| tipo | epocas | lista | receita_media | rl_medio |
+|---|---|---|---|---|
+| 1. Fase de grupos ou mais | 4 | 2013/14, 2017/18, 2019/20, 2024/25 | 14 580 428 | 1 520 216 |
+| 2. Só pré-eliminatórias | 3 | 2015/16, 2022/23, 2023/24 | 10 762 212 | -4 206 556 |
+| 3. Sem Europa | 5 | 2014/15, 2016/17, 2018/19, 2020/21, 2021/22 | 10 300 160 | -3 345 426 |
+
+## 22. Gastar mais em salários garante melhor classificação?
+
+| epocas | correlacao | pessoal_medio | lugar_medio |
+|---|---|---|---|
+| 12 | -0,3 | 12 577 916 | 6,7 |
+
+## 23. Custo de cada lugar: gastos com pessoal por época e lugar obtido
+
+| epoca | lugar | pessoal | ranking_gasto | ranking_lugar |
+|---|---|---|---|---|
+| 2013/14 | 10 | 4 621 871 | 11 | 11 |
+| 2014/15 | 5 | 4 413 612 | 12 | 2 |
+| 2015/16 | 10 | 5 278 997 | 10 | 11 |
+| 2016/17 | 4 | 6 758 553 | 9 | 1 |
+| 2017/18 | 9 | 8 843 968 | 8 | 10 |
+| 2018/19 | 5 | 11 559 940 | 7 | 2 |
+| 2019/20 | 7 | 16 100 077 | 5 | 8 |
+| 2020/21 | 7 | 20 655 205 | 1 | 8 |
+| 2021/22 | 6 | 19 627 255 | 3 | 5 |
+| 2022/23 | 6 | 15 602 700 | 6 | 5 |
+| 2023/24 | 5 | 16 946 060 | 4 | 2 |
+| 2024/25 | 6 | 20 526 758 | 2 | 5 |
+
+## 24. Aproximação ao rácio de custos do plantel da UEFA (limite de 70% desde 2025/26)
+
+| epoca | custos_plantel | receitas_relevantes | racio_pct | racio_sem_vendas_pct | leitura |
+|---|---|---|---|---|---|
+| 2017/18 | 12 165 530 | 16 557 622 | 73,5 | 123,9 | acima de 70% |
+| 2018/19 | 16 120 990 | 19 867 939 | 81,1 | 128,4 | acima de 70% |
+| 2019/20 | 20 680 122 | 32 023 912 | 64,6 | 121,5 | cumpriria 70% |
+| 2020/21 | 25 840 401 | 27 346 731 | 94,5 | 250,0 | acima de 70% |
+| 2021/22 | 25 853 787 | 22 827 782 | 113,3 | 229,1 | acima de 70% |
+| 2022/23 | 21 818 540 | 36 375 107 | 60,0 | 165,8 | cumpriria 70% |
+| 2023/24 | 19 007 476 | 19 566 432 | 97,1 | 147,3 | acima de 70% |
+| 2024/25 | 21 610 718 | 50 125 951 | 43,1 | 95,7 | cumpriria 70% |
+
+## 25. Ponto de equilíbrio 2025/26: quanto é preciso ganhar com jogadores
+
+| resultado_com_jogadores_2025_26 | resultado_liquido_2025_26 | necessario_para_equilibrio | falta_face_a_2025_26 |
+|---|---|---|---|
+| 12 591 584 | -11 063 044 | 23 654 628 | 11 063 044 |
+
+## 26. Centralização dos direitos TV (2028/29): parte igual estimada por clube
+
+| valor_total_contrato | parte_igual_por_clube | tv_vitoria_2024_25 | parte_igual_em_pct_do_atual |
+|---|---|---|---|
+| 200 000 000 | 3 320 000 | 6 922 619 | 48,0 |
+| 250 000 000 | 4 150 000 | 6 922 619 | 59,9 |
+| 275 000 000 | 4 565 000 | 6 922 619 | 65,9 |

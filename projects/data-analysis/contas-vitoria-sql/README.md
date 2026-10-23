@@ -6,12 +6,13 @@
   <img src="https://img.shields.io/badge/SQLite-3-111111?style=flat-square&logo=sqlite&logoColor=F5D510" alt="SQLite">
   <img src="https://img.shields.io/badge/Python-3-111111?style=flat-square&logo=python&logoColor=F5D510" alt="Python">
   <img src="https://img.shields.io/badge/Matplotlib-gráficos-111111?style=flat-square&labelColor=111111&color=F5D510" alt="Matplotlib">
-  <img src="https://img.shields.io/badge/épocas-2012%2F13%20–%202024%2F25-111111?style=flat-square&labelColor=111111&color=F5D510" alt="Épocas">
+  <img src="https://img.shields.io/badge/épocas-2012%2F13%20–%202025%2F26-111111?style=flat-square&labelColor=111111&color=F5D510" alt="Épocas">
 </p>
 
 <p align="center">
   <a href="#resumo">Resumo</a> ·
   <a href="#principais-conclusões">Conclusões</a> ·
+  <a href="analise-estrategica.md">Análise estratégica</a> ·
   <a href="#modelo-de-dados">Modelo de dados</a> ·
   <a href="#como-usar">Como usar</a> ·
   <a href="#fontes-e-limitações">Fontes e limitações</a>
@@ -21,25 +22,27 @@
 
 ## Resumo
 
-Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 13 épocas, de 2012/13 a 2024/25.
+Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.
 
-Sobre essa base, **19 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+Sobre essa base, **26 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+
+**→ Lê a [análise estratégica](analise-estrategica.md)**: diagnóstico, comparação com o desempenho desportivo, enquadramento (regras da UEFA, centralização dos direitos TV, custo da dívida) e 12 recomendações com cenários.
 
 > Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
 
 ## Indicadores-chave · SAD
 
-| Indicador | 2023/24 | 2024/25 |
-|:---|---:|---:|
-| Receitas (vendas e serviços) | 12,9 M€ | **22,6 M€** |
-| Gastos com pessoal | (16,9 M€) | (20,5 M€) |
-| Mais-valias com jogadores | 6,7 M€ | **27,5 M€** |
-| **Resultado líquido** | **(14,7 M€)** | **7,6 M€** |
-| Resultado sem mais-valias | (21,4 M€) | (19,9 M€) |
-| Juros suportados | (3,7 M€) | (5,0 M€) |
-| Capital próprio | (31,2 M€) | (24,0 M€) |
+| Indicador | 2023/24 | 2024/25 | 2025/26 |
+|:---|---:|---:|---:|
+| Lugar na Liga · Europa | 5.º · pré-eliminatória | 6.º · oitavos da Liga Conferência | 9.º · sem Europa |
+| Receitas (vendas e serviços / operacionais) | 12,9 M€ | **22,6 M€** | 15,1 M€ |
+| Gastos com pessoal | (16,9 M€) | (20,5 M€) | — |
+| Mais-valias com jogadores | 6,7 M€ | **27,5 M€** | — |
+| **Resultado líquido** | **(14,7 M€)** | **7,6 M€** | **(11,1 M€)** |
+| Resultado sem mais-valias | (21,4 M€) | (19,9 M€) | — |
+| Capital próprio | (31,2 M€) | (24,0 M€) | (36,8 M€) |
 
-<sub>Valores negativos entre parênteses, como nas demonstrações financeiras.</sub>
+<sub>Valores negativos entre parênteses, como nas demonstrações financeiras. 2025/26: comunicado de contas da SAD (indicadores resumidos, base reexpressa).</sub>
 
 ## Principais conclusões
 
@@ -51,7 +54,7 @@ Sobre essa base, **19 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Receitas vs. gastos com pessoal](graficos/02_receitas_vs_pessoal_sad.png)
 
-**3. A SAD tem capital próprio negativo desde 2020/21.** O passivo ultrapassa o ativo há cinco épocas seguidas e é hoje 11,5 vezes maior do que o do Clube.
+**3. A SAD tem capital próprio negativo desde 2020/21.** O passivo ultrapassa o ativo há seis épocas seguidas: o capital próprio chegou a (36,8 M€) a 30/06/2026, e o passivo a 85,3 M€.
 
 ![Ativo vs. passivo da SAD](graficos/05_balanco_sad.png)
 
@@ -61,11 +64,15 @@ Sobre essa base, **19 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Composição das receitas](graficos/04_composicao_receitas.png)
 
-**6. O Clube e a SAD têm perfis opostos.** O Clube tem pouco passivo e património valioso (Estádio e Academia), mas prejuízos recorrentes, perto de 1 M€ por ano nas duas últimas épocas. A SAD concentra a dívida e a volatilidade.
+**6. Gastar mais em salários não garantiu melhores classificações.** A correlação entre gastos com pessoal e lugar na Liga é fraca (−0,3). O 4.º lugar de 2016/17 custou 6,8 M€ em pessoal; o 7.º lugar de 2020/21 custou 20,7 M€.
+
+![Salários vs. classificação](graficos/06_salarios_vs_classificacao.png)
+
+**7. O Clube e a SAD têm perfis opostos.** O Clube tem pouco passivo e património valioso (Estádio e Academia), mas prejuízos recorrentes, perto de 1 M€ por ano nas duas últimas épocas. A SAD concentra a dívida e a volatilidade.
 
 ![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
 
-Os resultados completos das 19 consultas estão em [`resultados.md`](resultados.md).
+Os resultados completos das 26 consultas estão em [`resultados.md`](resultados.md). A leitura estratégica está em [`analise-estrategica.md`](analise-estrategica.md).
 
 ## Modelo de dados
 
@@ -83,6 +90,7 @@ erDiagram
     EPOCA ||--o{ OPERACAO_JOGADOR : ""
     EPOCA ||--o{ EVENTO : ""
     EPOCA ||--o{ FONTE : ""
+    EPOCA ||--|| DESEMPENHO_DESPORTIVO : ""
 
     DEMONSTRACAO_RESULTADOS {
         text entidade_id PK
@@ -109,7 +117,8 @@ erDiagram
 
 | Tabela | Conteúdo |
 |:---|:---|
-| `epoca` · `entidade` · `rubrica` | Dimensões: 13 épocas, 3 entidades, 20 rubricas |
+| `epoca` · `entidade` · `rubrica` | Dimensões: 14 épocas, 3 entidades, 20 rubricas |
+| `desempenho_desportivo` | Lugar na Liga, pontos, campanha europeia e troféus de cada época |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
 | `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho |
 | `cash_flow` | Fluxos operacional, de investimento e de financiamento (SAD) |
@@ -134,6 +143,8 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Self-join e `UNION ALL` | consultas 11, 14 e 19 |
 | Restrições `CHECK` e chaves estrangeiras | `01_schema.sql` |
 | Auditoria de qualidade dos dados | consultas 17 a 19 |
+| Correlação de Pearson em SQL (`sqrt`) | consulta 22 |
+| Cenários com `VALUES` e parâmetros | consulta 26 |
 
 ## Como usar
 
@@ -143,7 +154,7 @@ Para reconstruir tudo do zero:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 19 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 26 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 ```
@@ -169,7 +180,7 @@ contas-vitoria-sql/
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     19 consultas de análise
+│   └── 04_analises.sql     26 consultas de análise
 ├── scripts/
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
@@ -177,6 +188,7 @@ contas-vitoria-sql/
 ├── graficos/               Gráficos PNG
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
+├── analise-estrategica.md  Diagnóstico e recomendações
 └── vsc_contas.db           Base de dados pronta a usar
 ```
 
@@ -191,7 +203,8 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 - **Números diferentes para a mesma coisa.** As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
 - **Rácio pessoal/receitas.** É uma aproximação simples. A regra de custos do plantel da UEFA usa outra base de cálculo.
-- **Contas reexpressas.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26. Esta base usa os valores originalmente publicados.
+- **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `evento`. Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
+- **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas.
 
 ## Identidade visual
 

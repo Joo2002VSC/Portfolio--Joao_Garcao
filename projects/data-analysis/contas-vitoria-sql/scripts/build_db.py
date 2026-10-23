@@ -109,6 +109,13 @@ def main():
             (r["entidade"], r["epoca"], r["tipo"], r["descricao"], num(r["valor"])),
         )
 
+    for r in ler_csv("desempenho_desportivo.csv"):
+        con.execute(
+            "INSERT INTO desempenho_desportivo VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (r["epoca"], int(r["posicao_liga"]), num(r["pontos"]), r["competicao_europeia"] or None,
+             r["fase_europeia"] or None, r["trofeu"] or None, r["nota"] or None),
+        )
+
     con.executescript((SQL / "03_vistas.sql").read_text(encoding="utf-8"))
     con.commit()
 

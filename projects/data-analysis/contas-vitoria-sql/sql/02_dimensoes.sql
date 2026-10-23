@@ -2,11 +2,11 @@
 -- 02_dimensoes.sql : épocas, entidades e rubricas
 -- =====================================================================
 
--- Épocas 2012/13 a 2024/25 geradas com uma CTE recursiva
+-- Épocas 2012/13 a 2025/26 geradas com uma CTE recursiva
 WITH RECURSIVE anos(a) AS (
     SELECT 2012
     UNION ALL
-    SELECT a + 1 FROM anos WHERE a < 2024
+    SELECT a + 1 FROM anos WHERE a < 2025
 )
 INSERT INTO epoca (epoca_id, ano_inicio, ano_fim)
 SELECT a || '/' || substr(CAST(a + 1 AS TEXT), 3, 2), a, a + 1

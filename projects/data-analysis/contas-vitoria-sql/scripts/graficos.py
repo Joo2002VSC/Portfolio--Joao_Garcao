@@ -112,26 +112,26 @@ def barras_agrupadas(ax, epocas, series, largura=0.8):
 # Capa / resumo
 # ---------------------------------------------------------------------
 def capa(con):
-    rl, sem_mv, cp = q(con, """SELECT resultado_liquido, rl_sem_mais_valias, capital_proprio
-                               FROM v_kpis WHERE entidade_id='SAD' AND epoca_id='2024/25'""")[0]
-    divida_cp = q(con, """SELECT 100.0 * SUM(menos_1_ano) / SUM(total)
-                          FROM divida WHERE tipo='financeira'""")[0][0]
-    juros = q(con, """SELECT -valor FROM demonstracao_resultados
-                      WHERE entidade_id='SAD' AND rubrica_id='juros' AND epoca_id='2024/25'""")[0][0]
+    rl_2425 = q(con, """SELECT resultado_liquido FROM v_dr
+                        WHERE entidade_id='SAD' AND epoca_id='2024/25'""")[0][0]
+    rl_2526, cp_2526 = q(con, """SELECT k.resultado_liquido, k.capital_proprio FROM v_kpis k
+                                 WHERE k.entidade_id='SAD' AND k.epoca_id='2025/26'""")[0]
+    sem_mv = q(con, """SELECT rl_sem_mais_valias FROM v_kpis
+                       WHERE entidade_id='SAD' AND epoca_id='2024/25'""")[0][0]
 
     fig = plt.figure(figsize=(11, 4.4))
     fig.patches.append(Rectangle((0, 0.52), 1, 0.48, transform=fig.transFigure, color=AMARELO))
     fig.text(0.04, 0.83, "AS CONTAS DO VITÓRIA SC", fontsize=27, color=PRETO, **TITULO)
-    fig.text(0.04, 0.70, "Análise financeira em SQL  ·  SAD, Clube e Grupo consolidado  ·  2012/13 – 2024/25",
+    fig.text(0.04, 0.70, "Análise financeira em SQL  ·  SAD, Clube e Grupo consolidado  ·  2012/13 – 2025/26",
              fontsize=12, color=PRETO)
     fig.text(0.04, 0.585, "SQLITE   ·   PYTHON   ·   MATPLOTLIB", fontsize=9.5, fontweight="bold",
              color=PRETO, alpha=0.75)
 
     kpis = [
-        ("RESULTADO LÍQUIDO SAD", euros_m(rl, 1), "2024/25, recorde da SAD"),
-        ("SEM VENDAS DE JOGADORES", euros_m(sem_mv, 1), "resultado sem mais-valias"),
-        ("CAPITAL PRÓPRIO SAD", euros_m(cp, 1), "a 30/06/2025"),
-        ("DÍVIDA A MENOS DE 1 ANO", f"{divida_cp:.0f}%".replace(".", ","), f"juros de {euros_m(juros, 1)} na época"),
+        ("RESULTADO SAD 2024/25", euros_m(rl_2425, 1), "recorde, com Europa e vendas"),
+        ("SEM VENDAS DE JOGADORES", euros_m(sem_mv, 1), "o mesmo ano, sem mais-valias"),
+        ("RESULTADO SAD 2025/26", euros_m(rl_2526, 1), "sem Europa"),
+        ("CAPITAL PRÓPRIO SAD", euros_m(cp_2526, 1), "a 30/06/2026"),
     ]
     larg = 0.92 / len(kpis)
     for i, (rot, val, nota) in enumerate(kpis):
@@ -154,7 +154,7 @@ def resultado_por_entidade(con):
                      FROM v_resultado_por_entidade WHERE epoca_id >= '2017/18'""")
     epocas = [r[0] for r in rows]
     fig, ax = figura("Resultado líquido por entidade",
-                     "SAD, Clube e Grupo consolidado, por época (exercício a 30 de junho)")
+                     "SAD, Clube e Grupo consolidado, por época (exercício a 30 de junho) · 2025/26: só SAD, comunicado de contas")
     barras_agrupadas(ax, epocas, [
         ("SAD", [r[1] for r in rows], PRETO),
         ("Grupo consolidado", [r[3] for r in rows], CINZA),
@@ -255,21 +255,62 @@ def balanco_sad(con):
     at, ps = [r[1] for r in rows], [r[2] for r in rows]
     x = range(len(epocas))
     fig, ax = figura("Ativo vs. passivo da SAD",
-                     "Balanço a 30 de junho · A área amarela é o capital próprio negativo (passivo > ativo)")
+                     "Balanço a 30 de junho · A área amarela é o capital próprio negativo (passivo > ativo) · 2025/26: comunicado de contas")
     ax.fill_between(x, at, ps, where=[p > a for p, a in zip(ps, at)], interpolate=True,
                     color=AMARELO, alpha=0.55, linewidth=0, label="Capital próprio negativo")
     ax.plot(x, ps, color=PRETO, linewidth=2.4, marker="o", markersize=6, label="Passivo")
     ax.plot(x, at, color=CINZA_ESCURO, linewidth=2.4, marker="o", markersize=6,
             markerfacecolor=BRANCO, markeredgewidth=2, label="Ativo")
     ultimo = rows[-1]
-    ax.annotate(f"Capital próprio\n{euros_m(ultimo[3], 1)}", (len(epocas) - 1, (ultimo[1] + ultimo[2]) / 2),
-                xytext=(-12, 0), textcoords="offset points", ha="right", va="center",
-                fontsize=9, fontweight="bold")
+    ax.annotate(f"Capital próprio\n{euros_m(ultimo[3], 1)}\nem {ultimo[0]}", (len(epocas) - 1.5, (ultimo[1] + ultimo[2]) / 2 - 11e6),
+                ha="center", va="center", fontsize=9, fontweight="bold")
     ax.set_xticks(list(x), epocas, fontsize=9)
     ax.yaxis.set_major_formatter(eixo_m)
-    ax.set_ylim(0, 75e6)
+    ax.set_ylim(0, max(ps) * 1.12)
     ax.legend(loc="upper left")
     guardar(fig, "05_balanco_sad.png")
+
+
+def posicao_vs_pessoal(con):
+    rows = q(con, """SELECT d.epoca_id, d.posicao_liga, k.gastos_pessoal, d.fase_europeia
+                     FROM desempenho_desportivo d
+                     JOIN v_kpis k ON k.epoca_id = d.epoca_id AND k.entidade_id = 'SAD'
+                     WHERE k.gastos_pessoal IS NOT NULL ORDER BY d.epoca_id""")
+    fig, ax = figura("Salários vs. classificação",
+                     "SAD · Gastos com pessoal e lugar na Liga em cada época · Gastar mais não garantiu melhores lugares")
+    estilos = {
+        "Fase de grupos": (AMARELO, PRETO, "Europa: fase de grupos ou mais"),
+        "Oitavos de final": (AMARELO, PRETO, "Europa: fase de grupos ou mais"),
+        "Pré-eliminatória": (CINZA, CINZA_ESCURO, "Europa: só pré-eliminatórias"),
+        None: (BRANCO, PRETO, "Sem Europa"),
+    }
+    vistos = set()
+    for ep, pos, pes, fase in rows:
+        face, borda, rot = estilos[fase]
+        ax.scatter(pes, pos, s=150, color=face, edgecolor=borda, linewidth=1.6, zorder=3,
+                   label=None if rot in vistos else rot)
+        vistos.add(rot)
+        esquerda = ep in ("2013/14", "2021/22")
+        ax.annotate(ep, (pes, pos), xytext=(-11 if esquerda else 11, -3), textcoords="offset points",
+                    ha="right" if esquerda else "left", fontsize=8.5, color=TEXTO_2)
+    corr = q(con, """WITH x AS (SELECT k.gastos_pessoal g, d.posicao_liga p FROM v_kpis k
+                     JOIN desempenho_desportivo d ON d.epoca_id = k.epoca_id
+                     WHERE k.entidade_id = 'SAD' AND k.gastos_pessoal IS NOT NULL),
+                     m AS (SELECT AVG(g) mg, AVG(p) mp FROM x)
+                     SELECT SUM((g-mg)*(p-mp)) / (sqrt(SUM((g-mg)*(g-mg))) * sqrt(SUM((p-mp)*(p-mp))))
+                     FROM x, m""")[0][0]
+    ax.text(0.99, 0.04, f"Correlação: {corr:.1f}".replace(".", ",").replace("-", "−") + " (fraca)",
+            transform=ax.transAxes, ha="right", fontsize=9.5, fontweight="bold")
+    ax.invert_yaxis()
+    ax.set_yticks(range(1, 12), [f"{i}.º" for i in range(1, 12)])
+    ax.set_ylim(11, 3)
+    ax.set_xlim(3e6, 23e6)
+    ax.xaxis.set_major_formatter(eixo_m)
+    ax.grid(axis="both")
+    ax.set_xlabel("Gastos com pessoal da SAD")
+    ax.set_ylabel("Lugar na Liga")
+    ax.legend(loc="lower center", bbox_to_anchor=(0.62, 0.02))
+    guardar(fig, "06_salarios_vs_classificacao.png")
 
 
 def main():
@@ -282,6 +323,7 @@ def main():
     dependencia_vendas(con)
     composicao_receitas(con)
     balanco_sad(con)
+    posicao_vs_pessoal(con)
 
 
 if __name__ == "__main__":

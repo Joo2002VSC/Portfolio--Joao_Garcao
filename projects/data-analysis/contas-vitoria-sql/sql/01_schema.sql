@@ -7,6 +7,7 @@
 
 PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS desempenho_desportivo;
 DROP TABLE IF EXISTS evento;
 DROP TABLE IF EXISTS fonte;
 DROP TABLE IF EXISTS divida;
@@ -150,6 +151,18 @@ CREATE TABLE evento (
     tipo        TEXT NOT NULL CHECK (tipo IN ('evento', 'observacao')),
     descricao   TEXT NOT NULL,
     valor       INTEGER
+);
+
+-- Desempenho desportivo da equipa principal em cada época
+CREATE TABLE desempenho_desportivo (
+    epoca_id            TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
+    posicao_liga        INTEGER NOT NULL CHECK (posicao_liga BETWEEN 1 AND 18),
+    pontos              INTEGER,
+    competicao_europeia TEXT,                   -- NULL = sem Europa
+    fase_europeia       TEXT CHECK (fase_europeia IN
+                        ('Pré-eliminatória', 'Fase de grupos', 'Oitavos de final')),
+    trofeu              TEXT,
+    nota                TEXT
 );
 
 CREATE INDEX idx_dr_rubrica ON demonstracao_resultados (rubrica_id, epoca_id);

@@ -277,3 +277,141 @@ SELECT s.epoca_id AS epoca,
 FROM transferencias s
 JOIN transferencias c ON c.epoca_id = s.epoca_id AND c.entidade_id = 'CONSOLIDADO'
 WHERE s.entidade_id = 'SAD' AND s.mais_valias_liquidas <> c.mais_valias_liquidas;
+
+
+-- =====================================================================
+-- FINANÇAS vs. DESEMPENHO DESPORTIVO E ENQUADRAMENTO REGULATÓRIO
+-- =====================================================================
+
+
+-- @q 20. Finanças e resultados desportivos da SAD, época a época
+-- Conceitos: LEFT JOIN entre factos financeiros e desportivos, COALESCE
+SELECT
+    d.epoca_id                                         AS epoca,
+    d.posicao_liga                                     AS lugar,
+    COALESCE(d.competicao_europeia || ' · ' || d.fase_europeia, '—') AS europa,
+    COALESCE(d.trofeu, '')                             AS trofeu,
+    COALESCE(k.vendas_servicos, r.rendimentos_operacionais) AS receitas,
+    k.gastos_pessoal                                   AS pessoal,
+    r.resultado_liquido                                AS rl
+FROM desempenho_desportivo d
+LEFT JOIN v_kpis k ON k.epoca_id = d.epoca_id AND k.entidade_id = 'SAD'
+LEFT JOIN v_dr   r ON r.epoca_id = d.epoca_id AND r.entidade_id = 'SAD'
+ORDER BY d.epoca_id;
+
+
+-- @q 21. Quanto vale a Europa: receitas e resultado médios por tipo de época
+-- Conceitos: CASE para classificar, agregação, AVG
+WITH e AS (
+    SELECT
+        d.epoca_id,
+        CASE
+            WHEN d.fase_europeia IN ('Fase de grupos', 'Oitavos de final') THEN '1. Fase de grupos ou mais'
+            WHEN d.fase_europeia = 'Pré-eliminatória'                      THEN '2. Só pré-eliminatórias'
+            ELSE                                                                '3. Sem Europa'
+        END AS tipo,
+        k.vendas_servicos,
+        k.resultado_liquido
+    FROM desempenho_desportivo d
+    JOIN v_kpis k ON k.epoca_id = d.epoca_id AND k.entidade_id = 'SAD'
+    WHERE k.vendas_servicos IS NOT NULL
+)
+SELECT tipo,
+       COUNT(*)                                   AS epocas,
+       GROUP_CONCAT(epoca_id, ', ')               AS lista,
+       CAST(AVG(vendas_servicos) AS INTEGER)      AS receita_media,
+       CAST(AVG(resultado_liquido) AS INTEGER)    AS rl_medio
+FROM e
+GROUP BY tipo
+ORDER BY tipo;
+
+
+-- @q 22. Gastar mais em salários garante melhor classificação?
+-- Conceitos: correlação de Pearson calculada em SQL (AVG, SUM, sqrt).
+-- Correlação negativa = mais gastos, lugar mais baixo (melhor) na tabela.
+WITH x AS (
+    SELECT k.gastos_pessoal AS g, d.posicao_liga AS p
+    FROM v_kpis k
+    JOIN desempenho_desportivo d ON d.epoca_id = k.epoca_id
+    WHERE k.entidade_id = 'SAD' AND k.gastos_pessoal IS NOT NULL
+),
+m AS (SELECT AVG(g) AS mg, AVG(p) AS mp, COUNT(*) AS n FROM x)
+SELECT
+    m.n                                                         AS epocas,
+    ROUND(SUM((g - mg) * (p - mp)) /
+          (sqrt(SUM((g - mg) * (g - mg))) * sqrt(SUM((p - mp) * (p - mp)))), 2) AS correlacao,
+    CAST(m.mg AS INTEGER)                                       AS pessoal_medio,
+    ROUND(m.mp, 1)                                              AS lugar_medio
+FROM x, m;
+
+
+-- @q 23. Custo de cada lugar: gastos com pessoal por época e lugar obtido
+-- Conceitos: ordenação por duas colunas, rácio
+SELECT
+    d.epoca_id        AS epoca,
+    d.posicao_liga    AS lugar,
+    k.gastos_pessoal  AS pessoal,
+    RANK() OVER (ORDER BY k.gastos_pessoal DESC) AS ranking_gasto,
+    RANK() OVER (ORDER BY d.posicao_liga ASC)    AS ranking_lugar
+FROM desempenho_desportivo d
+JOIN v_kpis k ON k.epoca_id = d.epoca_id AND k.entidade_id = 'SAD'
+WHERE k.gastos_pessoal IS NOT NULL
+ORDER BY d.epoca_id;
+
+
+-- @q 24. Aproximação ao rácio de custos do plantel da UEFA (limite de 70% desde 2025/26)
+-- (salários de atletas e treinadores + amortizações) / (receitas + mais-valias).
+-- Aproximação: a UEFA usa definições próprias e só controla clubes nas suas provas.
+WITH p AS (
+    SELECT epoca_id,
+           SUM(CASE WHEN categoria IN ('Atletas', 'Treinadores') THEN valor END) AS plantel
+    FROM gastos_pessoal_composicao
+    GROUP BY epoca_id
+)
+SELECT
+    p.epoca_id                                   AS epoca,
+    p.plantel + (-r.depreciacoes)                AS custos_plantel,
+    r.vendas_servicos + t.mais_valias_liquidas   AS receitas_relevantes,
+    ROUND(100.0 * (p.plantel - r.depreciacoes)
+          / (r.vendas_servicos + t.mais_valias_liquidas), 1) AS racio_pct,
+    ROUND(100.0 * (p.plantel - r.depreciacoes) / r.vendas_servicos, 1) AS racio_sem_vendas_pct,
+    CASE WHEN 100.0 * (p.plantel - r.depreciacoes)
+              / (r.vendas_servicos + t.mais_valias_liquidas) <= 70
+         THEN 'cumpriria 70%' ELSE 'acima de 70%' END AS leitura
+FROM p
+JOIN v_dr r           ON r.epoca_id = p.epoca_id AND r.entidade_id = 'SAD'
+JOIN transferencias t ON t.epoca_id = p.epoca_id AND t.entidade_id = 'SAD'
+ORDER BY p.epoca_id;
+
+
+-- @q 25. Ponto de equilíbrio 2025/26: quanto é preciso ganhar com jogadores
+-- Valores do comunicado de contas 2025/26 (tabela evento). Para resultado
+-- líquido zero, o resultado com direitos de atletas tem de cobrir o resto.
+WITH v AS (
+    SELECT
+        (SELECT resultado_liquido FROM v_dr WHERE entidade_id = 'SAD' AND epoca_id = '2025/26') AS rl,
+        (SELECT valor FROM evento WHERE epoca_id = '2025/26'
+            AND descricao LIKE 'Resultado com direitos de atletas%')                          AS rda
+)
+SELECT
+    rda                    AS resultado_com_jogadores_2025_26,
+    rl                     AS resultado_liquido_2025_26,
+    rda - rl               AS necessario_para_equilibrio,
+    -rl                    AS falta_face_a_2025_26
+FROM v;
+
+
+-- @q 26. Centralização dos direitos TV (2028/29): parte igual estimada por clube
+-- Parâmetros da proposta: 90% para a Liga Betclic (18 clubes), 33,2% em
+-- partes iguais. Cenários para o valor total do contrato.
+WITH cenarios(total) AS (VALUES (200000000), (250000000), (275000000)),
+     atual AS (
+        SELECT valor AS tv_atual FROM receitas_composicao
+        WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'
+     )
+SELECT
+    total                                        AS valor_total_contrato,
+    CAST(total * 0.90 * 0.332 / 18 AS INTEGER)   AS parte_igual_por_clube,
+    tv_atual                                     AS tv_vitoria_2024_25,
+    ROUND(100.0 * (total * 0.90 * 0.332 / 18) / tv_atual, 1) AS parte_igual_em_pct_do_atual
+FROM cenarios, atual;
