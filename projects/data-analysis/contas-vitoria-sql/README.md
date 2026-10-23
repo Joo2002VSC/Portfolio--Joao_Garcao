@@ -12,8 +12,7 @@
 <p align="center">
   <a href="#resumo">Resumo</a> ·
   <a href="#principais-conclusões">Conclusões</a> ·
-  <a href="analise-estrategica.md">Análise estratégica</a> ·
-  <a href="verificacao-fontes.md">Verificação das fontes</a> ·
+  <a href="#relatórios">Relatórios</a> ·
   <a href="#modelo-de-dados">Modelo de dados</a> ·
   <a href="#como-usar">Como usar</a> ·
   <a href="#fontes-e-limitações">Fontes e limitações</a>
@@ -21,19 +20,19 @@
 
 ---
 
-## Resumo
+<a id="resumo"></a>
+<img src="graficos/cabecalhos/01_resumo.png" alt="Resumo" width="100%">
 
 Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.
 
-Sobre essa base, **35 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
-
-**→ Lê a [análise estratégica](analise-estrategica.md)**: diagnóstico, comparação com o desempenho desportivo, enquadramento (regras da UEFA, centralização dos direitos TV, custo da dívida) e 12 recomendações com cenários.
+Sobre essa base, **50 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
 
 **✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
 > Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
 
-## Indicadores-chave · SAD
+<a id="indicadores-chave"></a>
+<img src="graficos/cabecalhos/02_indicadores.png" alt="Indicadores-chave da SAD" width="100%">
 
 | Indicador | 2023/24 | 2024/25 | 2025/26 |
 |:---|---:|---:|---:|
@@ -47,7 +46,8 @@ Sobre essa base, **35 consultas SQL** respondem a uma pergunta central: *as cont
 
 <sub>Valores negativos entre parênteses, como nas demonstrações financeiras. 2025/26: comunicado de contas da SAD (indicadores resumidos, base reexpressa).</sub>
 
-## Principais conclusões
+<a id="principais-conclusões"></a>
+<img src="graficos/cabecalhos/03_conclusoes.png" alt="Principais conclusões" width="100%">
 
 **1. A SAD vive das vendas de jogadores.** Nas oito épocas com dados de transferências, o resultado sem mais-valias seria sempre negativo, entre (5,9 M€) e (25,3 M€). O recorde de 2024/25 só existe graças a 27,5 M€ de mais-valias.
 
@@ -83,9 +83,24 @@ Sobre essa base, **35 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
 
-Os resultados completos das 35 consultas estão em [`resultados.md`](resultados.md). A leitura estratégica está em [`analise-estrategica.md`](analise-estrategica.md).
+Os resultados completos das 50 consultas estão em [`resultados.md`](resultados.md).
 
-## Modelo de dados
+<a id="relatórios"></a>
+<img src="graficos/cabecalhos/04_relatorios.png" alt="Relatórios" width="100%">
+
+| Relatório | O que contém |
+|:---|:---|
+| **[Análise estratégica](analise-estrategica.md)** | Diagnóstico, finanças vs. desempenho desportivo, enquadramento económico e 12 recomendações com cenários |
+| **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva |
+| **[Verificação das fontes](verificacao-fontes.md)** | Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias |
+
+| | |
+|:---:|:---:|
+| ![Reservas ocultas](graficos/10_reservas_ocultas.png) | ![Rácio de custos do plantel](graficos/12_racio_custos_plantel_uefa.png) |
+| ![Centralização por lugar](graficos/13_centralizacao_por_lugar.png) | ![Custo por ponto](graficos/14_custo_por_ponto.png) |
+
+<a id="modelo-de-dados"></a>
+<img src="graficos/cabecalhos/05_modelo-de-dados.png" alt="Modelo de dados" width="100%">
 
 ```mermaid
 erDiagram
@@ -136,6 +151,13 @@ erDiagram
 | `balanco_sad_rc` | Balanço detalhado da SAD, dívida financeira e juros, tal como publicados nos R&C |
 | `pessoal_sad` | Nº médio de funcionários por categoria e decomposição dos gastos com pessoal |
 | `divergencia` | Diferenças entre fontes secundárias e os R&C (auditoria) |
+| `balanco_rubrica` | Balanço da SAD rubrica a rubrica (clientes, fornecedores, outras contas a pagar…) |
+| `passes_jogadores` | Aquisições, amortizações, abates e valor contabilístico do plantel |
+| `financiamento_detalhe` | Dívida financeira por instrumento (empréstimos, factoring, Apollo, locações) |
+| `partes_relacionadas` | Fluxos e saldos entre o Clube, a SAD e a V Sports |
+| `auditoria` | Opinião do auditor, ênfases e incertezas materiais por época |
+| `reexpressao` | Valores originais e reexpressos de 2024/25 |
+| `treinador` | Treinadores principais e interinos desde 2015 |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
 | `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho (SAD: valores dos R&C) |
 | `cash_flow` | Fluxos operacional, de investimento e de financiamento (SAD) |
@@ -163,9 +185,14 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Correlação de Pearson em SQL (`sqrt`) | consulta 22 |
 | Cenários com `VALUES` e parâmetros | consulta 26 |
 | Taxa de juro implícita com `LAG` e médias | consulta 27 |
-| Rácios financeiros e classificação com `CASE` | consultas 29 e 30 |
+| Rácios financeiros e classificação com `CASE` | consultas 29, 30 e 37 |
+| Médias móveis de 3 anos (`ROWS BETWEEN 2 PRECEDING`) | consulta 45 (rácio UEFA) |
+| Prazos médios e fundo de maneio | consulta 38 |
+| Simulação de repartição com CTE recursiva (1.º a 18.º lugar) | consulta 48 |
+| Agregação condicional (`SUM(CASE …)`, `COUNT(DISTINCT)`) | consultas 44 e 50 |
 
-## Como usar
+<a id="como-usar"></a>
+<img src="graficos/cabecalhos/06_como-usar.png" alt="Como usar" width="100%">
 
 A base de dados `vsc_contas.db` já vem incluída e abre diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
 
@@ -173,9 +200,10 @@ Para reconstruir tudo do zero:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 35 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 50 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
+python scripts/cabecalhos.py        # gera as faixas de título do README
 ```
 
 Exemplo: o resultado da SAD com e sem vendas de jogadores.
@@ -199,20 +227,23 @@ contas-vitoria-sql/
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     35 consultas de análise
+│   └── 04_analises.sql     50 consultas de análise
 ├── scripts/
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
-│   └── graficos.py         Gera os gráficos
-├── graficos/               Gráficos PNG
+│   ├── graficos.py         Gera os gráficos
+│   └── cabecalhos.py       Gera as faixas de título do README
+├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
+├── analise-tecnica.md      17 conceitos financeiros e desportivos
 ├── verificacao-fontes.md   Conferência com os Relatórios e Contas
 └── vsc_contas.db           Base de dados pronta a usar
 ```
 
-## Fontes e limitações
+<a id="fontes-e-limitações"></a>
+<img src="graficos/cabecalhos/07_fontes-e-limitacoes.png" alt="Fontes e limitações" width="100%">
 
 Os dados vêm de duas fontes:
 
@@ -225,15 +256,17 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 - **Valores repetidos.** Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas, e "Outros" repete-se em 2023/24 e 2024/25. Provavelmente são valores de preenchimento e não dados reais.
 - **Números diferentes para a mesma coisa.** As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
-- **Rácio pessoal/receitas.** É uma aproximação simples. A regra de custos do plantel da UEFA usa outra base de cálculo.
-- **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `evento`. Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
+- **Rácio de custos do plantel.** A consulta 45 segue a fórmula da UEFA, mas sem as comissões de agentes (não há dados separados), por isso subestima o rácio.
+- **Simulações.** A centralização dos direitos TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.
+- **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `reexpressao` (consulta 36). Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
 - **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.
 - **Juros.** A tabela `balanco_sad_rc` guarda os juros suportados brutos, tal como nos R&C. A rubrica "juros" da demonstração de resultados (origem: VSC Contas) é, nalgumas épocas, líquida dos juros obtidos. A taxa de juro implícita inclui encargos de factoring e de antecipação de receitas, por isso fica acima da taxa nominal dos empréstimos.
 - **Funcionários.** São números médios anuais. Em 2012/13 são os funcionários transferidos para a SAD em abril de 2013 (época parcial). A categoria "pessoal de apoio ao futebol profissional" só existe desde 2021/22.
 
-## Identidade visual
+<a id="identidade-visual"></a>
+<img src="graficos/cabecalhos/08_identidade-visual.png" alt="Identidade visual" width="100%">
 
-Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D510`, preto `#111111` e cinzentos `#6F6D6E` e `#EBEBEB`. Os valores negativos aparecem entre parênteses. A tipografia é a [Archivo](https://fonts.google.com/specimen/Archivo), da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta `fontes/` (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.
+Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D510`, preto `#111111` e cinzentos `#6F6D6E` e `#EBEBEB`. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por `scripts/cabecalhos.py`. A tipografia é a [Archivo](https://fonts.google.com/specimen/Archivo), da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta `fontes/` (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.
 
 ---
 

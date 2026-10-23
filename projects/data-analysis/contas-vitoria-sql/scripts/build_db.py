@@ -138,6 +138,35 @@ def main():
              float(r["diferenca"]), r["nota"] or None),
         )
 
+    def carregar(ficheiro, tabela, colunas, numericas):
+        """Carrega um CSV para uma tabela; colunas numéricas arredondadas ao euro."""
+        for r in ler_csv(ficheiro):
+            valores = [dinheiro(r[c]) if c in numericas else (r[c] or None) for c in colunas]
+            con.execute(f"INSERT INTO {tabela} ({', '.join(destino.get(c, c) for c in colunas)}) "
+                        f"VALUES ({', '.join('?' * len(colunas))})", valores)
+
+    destino = {"epoca": "epoca_id", "treinador": "nome"}
+    carregar("balanco_rubricas.csv", "balanco_rubrica",
+             ["epoca", "lado", "prazo", "rubrica", "valor"], {"valor"})
+    carregar("passes_jogadores.csv", "passes_jogadores",
+             ["epoca", "valor_liquido_inicio", "aquisicoes", "amortizacoes", "valor_bruto_alienado",
+              "amort_acumuladas_alienadas", "rescisoes_bruto", "rescisoes_amort_acumuladas",
+              "valor_liquido_fim", "documento"],
+             {"valor_liquido_inicio", "aquisicoes", "amortizacoes", "valor_bruto_alienado",
+              "amort_acumuladas_alienadas", "rescisoes_bruto", "rescisoes_amort_acumuladas",
+              "valor_liquido_fim"})
+    carregar("partes_relacionadas.csv", "partes_relacionadas",
+             ["epoca", "rubrica", "sentido", "valor", "documento"], {"valor"})
+    carregar("auditoria.csv", "auditoria",
+             ["epoca", "parecer_auditor", "artigo_35_no_relatorio", "nota"], {"artigo_35_no_relatorio"})
+    carregar("financiamento_detalhe.csv", "financiamento_detalhe",
+             ["data_ref", "instrumento", "total", "menos_1_ano", "entre_1_3_anos", "documento"],
+             {"total", "menos_1_ano", "entre_1_3_anos"})
+    carregar("reexpressao.csv", "reexpressao",
+             ["epoca", "indicador", "valor_original", "valor_reexpresso", "documento"],
+             {"valor_original", "valor_reexpresso"})
+    carregar("treinadores.csv", "treinador", ["periodo", "treinador", "tipo"], set())
+
     con.executescript((SQL / "03_vistas.sql").read_text(encoding="utf-8"))
     con.commit()
 

@@ -6,7 +6,7 @@
 
 *Como pode o Vitória SC melhorar a sua prestação financeira?*
 
-> Análise independente de João Garção, baseada nos dados deste projeto (consultas 20 a 26 em [`resultados.md`](resultados.md)) e em fontes públicas citadas no fim. As recomendações são opinião do autor. Não têm ligação ao clube nem a qualquer candidatura ou órgão social.
+> Análise independente de João Garção, baseada nos dados deste projeto (consultas 20 a 26 em [`resultados.md`](resultados.md)) e em fontes públicas citadas no fim. As recomendações são opinião do autor. Não têm ligação ao clube nem a qualquer candidatura ou órgão social. Os conceitos técnicos (dívida líquida/EBITDA, factoring, artigo 35.º, regras da UEFA, centralização…) são aprofundados na [análise técnica](analise-tecnica.md).
 
 ---
 

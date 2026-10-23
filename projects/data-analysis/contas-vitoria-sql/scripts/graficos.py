@@ -401,6 +401,118 @@ def funcionarios(con):
     guardar(fig, "09_funcionarios.png")
 
 
+def barras_simples(ax, epocas, valores, cor=PRETO, rotulos=None, fmt=None):
+    xs = range(len(epocas))
+    ax.bar(xs, valores, color=cor, width=0.66, edgecolor=PRETO if cor in (AMARELO, AMARELO_CLARO) else cor,
+           linewidth=0.6)
+    ax.set_xticks(list(xs), epocas, fontsize=9)
+    return xs
+
+
+def reservas_ocultas(con):
+    rows = q(con, """SELECT p.epoca_id, p.valor_bruto_alienado - p.amort_acumuladas_alienadas, t.vendas_brutas
+                     FROM passes_jogadores p JOIN transferencias t
+                       ON t.epoca_id = p.epoca_id AND t.entidade_id = 'SAD' ORDER BY p.epoca_id""")
+    epocas = [r[0] for r in rows]
+    fig, ax = figura("Quanto vale o plantel, de facto",
+                     "SAD · Valor contabilístico dos passes vendidos vs. valor de venda · A diferença é a 'reserva oculta' do plantel")
+    barras_agrupadas(ax, epocas, [
+        ("Valor contabilístico dos jogadores vendidos", [r[1] for r in rows], CINZA),
+        ("Vendas brutas", [r[2] for r in rows], PRETO),
+    ], largura=0.72)
+    for x, r in enumerate(rows):
+        ax.annotate(f"{r[2] / r[1]:.0f}×", (x + 0.18, r[2]), xytext=(0, 4), textcoords="offset points",
+                    ha="center", fontsize=9, fontweight="bold")
+    ax.set_ylim(0, 55e6)
+    ax.legend(loc="upper left")
+    guardar(fig, "10_reservas_ocultas.png")
+
+
+def alavancagem(con):
+    rows = q(con, """SELECT epoca_id, vendas_servicos, -(gastos_pessoal + fse + depreciacoes)
+                     FROM v_dr WHERE entidade_id = 'SAD' AND vendas_servicos IS NOT NULL ORDER BY epoca_id""")
+    epocas = [r[0] for r in rows]
+    fig, ax = figura("Custos fixos vs. receitas",
+                     "SAD · % = parte dos custos fixos coberta pelas receitas · O resto tem de vir da venda de jogadores")
+    xs = range(len(epocas))
+    ax.bar(xs, [r[2] for r in rows], color=CINZA_CLARO, width=0.7, label="Custos fixos (pessoal + FSE + depreciações)")
+    ax.bar(xs, [r[1] for r in rows], color=PRETO, width=0.42, label="Receitas (vendas e serviços)")
+    for x, r in enumerate(rows):
+        ax.text(x, r[2] + 0.5e6, f"{100 * r[1] / r[2]:.0f}%", ha="center", fontsize=8.5, fontweight="bold")
+    ax.set_xticks(list(xs), epocas, fontsize=9)
+    ax.yaxis.set_major_formatter(eixo_m)
+    ax.set_ylim(0, 40e6)
+    ax.legend(loc="upper left")
+    guardar(fig, "11_custos_fixos_vs_receitas.png")
+
+
+def racio_uefa(con):
+    rows = q(con, """WITH base AS (
+                        SELECT p.epoca_id, p.rem_jogadores + p.rem_treinadores + j.amortizacoes AS c,
+                               k.vendas_servicos AS r,
+                               AVG(t.mais_valias_liquidas) OVER (ORDER BY p.epoca_id
+                                   ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS mv
+                        FROM pessoal_sad p
+                        JOIN passes_jogadores j ON j.epoca_id = p.epoca_id
+                        JOIN v_kpis k ON k.epoca_id = p.epoca_id AND k.entidade_id = 'SAD'
+                        LEFT JOIN transferencias t ON t.epoca_id = p.epoca_id AND t.entidade_id = 'SAD'
+                        WHERE p.rem_jogadores IS NOT NULL)
+                     SELECT epoca_id, 100.0 * c / (r + mv), 100.0 * c / r FROM base ORDER BY epoca_id""")
+    epocas = [r[0] for r in rows]
+    fig, ax = figura("Rácio de custos do plantel (UEFA)",
+                     "SAD · Salários de jogadores e treinadores + amortizações de passes ÷ receitas · Aproximação ao regulamento")
+    barras_agrupadas(ax, epocas, [
+        ("Com média de 3 épocas de vendas de jogadores", [r[1] for r in rows], AMARELO),
+        ("Sem vendas de jogadores", [r[2] for r in rows], CINZA),
+    ], largura=0.72)
+    ax.axhline(70, color=PRETO, linewidth=1.2, linestyle=(0, (4, 3)))
+    ax.text(len(epocas) - 0.5, 72, "limite UEFA: 70%", ha="right", fontsize=9, fontweight="bold")
+    for x, r in enumerate(rows):
+        ax.text(x - 0.18, r[1] + 2, f"{r[1]:.0f}%", ha="center", fontsize=8)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+    ax.set_ylim(0, 230)
+    ax.legend(loc="upper left")
+    guardar(fig, "12_racio_custos_plantel_uefa.png")
+
+
+def centralizacao(con):
+    rows = q(con, """WITH RECURSIVE lugar(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM lugar WHERE n < 18)
+                     SELECT n, 225000000 * 0.332 / 18, 225000000 * 0.442 * (19 - n) / 171.0 FROM lugar""")
+    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos TV' AND epoca_id='2024/25'")[0][0]
+    fig, ax = figura("Centralização dos direitos TV: quanto vale cada lugar",
+                     "Simulação ilustrativa · Contrato de 250 M€ · Parte igual + mérito repartido de forma linear · Sem a componente de audiências")
+    xs = range(len(rows))
+    ax.bar(xs, [r[1] for r in rows], color=CINZA, width=0.68, label="Parte igual (33,2%)")
+    ax.bar(xs, [r[2] for r in rows], bottom=[r[1] for r in rows], color=PRETO, width=0.68,
+           label="Mérito desportivo (44,2%, ilustrativo)")
+    for i in (4, 5, 8):
+        ax.patches[18 + i].set_facecolor(AMARELO)
+        ax.patches[18 + i].set_edgecolor(PRETO)
+    ax.axhline(tv, color=PRETO, linewidth=1.2, linestyle=(0, (4, 3)))
+    ax.text(17.4, tv + 0.4e6, f"Vitória hoje: {euros_m(tv, 1)}", ha="right", fontsize=9, fontweight="bold")
+    ax.set_xticks(list(xs), [f"{r[0]}.º" for r in rows], fontsize=9)
+    ax.yaxis.set_major_formatter(eixo_m)
+    ax.set_ylim(0, 16e6)
+    ax.set_xlabel("Lugar na Liga · a amarelo, os lugares do Vitória nas últimas épocas (5.º, 6.º e 9.º)")
+    ax.legend(loc="upper right")
+    guardar(fig, "13_centralizacao_por_lugar.png")
+
+
+def custo_por_ponto(con):
+    rows = q(con, """SELECT d.epoca_id, 1.0 * p.total_gastos_pessoal / d.pontos, d.pontos
+                     FROM desempenho_desportivo d JOIN pessoal_sad p ON p.epoca_id = d.epoca_id
+                     WHERE d.epoca_id >= '2013/14' ORDER BY d.epoca_id""")
+    epocas = [r[0] for r in rows]
+    fig, ax = figura("Quanto custa cada ponto",
+                     "SAD · Gastos com pessoal ÷ pontos na Liga · Em 2014/15, um ponto custava 80 mil €; em 2024/25, 380 mil €")
+    xs = barras_simples(ax, epocas, [r[1] for r in rows], cor=PRETO)
+    for x, r in enumerate(rows):
+        ax.text(x, r[1] + 8e3, f"{r[1] / 1e3:.0f} mil €\n{r[2]} pts", ha="center", fontsize=8, linespacing=1.1)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v / 1e3:.0f} mil €" if v else "0"))
+    ax.set_ylim(0, 560e3)
+    guardar(fig, "14_custo_por_ponto.png")
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     con = sqlite3.connect(DB)
@@ -415,6 +527,11 @@ def main():
     divida_e_juros(con)
     racios_balanco(con)
     funcionarios(con)
+    reservas_ocultas(con)
+    alavancagem(con)
+    racio_uefa(con)
+    centralizacao(con)
+    custo_por_ponto(con)
 
 
 if __name__ == "__main__":

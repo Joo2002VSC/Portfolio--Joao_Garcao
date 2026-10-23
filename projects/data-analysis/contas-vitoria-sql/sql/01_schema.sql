@@ -7,6 +7,13 @@
 
 PRAGMA foreign_keys = ON;
 
+DROP TABLE IF EXISTS treinador;
+DROP TABLE IF EXISTS reexpressao;
+DROP TABLE IF EXISTS financiamento_detalhe;
+DROP TABLE IF EXISTS auditoria;
+DROP TABLE IF EXISTS partes_relacionadas;
+DROP TABLE IF EXISTS passes_jogadores;
+DROP TABLE IF EXISTS balanco_rubrica;
 DROP TABLE IF EXISTS divergencia;
 DROP TABLE IF EXISTS pessoal_sad;
 DROP TABLE IF EXISTS balanco_sad_rc;
@@ -222,6 +229,77 @@ CREATE TABLE divergencia (
     valor_rc       REAL NOT NULL,
     diferenca      REAL NOT NULL,
     nota           TEXT
+);
+
+-- Balanço da SAD por rubrica (formato longo), 2016/17 a 2024/25
+CREATE TABLE balanco_rubrica (
+    epoca_id TEXT NOT NULL REFERENCES epoca(epoca_id),
+    lado     TEXT NOT NULL CHECK (lado IN ('ativo', 'passivo')),
+    prazo    TEXT NOT NULL CHECK (prazo IN ('corrente', 'nao_corrente')),
+    rubrica  TEXT NOT NULL,
+    valor    INTEGER NOT NULL,
+    PRIMARY KEY (epoca_id, lado, prazo, rubrica)
+);
+
+-- Movimentos dos passes de jogadores (ativos intangíveis), nota 7 dos R&C
+CREATE TABLE passes_jogadores (
+    epoca_id                    TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
+    valor_liquido_inicio        INTEGER,
+    aquisicoes                  INTEGER,
+    amortizacoes                INTEGER,
+    valor_bruto_alienado        INTEGER,
+    amort_acumuladas_alienadas  INTEGER,
+    rescisoes_bruto             INTEGER,
+    rescisoes_amort_acumuladas  INTEGER,
+    valor_liquido_fim           INTEGER,
+    documento                   TEXT
+);
+
+-- Transações e saldos entre a SAD e o Clube (partes relacionadas)
+CREATE TABLE partes_relacionadas (
+    epoca_id TEXT NOT NULL REFERENCES epoca(epoca_id),
+    rubrica  TEXT NOT NULL,
+    sentido  TEXT NOT NULL CHECK (sentido IN ('receita da SAD', 'gasto da SAD', 'saldo')),
+    valor    INTEGER NOT NULL,
+    documento TEXT,
+    PRIMARY KEY (epoca_id, rubrica)
+);
+
+-- Parecer do auditor (certificação legal de contas) e artigo 35.º do CSC
+CREATE TABLE auditoria (
+    epoca_id               TEXT PRIMARY KEY REFERENCES epoca(epoca_id),
+    parecer_auditor        TEXT NOT NULL,
+    artigo_35_no_relatorio INTEGER CHECK (artigo_35_no_relatorio IN (0, 1)),
+    nota                   TEXT
+);
+
+-- Dívida financeira por instrumento e maturidade
+CREATE TABLE financiamento_detalhe (
+    data_ref       TEXT NOT NULL,
+    instrumento    TEXT NOT NULL,
+    total          INTEGER NOT NULL,
+    menos_1_ano    INTEGER,
+    entre_1_3_anos INTEGER,
+    documento      TEXT,
+    PRIMARY KEY (data_ref, instrumento)
+);
+
+-- Valores de 2024/25 reexpressos nas contas de 2025/26 (custo amortizado)
+CREATE TABLE reexpressao (
+    epoca_id         TEXT NOT NULL REFERENCES epoca(epoca_id),
+    indicador        TEXT NOT NULL,
+    valor_original   INTEGER NOT NULL,
+    valor_reexpresso INTEGER NOT NULL,
+    documento        TEXT,
+    PRIMARY KEY (epoca_id, indicador)
+);
+
+-- Treinadores principais e interinos (fonte: Wikipédia)
+CREATE TABLE treinador (
+    treinador_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    periodo      TEXT NOT NULL,
+    nome         TEXT NOT NULL,
+    tipo         TEXT NOT NULL CHECK (tipo IN ('principal', 'interino'))
 );
 
 CREATE INDEX idx_dr_rubrica ON demonstracao_resultados (rubrica_id, epoca_id);

@@ -555,3 +555,251 @@ SELECT
 FROM divergencia
 GROUP BY fonte
 ORDER BY divergencias DESC;
+
+
+-- =====================================================================
+-- APROFUNDAMENTO: CONCEITOS FINANCEIROS
+-- =====================================================================
+
+
+-- @q 36. Custo amortizado: o que mudou com a reexpressão de 2024/25
+SELECT
+    indicador,
+    valor_original,
+    valor_reexpresso,
+    valor_reexpresso - valor_original                                   AS diferenca,
+    ROUND(100.0 * (valor_reexpresso - valor_original) / ABS(valor_original), 1) AS variacao_pct
+FROM reexpressao
+WHERE epoca_id = '2024/25'
+ORDER BY ABS(valor_reexpresso - valor_original) DESC;
+
+
+-- @q 37. Dívida líquida / EBITDA: quantos anos de EBITDA pagariam a dívida
+WITH base AS (
+    SELECT
+        b.epoca_id,
+        b.financiamentos_nc + b.financiamentos_c - b.caixa  AS divida_liquida,
+        r.resultado_operacional - r.depreciacoes             AS ebitda,
+        r.ebitda_sem_transferencias
+    FROM balanco_sad_rc b
+    JOIN v_dr r ON r.epoca_id = b.epoca_id AND r.entidade_id = 'SAD'
+    WHERE b.financiamentos_nc IS NOT NULL
+)
+SELECT
+    epoca_id                                                 AS epoca,
+    divida_liquida,
+    ebitda,
+    CASE WHEN ebitda > 0 THEN ROUND(1.0 * divida_liquida / ebitda, 1) END AS divida_liq_ebitda,
+    ebitda_sem_transferencias,
+    CASE WHEN ebitda <= 0 THEN 'EBITDA negativo: rácio sem leitura'
+         WHEN 1.0 * divida_liquida / ebitda > 3 THEN 'acima de 3x: alavancagem elevada'
+         ELSE 'até 3x' END                                   AS leitura
+FROM base
+ORDER BY epoca_id;
+
+
+-- @q 38. Fundo de maneio e prazos médios
+-- PMR: clientes (correntes e não correntes) em dias de receitas + vendas de passes.
+-- PMP: fornecedores em dias de FSE e mercadorias. Outras contas a pagar inclui
+-- dívidas a clubes, intermediários e pessoal.
+WITH r AS (
+    SELECT epoca_id,
+           SUM(CASE WHEN lado = 'ativo' AND rubrica = 'clientes' THEN valor END)              AS clientes,
+           SUM(CASE WHEN lado = 'passivo' AND rubrica = 'fornecedores' THEN valor END)        AS fornecedores,
+           SUM(CASE WHEN lado = 'passivo' AND rubrica = 'outras_contas_pagar' THEN valor END) AS outras_contas_pagar
+    FROM balanco_rubrica
+    GROUP BY epoca_id
+)
+SELECT
+    r.epoca_id                                               AS epoca,
+    b.ativo_corrente - b.passivo_corrente                    AS fundo_maneio,
+    r.clientes,
+    CAST(365.0 * r.clientes / (d.vendas_servicos + t.vendas_brutas) AS INTEGER) AS pmr_dias,
+    CAST(365.0 * r.fornecedores / -(d.fse + d.cmvmc) AS INTEGER)               AS pmp_dias,
+    r.outras_contas_pagar,
+    ROUND(100.0 * r.outras_contas_pagar / b.passivo_total, 1) AS outras_contas_pagar_pct_passivo
+FROM r
+JOIN balanco_sad_rc b ON b.epoca_id = r.epoca_id
+JOIN (SELECT epoca_id,
+             MAX(CASE WHEN rubrica_id = 'vendas_servicos' THEN valor END) AS vendas_servicos,
+             MAX(CASE WHEN rubrica_id = 'fse' THEN valor END)             AS fse,
+             MAX(CASE WHEN rubrica_id = 'cmvmc' THEN valor END)           AS cmvmc
+      FROM demonstracao_resultados WHERE entidade_id = 'SAD' GROUP BY epoca_id) d
+     ON d.epoca_id = r.epoca_id
+LEFT JOIN transferencias t ON t.epoca_id = r.epoca_id AND t.entidade_id = 'SAD'
+ORDER BY r.epoca_id;
+
+
+-- @q 39. Factoring e composição da dívida financeira por instrumento
+SELECT
+    data_ref,
+    instrumento,
+    total,
+    ROUND(100.0 * total / SUM(total) OVER (PARTITION BY data_ref), 1)  AS pct_da_divida,
+    ROUND(100.0 * menos_1_ano / total, 1)                              AS pct_curto_prazo
+FROM financiamento_detalhe
+ORDER BY data_ref, total DESC;
+
+
+-- @q 40. Passes de jogadores: investimento, amortizações e abates
+SELECT
+    epoca_id                                               AS epoca,
+    aquisicoes,
+    amortizacoes,
+    aquisicoes - amortizacoes                              AS investimento_liquido,
+    rescisoes_bruto - rescisoes_amort_acumuladas           AS perda_em_rescisoes,
+    valor_liquido_fim                                      AS valor_contabilistico_plantel,
+    ROUND(100.0 * amortizacoes / (valor_liquido_inicio + aquisicoes), 1) AS taxa_amortizacao_pct
+FROM passes_jogadores
+ORDER BY epoca_id;
+
+
+-- @q 41. Valor contabilístico vs. valor de venda: as "reservas ocultas" do plantel
+-- Valor contabilístico dos passes vendidos = valor bruto alienado - amortizações acumuladas.
+SELECT
+    p.epoca_id                                                       AS epoca,
+    p.valor_bruto_alienado - p.amort_acumuladas_alienadas            AS valor_contabilistico_vendido,
+    t.vendas_brutas,
+    t.vendas_brutas - (p.valor_bruto_alienado - p.amort_acumuladas_alienadas) AS reserva_oculta_realizada,
+    ROUND(1.0 * t.vendas_brutas /
+          NULLIF(p.valor_bruto_alienado - p.amort_acumuladas_alienadas, 0), 1) AS multiplo_de_venda,
+    p.valor_liquido_fim                                              AS plantel_no_balanco
+FROM passes_jogadores p
+JOIN transferencias t ON t.epoca_id = p.epoca_id AND t.entidade_id = 'SAD'
+ORDER BY p.epoca_id;
+
+
+-- @q 42. Alavancagem operacional: peso dos custos fixos
+-- Custos fixos = pessoal + FSE + depreciações. Mostra quanto as receitas cobrem.
+SELECT
+    epoca_id                                                       AS epoca,
+    vendas_servicos                                                AS receitas,
+    -(gastos_pessoal + fse + depreciacoes)                         AS custos_fixos,
+    ROUND(100.0 * vendas_servicos / -(gastos_pessoal + fse + depreciacoes), 1) AS cobertura_pct,
+    vendas_servicos + (gastos_pessoal + fse + depreciacoes)        AS defice_antes_de_vendas
+FROM v_dr
+WHERE entidade_id = 'SAD' AND vendas_servicos IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 43. Artigo 35.º do CSC e continuidade: capital próprio vs. metade do capital social
+SELECT
+    b.epoca_id                                           AS epoca,
+    b.capital_proprio,
+    2250000                                              AS metade_capital_social,
+    CASE WHEN b.capital_proprio < 2250000 THEN 'sim' ELSE 'não' END AS metade_do_capital_perdida,
+    a.parecer_auditor
+FROM balanco_sad_rc b
+LEFT JOIN auditoria a ON a.epoca_id = b.epoca_id
+ORDER BY b.epoca_id;
+
+
+-- @q 44. Partes relacionadas: fluxos entre o Clube e a SAD
+SELECT
+    epoca_id                                                                     AS epoca,
+    SUM(CASE WHEN sentido = 'receita da SAD' THEN valor ELSE 0 END)              AS sad_cobra_quotas_e_lugares,
+    SUM(CASE WHEN rubrica LIKE 'Rendas%' THEN valor ELSE 0 END)                  AS rendas_pagas_ao_clube,
+    SUM(CASE WHEN rubrica LIKE 'Cedência%' THEN valor ELSE 0 END)                AS cedencia_pessoal,
+    SUM(CASE WHEN rubrica = 'Saldo: Clube deve à SAD' THEN valor ELSE 0 END)     AS clube_deve_a_sad
+FROM partes_relacionadas
+GROUP BY epoca_id
+ORDER BY epoca_id;
+
+
+-- =====================================================================
+-- APROFUNDAMENTO: POLÍTICA DESPORTIVA
+-- =====================================================================
+
+
+-- @q 45. Rácio de custos do plantel da UEFA, versão mais próxima do regulamento
+-- Numerador: remunerações de jogadores e treinadores + amortizações de passes.
+-- Denominador: receitas + média de 3 épocas do resultado com vendas de jogadores.
+WITH base AS (
+    SELECT
+        p.epoca_id,
+        p.rem_jogadores + p.rem_treinadores + j.amortizacoes          AS custos_plantel,
+        k.vendas_servicos,
+        AVG(t.mais_valias_liquidas) OVER (ORDER BY p.epoca_id
+            ROWS BETWEEN 2 PRECEDING AND CURRENT ROW)                 AS mais_valias_media_3
+    FROM pessoal_sad p
+    JOIN passes_jogadores j ON j.epoca_id = p.epoca_id
+    JOIN v_kpis k           ON k.epoca_id = p.epoca_id AND k.entidade_id = 'SAD'
+    LEFT JOIN transferencias t ON t.epoca_id = p.epoca_id AND t.entidade_id = 'SAD'
+    WHERE p.rem_jogadores IS NOT NULL
+)
+SELECT
+    epoca_id                                       AS epoca,
+    custos_plantel,
+    CAST(vendas_servicos + mais_valias_media_3 AS INTEGER) AS receitas_relevantes,
+    ROUND(100.0 * custos_plantel / (vendas_servicos + mais_valias_media_3), 1) AS racio_pct,
+    CASE WHEN 100.0 * custos_plantel / (vendas_servicos + mais_valias_media_3) <= 70 THEN 'cumpre 70%'
+         WHEN 100.0 * custos_plantel / (vendas_servicos + mais_valias_media_3) <= 80 THEN 'acima de 70%, até 80%'
+         ELSE 'acima de 80%' END                   AS leitura
+FROM base
+ORDER BY epoca_id;
+
+
+-- @q 46. Intermediários e terceiros: quanto das vendas não fica no clube
+SELECT
+    t.epoca_id                                                    AS epoca,
+    t.vendas_brutas,
+    t.custo_vendas,
+    ROUND(100.0 * t.custo_vendas / t.vendas_brutas, 1)            AS custo_vendas_pct,
+    ROUND(100.0 * t.mais_valias_liquidas / t.vendas_brutas, 1)    AS retencao_pct
+FROM transferencias t
+WHERE t.entidade_id = 'SAD' AND t.custo_vendas IS NOT NULL
+UNION ALL
+SELECT 'dívida 30/06/2025', NULL, total, NULL, NULL
+FROM divida WHERE credor = 'Intermediários desportivos'
+ORDER BY 1;
+
+
+-- @q 47. Mecanismo de solidariedade e compensação por formação
+SELECT
+    epoca_id                                                   AS epoca,
+    valor                                                      AS solidariedade,
+    ROUND(100.0 * valor / SUM(valor) OVER (), 1)               AS pct_do_total_do_periodo,
+    SUM(valor) OVER (ORDER BY epoca_id)                        AS acumulado
+FROM receitas_composicao
+WHERE categoria = 'Mecanismo Solidariedade'
+ORDER BY epoca_id;
+
+
+-- @q 48. Centralização dos direitos TV: simulação por lugar na tabela (ilustrativa)
+-- Contrato de 250 M€; 90% para 18 clubes; 33,2% igual; 44,2% por mérito, aqui
+-- repartido de forma linear pela classificação (pesos 18 a 1). Exclui audiências.
+WITH RECURSIVE lugar(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM lugar WHERE n < 18),
+p AS (SELECT 250000000 * 0.90 AS pote)
+SELECT
+    n                                                          AS lugar,
+    CAST(pote * 0.332 / 18 AS INTEGER)                         AS parte_igual,
+    CAST(pote * 0.442 * (19 - n) / 171.0 AS INTEGER)           AS merito_ilustrativo,
+    CAST(pote * 0.332 / 18 + pote * 0.442 * (19 - n) / 171.0 AS INTEGER) AS total_sem_audiencias,
+    CAST(pote * 0.332 / 18 + pote * 0.442 * (19 - n) / 171.0 - 6922619 AS INTEGER) AS vs_tv_atual
+FROM lugar, p
+WHERE n BETWEEN 3 AND 12
+ORDER BY n;
+
+
+-- @q 49. Eficiência desportiva: quanto custa cada ponto
+SELECT
+    d.epoca_id                                                   AS epoca,
+    d.pontos,
+    d.posicao_liga                                               AS lugar,
+    p.total_gastos_pessoal                                       AS gastos_pessoal,
+    CAST(p.total_gastos_pessoal / d.pontos AS INTEGER)           AS custo_por_ponto,
+    RANK() OVER (ORDER BY 1.0 * p.total_gastos_pessoal / d.pontos) AS ranking_eficiencia
+FROM desempenho_desportivo d
+JOIN pessoal_sad p ON p.epoca_id = d.epoca_id
+WHERE d.epoca_id >= '2013/14'
+ORDER BY d.epoca_id;
+
+
+-- @q 50. Rotação de treinadores desde 2015
+SELECT
+    COUNT(*)                                             AS mudancas_desde_2015,
+    SUM(CASE WHEN tipo = 'interino' THEN 1 ELSE 0 END)   AS interinos,
+    COUNT(DISTINCT nome)                                 AS treinadores_diferentes,
+    ROUND(COUNT(*) / 11.0, 1)                            AS media_por_epoca_2015_16_a_2025_26
+FROM treinador
+WHERE periodo NOT LIKE '2011%';
