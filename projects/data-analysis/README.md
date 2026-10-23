@@ -13,6 +13,9 @@ Análise textual (PLN) e estatística: extração de lemas, colocações e sinta
 ### Análise de Dados para Negócios (ADPN)
 - **[`adpn-marketing-publicidade/`](./adpn-marketing-publicidade)**: *"O Papel do Marketing e da Publicidade no Processo de Tomada de Decisão do Consumidor"*, em grupo (com Joana Azevedo e Michel Gonçalves) — explora marketing, publicidade e Business Analytics através de quatro casos de estudo (Automaise, Netflix, Spotify, Instagram/YouTube).
 
+### Projetos pessoais
+- **[`contas-vitoria-sql/`](./contas-vitoria-sql)**: projeto pessoal (autodidata, fora das cadeiras) — base de dados **SQLite** com as contas do Vitória Sport Clube (SAD, Clube e Grupo consolidado, 2012/13–2024/25), 19 consultas SQL (CTEs, funções de janela, vistas) e gráficos em Python sobre a dependência das vendas de jogadores, o peso dos salários e a dívida.
+
 ---
 
 ## 🇬🇧
@@ -27,3 +30,6 @@ Textual (NLP) and statistical analysis: lemma extraction, collocations and noun 
 
 ### Business Data Analysis (ADPN)
 - **[`adpn-marketing-publicidade/`](./adpn-marketing-publicidade)**: *"The Role of Marketing and Advertising in Consumer Decision-Making"*, group work (with Joana Azevedo and Michel Gonçalves) — explores marketing, advertising, and Business Analytics through four case studies (Automaise, Netflix, Spotify, Instagram/YouTube).
+
+### Personal projects
+- **[`contas-vitoria-sql/`](./contas-vitoria-sql)**: self-directed personal project (not coursework) — a **SQLite** database of Vitória Sport Clube's accounts (SAD, Club and consolidated Group, 2012/13–2024/25), 19 SQL queries (CTEs, window functions, views) and Python charts on reliance on player sales, wage costs and debt.

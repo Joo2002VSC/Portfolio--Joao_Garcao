@@ -1,0 +1,45 @@
+entidade,epoca,tipo,descricao,valor
+SAD,2024/25,evento,Recorde de sempre do resultado líquido; fase de grupos da UEFA Conference League,
+SAD,2024/25,observacao,Amortização artificial do acordo com o FC Porto,2200000
+SAD,2024/25,observacao,Sem o acordo FC Porto o resultado seria cerca de +9.8M,9800000
+SAD,2023/24,evento,Sem competições UEFA; refinanciamento BDT & MSD a taxa fixa de 11% (04/08/2023),
+SAD,2023/24,observacao,Amortização artificial do acordo com o FC Porto,2200000
+SAD,2023/24,observacao,Caixa em nível crítico,78684
+SAD,2023/24,observacao,UEFA forçou a reclassificação da dívida V Sports para curto prazo,11400000
+SAD,2022/23,evento,Recompra de 29% à V Sports por 5.5M e aquisição de 45.47% da MAF SGPS por 5.2M,
+SAD,2022/23,observacao,Amortização artificial do acordo com o FC Porto,4866800
+SAD,2022/23,observacao,Resultado ajustado sem o acordo FC Porto,6606704
+SAD,2021/22,evento,Pior resultado da história da SAD,
+SAD,2021/22,observacao,Resultado ajustado sem o acordo FC Porto,-10196494
+SAD,2021/22,observacao,Rácio pessoal/receitas de 174%,
+SAD,2021/22,observacao,Caixa em nível crítico,77642
+SAD,2020/21,evento,Acordo com o FC Porto: impacto artificial de cerca de +15M nos proveitos,15000000
+SAD,2020/21,observacao,Resultado ajustado sem o acordo FC Porto,-23246496
+SAD,2020/21,observacao,Entrada da V Sports (29%) com empréstimo de 11.4M a juro zero,11400000
+SAD,2020/21,observacao,Bilheteira nula devido à COVID-19,0
+SAD,2019/20,evento,Fase de grupos da Liga Europa (prémios de 5.43M),5430000
+SAD,2019/20,observacao,Impacto da COVID-19 no final da época,
+SAD,2018/19,evento,Novo contrato de direitos TV (de 4M para 7M por ano); sem UEFA,
+SAD,2017/18,evento,Fase de grupos da Liga Europa (Salzburgo; Marselha; Konyaspor),
+SAD,2016/17,observacao,Aumento de capital,450000
+SAD,2015/16,observacao,Aumento de capital,2965000
+CLUBE,2024/25,evento,Participação da SAD na Conference League com impacto positivo no MEP,
+CLUBE,2024/25,observacao,Dívida do Clube à SAD a 30/06,1853041
+CLUBE,2023/24,observacao,Juros +81% face a 22/23; amortização de goodwill de cerca de 520K/ano,520000
+CLUBE,2022/23,observacao,Aquisição de 45.47% da MAF SGPS por 5.2M (origem do goodwill),5200000
+CLUBE,2021/22,observacao,Receitas +29% (recuperação pós-COVID),
+CLUBE,2021/22,observacao,Dívida do Clube à SAD a 30/06,1745845
+CLUBE,2020/21,evento,Clube torna-se acionista maioritário da SAD (51%; custo de 1.3M via empréstimo),1300000
+CLUBE,2019/20,observacao,COVID-19 afeta receitas de sócios,
+CLUBE,2018/19,observacao,Melhor resultado da década,
+CLUBE,2016/17,evento,Resultado positivo após ganhos MEP da SAD (904K),904000
+CLUBE,2014/15,observacao,Clube transfere staff para a SAD,
+CLUBE,2013/14,observacao,Primeira época após a criação da SAD,
+CONSOLIDADO,2024/25,evento,Conference League; capital próprio volta a positivo,
+CONSOLIDADO,2023/24,evento,Capital próprio consolidado negativo pela primeira vez,
+CONSOLIDADO,2022/23,evento,Recompra à V Sports e aquisição da MAF SGPS,
+CONSOLIDADO,2021/22,evento,Pior resultado do grupo,
+CONSOLIDADO,2020/21,evento,Aquisição da maioria da SAD; acordo FC Porto; entrada da V Sports,
+CONSOLIDADO,2019/20,evento,Fase de grupos da Liga Europa; COVID-19,
+CONSOLIDADO,2018/19,evento,Novo contrato de direitos TV,
+CONSOLIDADO,2017/18,evento,Fase de grupos da Liga Europa,

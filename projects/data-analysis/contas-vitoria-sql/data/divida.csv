@@ -1,0 +1,7 @@
+data_ref,credor,tipo,total,menos_1_ano,entre_1_3_anos,mais_3_anos,nota
+2025-06-30,BDT & MSD,financeira,26321818,26321818,0,0,Taxa fixa de 11%
+2025-06-30,Factoring,financeira,5700000,2850000,2850000,0,Antecipação de recebíveis de atletas
+2025-06-30,Apollo,financeira,2513999,2513999,0,0,Garantia: direitos TV; extinto em jan/2026
+2025-06-30,Locações Financeiras,financeira,48670,19130,29539,0,Residual
+2025-06-30,Intermediários desportivos,operacional,21226481,,,,Corrente + não corrente
+2025-06-30,Clubes vendedores,operacional,4717818,,,,Passes adquiridos ainda por pagar

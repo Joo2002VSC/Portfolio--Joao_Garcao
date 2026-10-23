@@ -1,0 +1,34 @@
+entidade,epoca,estado,documentos
+SAD,2012/13,Apenas resultado líquido (gráfico histórico),Gráfico da página SAD
+SAD,2013/14,Dados totais via Excel; R&C digitalizado sem OCR,vsc_evolucao.xlsx | R&C SAD 2014/15 (comparativos)
+SAD,2014/15,Dados via Excel + comparativos; R&C digitalizado,vsc_evolucao.xlsx | R&C 16/17 (comparativos)
+SAD,2015/16,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos)
+SAD,2016/17,Dados via Excel; R&C digitalizado,Excel | R&C 17/18 (comparativos)
+SAD,2017/18,R&C extraível; DR e balanço completos,R&C SAD 2017/18 | R&C SAD 2018/19 (comparativos)
+SAD,2018/19,R&C extraível + consolidado; completo,R&C SAD 2018/19 | Contas Consolidadas 18/19
+SAD,2019/20,Completo,R&C SAD 2019/20 | Contas Consolidadas 19/20
+SAD,2020/21,Completo; inclui ajustamentos FC Porto,R&C SAD 2020/21 | Contas Consolidadas 20/21
+SAD,2021/22,Completo; EBITDA s/ transferências disponível,R&C SAD 2021/22
+SAD,2022/23,R&C digitalizado; dados via consolidado + CF,Contas Consolidadas 22/23 | CF VSC 22/23
+SAD,2023/24,R&C parcialmente digitalizado; dados via consolidado e CF,R&C SAD 2023/24 | Contas Consolidadas 23/24
+SAD,2024/25,Completo,R&C SAD 2024/25 | Contas Consolidadas 24/25
+CLUBE,2013/14,Limitado: apenas passivo,vsc_evolucao.xlsx
+CLUBE,2014/15,Resumo,CF VSC 2014/2015
+CLUBE,2015/16,Resumo,CF VSC 2015/2016
+CLUBE,2016/17,Resumo,CF VSC 2016/2017
+CLUBE,2017/18,Resumo,CF VSC 2017/2018
+CLUBE,2018/19,Resumo,CF VSC 2018/2019
+CLUBE,2019/20,Resumo,CF VSC 2019/2020
+CLUBE,2020/21,Resumo,CF VSC 2020/2021
+CLUBE,2021/22,Completo,CF VSC 2021/2022
+CLUBE,2022/23,Completo,CF VSC 2022/2023
+CLUBE,2023/24,Completo,CF VSC 2023/2024
+CLUBE,2024/25,Completo,CF VSC 2024/2025 | R&C SAD 2024/25
+CONSOLIDADO,2017/18,Comparativos,Contas Consolidadas 2018/2019
+CONSOLIDADO,2018/19,Completo,Contas Consolidadas 2018/2019
+CONSOLIDADO,2019/20,Completo,Contas Consolidadas 2019/2020
+CONSOLIDADO,2020/21,Completo,Contas Consolidadas 2020/2021
+CONSOLIDADO,2021/22,Comparativos,Contas Consolidadas 2022/2023
+CONSOLIDADO,2022/23,Completo,Contas Consolidadas 2022/2023
+CONSOLIDADO,2023/24,Completo,Contas Consolidadas (Licenciamento UEFA 25/26)
+CONSOLIDADO,2024/25,Completo,Demonstrações Financeiras Anuais 2024/2025 (Licenciamento UEFA 26/27)
