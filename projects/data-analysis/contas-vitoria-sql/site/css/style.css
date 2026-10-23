@@ -1,0 +1,88 @@
+/* As contas do Vitória SC · estilos
+   Paleta dos documentos financeiros do clube e letra Archivo (pasta fontes/). */
+
+@font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url("../fontes/ArchivoExpanded-ExtraBold.ttf") format("truetype"); }
+@font-face { font-family: "Archivo"; font-weight: 400; src: url("../fontes/Archivo-Regular.ttf") format("truetype"); }
+@font-face { font-family: "Archivo"; font-weight: 700; src: url("../fontes/Archivo-Bold.ttf") format("truetype"); }
+
+:root {
+  --amarelo: #F5D510; --amarelo-claro: #FAEB8A; --preto: #111111;
+  --cinza-escuro: #6F6D6E; --cinza: #A9A7A8; --cinza-claro: #EBEBEB;
+  --fundo: #FFFFFF; --texto: #111111; --suave: #6F6D6E; --linha: #E2E2E2; --zebra: #F7F7F5; --erro: #B03A2E;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fundo: #161616; --texto: #EDEDED; --suave: #A9A7A8; --linha: #333; --zebra: #1E1E1E; --erro: #F07B6E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] { --fundo: #161616; --texto: #EDEDED; --suave: #A9A7A8; --linha: #333; --zebra: #1E1E1E; --erro: #F07B6E; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body { margin: 0; background: var(--fundo); color: var(--texto);
+       font: 400 16px/1.6 "Archivo", system-ui, sans-serif; }
+
+header.topo { background: var(--preto); color: #fff; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 11; background: var(--preto); }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.topo .marca { max-width: 1040px; margin: 0 auto; padding-block: 22px 0;
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+header.topo h1 { margin: 0; font: 800 clamp(20px, 3.4vw, 30px)/1.1 "Archivo Expanded", sans-serif;
+  color: var(--amarelo); text-transform: uppercase; letter-spacing: .01em; }
+header.topo .sub { color: var(--cinza); font-size: 14px; }
+nav.abas { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--preto);
+  border-bottom: 4px solid var(--amarelo); }
+nav.abas .dentro { max-width: 1040px; margin: 0 auto; padding-block: 14px 0;
+  display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+nav.abas a { color: #ddd; text-decoration: none; white-space: nowrap; padding: 9px 14px 8px;
+  font: 700 14px "Archivo", sans-serif; border-radius: 3px 3px 0 0; }
+nav.abas a:hover { color: #fff; }
+nav.abas a.ativa { background: var(--amarelo); color: var(--preto); }
+
+main { max-width: 1040px; margin: 0 auto; padding-block: 28px 64px; }
+.pagina { display: none; }
+.pagina.ativa { display: block; }
+
+h1, h2 { font-family: "Archivo Expanded", sans-serif; font-weight: 800; text-transform: uppercase; }
+.pagina h1 { font-size: clamp(20px, 3vw, 28px); line-height: 1.2; margin: 8px 0 18px;
+  border-left: 10px solid var(--amarelo); padding-left: 14px; text-transform: none; }
+.pagina h2 { background: var(--amarelo); color: var(--preto); font-size: clamp(15px, 2.2vw, 20px);
+  padding: 12px 16px; margin: 44px 0 18px; letter-spacing: .01em; line-height: 1.25; }
+.pagina h3 { font: 700 18px "Archivo", sans-serif; margin: 28px 0 10px;
+  border-bottom: 2px solid var(--amarelo); padding-bottom: 4px; display: inline-block; }
+button:focus-visible, a:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.pagina h1, .pagina h2 { text-wrap: balance; }
+a { color: inherit; text-decoration-color: var(--amarelo); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+img { max-width: 100%; height: auto; }
+.pagina p img, .pagina td img { border: 1px solid var(--linha); background: #fff; }
+blockquote { margin: 18px 0; padding: 10px 16px; border-left: 4px solid var(--amarelo); background: var(--zebra); color: var(--suave); }
+blockquote p { margin: 4px 0; }
+hr { border: 0; border-top: 1px solid var(--linha); margin: 32px 0; }
+sub { color: var(--suave); font-size: 13px; vertical-align: baseline; }
+code { font: 13.5px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--zebra); padding: 1px 5px; border-radius: 3px; }
+pre { background: var(--preto); color: #f2f2f2; padding: 14px 16px; overflow-x: auto; border-radius: 3px; }
+pre code { background: none; padding: 0; color: inherit; }
+pre.mermaid { background: #fff; color: var(--preto); text-align: center; }
+
+.tabela { overflow-x: auto; margin: 16px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+th { background: var(--preto); color: #fff; text-align: left; font-weight: 700; padding: 8px 10px; white-space: nowrap; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+
+/* Consola SQL */
+.consola .barra { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.consola select { flex: 1 1 320px; min-width: 0; font: 15px "Archivo", sans-serif; padding: 9px 10px;
+  border: 2px solid var(--preto); background: var(--fundo); color: var(--texto); border-radius: 3px; }
+.consola textarea { width: 100%; min-height: 240px; resize: vertical; font: 13.5px/1.5 ui-monospace, Menlo, monospace;
+  padding: 14px; background: var(--preto); color: #f2f2f2; border: 0; border-radius: 3px; }
+.consola button { font: 700 15px "Archivo", sans-serif; padding: 10px 20px; border: 0; border-radius: 3px; cursor: pointer;
+  background: var(--amarelo); color: var(--preto); }
+.consola button.secundario { background: transparent; color: var(--texto); border: 2px solid var(--linha); }
+.consola .estado { color: var(--suave); font-size: 14px; margin: 8px 0; min-height: 1.4em; }
+.consola .erro { color: var(--erro); }
+.consola .tabelas { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 18px; }
+.consola .tabelas button { font: 13px ui-monospace, Menlo, monospace; padding: 4px 9px; background: var(--zebra);
+  color: var(--texto); border: 1px solid var(--linha); }
+td.num { text-align: right; }
+footer { text-align: center; color: var(--suave); font-size: 13px; padding-block: 24px 40px; border-top: 1px solid var(--linha); }

@@ -100,7 +100,8 @@ footer { text-align: center; color: var(--suave); font-size: 13px; padding-block
 <nav class="abas"><div class="dentro gutter"><a href="#projeto" data-aba="projeto">Projeto</a><a href="#estrategica" data-aba="estrategica">Análise estratégica</a><a href="#tecnica" data-aba="tecnica">Análise técnica</a><a href="#verificacao" data-aba="verificacao">Verificação das fontes</a><a href="#resultados" data-aba="resultados">Resultados</a><a href="#sql" data-aba="sql">Consola SQL</a></div></nav>
 
 <main class="gutter">
-  <article class="pagina" id="p-projeto" data-pagina="projeto"><p align="center">
+  <article class="pagina" id="p-projeto" data-pagina="projeto">
+<p align="center">
   <a href="#projeto:resumo">Resumo</a> ·
   <a href="#projeto:principais-conclusões">Conclusões</a> ·
   <a href="#projeto:relatórios">Relatórios</a> ·
@@ -478,6 +479,7 @@ footer { text-align: center; color: var(--suave); font-size: 13px; padding-block
 </table></div>
 <h2 id="projeto:como-usar">Como usar</h2>
 <p><strong>Versão HTML.</strong> O ficheiro <a href="html/contas-vitoria.html"><code>html/contas-vitoria.html</code></a> junta o README, as três análises, os gráficos e uma consola SQL que corre a base de dados no browser. Descarrega-o e abre-o num browser (Chrome, Safari, Firefox ou Edge). Funciona sem internet: o SQLite também vai embutido. Só o diagrama do modelo de dados precisa de ligação.</p>
+<p><strong>Versão web para editar no VS Code.</strong> A pasta <a href="site/"><code>site/</code></a> tem o mesmo conteúdo em ficheiros separados: <code>index.html</code>, <code>css/style.css</code> e <code>js/app.js</code>, com os gráficos em <code>img/</code> e as letras em <code>fontes/</code>. Abre a pasta no Visual Studio Code e usa a extensão Live Server (<em>Go Live</em>); as instruções estão em <a href="../site/LEIA-ME.md" target="_blank" rel="noopener"><code>site/LEIA-ME.md</code></a>.</p>
 <p>A base de dados <code>vsc_contas.db</code> já vem incluída e abre diretamente no <a target="_blank" rel="noopener" href="https://sqlitebrowser.org/">DB Browser for SQLite</a>, no DBeaver ou em qualquer cliente SQLite.</p>
 <p>Para reconstruir tudo do zero:</p>
 <pre><code class="language-bash">python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
@@ -485,7 +487,7 @@ python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
-python scripts/gerar_html.py        # gera html/contas-vitoria.html
+python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
 </code></pre>
 <p>Exemplo: o resultado da SAD com e sem vendas de jogadores.</p>
 <pre><code class="language-sql">SELECT epoca_id,
@@ -514,6 +516,7 @@ ORDER BY epoca_id;
 │   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
 ├── html/                   Versão HTML autónoma, com consola SQL
+├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
@@ -544,8 +547,10 @@ ORDER BY epoca_id;
 <h2 id="projeto:identidade-visual">Identidade visual</h2>
 <p>Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo <code>#F5D510</code>, preto <code>#111111</code> e cinzentos <code>#6F6D6E</code> e <code>#EBEBEB</code>. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por <code>scripts/cabecalhos.py</code>. A tipografia é a <a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Archivo">Archivo</a>, da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta <code>fontes/</code> (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.</p>
 <hr />
-<p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p></article>
-<article class="pagina" id="p-estrategica" data-pagina="estrategica"><h1 id="estrategica:análise-estratégica-finanças-desporto-e-enquadramento-económico">Análise estratégica: finanças, desporto e enquadramento económico</h1>
+<p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p>
+</article>
+<article class="pagina" id="p-estrategica" data-pagina="estrategica">
+<h1 id="estrategica:análise-estratégica-finanças-desporto-e-enquadramento-económico">Análise estratégica: finanças, desporto e enquadramento económico</h1>
 <p><em>Como pode o Vitória SC melhorar a sua prestação financeira?</em></p>
 <blockquote>
 <p>Análise independente de João Garção, baseada nos dados deste projeto (consultas 20 a 26 em <a href="#resultados"><code>resultados.md</code></a>) e em fontes públicas citadas no fim. As recomendações são opinião do autor. Não têm ligação ao clube nem a qualquer candidatura ou órgão social. Os conceitos técnicos (dívida líquida/EBITDA, factoring, artigo 35.º, regras da UEFA, centralização…) são aprofundados na <a href="#tecnica">análise técnica</a>.</p>
@@ -915,8 +920,10 @@ ORDER BY epoca_id;
 - <a target="_blank" rel="noopener" href="https://portugal.gov.pt/gc22/comunicacao/comunicados/centralizacao-dos-direitos-televisivos">Governo: centralização dos direitos televisivos</a>
 - <a target="_blank" rel="noopener" href="https://www.flashscore.pt/noticias/acordo-com-v-sports-preve-entrada-de-3-8-me-na-sad-do-vitoria-sc/6Zv0gKsn/">Flashscore: acordo com a V Sports prevê entrada de 3,8 M€ na SAD</a>
 - <a target="_blank" rel="noopener" href="https://www.abola.pt/noticias/vitoria-de-guimaraes-apresenta-orcamento-e-rui-rodrigues-deixa-mensagem-2026071614153617207">A Bola: orçamento do Clube para 2026/27</a>
-- <a target="_blank" rel="noopener" href="https://www.dnoticias.pt/2026/5/27/493433-viriato-sampaio-propoe-emprestimo-obrigacionista-e-valorizacao-do-estadio-do-vitoria/">dnoticias.pt: proposta de empréstimo obrigacionista (candidatura de Viriato Sampaio)</a></p></article>
-<article class="pagina" id="p-tecnica" data-pagina="tecnica"><h1 id="tecnica:análise-técnica-conceitos-financeiros-e-política-desportiva">Análise técnica: conceitos financeiros e política desportiva</h1>
+- <a target="_blank" rel="noopener" href="https://www.dnoticias.pt/2026/5/27/493433-viriato-sampaio-propoe-emprestimo-obrigacionista-e-valorizacao-do-estadio-do-vitoria/">dnoticias.pt: proposta de empréstimo obrigacionista (candidatura de Viriato Sampaio)</a></p>
+</article>
+<article class="pagina" id="p-tecnica" data-pagina="tecnica">
+<h1 id="tecnica:análise-técnica-conceitos-financeiros-e-política-desportiva">Análise técnica: conceitos financeiros e política desportiva</h1>
 <p>Este documento aprofunda <strong>17 conceitos</strong>, nove de análise financeira e oito de política e regulação desportiva, e junta uma terceira parte com <strong>indicadores, juros e cenários</strong>: painel de rácios, comparação com as taxas de juro de mercado, regressão entre despesas e classificação, peso das vendas de jogadores e o efeito da centralização no equilíbrio das contas. Para cada um, explica o que significa e o que os números mostram no caso do Vitória SC – Futebol, SAD. Indica também que consulta SQL o calcula (ver <a href="#resultados"><code>resultados.md</code></a>).</p>
 <blockquote>
 <p>Os valores do balanço, da dívida, dos passes e do pessoal vêm dos Relatórios e Contas (R&amp;C) de 2012/13 a 2024/25, verificados documento a documento (<a href="#verificacao">verificação das fontes</a>). A interpretação é do autor. Valores negativos entre parênteses.</p>
@@ -1754,8 +1761,10 @@ ORDER BY epoca_id;
 <li><a target="_blank" rel="noopener" href="https://fred.stlouisfed.org/series/IRLTLT01PTM156N">OCDE via FRED: obrigações do Estado português a 10 anos</a></li>
 <li>Banco de Portugal: taxas de juro de novos empréstimos a sociedades não financeiras (<a target="_blank" rel="noopener" href="https://www.bportugal.pt/sites/default/files/anexos/10-taxas_juro_bancarias.pdf">nota de 2020</a>, <a target="_blank" rel="noopener" href="https://eco.sapo.pt/2024/07/31/taxa-de-juro-do-credito-as-empresas-renova-minimos-de-um-ano/">ECO, julho de 2024</a>, <a target="_blank" rel="noopener" href="https://estatistica.dgeconomia.gov.pt/taxa-de-juro-dos-novos-emprestimos-banco-de-portugal-46/">DGE, outubro de 2025</a>)</li>
 <li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Vit%C3%B3ria_S.C.">Wikipédia: Vitória S.C.</a> (treinadores e pontos por época)</li>
-</ul></article>
-<article class="pagina" id="p-verificacao" data-pagina="verificacao"><h1 id="verificacao:verificação-das-fontes">Verificação das fontes</h1>
+</ul>
+</article>
+<article class="pagina" id="p-verificacao" data-pagina="verificacao">
+<h1 id="verificacao:verificação-das-fontes">Verificação das fontes</h1>
 <p>Todos os números do balanço, dos juros e do pessoal da SAD usados neste projeto foram conferidos, um a um, com os <strong>Relatórios e Contas (R&amp;C) da Vitória SC – Futebol, SAD de 2012/13 a 2024/25</strong>. Seis desses relatórios (2012/13 a 2016/17 e 2022/23) são digitalizados e foram lidos com OCR e confirmados visualmente na página original.</p>
 <p>Foram comparadas três fontes secundárias com os R&amp;C:</p>
 <div class="tabela"><table>
@@ -2086,8 +2095,10 @@ ORDER BY epoca_id;
 <li>Leitura do balanço, da demonstração de resultados e da nota "Benefícios dos empregados" de cada época, usando sempre o <strong>relatório da própria época</strong> e, quando este não é legível, os comparativos do ano seguinte.</li>
 <li>Testes de coerência em todas as épocas: ativo = corrente + não corrente, passivo = corrente + não corrente, capital próprio = ativo − passivo, soma das rubricas de pessoal = total, soma das categorias = nº de funcionários. As restrições <code>CHECK</code> da tabela <code>balanco_sad_rc</code> repetem estes testes sempre que a base é construída.</li>
 <li>Comparação automática de cada fonte com os R&amp;C. É considerada divergência qualquer diferença igual ou superior a 1 €.</li>
-</ol></article>
-<article class="pagina" id="p-resultados" data-pagina="resultados"><h1 id="resultados:resultados-das-análises">Resultados das análises</h1>
+</ol>
+</article>
+<article class="pagina" id="p-resultados" data-pagina="resultados">
+<h1 id="resultados:resultados-das-análises">Resultados das análises</h1>
 <p>Gerado automaticamente por <code>scripts/correr_analises.py</code>. Valores em euros.</p>
 <h2 id="resultados:1-evolução-do-resultado-líquido-da-sad-variação-face-à-época-anterior">1. Evolução do resultado líquido da SAD (variação face à época anterior)</h2>
 <div class="tabela"><table>
@@ -6336,7 +6347,8 @@ ORDER BY epoca_id;
 <td>24,1</td>
 </tr>
 </tbody>
-</table></div></article>
+</table></div>
+</article>
 
   <article class="pagina consola" id="p-sql" data-pagina="sql">
     <h1>Consola SQL</h1>

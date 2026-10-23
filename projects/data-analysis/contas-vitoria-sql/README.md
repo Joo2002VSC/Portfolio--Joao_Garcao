@@ -216,6 +216,8 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 
 **Versão HTML.** O ficheiro [`html/contas-vitoria.html`](html/contas-vitoria.html) junta o README, as três análises, os gráficos e uma consola SQL que corre a base de dados no browser. Descarrega-o e abre-o num browser (Chrome, Safari, Firefox ou Edge). Funciona sem internet: o SQLite também vai embutido. Só o diagrama do modelo de dados precisa de ligação.
 
+**Versão web para editar no VS Code.** A pasta [`site/`](site/) tem o mesmo conteúdo em ficheiros separados: `index.html`, `css/style.css` e `js/app.js`, com os gráficos em `img/` e as letras em `fontes/`. Abre a pasta no Visual Studio Code e usa a extensão Live Server (*Go Live*); as instruções estão em [`site/LEIA-ME.md`](site/LEIA-ME.md).
+
 A base de dados `vsc_contas.db` já vem incluída e abre diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
 
 Para reconstruir tudo do zero:
@@ -226,7 +228,7 @@ python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
 pip install -r requirements.txt
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
-python scripts/gerar_html.py        # gera html/contas-vitoria.html
+python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
 ```
 
 Exemplo: o resultado da SAD com e sem vendas de jogadores.
@@ -261,6 +263,7 @@ contas-vitoria-sql/
 │   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
 ├── html/                   Versão HTML autónoma, com consola SQL
+├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 ├── analise-estrategica.md  Diagnóstico e recomendações
