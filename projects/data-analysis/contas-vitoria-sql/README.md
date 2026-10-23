@@ -175,6 +175,7 @@ contas-vitoria-sql/
 │   ├── correr_analises.py  Gera resultados.md
 │   └── graficos.py         Gera os gráficos
 ├── graficos/               Gráficos PNG
+├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
 └── vsc_contas.db           Base de dados pronta a usar
 ```
@@ -191,6 +192,10 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
 - **Rácio pessoal/receitas.** É uma aproximação simples. A regra de custos do plantel da UEFA usa outra base de cálculo.
 - **Contas reexpressas.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26. Esta base usa os valores originalmente publicados.
+
+## Identidade visual
+
+Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D510`, preto `#111111` e cinzentos `#6F6D6E` e `#EBEBEB`. Os valores negativos aparecem entre parênteses. A tipografia é a [Archivo](https://fonts.google.com/specimen/Archivo), da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta `fontes/` (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.
 
 ---
 

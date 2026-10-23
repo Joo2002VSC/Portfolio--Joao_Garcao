@@ -38,8 +38,15 @@ FONTE = "Fonte: VSC Contas (vitoriasempre.net), a partir dos Relatórios e Conta
 
 from matplotlib import font_manager
 
+# Tipos de letra incluídos no projeto (pasta fontes/, licença OFL):
+# Archivo Expanded nos títulos e números de destaque, Archivo no restante texto.
+FONTES = RAIZ / "fontes"
+for _f in FONTES.glob("*.ttf"):
+    font_manager.fontManager.addfont(str(_f))
 _disponiveis = {f.name for f in font_manager.fontManager.ttflist}
-FAMILIA = next((f for f in ("Inter", "Helvetica Neue", "Arial") if f in _disponiveis), "DejaVu Sans")
+FAMILIA = "Archivo" if "Archivo" in _disponiveis else "DejaVu Sans"
+FAMILIA_TITULO = "Archivo Expanded" if "Archivo Expanded" in _disponiveis else FAMILIA
+TITULO = {"family": FAMILIA_TITULO, "fontweight": "heavy"}
 
 plt.rcParams.update({
     "font.family": FAMILIA,
@@ -73,8 +80,8 @@ def figura(titulo, subtitulo, altura=5.6, base=0.14):
     topo = 1 - 0.62 / altura
     fig.patches.append(Rectangle((0, topo), 1, 1 - topo, transform=fig.transFigure,
                                  color=AMARELO, zorder=0))
-    fig.text(0.035, topo + (1 - topo) / 2, titulo.upper(), fontsize=14, fontweight="bold",
-             va="center", color=PRETO)
+    fig.text(0.035, topo + (1 - topo) / 2, titulo.upper(), fontsize=14.5, va="center",
+             color=PRETO, **TITULO)
     fig.text(0.035, topo - 0.32 / altura, subtitulo, fontsize=10.5, color=TEXTO_2, va="center")
     ax = fig.add_axes([0.085, base, 0.885, topo - 0.62 / altura - base])
     return fig, ax
@@ -114,7 +121,7 @@ def capa(con):
 
     fig = plt.figure(figsize=(11, 4.4))
     fig.patches.append(Rectangle((0, 0.52), 1, 0.48, transform=fig.transFigure, color=AMARELO))
-    fig.text(0.04, 0.83, "AS CONTAS DO VITÓRIA SC", fontsize=26, fontweight="bold", color=PRETO)
+    fig.text(0.04, 0.83, "AS CONTAS DO VITÓRIA SC", fontsize=27, color=PRETO, **TITULO)
     fig.text(0.04, 0.70, "Análise financeira em SQL  ·  SAD, Clube e Grupo consolidado  ·  2012/13 – 2024/25",
              fontsize=12, color=PRETO)
     fig.text(0.04, 0.585, "SQLITE   ·   PYTHON   ·   MATPLOTLIB", fontsize=9.5, fontweight="bold",
@@ -132,7 +139,7 @@ def capa(con):
         fig.patches.append(Rectangle((x, 0.08), larg - 0.015, 0.36, transform=fig.transFigure,
                                      color=CINZA_CLARO))
         fig.text(x + 0.015, 0.37, rot, fontsize=8.5, fontweight="bold", color=TEXTO_2)
-        fig.text(x + 0.015, 0.22, val, fontsize=22, fontweight="bold", color=PRETO)
+        fig.text(x + 0.015, 0.22, val, fontsize=21, color=PRETO, **TITULO)
         fig.text(x + 0.015, 0.125, nota, fontsize=8.5, color=TEXTO_2)
     fig.savefig(OUT / "00_capa.png", dpi=170)
     plt.close(fig)
