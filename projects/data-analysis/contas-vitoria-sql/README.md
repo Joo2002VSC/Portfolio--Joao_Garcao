@@ -1,58 +1,115 @@
-# As contas do Vitória SC em SQL
+<p align="center">
+  <img src="graficos/00_capa.png" alt="As contas do Vitória SC — análise financeira em SQL" width="100%">
+</p>
 
-Base de dados SQLite com as contas do **Vitória Sport Clube** — SAD, Clube e Grupo consolidado — entre **2012/13 e 2024/25**, e um conjunto de consultas SQL que respondem a perguntas sobre a sustentabilidade financeira do clube.
+<p align="center">
+  <img src="https://img.shields.io/badge/SQLite-3-111111?style=flat-square&logo=sqlite&logoColor=F5D510" alt="SQLite">
+  <img src="https://img.shields.io/badge/Python-3-111111?style=flat-square&logo=python&logoColor=F5D510" alt="Python">
+  <img src="https://img.shields.io/badge/Matplotlib-gráficos-111111?style=flat-square&labelColor=111111&color=F5D510" alt="Matplotlib">
+  <img src="https://img.shields.io/badge/épocas-2012%2F13%20–%202024%2F25-111111?style=flat-square&labelColor=111111&color=F5D510" alt="Épocas">
+</p>
 
-> Projeto pessoal de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
+<p align="center">
+  <a href="#resumo">Resumo</a> ·
+  <a href="#principais-conclusões">Conclusões</a> ·
+  <a href="#modelo-de-dados">Modelo de dados</a> ·
+  <a href="#como-usar">Como usar</a> ·
+  <a href="#fontes-e-limitações">Fontes e limitações</a>
+</p>
 
-![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
+---
+
+## Resumo
+
+Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 13 épocas, de 2012/13 a 2024/25.
+
+Sobre essa base, **19 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+
+> Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
+
+## Indicadores-chave · SAD
+
+| Indicador | 2023/24 | 2024/25 |
+|:---|---:|---:|
+| Receitas (vendas e serviços) | 12,9 M€ | **22,6 M€** |
+| Gastos com pessoal | (16,9 M€) | (20,5 M€) |
+| Mais-valias com jogadores | 6,7 M€ | **27,5 M€** |
+| **Resultado líquido** | **(14,7 M€)** | **7,6 M€** |
+| Resultado sem mais-valias | (21,4 M€) | (19,9 M€) |
+| Juros suportados | (3,7 M€) | (5,0 M€) |
+| Capital próprio | (31,2 M€) | (24,0 M€) |
+
+<sub>Valores negativos entre parênteses, como nas demonstrações financeiras.</sub>
 
 ## Principais conclusões
 
-- **A SAD vive das vendas de jogadores.** Em todas as oito épocas com dados de transferências, o resultado sem mais-valias seria negativo — entre −5,9 M€ e −25,3 M€. Os lucros de 2022/23 e do recorde de 2024/25 (+7,6 M€) só existem graças às vendas.
-- **O pessoal pesou mais do que as receitas durante quatro épocas seguidas.** De 2020/21 a 2023/24, os gastos com pessoal ficaram entre 119% e 200% das vendas e serviços.
-- **A SAD está em falência técnica desde 2020/21.** O capital próprio é negativo há cinco épocas seguidas (−24 M€ em 2024/25) e o passivo é hoje 11,5 vezes o do Clube.
-- **Os juros dispararam.** Passaram de 149 mil € em 2019/20 para 5 M€ em 2024/25 — um crescimento médio de cerca de 100% ao ano. 92% da dívida financeira vence em menos de um ano.
-- **Uma época europeia muda tudo.** Nas épocas com fase de grupos UEFA, as receitas operacionais médias foram de 21,3 M€, contra 14,0 M€ nas restantes.
+**1. A SAD vive das vendas de jogadores.** Nas oito épocas com dados de transferências, o resultado sem mais-valias seria sempre negativo, entre (5,9 M€) e (25,3 M€). O recorde de 2024/25 só existe graças a 27,5 M€ de mais-valias.
 
-Todos os resultados estão em [`resultados.md`](resultados.md).
+![Dependência das vendas de jogadores](graficos/03_dependencia_vendas_jogadores.png)
 
-## Estrutura do projeto
+**2. Os salários ultrapassaram as receitas durante quatro épocas.** Entre 2020/21 e 2023/24, os gastos com pessoal ficaram entre 119% e 200% das vendas e serviços.
 
-```
-contas-vitoria-sql/
-├── data/                 Dados em CSV (um ficheiro por tabela)
-├── sql/
-│   ├── 01_schema.sql     Criação das tabelas
-│   ├── 02_dimensoes.sql  Épocas, entidades e rubricas
-│   ├── 03_vistas.sql     Vistas reutilizáveis (pivot, KPIs)
-│   └── 04_analises.sql   19 consultas de análise
-├── scripts/
-│   ├── build_db.py       Constrói vsc_contas.db
-│   ├── correr_analises.py  Corre as consultas e gera resultados.md
-│   └── graficos.py       Gera os gráficos em graficos/
-├── graficos/             Gráficos PNG
-├── resultados.md         Resultados das consultas
-└── vsc_contas.db         A base de dados pronta a abrir
-```
+![Receitas vs. gastos com pessoal](graficos/02_receitas_vs_pessoal_sad.png)
 
-## Como usar
+**3. A SAD tem capital próprio negativo desde 2020/21.** O passivo ultrapassa o ativo há cinco épocas seguidas e é hoje 11,5 vezes maior do que o do Clube.
 
-A base de dados `vsc_contas.db` já vem incluída: pode ser aberta diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
+![Ativo vs. passivo da SAD](graficos/05_balanco_sad.png)
 
-Para a reconstruir do zero:
+**4. Os juros foram multiplicados por cerca de 34 em cinco anos.** Passaram de 149 mil € em 2019/20 para 5,0 M€ em 2024/25. A 30/06/2025, 92% da dívida financeira vencia em menos de um ano.
 
-```bash
-python scripts/build_db.py         # só biblioteca padrão
-python scripts/correr_analises.py  # gera resultados.md
-pip install matplotlib
-python scripts/graficos.py         # gera os gráficos
-```
+**5. Uma época europeia muda tudo.** Com fase de grupos UEFA, as receitas operacionais médias foram de 21,3 M€, contra 14,0 M€ nas restantes épocas.
+
+![Composição das receitas](graficos/04_composicao_receitas.png)
+
+**6. O Clube e a SAD têm perfis opostos.** O Clube tem pouco passivo e património valioso (Estádio e Academia), mas prejuízos recorrentes, perto de 1 M€ por ano nas duas últimas épocas. A SAD concentra a dívida e a volatilidade.
+
+![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
+
+Os resultados completos das 19 consultas estão em [`resultados.md`](resultados.md).
 
 ## Modelo de dados
 
+```mermaid
+erDiagram
+    EPOCA ||--o{ DEMONSTRACAO_RESULTADOS : ""
+    ENTIDADE ||--o{ DEMONSTRACAO_RESULTADOS : ""
+    RUBRICA ||--o{ DEMONSTRACAO_RESULTADOS : ""
+    EPOCA ||--o{ BALANCO : ""
+    ENTIDADE ||--o{ BALANCO : ""
+    EPOCA ||--o{ CASH_FLOW : ""
+    EPOCA ||--o{ RECEITAS_COMPOSICAO : ""
+    EPOCA ||--o{ GASTOS_PESSOAL_COMPOSICAO : ""
+    EPOCA ||--o{ TRANSFERENCIAS : ""
+    EPOCA ||--o{ OPERACAO_JOGADOR : ""
+    EPOCA ||--o{ EVENTO : ""
+    EPOCA ||--o{ FONTE : ""
+
+    DEMONSTRACAO_RESULTADOS {
+        text entidade_id PK
+        text epoca_id PK
+        text rubrica_id PK
+        int valor
+    }
+    BALANCO {
+        text entidade_id PK
+        text epoca_id PK
+        int ativo_total
+        int passivo_total
+        int capital_proprio
+        int caixa
+    }
+    TRANSFERENCIAS {
+        text entidade_id PK
+        text epoca_id PK
+        int vendas_brutas
+        int custo_vendas
+        int mais_valias_liquidas
+    }
+```
+
 | Tabela | Conteúdo |
-|---|---|
-| `epoca`, `entidade`, `rubrica` | Dimensões: 13 épocas, 3 entidades, 20 rubricas |
+|:---|:---|
+| `epoca` · `entidade` · `rubrica` | Dimensões: 13 épocas, 3 entidades, 20 rubricas |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
 | `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho |
 | `cash_flow` | Fluxos operacional, de investimento e de financiamento (SAD) |
@@ -61,30 +118,80 @@ python scripts/graficos.py         # gera os gráficos
 | `transferencias` | Vendas brutas, custos e mais-valias por época |
 | `operacao_jogador` | Principais vendas e aquisições de 2024/25 |
 | `divida` | Dívida da SAD por credor e maturidade (30/06/2025) |
-| `fonte` | Estado e documentos de origem de cada época |
-| `evento` | Acontecimentos e observações relevantes |
+| `fonte` · `evento` | Proveniência dos dados e acontecimentos de cada época |
+| `v_dr` · `v_kpis` · `v_resultado_por_entidade` | Vistas: pivot da DR, indicadores e comparação entre entidades |
 
-Os gastos são guardados com sinal negativo, tal como nas demonstrações de resultados. Valores não disponíveis ficam como `NULL` (ou sem linha, na tabela longa).
+Os gastos são guardados com sinal negativo, tal como nas demonstrações financeiras. Valores não disponíveis ficam como `NULL`.
 
-## Técnicas SQL utilizadas
+### Técnicas SQL
 
-CTEs (incluindo uma CTE recursiva para gerar as épocas) · funções de janela (`LAG`, `RANK`, `ROW_NUMBER`, `FIRST_VALUE`, `SUM() OVER`, médias móveis) · pivot com `CASE` · self-joins · `UNION ALL` · vistas · chaves estrangeiras e restrições `CHECK` · análise de lacunas e de qualidade dos dados.
+| Técnica | Onde |
+|:---|:---|
+| CTE recursiva | geração das épocas em `02_dimensoes.sql` |
+| `LAG`, `RANK`, `ROW_NUMBER`, `FIRST_VALUE` | consultas 1, 3, 13 e 16 |
+| `SUM() OVER (PARTITION BY …)` e médias móveis | consultas 5, 7 e 12 |
+| Pivot com `CASE` | vistas `v_dr` e `v_resultado_por_entidade` |
+| Self-join e `UNION ALL` | consultas 11, 14 e 19 |
+| Restrições `CHECK` e chaves estrangeiras | `01_schema.sql` |
+| Auditoria de qualidade dos dados | consultas 17 a 19 |
 
-## Mais gráficos
+## Como usar
 
-![Dependência das vendas de jogadores](graficos/03_dependencia_vendas_jogadores.png)
-![Receitas vs pessoal](graficos/02_receitas_vs_pessoal_sad.png)
-![Composição das receitas](graficos/04_composicao_receitas.png)
-![Balanço da SAD](graficos/05_balanco_sad.png)
+A base de dados `vsc_contas.db` já vem incluída e abre diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
+
+Para reconstruir tudo do zero:
+
+```bash
+python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
+python scripts/correr_analises.py   # corre as 19 consultas e gera resultados.md
+pip install -r requirements.txt
+python scripts/graficos.py          # gera os gráficos em graficos/
+```
+
+Exemplo: o resultado da SAD com e sem vendas de jogadores.
+
+```sql
+SELECT epoca_id,
+       resultado_liquido,
+       mais_valias_liquidas,
+       resultado_liquido - mais_valias_liquidas AS rl_sem_mais_valias
+FROM v_kpis
+WHERE entidade_id = 'SAD' AND mais_valias_liquidas IS NOT NULL
+ORDER BY epoca_id;
+```
+
+### Estrutura
+
+```
+contas-vitoria-sql/
+├── data/                   Dados em CSV (um ficheiro por tabela)
+├── sql/
+│   ├── 01_schema.sql       Tabelas, chaves e restrições
+│   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
+│   ├── 03_vistas.sql       Vistas reutilizáveis
+│   └── 04_analises.sql     19 consultas de análise
+├── scripts/
+│   ├── build_db.py         Constrói vsc_contas.db
+│   ├── correr_analises.py  Gera resultados.md
+│   └── graficos.py         Gera os gráficos
+├── graficos/               Gráficos PNG
+├── resultados.md           Resultados das consultas
+└── vsc_contas.db           Base de dados pronta a usar
+```
 
 ## Fontes e limitações
 
-Os dados foram recolhidos em outubro de 2026 do site **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial que extrai os números dos Relatórios e Contas auditados publicados em [vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/). Para qualquer uso sério, os valores devem ser confirmados nos documentos originais.
+Os dados foram recolhidos em outubro de 2026 do site **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial que extrai os números dos Relatórios e Contas auditados publicados em [vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/). Para uso sério, os valores devem ser confirmados nos documentos originais.
 
-As próprias consultas de qualidade (17 a 19 em `resultados.md`) revelam limitações que convém conhecer:
+As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 
-- **Cobertura desigual.** A SAD tem a demonstração de resultados completa em quase todas as épocas; o Clube só tem dados detalhados a partir de 2021/22 (antes disso, apenas resultado, EBITDA e passivo, arredondados); o consolidado começa em 2017/18.
-- **Valores repetidos.** Os direitos TV aparecem com exatamente 6 922 619 € em quatro épocas seguidas e "Outros" repete-se em 2023/24 e 2024/25 — provavelmente valores de preenchimento e não dados reais.
-- **Números diferentes para a mesma coisa.** As mais-valias de transferências da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, com a entidade de origem.
-- **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados* (e não com as vendas e serviços da SAD), por isso foram associados ao Grupo.
-- **Rácio pessoal/receitas.** É uma aproximação simples; a regra de custos do plantel da UEFA usa outra base de cálculo.
+- **Cobertura desigual.** A SAD tem a demonstração de resultados completa em quase todas as épocas. O Clube só tem dados detalhados a partir de 2021/22. O consolidado começa em 2017/18.
+- **Valores repetidos.** Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas, e "Outros" repete-se em 2023/24 e 2024/25. Provavelmente são valores de preenchimento e não dados reais.
+- **Números diferentes para a mesma coisa.** As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.
+- **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
+- **Rácio pessoal/receitas.** É uma aproximação simples. A regra de custos do plantel da UEFA usa outra base de cálculo.
+- **Contas reexpressas.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26. Esta base usa os valores originalmente publicados.
+
+---
+
+<p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p>

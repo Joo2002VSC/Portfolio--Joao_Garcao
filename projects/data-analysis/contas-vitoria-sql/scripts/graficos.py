@@ -4,6 +4,10 @@ Uso (a partir da raiz do projeto, depois de build_db.py):
     python scripts/graficos.py
 
 Requer: matplotlib
+
+Identidade visual inspirada nos documentos financeiros do Vitória SC:
+faixa amarela com título a negro, cinzentos neutros e valores negativos
+entre parênteses, como nas demonstrações financeiras.
 """
 import sqlite3
 from pathlib import Path
@@ -11,57 +15,149 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 from matplotlib.ticker import FuncFormatter
 
 RAIZ = Path(__file__).resolve().parent.parent
 DB = RAIZ / "vsc_contas.db"
 OUT = RAIZ / "graficos"
 
-# Paleta categórica (ordem fixa) e tokens de texto/superfície
-SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"]
-SURFACE = "#fcfcfb"
-TEXT = "#0b0b0b"
-TEXT_2 = "#52514e"
-GRID = "#e4e3df"
+# ---------------------------------------------------------------------
+# Paleta
+# ---------------------------------------------------------------------
+AMARELO = "#F5D510"        # amarelo dos documentos
+AMARELO_CLARO = "#FAEB8A"
+PRETO = "#111111"
+CINZA_ESCURO = "#6F6D6E"   # cinzento das linhas de total
+CINZA = "#A9A7A8"
+CINZA_CLARO = "#EBEBEB"    # cinzento das linhas de subtotal
+BRANCO = "#FFFFFF"
+TEXTO_2 = "#4A4949"
+
+FONTE = "Fonte: VSC Contas (vitoriasempre.net), a partir dos Relatórios e Contas auditados · Análise: João Garção"
+
+from matplotlib import font_manager
+
+_disponiveis = {f.name for f in font_manager.fontManager.ttflist}
+FAMILIA = next((f for f in ("Inter", "Helvetica Neue", "Arial") if f in _disponiveis), "DejaVu Sans")
 
 plt.rcParams.update({
-    "figure.facecolor": SURFACE, "axes.facecolor": SURFACE,
-    "axes.edgecolor": GRID, "axes.labelcolor": TEXT_2,
-    "xtick.color": TEXT_2, "ytick.color": TEXT_2, "text.color": TEXT,
-    "font.size": 10, "axes.titlesize": 13, "axes.titleweight": "bold",
-    "axes.titlelocation": "left", "axes.spines.top": False, "axes.spines.right": False,
-    "axes.grid": True, "axes.grid.axis": "y", "grid.color": GRID, "grid.linewidth": 0.8,
-    "legend.frameon": False, "axes.axisbelow": True,
+    "font.family": FAMILIA,
+    "font.size": 10.5,
+    "figure.facecolor": BRANCO, "axes.facecolor": BRANCO,
+    "axes.edgecolor": CINZA_CLARO, "axes.labelcolor": TEXTO_2,
+    "xtick.color": TEXTO_2, "ytick.color": TEXTO_2, "text.color": PRETO,
+    "axes.spines.top": False, "axes.spines.right": False, "axes.spines.left": False,
+    "axes.grid": True, "axes.grid.axis": "y", "grid.color": CINZA_CLARO, "grid.linewidth": 1,
+    "axes.axisbelow": True, "legend.frameon": False,
+    "xtick.major.size": 0, "ytick.major.size": 0,
 })
 
-milhoes = FuncFormatter(lambda v, _: f"{v / 1e6:.0f} M€".replace("-", "−"))
+
+def euros_m(v, casas=0):
+    """Formato financeiro: 7 M€ e negativos entre parênteses, (15 M€)."""
+    txt = f"{abs(v) / 1e6:.{casas}f}".replace(".", ",") + " M€"
+    return f"({txt})" if v < 0 else txt
+
+
+eixo_m = FuncFormatter(lambda v, _: euros_m(v) if v else "0")
 
 
 def q(con, sql):
     return con.execute(sql).fetchall()
 
 
-def guardar(fig, nome, fonte="Fonte: VSC Contas (vitoriasempre.net), a partir dos R&C auditados"):
-    fig.text(0.01, 0.01, fonte, fontsize=8, color=TEXT_2)
-    fig.tight_layout(rect=(0, 0.03, 1, 1))
-    fig.savefig(OUT / nome, dpi=150)
+def figura(titulo, subtitulo, altura=5.6, base=0.14):
+    """Figura com faixa amarela de título, como nos documentos do clube."""
+    fig = plt.figure(figsize=(11, altura))
+    topo = 1 - 0.62 / altura
+    fig.patches.append(Rectangle((0, topo), 1, 1 - topo, transform=fig.transFigure,
+                                 color=AMARELO, zorder=0))
+    fig.text(0.035, topo + (1 - topo) / 2, titulo.upper(), fontsize=14, fontweight="bold",
+             va="center", color=PRETO)
+    fig.text(0.035, topo - 0.32 / altura, subtitulo, fontsize=10.5, color=TEXTO_2, va="center")
+    ax = fig.add_axes([0.085, base, 0.885, topo - 0.62 / altura - base])
+    return fig, ax
+
+
+def guardar(fig, nome):
+    fig.patches.append(Rectangle((0, 0), 1, 0.006, transform=fig.transFigure,
+                                 color=AMARELO, zorder=0))
+    fig.text(0.035, 0.03, FONTE, fontsize=8, color=CINZA_ESCURO)
+    fig.savefig(OUT / nome, dpi=170)
     plt.close(fig)
     print(f"  {nome}")
 
 
+def barras_agrupadas(ax, epocas, series, largura=0.8):
+    n = len(series)
+    w = largura / n
+    for i, (nome, valores, cor) in enumerate(series):
+        xs = [x + (i - (n - 1) / 2) * w for x in range(len(epocas))]
+        ax.bar(xs, [v or 0 for v in valores], width=w * 0.88, color=cor, label=nome,
+               edgecolor=PRETO if cor in (AMARELO, AMARELO_CLARO) else cor, linewidth=0.6)
+    ax.axhline(0, color=PRETO, linewidth=1.1)
+    ax.set_xticks(range(len(epocas)), epocas)
+    ax.yaxis.set_major_formatter(eixo_m)
+
+
+# ---------------------------------------------------------------------
+# Capa / resumo
+# ---------------------------------------------------------------------
+def capa(con):
+    rl, sem_mv, cp = q(con, """SELECT resultado_liquido, rl_sem_mais_valias, capital_proprio
+                               FROM v_kpis WHERE entidade_id='SAD' AND epoca_id='2024/25'""")[0]
+    divida_cp = q(con, """SELECT 100.0 * SUM(menos_1_ano) / SUM(total)
+                          FROM divida WHERE tipo='financeira'""")[0][0]
+    juros = q(con, """SELECT -valor FROM demonstracao_resultados
+                      WHERE entidade_id='SAD' AND rubrica_id='juros' AND epoca_id='2024/25'""")[0][0]
+
+    fig = plt.figure(figsize=(11, 4.4))
+    fig.patches.append(Rectangle((0, 0.52), 1, 0.48, transform=fig.transFigure, color=AMARELO))
+    fig.text(0.04, 0.83, "AS CONTAS DO VITÓRIA SC", fontsize=26, fontweight="bold", color=PRETO)
+    fig.text(0.04, 0.70, "Análise financeira em SQL  ·  SAD, Clube e Grupo consolidado  ·  2012/13 – 2024/25",
+             fontsize=12, color=PRETO)
+    fig.text(0.04, 0.585, "SQLITE   ·   PYTHON   ·   MATPLOTLIB", fontsize=9.5, fontweight="bold",
+             color=PRETO, alpha=0.75)
+
+    kpis = [
+        ("RESULTADO LÍQUIDO SAD", euros_m(rl, 1), "2024/25, recorde da SAD"),
+        ("SEM VENDAS DE JOGADORES", euros_m(sem_mv, 1), "resultado sem mais-valias"),
+        ("CAPITAL PRÓPRIO SAD", euros_m(cp, 1), "a 30/06/2025"),
+        ("DÍVIDA A MENOS DE 1 ANO", f"{divida_cp:.0f}%".replace(".", ","), f"juros de {euros_m(juros, 1)} na época"),
+    ]
+    larg = 0.92 / len(kpis)
+    for i, (rot, val, nota) in enumerate(kpis):
+        x = 0.04 + i * larg
+        fig.patches.append(Rectangle((x, 0.08), larg - 0.015, 0.36, transform=fig.transFigure,
+                                     color=CINZA_CLARO))
+        fig.text(x + 0.015, 0.37, rot, fontsize=8.5, fontweight="bold", color=TEXTO_2)
+        fig.text(x + 0.015, 0.22, val, fontsize=22, fontweight="bold", color=PRETO)
+        fig.text(x + 0.015, 0.125, nota, fontsize=8.5, color=TEXTO_2)
+    fig.savefig(OUT / "00_capa.png", dpi=170)
+    plt.close(fig)
+    print("  00_capa.png")
+
+
+# ---------------------------------------------------------------------
+# Gráficos
+# ---------------------------------------------------------------------
 def resultado_por_entidade(con):
     rows = q(con, """SELECT epoca_id, rl_sad, rl_clube, rl_consolidado
                      FROM v_resultado_por_entidade WHERE epoca_id >= '2017/18'""")
     epocas = [r[0] for r in rows]
-    fig, ax = plt.subplots(figsize=(10, 5))
-    w = 0.26
-    for i, (nome, cor) in enumerate(zip(["SAD", "Clube", "Consolidado"], SERIES)):
-        xs = [x + (i - 1) * w for x in range(len(epocas))]
-        ax.bar(xs, [r[i + 1] or 0 for r in rows], width=w - 0.03, color=cor, label=nome)
-    ax.axhline(0, color=TEXT_2, linewidth=1)
-    ax.set_xticks(range(len(epocas)), epocas)
-    ax.yaxis.set_major_formatter(milhoes)
-    ax.set_title("Resultado líquido por entidade")
+    fig, ax = figura("Resultado líquido por entidade",
+                     "SAD, Clube e Grupo consolidado, por época (exercício a 30 de junho)")
+    barras_agrupadas(ax, epocas, [
+        ("SAD", [r[1] for r in rows], PRETO),
+        ("Grupo consolidado", [r[3] for r in rows], CINZA),
+        ("Clube", [r[2] for r in rows], AMARELO),
+    ])
+    for x, r in enumerate(rows):
+        if r[1] is not None and abs(r[1]) > 5e6:
+            # valor escrito na vertical, dentro da barra da SAD
+            ax.text(x - 0.267, r[1] / 2, euros_m(r[1], 1), rotation=90, ha="center", va="center",
+                    fontsize=9, fontweight="bold", color=AMARELO if r[1] < 0 else BRANCO)
     ax.legend(loc="lower left", ncols=3)
     guardar(fig, "01_resultado_por_entidade.png")
 
@@ -71,18 +167,22 @@ def receitas_vs_pessoal(con):
                      FROM v_kpis WHERE entidade_id = 'SAD' AND vendas_servicos IS NOT NULL
                      ORDER BY epoca_id""")
     epocas = [r[0] for r in rows]
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(epocas, [r[1] for r in rows], color=SERIES[0], linewidth=2, marker="o", markersize=5)
-    ax.plot(epocas, [r[2] for r in rows], color=SERIES[1], linewidth=2, marker="o", markersize=5)
-    i = epocas.index("2021/22")
-    ax.annotate("Gastos com pessoal", (epocas[i], rows[i][2]), xytext=(0, 10),
-                textcoords="offset points", ha="center", color=TEXT_2)
-    ax.annotate("Receitas (vendas e serviços)", (epocas[i], rows[i][1]), xytext=(0, -18),
-                textcoords="offset points", ha="center", color=TEXT_2)
-    ax.yaxis.set_major_formatter(milhoes)
-    ax.set_ylim(0, None)
-    ax.tick_params(axis="x", rotation=45)
-    ax.set_title("SAD: de 2020/21 a 2023/24, o pessoal custou mais do que as receitas")
+    rec, pes = [r[1] for r in rows], [r[2] for r in rows]
+    fig, ax = figura("Receitas vs. gastos com pessoal",
+                     "SAD · Entre 2020/21 e 2023/24, os gastos com pessoal superaram as receitas")
+    x = range(len(epocas))
+    ax.fill_between(x, rec, pes, where=[p > r for p, r in zip(pes, rec)], interpolate=True,
+                    color=AMARELO, alpha=0.55, linewidth=0, label="Pessoal acima das receitas")
+    ax.plot(x, rec, color=PRETO, linewidth=2.4, marker="o", markersize=6, label="Receitas (vendas e serviços)")
+    ax.plot(x, pes, color=CINZA_ESCURO, linewidth=2.4, marker="o", markersize=6,
+            markerfacecolor=BRANCO, markeredgewidth=2, label="Gastos com pessoal")
+    i = epocas.index("2020/21")
+    ax.annotate(f"{100 * pes[i] / rec[i]:.0f}% das receitas", (i, pes[i]), xytext=(0, 10),
+                textcoords="offset points", ha="center", fontsize=9, fontweight="bold")
+    ax.set_xticks(list(x), epocas, rotation=0, fontsize=9)
+    ax.yaxis.set_major_formatter(eixo_m)
+    ax.set_ylim(0, 25e6)
+    ax.legend(loc="upper left")
     guardar(fig, "02_receitas_vs_pessoal_sad.png")
 
 
@@ -91,40 +191,53 @@ def dependencia_vendas(con):
                      FROM v_kpis WHERE entidade_id = 'SAD' AND mais_valias_liquidas IS NOT NULL
                      ORDER BY epoca_id""")
     epocas = [r[0] for r in rows]
-    fig, ax = plt.subplots(figsize=(10, 5))
-    w = 0.38
-    ax.bar([x - w / 2 for x in range(len(epocas))], [r[1] for r in rows], width=w - 0.03,
-           color=SERIES[0], label="Resultado líquido")
-    ax.bar([x + w / 2 for x in range(len(epocas))], [r[2] for r in rows], width=w - 0.03,
-           color=SERIES[1], label="Resultado sem mais-valias de jogadores")
-    ax.axhline(0, color=TEXT_2, linewidth=1)
-    ax.set_xticks(range(len(epocas)), epocas)
-    ax.yaxis.set_major_formatter(milhoes)
-    ax.set_title("SAD: sem vender jogadores, todas as épocas dariam prejuízo")
-    ax.legend(loc="lower left")
+    fig, ax = figura("Dependência das vendas de jogadores",
+                     "SAD · Sem as mais-valias das transferências, todas as épocas teriam dado prejuízo")
+    barras_agrupadas(ax, epocas, [
+        ("Resultado líquido", [r[1] for r in rows], PRETO),
+        ("Resultado sem mais-valias de jogadores", [r[2] for r in rows], AMARELO),
+    ], largura=0.72)
+    for x, r in enumerate(rows):
+        ax.annotate(euros_m(r[2], 1), (x + 0.18, r[2]), xytext=(0, -13), textcoords="offset points",
+                    ha="center", fontsize=8, color=TEXTO_2)
+    ax.set_ylim(-29e6, 11e6)
+    ax.legend(loc="upper left", ncols=2)
     guardar(fig, "03_dependencia_vendas_jogadores.png")
 
 
 def composicao_receitas(con):
-    grupos = ["Direitos TV", "Competições UEFA + Nacionais", "Sócios e Camarotes",
-              "Patrocínios e Publicidade", "Bilhética"]
+    grupos = [("Direitos TV", PRETO, BRANCO),
+              ("Competições UEFA + Nacionais", AMARELO, PRETO),
+              ("Sócios e Camarotes", CINZA_ESCURO, BRANCO),
+              ("Patrocínios e Publicidade", CINZA, PRETO),
+              ("Bilhética", AMARELO_CLARO, PRETO),
+              ("Outras", CINZA_CLARO, PRETO)]
+    nomes = [g[0] for g in grupos]
     rows = q(con, "SELECT epoca_id, categoria, valor FROM receitas_composicao ORDER BY epoca_id")
     epocas = sorted({r[0] for r in rows})
-    dados = {g: [0] * len(epocas) for g in grupos + ["Outras"]}
+    dados = {g: [0] * len(epocas) for g in nomes}
     for e, cat, v in rows:
-        dados[cat if cat in grupos else "Outras"][epocas.index(e)] += v
-    totais = [sum(dados[g][i] for g in dados) for i in range(len(epocas))]
-    fig, ax = plt.subplots(figsize=(10, 5.5))
+        dados[cat if cat in nomes else "Outras"][epocas.index(e)] += v
+    totais = [sum(dados[g][i] for g in nomes) for i in range(len(epocas))]
+
+    fig, ax = figura("Composição das receitas operacionais",
+                     "Peso de cada fonte de receita (%) · Os direitos TV dominam, exceto em anos europeus",
+                     altura=6.2, base=0.2)
     base = [0.0] * len(epocas)
-    for g, cor in zip(dados, SERIES):
-        pct = [100 * dados[g][i] / totais[i] for i in range(len(epocas))]
-        ax.bar(epocas, pct, bottom=base, color=cor, label=g.replace(" + Nacionais", ""),
-               width=0.7, edgecolor=SURFACE, linewidth=1.5)
+    for nome, cor, cor_txt in grupos:
+        pct = [100 * dados[nome][i] / totais[i] for i in range(len(epocas))]
+        ax.bar(epocas, pct, bottom=base, color=cor, width=0.68, edgecolor=BRANCO, linewidth=1.5,
+               label=nome.replace(" + Nacionais", ""))
+        for i, p in enumerate(pct):
+            if p >= 6:
+                ax.text(i, base[i] + p / 2, f"{p:.0f}%", ha="center", va="center",
+                        fontsize=8.5, fontweight="bold", color=cor_txt)
         base = [b + p for b, p in zip(base, pct)]
     ax.set_ylim(0, 100)
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
-    ax.set_title("Composição das receitas operacionais")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.07), ncols=6, fontsize=8.5)
+    ax.grid(False)
+    ax.set_yticks([])
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.06), ncols=6, fontsize=9,
+              handlelength=1.2, columnspacing=1.4)
     guardar(fig, "04_composicao_receitas.png")
 
 
@@ -132,22 +245,23 @@ def balanco_sad(con):
     rows = q(con, """SELECT epoca_id, ativo_total, passivo_total, capital_proprio
                      FROM balanco WHERE entidade_id = 'SAD' ORDER BY epoca_id""")
     epocas = [r[0] for r in rows]
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(epocas, [r[1] for r in rows], color=SERIES[0], linewidth=2, marker="o", markersize=5)
-    ax.plot(epocas, [r[2] for r in rows], color=SERIES[1], linewidth=2, marker="o", markersize=5)
-    ax.fill_between(epocas, [r[1] for r in rows], [r[2] for r in rows],
-                    where=[r[2] > r[1] for r in rows], color=SERIES[1], alpha=0.12,
-                    interpolate=True)
-    ax.annotate("Passivo", (epocas[-1], rows[-1][2]), xytext=(-6, 8),
-                textcoords="offset points", ha="right", color=TEXT_2)
-    ax.annotate("Ativo", (epocas[-1], rows[-1][1]), xytext=(-10, -20),
-                textcoords="offset points", ha="right", color=TEXT_2)
-    ax.annotate("Capital próprio negativo\n(passivo > ativo)", ("2022/23", 45e6),
-                ha="center", color=TEXT_2, fontsize=9)
-    ax.yaxis.set_major_formatter(milhoes)
-    ax.set_ylim(0, None)
-    ax.tick_params(axis="x", rotation=45)
-    ax.set_title("SAD: ativo vs passivo a 30 de junho")
+    at, ps = [r[1] for r in rows], [r[2] for r in rows]
+    x = range(len(epocas))
+    fig, ax = figura("Ativo vs. passivo da SAD",
+                     "Balanço a 30 de junho · A área amarela é o capital próprio negativo (passivo > ativo)")
+    ax.fill_between(x, at, ps, where=[p > a for p, a in zip(ps, at)], interpolate=True,
+                    color=AMARELO, alpha=0.55, linewidth=0, label="Capital próprio negativo")
+    ax.plot(x, ps, color=PRETO, linewidth=2.4, marker="o", markersize=6, label="Passivo")
+    ax.plot(x, at, color=CINZA_ESCURO, linewidth=2.4, marker="o", markersize=6,
+            markerfacecolor=BRANCO, markeredgewidth=2, label="Ativo")
+    ultimo = rows[-1]
+    ax.annotate(f"Capital próprio\n{euros_m(ultimo[3], 1)}", (len(epocas) - 1, (ultimo[1] + ultimo[2]) / 2),
+                xytext=(-12, 0), textcoords="offset points", ha="right", va="center",
+                fontsize=9, fontweight="bold")
+    ax.set_xticks(list(x), epocas, fontsize=9)
+    ax.yaxis.set_major_formatter(eixo_m)
+    ax.set_ylim(0, 75e6)
+    ax.legend(loc="upper left")
     guardar(fig, "05_balanco_sad.png")
 
 
@@ -155,6 +269,7 @@ def main():
     OUT.mkdir(exist_ok=True)
     con = sqlite3.connect(DB)
     print("Gráficos gerados:")
+    capa(con)
     resultado_por_entidade(con)
     receitas_vs_pessoal(con)
     dependencia_vendas(con)
