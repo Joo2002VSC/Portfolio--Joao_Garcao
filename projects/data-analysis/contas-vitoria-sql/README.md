@@ -27,6 +27,16 @@ Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três pers
 
 Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
 
+**Perguntas de investigação**
+
+| # | Pergunta | Resposta curta | Onde |
+|:---:|:---|:---|:---|
+| 1 | A atividade corrente cobre os custos recorrentes? | Não. A margem corrente sem vendas foi negativa em todas as épocas; em média faltaram 20,9 M€ por época (2022/23–2024/25). | Conclusões 1–2, consultas 2, 42, 51 |
+| 2 | Quanto pesam as vendas de jogadores e a Europa? | As vendas superaram sempre as receitas da operação (2,19 € por cada euro em 2024/25). A fase de grupos europeia sobe as receitas médias de 14,0 para 21,3 M€. | Conclusões 5 e 10, consultas 6, 54 |
+| 3 | A dívida é sustentável e a que custo? | É cara e curta: taxa implícita de 14,6% (12 p.p. acima da Euribor) e 92% a vencer em menos de um ano. | Conclusões 3, 4 e 9, consultas 27–30, 52 |
+| 4 | Gastar mais traz melhores classificações? | Não se consegue demonstrar: R² = 0,09 e o intervalo de confiança do efeito inclui o zero. | Conclusão 6, consultas 22, 53 |
+| 5 | Que combinação reduz a dependência das vendas? | Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 40% do défice. O resto exige cortar custos ou manter vendas. | Conclusão 11, consultas 48, 55 |
+
 **✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
 > Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
@@ -71,7 +81,7 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Composição das receitas](graficos/04_composicao_receitas.png)
 
-**6. Gastar mais não garantiu melhores classificações.** Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.
+**6. Gastar mais não garantiu melhores classificações.** Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, em 12 épocas, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O intervalo de confiança a 95% do declive inclui o zero: é uma associação fraca, não uma relação de causa e efeito. O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.
 
 ![Despesas vs. classificação](graficos/16_despesas_vs_classificacao.png)
 
@@ -107,6 +117,8 @@ Os resultados completos das 55 consultas estão em [`resultados.md`](resultados.
 | **[Análise estratégica](analise-estrategica.md)** | Diagnóstico, finanças vs. desempenho desportivo, enquadramento económico e 12 recomendações com cenários |
 | **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas |
 | **[Verificação das fontes](verificacao-fontes.md)** | Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias |
+| **[Testes](testes.md)** | Resultado dos testes automáticos de integridade, coerência contabilística e reconciliação |
+| **[Dicionário de dados](dicionario-dados.md)** | As 30 tabelas e vistas, coluna a coluna |
 
 | | |
 |:---:|:---:|
@@ -198,7 +210,8 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Pivot com `CASE` | vistas `v_dr` e `v_resultado_por_entidade` |
 | Self-join e `UNION ALL` | consultas 11, 14 e 19 |
 | Restrições `CHECK` e chaves estrangeiras | `01_schema.sql` |
-| Auditoria de qualidade dos dados | consultas 17 a 19 e 35 |
+| Auditoria de qualidade dos dados | consultas 17 a 19 e 35, `scripts/testes.py` |
+| Bisseção com CTE recursiva (taxa de crescimento sem `ln`/`exp`) | consulta 9 |
 | Correlação de Pearson em SQL (`sqrt`) | consulta 22 |
 | Cenários com `VALUES` e parâmetros | consulta 26 |
 | Taxa de juro implícita com `LAG` e médias | consulta 27 |
@@ -208,7 +221,7 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 | Simulação de repartição com CTE recursiva (1.º a 18.º lugar) | consulta 48 |
 | Agregação condicional (`SUM(CASE …)`, `COUNT(DISTINCT)`) | consultas 44 e 50 |
 | Média ponderada por dias com `LEAD` e `julianday` (taxa do BCE por época) | vista `v_taxas_epoca` |
-| Regressão linear por mínimos quadrados, R² e resíduos em SQL | consulta 53 |
+| Regressão linear por mínimos quadrados, R², erro-padrão, intervalo de confiança e resíduos em SQL | consulta 53 |
 | Cenários cruzados (`VALUES` × `VALUES`) | consulta 55 |
 
 <a id="como-usar"></a>
@@ -220,16 +233,40 @@ Os gastos são guardados com sinal negativo, tal como nas demonstrações financ
 
 A base de dados `vsc_contas.db` já vem incluída e abre diretamente no [DB Browser for SQLite](https://sqlitebrowser.org/), no DBeaver ou em qualquer cliente SQLite.
 
-Para reconstruir tudo do zero:
+**Requisitos.** Python 3.10 ou mais recente (testado com 3.13) e SQLite 3.35 ou mais recente (testado com 3.45, o que vem com o Python). O dialeto é **SQLite**: as consultas usam CTE recursivas, funções de janela e `sqrt()`, e foram escritas para correr também no sql.js do browser (por isso não usam `ln()` nem `pow()`).
+
+Para reconstruir e validar tudo com um só comando:
+
+```bash
+pip install -r requirements.txt
+python scripts/construir.py            # base de dados, consultas, testes, dicionário, gráficos e HTML
+python scripts/construir.py --rapido   # só base de dados, consultas e testes (sem dependências externas)
+```
+
+O comando pára no primeiro erro. Os passos também podem correr um a um:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
 python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
-pip install -r requirements.txt
+python scripts/testes.py            # testes de qualidade e reconciliação → testes.md
+python scripts/dicionario.py        # dicionário de dados → dicionario-dados.md
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
 python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
 ```
+
+**Qualidade e reconciliação.** [`testes.md`](testes.md) mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 55 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O [dicionário de dados](dicionario-dados.md) descreve as 30 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.
+
+**Integração contínua.** O ficheiro [`ci/contas-vitoria-sql.yml`](ci/contas-vitoria-sql.yml) é uma GitHub Action que reconstrói a base e corre os testes sempre que algo muda nesta pasta. Para a ativar, copia-o para `.github/workflows/` na raiz do repositório.
+
+**Resolução de problemas**
+
+| Sintoma | Causa e solução |
+|:---|:---|
+| `ModuleNotFoundError: matplotlib` ou `markdown` | Falta instalar as dependências: `pip install -r requirements.txt`. A base de dados, as consultas e os testes não precisam delas. |
+| `no such function: sqrt` | SQLite antigo, sem funções matemáticas (anterior a 3.35). Atualiza o Python ou usa a versão HTML. |
+| Os gráficos saem com outra letra | A pasta `fontes/` tem de estar ao lado de `scripts/`. |
+| A consola SQL do `site/` não abre | Abre a pasta com o Live Server do VS Code, ou o `index.html` diretamente num browser recente. |
 
 Exemplo: o resultado da SAD com e sem vendas de jogadores.
 
@@ -254,18 +291,24 @@ contas-vitoria-sql/
 │   ├── 03_vistas.sql       Vistas reutilizáveis
 │   └── 04_analises.sql     55 consultas de análise
 ├── scripts/
+│   ├── construir.py        Reconstrói e valida tudo com um comando
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
+│   ├── testes.py           Testes de qualidade e reconciliação → testes.md
+│   ├── dicionario.py       Gera dicionario-dados.md
 │   ├── graficos.py         Gera os gráficos
 │   ├── cabecalhos.py       Gera as faixas de título do README
 │   ├── gerar_html.py       Gera a versão HTML
 │   ├── modelo.html         Modelo da versão HTML
 │   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
+├── ci/                     GitHub Action com os testes (copiar para .github/workflows/)
 ├── html/                   Versão HTML autónoma, com consola SQL
 ├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
+├── testes.md               Relatório dos testes
+├── dicionario-dados.md     Tabelas, colunas, unidades e proveniência
 ├── analise-estrategica.md  Diagnóstico e recomendações
 ├── analise-tecnica.md      17 conceitos, indicadores, juros e cenários
 ├── verificacao-fontes.md   Conferência com os Relatórios e Contas

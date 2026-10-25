@@ -10,7 +10,7 @@
 <header class="topo">
   <div class="marca gutter"><h1>As contas do Vitória SC</h1><span class="sub">Análise financeira em SQL · 2012/13 – 2025/26</span></div>
 </header>
-<nav class="abas"><div class="dentro gutter"><a href="#projeto" data-aba="projeto">Projeto</a><a href="#estrategica" data-aba="estrategica">Análise estratégica</a><a href="#tecnica" data-aba="tecnica">Análise técnica</a><a href="#verificacao" data-aba="verificacao">Verificação das fontes</a><a href="#resultados" data-aba="resultados">Resultados</a><a href="#sql" data-aba="sql">Consola SQL</a></div></nav>
+<nav class="abas"><div class="dentro gutter"><a href="#projeto" data-aba="projeto">Projeto</a><a href="#estrategica" data-aba="estrategica">Análise estratégica</a><a href="#tecnica" data-aba="tecnica">Análise técnica</a><a href="#verificacao" data-aba="verificacao">Verificação das fontes</a><a href="#resultados" data-aba="resultados">Resultados</a><a href="#testes" data-aba="testes">Testes</a><a href="#dicionario" data-aba="dicionario">Dicionário de dados</a><a href="#sql" data-aba="sql">Consola SQL</a></div></nav>
 
 <main class="gutter">
   <article class="pagina" id="p-projeto" data-pagina="projeto">
@@ -27,6 +27,49 @@
 <h2 id="projeto:resumo">Resumo</h2>
 <p>Base de dados <strong>SQLite</strong> com as contas do <strong>Vitória Sport Clube</strong> em três perspetivas: a <strong>SAD</strong> (futebol profissional), o <strong>Clube</strong> (associação-mãe) e o <strong>Grupo consolidado</strong>. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.</p>
 <p>Sobre essa base, <strong>55 consultas SQL</strong> respondem a uma pergunta central: <em>as contas do Vitória são sustentáveis sem a venda de jogadores?</em></p>
+<p><strong>Perguntas de investigação</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Pergunta</th>
+<th style="text-align: left;">Resposta curta</th>
+<th style="text-align: left;">Onde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">A atividade corrente cobre os custos recorrentes?</td>
+<td style="text-align: left;">Não. A margem corrente sem vendas foi negativa em todas as épocas; em média faltaram 20,9 M€ por época (2022/23–2024/25).</td>
+<td style="text-align: left;">Conclusões 1–2, consultas 2, 42, 51</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Quanto pesam as vendas de jogadores e a Europa?</td>
+<td style="text-align: left;">As vendas superaram sempre as receitas da operação (2,19 € por cada euro em 2024/25). A fase de grupos europeia sobe as receitas médias de 14,0 para 21,3 M€.</td>
+<td style="text-align: left;">Conclusões 5 e 10, consultas 6, 54</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">A dívida é sustentável e a que custo?</td>
+<td style="text-align: left;">É cara e curta: taxa implícita de 14,6% (12 p.p. acima da Euribor) e 92% a vencer em menos de um ano.</td>
+<td style="text-align: left;">Conclusões 3, 4 e 9, consultas 27–30, 52</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Gastar mais traz melhores classificações?</td>
+<td style="text-align: left;">Não se consegue demonstrar: R² = 0,09 e o intervalo de confiança do efeito inclui o zero.</td>
+<td style="text-align: left;">Conclusão 6, consultas 22, 53</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Que combinação reduz a dependência das vendas?</td>
+<td style="text-align: left;">Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 40% do défice. O resto exige cortar custos ou manter vendas.</td>
+<td style="text-align: left;">Conclusão 11, consultas 48, 55</td>
+</tr>
+</tbody>
+</table></div>
 <p><strong>✓ Dados verificados.</strong> O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A <a href="#verificacao">verificação das fontes</a> documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.</p>
 <blockquote>
 <p>Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.</p>
@@ -99,7 +142,7 @@
 <p><img alt="Endividamento e liquidez" src="img/08_endividamento_liquidez.png" loading="lazy" /></p>
 <p><strong>5. Uma época europeia muda tudo.</strong> Com fase de grupos UEFA, as receitas operacionais médias foram de 21,3 M€, contra 14,0 M€ nas restantes épocas.</p>
 <p><img alt="Composição das receitas" src="img/04_composicao_receitas.png" loading="lazy" /></p>
-<p><strong>6. Gastar mais não garantiu melhores classificações.</strong> Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.</p>
+<p><strong>6. Gastar mais não garantiu melhores classificações.</strong> Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, em 12 épocas, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O intervalo de confiança a 95% do declive inclui o zero: é uma associação fraca, não uma relação de causa e efeito. O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.</p>
 <p><img alt="Despesas vs. classificação" src="img/16_despesas_vs_classificacao.png" loading="lazy" /></p>
 <p><strong>7. A estrutura cresceu mais depressa do que a equipa.</strong> A SAD passou de 59 funcionários em 2012/13 para <strong>229 em 2024/25</strong>, um recorde. Os jogadores quase duplicaram (42 → 82), mas o restante pessoal (treinadores, staff e apoio) multiplicou-se por mais de 8 (17 → 147). Hoje há 1,8 não-jogadores por cada jogador, contra 0,4 em 2012/13. A remuneração média por jogador subiu de 80 mil € (2016/17) para 134 mil € (2024/25).</p>
 <p><img alt="Funcionários da SAD" src="img/09_funcionarios.png" loading="lazy" /></p>
@@ -133,6 +176,14 @@
 <tr>
 <td style="text-align: left;"><strong><a href="#verificacao">Verificação das fontes</a></strong></td>
 <td style="text-align: left;">Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#testes">Testes</a></strong></td>
+<td style="text-align: left;">Resultado dos testes automáticos de integridade, coerência contabilística e reconciliação</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><a href="#dicionario">Dicionário de dados</a></strong></td>
+<td style="text-align: left;">As 30 tabelas e vistas, coluna a coluna</td>
 </tr>
 </tbody>
 </table></div>
@@ -342,7 +393,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Auditoria de qualidade dos dados</td>
-<td style="text-align: left;">consultas 17 a 19 e 35</td>
+<td style="text-align: left;">consultas 17 a 19 e 35, <code>scripts/testes.py</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Bisseção com CTE recursiva (taxa de crescimento sem <code>ln</code>/<code>exp</code>)</td>
+<td style="text-align: left;">consulta 9</td>
 </tr>
 <tr>
 <td style="text-align: left;">Correlação de Pearson em SQL (<code>sqrt</code>)</td>
@@ -381,7 +436,7 @@
 <td style="text-align: left;">vista <code>v_taxas_epoca</code></td>
 </tr>
 <tr>
-<td style="text-align: left;">Regressão linear por mínimos quadrados, R² e resíduos em SQL</td>
+<td style="text-align: left;">Regressão linear por mínimos quadrados, R², erro-padrão, intervalo de confiança e resíduos em SQL</td>
 <td style="text-align: left;">consulta 53</td>
 </tr>
 <tr>
@@ -394,14 +449,49 @@
 <p><strong>Versão HTML.</strong> O ficheiro <a href="html/contas-vitoria.html"><code>html/contas-vitoria.html</code></a> junta o README, as três análises, os gráficos e uma consola SQL que corre a base de dados no browser. Descarrega-o e abre-o num browser (Chrome, Safari, Firefox ou Edge). Funciona sem internet: o SQLite também vai embutido. Só o diagrama do modelo de dados precisa de ligação.</p>
 <p><strong>Versão web para editar no VS Code.</strong> A pasta <a href="site/"><code>site/</code></a> tem o mesmo conteúdo em ficheiros separados: <code>index.html</code>, <code>css/style.css</code> e <code>js/app.js</code>, com os gráficos em <code>img/</code> e as letras em <code>fontes/</code>. Abre a pasta no Visual Studio Code e usa a extensão Live Server (<em>Go Live</em>); as instruções estão em <a href="../site/LEIA-ME.md" target="_blank" rel="noopener"><code>site/LEIA-ME.md</code></a>.</p>
 <p>A base de dados <code>vsc_contas.db</code> já vem incluída e abre diretamente no <a target="_blank" rel="noopener" href="https://sqlitebrowser.org/">DB Browser for SQLite</a>, no DBeaver ou em qualquer cliente SQLite.</p>
-<p>Para reconstruir tudo do zero:</p>
+<p><strong>Requisitos.</strong> Python 3.10 ou mais recente (testado com 3.13) e SQLite 3.35 ou mais recente (testado com 3.45, o que vem com o Python). O dialeto é <strong>SQLite</strong>: as consultas usam CTE recursivas, funções de janela e <code>sqrt()</code>, e foram escritas para correr também no sql.js do browser (por isso não usam <code>ln()</code> nem <code>pow()</code>).</p>
+<p>Para reconstruir e validar tudo com um só comando:</p>
+<pre><code class="language-bash">pip install -r requirements.txt
+python scripts/construir.py            # base de dados, consultas, testes, dicionário, gráficos e HTML
+python scripts/construir.py --rapido   # só base de dados, consultas e testes (sem dependências externas)
+</code></pre>
+<p>O comando pára no primeiro erro. Os passos também podem correr um a um:</p>
 <pre><code class="language-bash">python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
 python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
-pip install -r requirements.txt
+python scripts/testes.py            # testes de qualidade e reconciliação → testes.md
+python scripts/dicionario.py        # dicionário de dados → dicionario-dados.md
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
 python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
 </code></pre>
+<p><strong>Qualidade e reconciliação.</strong> <a href="#testes"><code>testes.md</code></a> mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 55 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O <a href="#dicionario">dicionário de dados</a> descreve as 30 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.</p>
+<p><strong>Resolução de problemas</strong></p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Sintoma</th>
+<th style="text-align: left;">Causa e solução</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ModuleNotFoundError: matplotlib</code> ou <code>markdown</code></td>
+<td style="text-align: left;">Falta instalar as dependências: <code>pip install -r requirements.txt</code>. A base de dados, as consultas e os testes não precisam delas.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>no such function: sqrt</code></td>
+<td style="text-align: left;">SQLite antigo, sem funções matemáticas (anterior a 3.35). Atualiza o Python ou usa a versão HTML.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Os gráficos saem com outra letra</td>
+<td style="text-align: left;">A pasta <code>fontes/</code> tem de estar ao lado de <code>scripts/</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">A consola SQL do <code>site/</code> não abre</td>
+<td style="text-align: left;">Abre a pasta com o Live Server do VS Code, ou o <code>index.html</code> diretamente num browser recente.</td>
+</tr>
+</tbody>
+</table></div>
 <p>Exemplo: o resultado da SAD com e sem vendas de jogadores.</p>
 <pre><code class="language-sql">SELECT epoca_id,
        resultado_liquido,
@@ -420,8 +510,11 @@ ORDER BY epoca_id;
 │   ├── 03_vistas.sql       Vistas reutilizáveis
 │   └── 04_analises.sql     55 consultas de análise
 ├── scripts/
+│   ├── construir.py        Reconstrói e valida tudo com um comando
 │   ├── build_db.py         Constrói vsc_contas.db
 │   ├── correr_analises.py  Gera resultados.md
+│   ├── testes.py           Testes de qualidade e reconciliação → testes.md
+│   ├── dicionario.py       Gera dicionario-dados.md
 │   ├── graficos.py         Gera os gráficos
 │   ├── cabecalhos.py       Gera as faixas de título do README
 │   ├── gerar_html.py       Gera a versão HTML
@@ -432,6 +525,8 @@ ORDER BY epoca_id;
 ├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
 ├── resultados.md           Resultados das consultas
+├── testes.md               Relatório dos testes
+├── dicionario-dados.md     Tabelas, colunas, unidades e proveniência
 ├── analise-estrategica.md  Diagnóstico e recomendações
 ├── analise-tecnica.md      17 conceitos, indicadores, juros e cenários
 ├── verificacao-fontes.md   Conferência com os Relatórios e Contas
@@ -471,7 +566,7 @@ ORDER BY epoca_id;
 <hr />
 <h2 id="estrategica:sumário-executivo">Sumário executivo</h2>
 <ul>
-<li><strong>O problema é estrutural, não conjuntural.</strong> Em 2025/26 a SAD gastou 33,1 M€ em custos operacionais para 15,1 M€ de rendimentos operacionais. O défice de exploração, antes de vender jogadores, foi de <strong>(17,2 M€)</strong>.</li>
+<li><strong>O problema é estrutural, não conjuntural.</strong> Em 2025/26 a SAD gastou 33,1 M€ em custos operacionais para 15,1 M€ de rendimentos operacionais: um resultado operacional de <strong>(18,0 M€)</strong> antes de vender jogadores. Sem as depreciações, o EBITDA sem operações com jogadores foi de (17,2 M€).</li>
 <li><strong>As vendas de jogadores tapam o buraco, mas não chegam.</strong> Para fechar 2025/26 sem prejuízo, a SAD precisava de ganhar <strong>23,7 M€ líquidos com jogadores</strong> num só ano. Só esteve perto disso uma vez (2024/25, com o recorde de 49,5 M€ em vendas brutas).</li>
 <li><strong>A Europa é a variável que mais mexe nas contas.</strong> A diferença entre 2024/25 e 2025/26 explica-se quase toda pelas receitas UEFA: 9,4 M€ contra 1,2 M€. O resultado passou de +7,4 M€ para (11,1 M€).</li>
 <li><strong>Gastar mais em salários não comprou classificações.</strong> A correlação entre gastos com pessoal e lugar na Liga é fraca (−0,3). As duas épocas mais caras (2020/21 e 2024/25) acabaram em 7.º e 6.º lugar. O 4.º lugar de 2016/17 custou um terço disso.</li>
@@ -492,31 +587,39 @@ ORDER BY epoca_id;
 <tbody>
 <tr>
 <td style="text-align: left;">Rendimentos operacionais (sem jogadores)</td>
-<td style="text-align: right;">15,1 M€</td>
+<td style="text-align: right;">15,10 M€</td>
 </tr>
 <tr>
-<td style="text-align: left;">Gastos operacionais (sem jogadores)</td>
-<td style="text-align: right;">(33,1 M€)</td>
+<td style="text-align: left;">Gastos operacionais (sem jogadores, incluindo depreciações)</td>
+<td style="text-align: right;">(33,10 M€)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>EBITDA sem operações com jogadores</strong></td>
-<td style="text-align: right;"><strong>(17,2 M€)</strong></td>
+<td style="text-align: left;"><strong>Resultado operacional sem operações com jogadores</strong></td>
+<td style="text-align: right;"><strong>(18,00 M€)</strong></td>
 </tr>
 <tr>
 <td style="text-align: left;">Resultado com direitos de atletas</td>
-<td style="text-align: right;">12,6 M€</td>
+<td style="text-align: right;">12,59 M€</td>
 </tr>
 <tr>
 <td style="text-align: left;">Resultados financeiros</td>
-<td style="text-align: right;">(5,6 M€)</td>
+<td style="text-align: right;">(5,60 M€)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Imposto sobre o rendimento</td>
+<td style="text-align: right;">(0,05 M€)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>Resultado líquido</strong></td>
-<td style="text-align: right;"><strong>(11,1 M€)</strong></td>
+<td style="text-align: right;"><strong>(11,06 M€)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><em>Para referência:</em> EBITDA sem operações com jogadores (comunicado)</td>
+<td style="text-align: right;">(17,21 M€)</td>
 </tr>
 </tbody>
 </table></div>
-<p><sub>Fonte: comunicado de contas da SAD a 30/06/2026.</sub></p>
+<p><sub>Fonte: comunicado de contas da SAD a 30/06/2026. As linhas somam o resultado líquido: 15,10 − 33,10 + 12,59 − 5,60 − 0,05 = −11,06. O EBITDA publicado exclui as depreciações e amortizações de ativos que não são passes de jogadores, que estão incluídas nos 33,10 M€ de gastos. A diferença, de cerca de 0,79 M€, é deduzida (o comunicado não a discrimina). O teste <code>rec_2025_26</code> em <code>scripts/testes.py</code> verifica esta soma.</sub></p>
 <p>Isto quer dizer que <strong>a atividade normal do clube (jogar futebol, vender bilhetes, televisão, patrocínios) dá prejuízo todos os anos</strong>. A diferença tem de vir da venda de jogadores. É o modelo de "clube vendedor", comum em Portugal, mas com uma margem de segurança muito pequena:</p>
 <ul>
 <li>Nas oito épocas com dados, <strong>o resultado sem mais-valias foi sempre negativo</strong>, entre (5,9 M€) e (25,3 M€) (consulta 2).</li>
@@ -771,7 +874,7 @@ ORDER BY epoca_id;
 <h3 id="estrategica:médio-prazo-13-anos-ajustar-o-modelo">Médio prazo (1–3 anos): ajustar o modelo</h3>
 <ol start="5">
 <li><strong>Teto para os custos do plantel e revisão da estrutura.</strong> Reduzir os gastos com pessoal para um máximo de <strong>100% das receitas recorrentes em dois anos e 85% em quatro</strong>, e cumprir os 70% da UEFA sem depender de vendas. Isto inclui rever os 147 postos não-jogadores, mantendo os que provam retorno (<em>performance</em>, <em>scouting</em>, formação).</li>
-<li><strong>Plantel mais curto e menos dependente de terceiros.</strong> Menos jogadores emprestados e em co-propriedade, mais jogadores 100% do clube. Subir a retenção nas vendas de 56% para 70% teria valido <strong>mais 7,1 M€</strong> em 2024/25.</li>
+<li><strong>Plantel mais curto e menos dependente de terceiros.</strong> Menos jogadores emprestados e em co-propriedade, mais jogadores 100% do clube. Se as mais-valias tivessem sido 70% das vendas brutas, e não 56%, a SAD teria ganho <strong>mais 7,1 M€</strong> em 2024/25 (menos comissões e menos percentagens cedidas a terceiros).</li>
 <li><strong>Vender no momento certo.</strong> Um calendário de vendas planeado (no verão, com 2–3 ativos preparados por época) em vez de vendas de emergência a meio da época.</li>
 <li><strong>Estabilidade técnica.</strong> Um modelo de jogo e um perfil de treinador definidos pela estrutura, para que as contratações sirvam o projeto e não cada treinador.</li>
 <li><strong>Receitas comerciais e de dia de jogo.</strong> Bilhética, sócios e camarotes renderam cerca de <strong>9 € por espectador e jogo</strong> em 2024/25 (aproximação). Há margem em <em>hospitality</em>, eventos no estádio, <em>merchandising</em> e patrocínios, sobretudo a pensar no critério de assistências da centralização.</li>
@@ -1274,7 +1377,7 @@ ORDER BY epoca_id;
 <p><strong>Leitura.</strong> A fatia que não fica no clube triplicou em quatro épocas. Sem limites legais eficazes, só a política do clube pode travar este custo: contratos com comissões fixas e mandatos claros.</p>
 <h2 id="tecnica:14-direitos-económicos-de-terceiros-e-co-propriedade">14. Direitos económicos de terceiros e co-propriedade</h2>
 <p><strong>O conceito.</strong> A FIFA proíbe desde 2015 a propriedade de direitos económicos de jogadores por <strong>terceiros</strong> (fundos e investidores que não são clubes). Clubes podem continuar a partilhar percentagens entre si, por exemplo uma "percentagem de futura venda" para o clube de origem.</p>
-<p><strong>No Vitória.</strong> A retenção das vendas (mais-valias ÷ vendas brutas) variou entre 34% e 76% (consulta 12). As aquisições incluem "direitos económicos" separados (217 mil € em 2017/18, 162 mil € em 2018/19).</p>
+<p><strong>No Vitória.</strong> As mais-valias líquidas variaram entre 34% e 76% das vendas brutas (consulta 12). Este rácio não é a parte do preço que fica no clube: desconta também o valor contabilístico dos jogadores vendidos. As aquisições incluem "direitos económicos" separados (217 mil € em 2017/18, 162 mil € em 2018/19).</p>
 <p><strong>Leitura.</strong> Cada percentagem cedida a outro clube, e cada comissão, reduz o que fica de uma venda. Ter jogadores <strong>100% do clube</strong>, sobretudo formados em casa, é a forma mais simples de reter valor.</p>
 <h2 id="tecnica:15-mecanismo-de-solidariedade-e-formação">15. Mecanismo de solidariedade e formação</h2>
 <p><strong>O conceito.</strong> Em cada transferência internacional, 5% do valor é distribuído pelos clubes que formaram o jogador entre os 12 e os 23 anos. Há ainda a compensação por formação no primeiro contrato profissional.</p>
@@ -1479,11 +1582,18 @@ ORDER BY epoca_id;
 <ul>
 <li><strong>Reta:</strong> lugar previsto = 8,05 − 0,060 × despesas (M€).</li>
 <li><strong>Declive:</strong> cada 10 M€ a mais de despesas valem, em média, <strong>0,6 lugares</strong> na tabela.</li>
+<li><strong>Incerteza:</strong> o erro-padrão do declive é 0,061. O intervalo de confiança a 95% vai de −0,20 a +0,08 lugares por M€, ou seja, de 2,0 lugares melhor a 0,8 lugares pior por cada 10 M€. <strong>Inclui o zero</strong>: com estes dados, não se pode afirmar que gastar mais esteja associado a melhores lugares.</li>
 <li><strong>R² = 0,09:</strong> as despesas explicam só <strong>9%</strong> das diferenças de classificação.</li>
 <li><strong>Acima do esperado:</strong> 2016/17 (4.º lugar com 13,3 M€, 3,3 lugares melhor do que o previsto) e 2014/15 (5.º com 8,9 M€).</li>
 <li><strong>Abaixo do esperado:</strong> 2013/14 e 2015/16 (10.º lugar) e 2017/18 (9.º com 18,4 M€).</li>
 </ul>
-<p><strong>Leitura.</strong> As despesas triplicaram (de cerca de 11 M€ para 36 M€) e o Vitória continua entre o 5.º e o 7.º lugar. A classificação depende mais de outros fatores (qualidade do recrutamento, estabilidade técnica, formação) do que do orçamento. Com 12 observações, a relação não é estatisticamente sólida: o resultado deve ler-se como "gastar mais não garantiu nada", não como uma lei.</p>
+<p><strong>Leitura.</strong> As despesas triplicaram (de cerca de 11 M€ para 36 M€) e o Vitória continua entre o 5.º e o 7.º lugar.</p>
+<p><strong>Limitações.</strong>
+- <strong>É uma associação, não uma causa.</strong> A regressão não diz que gastar mais seja inútil: diz que, nestas 12 épocas, as despesas não explicam a classificação. O lugar depende de muitos fatores que o modelo não inclui: qualidade do recrutamento, lesões, treinador, calendário, força dos adversários.
+- <strong>A amostra é pequena</strong> (n = 12) e as épocas não são independentes: o plantel de uma época transita para a seguinte.
+- <strong>A relação pode ser circular.</strong> Uma boa época (Europa, vendas) aumenta as despesas da época seguinte.
+- <strong>O lugar é uma escala ordinal.</strong> A distância entre o 4.º e o 5.º não é igual à distância entre o 9.º e o 10.º. Os pontos seriam uma variável melhor, mas só existem para as épocas mais recentes.</p>
+<p>O resultado deve ler-se como "gastar mais não garantiu melhores lugares", não como uma lei.</p>
 <h2 id="tecnica:21-vendas-de-jogadores-face-às-receitas">21. Vendas de jogadores face às receitas</h2>
 <p><strong>O conceito.</strong> Compara o que a SAD encaixa com transferências com o que fatura na operação (bilheteira, TV, patrocínios, sócios, prémios). Num clube com um modelo de negócio estável, as vendas são um complemento. Num clube vendedor, são a principal fonte de rendimento.</p>
 <p><strong>No Vitória</strong> (consulta 54):</p>
@@ -1577,7 +1687,7 @@ ORDER BY epoca_id;
 </table></div>
 <p><sub>Ganho face aos 6,9 M€ atuais de direitos TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub></p>
 <p><strong>Leitura.</strong>
-- <strong>Sozinha, a centralização não equilibra as contas.</strong> No cenário central (250 M€, 6.º lugar), cobre cerca de um quarto do défice.
+- <strong>Sozinha, a centralização não equilibra as contas.</strong> No cenário central (250 M€, 6.º lugar), cobre cerca de um quarto do défice. Todos os valores desta secção são <strong>simulações</strong> com pressupostos explícitos, não previsões.
 - <strong>Combinada, muda o modelo.</strong> Centralização (+4,8 M€) e juros ao nível do mercado (+3,1 a 3,5 M€, ponto 19) somam cerca de 8 M€, perto de 40% do défice. As mais-valias necessárias para o equilíbrio desceriam de cerca de 21 M€ para cerca de 13 M€ por época, abaixo da média recente (19,1 M€). As vendas deixariam de ser uma questão de sobrevivência e passariam a ser uma margem.
 - <strong>O lugar na tabela passa a valer dinheiro todos os anos.</strong> Entre o 4.º e o 9.º lugar há 3,0 M€ de diferença (contrato de 250 M€). Isto reforça a importância de gastar com eficiência (ponto 20): a centralização premeia a classificação, e a classificação depende pouco do orçamento.
 - <strong>Os números são uma ordem de grandeza.</strong> O valor do contrato, a fórmula do mérito (que deverá incluir o histórico e o <em>ranking</em> UEFA) e a componente de audiências ainda não são conhecidos. As audiências tendem a favorecer clubes com grandes massas adeptas, o que pode beneficiar o Vitória acima destes valores.</p>
@@ -2400,16 +2510,22 @@ ORDER BY epoca_id;
 </thead>
 <tbody>
 <tr>
-<td>Com fase de grupos UEFA</td>
+<td>1. Fase de grupos ou mais</td>
 <td>2</td>
 <td>2019/20, 2024/25</td>
 <td>21 269 628</td>
 </tr>
 <tr>
-<td>Sem UEFA</td>
-<td>5</td>
-<td>2018/19, 2020/21, 2021/22, 2022/23, 2023/24</td>
-<td>13 989 056</td>
+<td>2. Só pré-eliminatórias</td>
+<td>2</td>
+<td>2022/23, 2023/24</td>
+<td>14 707 941</td>
+</tr>
+<tr>
+<td>3. Sem Europa</td>
+<td>3</td>
+<td>2018/19, 2020/21, 2021/22</td>
+<td>13 509 799</td>
 </tr>
 </tbody>
 </table></div>
@@ -2646,6 +2762,7 @@ ORDER BY epoca_id;
 <tr>
 <th>juros_2019_20</th>
 <th>juros_2024_25</th>
+<th>multiplicador</th>
 <th>crescimento_anual_pct</th>
 </tr>
 </thead>
@@ -2653,6 +2770,7 @@ ORDER BY epoca_id;
 <tr>
 <td>148 684</td>
 <td>5 006 965</td>
+<td>33,7</td>
 <td>102,1</td>
 </tr>
 </tbody>
@@ -2776,7 +2894,7 @@ ORDER BY epoca_id;
 <th>epoca</th>
 <th>passivo_clube</th>
 <th>passivo_sad</th>
-<th>sad_vezes_clube</th>
+<th>passivo_sad_por_euro_do_clube</th>
 </tr>
 </thead>
 <tbody>
@@ -2854,14 +2972,15 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
-<h2 id="resultados:12-transferências-quanto-das-vendas-brutas-fica-no-clube">12. Transferências: quanto das vendas brutas fica no clube</h2>
+<h2 id="resultados:12-transferências-mais-valias-líquidas-face-às-vendas-brutas">12. Transferências: mais-valias líquidas face às vendas brutas</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
 <th>epoca</th>
 <th>vendas_brutas</th>
+<th>custo_vendas</th>
 <th>mais_valias_liquidas</th>
-<th>pct_retencao</th>
+<th>mais_valias_sobre_vendas_pct</th>
 <th>media_movel_3_epocas</th>
 </tr>
 </thead>
@@ -2869,6 +2988,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2017/18</td>
 <td>10 660 000</td>
+<td>—</td>
 <td>6 735 474</td>
 <td>63,2</td>
 <td>6 735 474</td>
@@ -2876,6 +2996,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2018/19</td>
 <td>21 744 390</td>
+<td>—</td>
 <td>7 309 152</td>
 <td>33,6</td>
 <td>7 022 313</td>
@@ -2883,6 +3004,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2019/20</td>
 <td>21 309 347</td>
+<td>—</td>
 <td>15 009 861</td>
 <td>70,4</td>
 <td>9 684 829</td>
@@ -2890,6 +3012,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2020/21</td>
 <td>17 012 320</td>
+<td>—</td>
 <td>17 012 320</td>
 <td>100,0</td>
 <td>13 110 444</td>
@@ -2897,6 +3020,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2021/22</td>
 <td>15 217 500</td>
+<td>1 617 071</td>
 <td>11 542 768</td>
 <td>75,9</td>
 <td>14 521 649</td>
@@ -2904,6 +3028,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2022/23</td>
 <td>30 921 739</td>
+<td>6 049 650</td>
 <td>23 216 097</td>
 <td>75,1</td>
 <td>17 257 061</td>
@@ -2911,6 +3036,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2023/24</td>
 <td>14 626 816</td>
+<td>3 711 075</td>
 <td>6 665 467</td>
 <td>45,6</td>
 <td>13 808 110</td>
@@ -2918,6 +3044,7 @@ ORDER BY epoca_id;
 <tr>
 <td>2024/25</td>
 <td>49 518 024</td>
+<td>17 285 567</td>
 <td>27 540 964</td>
 <td>55,6</td>
 <td>19 140 842</td>
@@ -5381,7 +5508,7 @@ ORDER BY epoca_id;
 <th>vendas_brutas</th>
 <th>custo_vendas</th>
 <th>custo_vendas_pct</th>
-<th>retencao_pct</th>
+<th>mais_valias_sobre_vendas_pct</th>
 </tr>
 </thead>
 <tbody>
@@ -5937,6 +6064,9 @@ ORDER BY epoca_id;
 <th>residuo</th>
 <th>a_ordenada</th>
 <th>b_declive_por_m</th>
+<th>erro_padrao_b</th>
+<th>ic95_inferior</th>
+<th>ic95_superior</th>
 <th>r_quadrado</th>
 <th>n</th>
 </tr>
@@ -5950,6 +6080,9 @@ ORDER BY epoca_id;
 <td>2,70</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -5961,6 +6094,9 @@ ORDER BY epoca_id;
 <td>-2,50</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -5972,6 +6108,9 @@ ORDER BY epoca_id;
 <td>2,60</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -5983,6 +6122,9 @@ ORDER BY epoca_id;
 <td>-3,30</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -5994,6 +6136,9 @@ ORDER BY epoca_id;
 <td>2,00</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6005,6 +6150,9 @@ ORDER BY epoca_id;
 <td>-1,70</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6016,6 +6164,9 @@ ORDER BY epoca_id;
 <td>0,70</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6027,6 +6178,9 @@ ORDER BY epoca_id;
 <td>0,90</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6038,6 +6192,9 @@ ORDER BY epoca_id;
 <td>-0,10</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6049,6 +6206,9 @@ ORDER BY epoca_id;
 <td>-0,20</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6060,6 +6220,9 @@ ORDER BY epoca_id;
 <td>-1,30</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6071,6 +6234,9 @@ ORDER BY epoca_id;
 <td>0,10</td>
 <td>8,05</td>
 <td>-0,06</td>
+<td>0,06</td>
+<td>-0,20</td>
+<td>0,08</td>
 <td>0,09</td>
 <td>12</td>
 </tr>
@@ -6258,6 +6424,2134 @@ ORDER BY epoca_id;
 <td>-20 931 924</td>
 <td>15 895 595</td>
 <td>24,1</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+<article class="pagina" id="p-testes" data-pagina="testes">
+<h1 id="testes:testes-de-qualidade-e-reconciliação">Testes de qualidade e reconciliação</h1>
+<p>Gerado por <code>scripts/testes.py</code>. Corre-o depois de <code>build_db.py</code>.</p>
+<p><strong>33 testes aprovados · 0 falhados · 7 avisos</strong></p>
+<p>Python 3.13.17 · SQLite 3.45.1 · Linux</p>
+<h2 id="testes:1-integridade-da-base-de-dados">1. Integridade da base de dados</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">Resultado</th>
+<th style="text-align: left;">Teste</th>
+<th style="text-align: left;">Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Ficheiro SQLite íntegro (<code>PRAGMA integrity_check</code>)</td>
+<td style="text-align: left;">ok</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Chaves estrangeiras válidas (<code>PRAGMA foreign_key_check</code>)</td>
+<td style="text-align: left;">0 referências inválidas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Épocas contínuas de 2012/13 a 2025/26</td>
+<td style="text-align: left;">14 épocas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Todas as linhas da DR têm rubrica conhecida</td>
+<td style="text-align: left;">0 sem correspondência</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="testes:2-coerência-contabilística">2. Coerência contabilística</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">Resultado</th>
+<th style="text-align: left;">Teste</th>
+<th style="text-align: left;">Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Ativo = passivo + capital próprio (todas as entidades e épocas)</td>
+<td style="text-align: left;">diferença ≤ 1 € em todas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Corrente + não corrente = total (balanço dos R&amp;C)</td>
+<td style="text-align: left;">13 épocas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Tabela <code>balanco</code> (SAD) igual ao balanço dos R&amp;C</td>
+<td style="text-align: left;">sem diferenças</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Soma das categorias de pessoal = nº de funcionários</td>
+<td style="text-align: left;">todas as épocas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Soma das rubricas de gastos com pessoal = total</td>
+<td style="text-align: left;">épocas com remunerações decompostas (2016/17 em diante)</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Remunerações sem decomposição por categoria</td>
+<td style="text-align: left;">2012/13, 2013/14, 2014/15, 2015/16: os R&amp;C dessas épocas só dão o total</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Passes: valor inicial + aquisições − amortizações − saídas = valor final</td>
+<td style="text-align: left;">todas as épocas (tolerância de 4 €: oito valores arredondados ao euro)</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Passes: valor final de uma época = valor inicial da seguinte</td>
+<td style="text-align: left;">sem quebras</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Resultado sem mais-valias = resultado líquido − mais-valias</td>
+<td style="text-align: left;">todas as épocas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Dívida por instrumento: parte de curto prazo ≤ total</td>
+<td style="text-align: left;">sem incoerências</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;"><code>rec_2025_26</code>: linhas do comunicado somam o resultado líquido</td>
+<td style="text-align: left;">-11 062 106 € vs -11 063 044 € · diferença de 938 € não discriminada no comunicado</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;"><code>rec_2025_26</code>: EBITDA publicado ≠ rendimentos − gastos</td>
+<td style="text-align: left;">diferença de 0,79 M€: depreciações de ativos não desportivos (deduzida)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="testes:3-reconciliação-números-citados-nos-relatórios-vs-base-de-dados">3. Reconciliação: números citados nos relatórios vs. base de dados</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">Resultado</th>
+<th style="text-align: left;">Teste</th>
+<th style="text-align: left;">Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Resultado líquido da SAD 2024/25 (M€)</td>
+<td style="text-align: left;">publicado 7,6 · calculado 7,610</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Resultado sem mais-valias 2024/25 (M€)</td>
+<td style="text-align: left;">publicado -19,9 · calculado -19,931</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Resultado sem mais-valias 2023/24 (M€)</td>
+<td style="text-align: left;">publicado -21,4 · calculado -21,389</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Mais-valias 2024/25 (M€)</td>
+<td style="text-align: left;">publicado 27,5 · calculado 27,541</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Resultado líquido da SAD 2025/26 (M€)</td>
+<td style="text-align: left;">publicado -11,1 · calculado -11,063</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Capital próprio da SAD a 30/06/2026 (M€)</td>
+<td style="text-align: left;">publicado -36,8 · calculado -36,832</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Passivo da SAD a 30/06/2026 (M€)</td>
+<td style="text-align: left;">publicado 85,3 · calculado 85,299</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Rácio de endividamento 2023/24</td>
+<td style="text-align: left;">publicado 1,87 · calculado 1,871</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Dívida financeira a 30/06/2025 (M€)</td>
+<td style="text-align: left;">publicado 34,6 · calculado 34,584</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Juros suportados 2024/25 (M€)</td>
+<td style="text-align: left;">publicado 5 · calculado 5,007</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Taxa de juro implícita 2024/25 (%)</td>
+<td style="text-align: left;">publicado 14,6 · calculado 14,610</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Euribor a 12 meses, média 2024/25 (%)</td>
+<td style="text-align: left;">publicado 2,6 · calculado 2,620</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Funcionários da SAD 2024/25</td>
+<td style="text-align: left;">publicado 229 · calculado 229,000</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Vendas brutas por euro de receita 2024/25</td>
+<td style="text-align: left;">publicado 2,19 · calculado 2,193</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Défice antes de vendas, média 2022/23–2024/25 (M€)</td>
+<td style="text-align: left;">publicado -20,9 · calculado -20,932</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Rácio UEFA de custos do plantel 2024/25 (%) · consulta 45</td>
+<td style="text-align: left;">publicado 44,7 · calculado 44,700</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">R² da regressão despesas vs. lugar · consulta 53</td>
+<td style="text-align: left;">publicado 0,09 · calculado 0,090</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="testes:4-consultas-de-análise">4. Consultas de análise</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">Resultado</th>
+<th style="text-align: left;">Teste</th>
+<th style="text-align: left;">Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">As 55 consultas correm sem erros</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Todas as consultas devolvem pelo menos uma linha</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Nenhuma consulta usa funções que não existem no SQLite do browser (ln, log, pow)</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="testes:5-avisos-de-qualidade-não-bloqueiam">5. Avisos de qualidade (não bloqueiam)</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: center;">Resultado</th>
+<th style="text-align: left;">Teste</th>
+<th style="text-align: left;">Detalhe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Valor repetido em 4 épocas: Direitos TV</td>
+<td style="text-align: left;">6 922 619 €</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Valor repetido em 3 épocas: Direitos TV</td>
+<td style="text-align: left;">7 000 000 €</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Vendas brutas = mais-valias em 2020/21</td>
+<td style="text-align: left;">a fonte só indica as mais-valias; o rácio de mais-valias sobre vendas dá 100%</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Épocas da SAD sem receitas detalhadas</td>
+<td style="text-align: left;">2012/13, 2025/26</td>
+</tr>
+</tbody>
+</table></div>
+</article>
+<article class="pagina" id="p-dicionario" data-pagina="dicionario">
+<h1 id="dicionario:dicionário-de-dados">Dicionário de dados</h1>
+<p>Gerado por <code>scripts/dicionario.py</code> a partir de <code>vsc_contas.db</code> e dos comentários do esquema.</p>
+<h2 id="dicionario:convenções">Convenções</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Tema</th>
+<th style="text-align: left;">Regra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Dialeto</td>
+<td style="text-align: left;">SQLite 3 (testado com 3.45). As consultas só usam funções que também existem no sql.js do browser.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Unidades</td>
+<td style="text-align: left;">Valores monetários em <strong>euros inteiros</strong> (arredondados ao euro na carga). Taxas de juro em <strong>percentagem</strong> (2,5 = 2,5%).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Sinais</td>
+<td style="text-align: left;">Gastos com sinal <strong>negativo</strong>, como nas demonstrações de resultados. Em <code>v_kpis</code>, <code>gastos_pessoal</code> e <code>juros</code> passam a positivos.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Épocas</td>
+<td style="text-align: left;">Texto <code>AAAA/AA</code> (por exemplo <code>2024/25</code>). O exercício fecha a 30 de junho do segundo ano.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Entidades</td>
+<td style="text-align: left;"><code>SAD</code> (Vitória SC – Futebol, SAD), <code>CLUBE</code> (associação) e <code>CONSOLIDADO</code> (Grupo).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Em falta</td>
+<td style="text-align: left;"><code>NULL</code> = dado não disponível na fonte. Nunca se usa 0 para "desconhecido".</td>
+</tr>
+<tr>
+<td style="text-align: left;">Proveniência</td>
+<td style="text-align: left;">Coluna <code>documento</code> (relatório e nota de origem) nas tabelas verificadas nos R&C; tabela <code>fonte</code> para as restantes; <code>divergencia</code> regista os valores das fontes secundárias que foram substituídos.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:índice">Índice</h2>
+<p><a href="#dicionario:auditoria"><code>auditoria</code></a> · <a href="#dicionario:balanco"><code>balanco</code></a> · <a href="#dicionario:balanco_rubrica"><code>balanco_rubrica</code></a> · <a href="#dicionario:balanco_sad_rc"><code>balanco_sad_rc</code></a> · <a href="#dicionario:bce_taxa"><code>bce_taxa</code></a> · <a href="#dicionario:cash_flow"><code>cash_flow</code></a> · <a href="#dicionario:demonstracao_resultados"><code>demonstracao_resultados</code></a> · <a href="#dicionario:desempenho_desportivo"><code>desempenho_desportivo</code></a> · <a href="#dicionario:divergencia"><code>divergencia</code></a> · <a href="#dicionario:divida"><code>divida</code></a> · <a href="#dicionario:entidade"><code>entidade</code></a> · <a href="#dicionario:epoca"><code>epoca</code></a> · <a href="#dicionario:evento"><code>evento</code></a> · <a href="#dicionario:financiamento_detalhe"><code>financiamento_detalhe</code></a> · <a href="#dicionario:fonte"><code>fonte</code></a> · <a href="#dicionario:gastos_pessoal_composicao"><code>gastos_pessoal_composicao</code></a> · <a href="#dicionario:operacao_jogador"><code>operacao_jogador</code></a> · <a href="#dicionario:partes_relacionadas"><code>partes_relacionadas</code></a> · <a href="#dicionario:passes_jogadores"><code>passes_jogadores</code></a> · <a href="#dicionario:pessoal_sad"><code>pessoal_sad</code></a> · <a href="#dicionario:receitas_composicao"><code>receitas_composicao</code></a> · <a href="#dicionario:reexpressao"><code>reexpressao</code></a> · <a href="#dicionario:rubrica"><code>rubrica</code></a> · <a href="#dicionario:taxa_referencia"><code>taxa_referencia</code></a> · <a href="#dicionario:transferencias"><code>transferencias</code></a> · <a href="#dicionario:treinador"><code>treinador</code></a> · <a href="#dicionario:v_dr"><code>v_dr</code></a> · <a href="#dicionario:v_kpis"><code>v_kpis</code></a> · <a href="#dicionario:v_resultado_por_entidade"><code>v_resultado_por_entidade</code></a> · <a href="#dicionario:v_taxas_epoca"><code>v_taxas_epoca</code></a></p>
+<h2 id="dicionario:auditoria"><code>auditoria</code></h2>
+<p><em>Tabela · 13 linhas · épocas 2012/13 a 2024/25</em></p>
+<p>Parecer do auditor (certificação legal de contas) e artigo 35.º do CSC</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>parecer_auditor</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Tipo de opinião e ênfases da certificação legal de contas</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>artigo_35_no_relatorio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">1 se o relatório refere o artigo 35.º do CSC</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nota</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Observação sobre o valor ou a época</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:balanco"><code>balanco</code></h2>
+<p><em>Tabela · 34 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Balanço a 30/06 de cada época (NULL = não disponível)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ativo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">Ativo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>passivo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passivo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>capital_proprio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">no Clube: fundos patrimoniais</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>caixa</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">Caixa e depósitos bancários a 30/06 (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:balanco_rubrica"><code>balanco_rubrica</code></h2>
+<p><em>Tabela · 159 linhas · épocas 2016/17 a 2024/25</em></p>
+<p>Balanço da SAD por rubrica (formato longo), 2016/17 a 2024/25</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>lado</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>ativo</code> ou <code>passivo</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>prazo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>corrente</code> ou <code>nao_corrente</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rubrica</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Rubrica do balanço ou da transação</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:balanco_sad_rc"><code>balanco_sad_rc</code></h2>
+<p><em>Tabela · 13 linhas · épocas 2012/13 a 2024/25</em></p>
+<p>Balanço detalhado da SAD tal como publicado nos Relatórios e Contas, com dívida financeira e juros (verificado documento a documento)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ativo_nao_corrente</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ativo não corrente (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ativo_corrente</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ativo corrente (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ativo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ativo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>passivo_nao_corrente</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passivo não corrente (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>passivo_corrente</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passivo corrente, a menos de um ano (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>passivo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passivo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>capital_proprio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Capital próprio = ativo − passivo (€); no Clube, fundos patrimoniais</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>caixa</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Caixa e depósitos bancários a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>financiamentos_nc</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">financiamentos obtidos não correntes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>financiamentos_c</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">financiamentos obtidos correntes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>juros_suportados</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">valor bruto, positivo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>juros_obtidos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Juros obtidos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:bce_taxa"><code>bce_taxa</code></h2>
+<p><em>Tabela · 25 linhas</em></p>
+<p>Alterações das taxas diretoras do BCE (em vigor a partir de data_efeito).</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>data_efeito</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Data a partir da qual a taxa vigora</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>facilidade_deposito</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Taxa da facilidade permanente de depósito do BCE (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>refinanciamento</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Taxa das operações principais de refinanciamento do BCE (%)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:cash_flow"><code>cash_flow</code></h2>
+<p><em>Tabela · 12 linhas · épocas 2013/14 a 2024/25</em></p>
+<p>Fluxos de caixa (só SAD)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>operacional</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Fluxo de caixa das atividades operacionais (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>investimento</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Fluxo de caixa das atividades de investimento (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>financiamento</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Fluxo de caixa das atividades de financiamento (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:demonstracao_resultados"><code>demonstracao_resultados</code></h2>
+<p><em>Tabela · 293 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Demonstração de resultados em formato longo (uma linha por rubrica)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rubrica_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>rubrica.rubrica_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador da rubrica da demonstração de resultados</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:desempenho_desportivo"><code>desempenho_desportivo</code></h2>
+<p><em>Tabela · 14 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Desempenho desportivo da equipa principal em cada época</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>posicao_liga</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Lugar final na I Liga</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pontos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Pontos na I Liga</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>media_espectadores</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">média em casa na Liga (0 = COVID)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>competicao_europeia</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">NULL = sem Europa</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fase_europeia</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Fase mais avançada atingida na Europa</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>trofeu</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Troféu conquistado na época</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nota</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Observação sobre o valor ou a época</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:divergencia"><code>divergencia</code></h2>
+<p><em>Tabela · 40 linhas · épocas 2014/15 a 2023/24</em></p>
+<p>Divergências encontradas entre fontes secundárias e os Relatórios e Contas</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>divergencia_id</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fonte</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Origem do valor</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>indicador</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome do indicador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_fonte</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor na fonte secundária</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_rc</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor nos Relatórios e Contas</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>diferenca</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">valor_fonte − valor_rc</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nota</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Observação sobre o valor ou a época</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:divida"><code>divida</code></h2>
+<p><em>Tabela · 6 linhas</em></p>
+<p>Dívida da SAD por credor e maturidade</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>data_ref</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">'AAAA-MM-DD'</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>credor</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Entidade credora</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tipo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Tipo de registo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Montante total em dívida (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>menos_1_ano</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Parte que vence em menos de um ano (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>entre_1_3_anos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Parte que vence entre um e três anos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mais_3_anos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Parte que vence a mais de três anos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nota</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Observação sobre o valor ou a época</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:entidade"><code>entidade</code></h2>
+<p><em>Tabela · 3 linhas</em></p>
+<p>As três "vistas" do Vitória: SAD, Clube e Grupo consolidado</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">'SAD'</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nome</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome legível</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>descricao</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Texto descritivo</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:epoca"><code>epoca</code></h2>
+<p><em>Tabela · 14 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Época desportiva (o exercício fecha a 30 de junho do ano_fim)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">'2024/25'</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ano_inicio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ano em que a época começa (1 de julho)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ano_fim</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ano em que a época termina (30 de junho)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:evento"><code>evento</code></h2>
+<p><em>Tabela · 51 linhas · épocas 2013/14 a 2025/26</em></p>
+<p>Acontecimentos e observações relevantes de cada época</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>evento_id</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tipo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Tipo de registo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>descricao</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Texto descritivo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:financiamento_detalhe"><code>financiamento_detalhe</code></h2>
+<p><em>Tabela · 8 linhas</em></p>
+<p>Dívida financeira por instrumento e maturidade</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>data_ref</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Data de referência (AAAA-MM-DD)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>instrumento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Empréstimos, factoring, Apollo ou locações financeiras</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Montante total em dívida (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>menos_1_ano</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Parte que vence em menos de um ano (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>entre_1_3_anos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Parte que vence entre um e três anos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:fonte"><code>fonte</code></h2>
+<p><em>Tabela · 34 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Proveniência e estado dos dados de cada página/época</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>estado</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Estado dos dados nesta fonte</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documentos</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documentos de origem</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:gastos_pessoal_composicao"><code>gastos_pessoal_composicao</code></h2>
+<p><em>Tabela · 24 linhas · épocas 2017/18 a 2024/25</em></p>
+<p>Composição dos gastos com pessoal (valores consolidados)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>categoria</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Categoria da receita ou do gasto</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:operacao_jogador"><code>operacao_jogador</code></h2>
+<p><em>Tabela · 11 linhas · épocas 2024/25 a 2024/25</em></p>
+<p>Principais vendas e aquisições individuais</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>operacao_id</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador da operação</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>jogador</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome do jogador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tipo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Tipo de registo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>clube</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">clube de destino (vendas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:partes_relacionadas"><code>partes_relacionadas</code></h2>
+<p><em>Tabela · 26 linhas · épocas 2020/21 a 2024/25</em></p>
+<p>Transações e saldos entre a SAD e o Clube (partes relacionadas)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rubrica</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Rubrica do balanço ou da transação</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sentido</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>receita da SAD</code>, <code>gasto da SAD</code> ou <code>saldo</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:passes_jogadores"><code>passes_jogadores</code></h2>
+<p><em>Tabela · 8 linhas · épocas 2017/18 a 2024/25</em></p>
+<p>Movimentos dos passes de jogadores (ativos intangíveis), nota 7 dos R&amp;C</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_liquido_inicio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor contabilístico do plantel no início da época (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>aquisicoes</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passes adquiridos na época (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>amortizacoes</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Amortizações dos passes na época (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_bruto_alienado</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Custo de aquisição dos passes vendidos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>amort_acumuladas_alienadas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Amortizações acumuladas dos passes vendidos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rescisoes_bruto</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Custo de aquisição dos contratos rescindidos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rescisoes_amort_acumuladas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Amortizações acumuladas dos contratos rescindidos (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_liquido_fim</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor contabilístico do plantel no fim da época (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:pessoal_sad"><code>pessoal_sad</code></h2>
+<p><em>Tabela · 13 linhas · épocas 2012/13 a 2024/25</em></p>
+<p>Número médio de funcionários e gastos com pessoal da SAD (nota "Benefícios dos empregados")</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>funcionarios</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Número médio de funcionários da SAD</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>jogadores</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Número médio de jogadores</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>treinadores_profissional</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Treinadores e staff técnico do futebol profissional</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>treinadores_formacao</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Treinadores da formação</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>apoio_futebol_profissional</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">categoria autónoma desde 2021/22</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>outro_pessoal</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Restante pessoal (administrativo e outros)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rem_administracao</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Remunerações dos órgãos sociais (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rem_pessoal_administrativo</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Remunerações do pessoal administrativo (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rem_treinadores</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Remunerações dos treinadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rem_jogadores</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Remunerações dos jogadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rem_apoio_futebol</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">Remunerações do pessoal de apoio ao futebol (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>encargos_remuneracoes</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Encargos sociais sobre remunerações (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>seguro_acidentes</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Seguros de acidentes de trabalho (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>outros_gastos</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Outros gastos com pessoal (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>total_gastos_pessoal</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Total de gastos com pessoal (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:receitas_composicao"><code>receitas_composicao</code></h2>
+<p><em>Tabela · 63 linhas · épocas 2018/19 a 2024/25</em></p>
+<p>Composição das receitas operacionais (os totais coincidem com os rendimentos operacionais consolidados, por isso ficam no CONSOLIDADO)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>categoria</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Categoria da receita ou do gasto</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:reexpressao"><code>reexpressao</code></h2>
+<p><em>Tabela · 8 linhas · épocas 2024/25 a 2024/25</em></p>
+<p>Valores de 2024/25 reexpressos nas contas de 2025/26 (custo amortizado)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>indicador</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome do indicador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_original</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor publicado no R&amp;C da própria época</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor_reexpresso</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor reexpresso no ano seguinte</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:rubrica"><code>rubrica</code></h2>
+<p><em>Tabela · 20 linhas</em></p>
+<p>Linhas da demonstração de resultados</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>rubrica_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador da rubrica da demonstração de resultados</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nome</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome legível</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>natureza</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>rendimento</code>, <code>gasto</code> ou <code>resultado</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ordem</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Ordem de apresentação na demonstração de resultados</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:taxa_referencia"><code>taxa_referencia</code></h2>
+<p><em>Tabela · 253 linhas</em></p>
+<p>Taxas de juro de referência (mercado e crédito), em percentagem.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>data</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">AAAA-MM-DD (mês da observação)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>indicador</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome do indicador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>taxa_pct</code></td>
+<td style="text-align: left;">REAL</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Taxa em percentagem</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fonte</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Origem do valor</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:transferencias"><code>transferencias</code></h2>
+<p><em>Tabela · 16 linhas · épocas 2017/18 a 2024/25</em></p>
+<p>Transferências de jogadores (resumo por época)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>entidade.entidade_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vendas_brutas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Valor bruto das vendas de passes de jogadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>custo_vendas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">intermediários, terceiros, solidariedade</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mais_valias_liquidas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Preço de venda − valor contabilístico − custos da venda (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:treinador"><code>treinador</code></h2>
+<p><em>Tabela · 20 linhas</em></p>
+<p>Treinadores principais e interinos (fonte: Wikipédia)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>treinador_id</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Identificador</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>periodo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Período no cargo (texto)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nome</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Nome legível</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tipo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Tipo de registo</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:v_dr"><code>v_dr</code></h2>
+<p><em>Vista · 33 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Demonstração de resultados em formato largo (pivot com CASE)</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vendas_servicos</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">Vendas e prestações de serviços: receitas da operação (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rendimentos_operacionais</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">25</td>
+<td style="text-align: left;">Rendimentos operacionais sem operações com jogadores (€; 2025/26)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>outros_rendimentos</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">Outros rendimentos, incluindo mais-valias com jogadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fse</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Fornecimentos e serviços externos (€, negativo)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gastos_pessoal</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Gastos com pessoal (€; negativo em <code>v_dr</code>, positivo em <code>v_kpis</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>depreciacoes</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Depreciações e amortizações, incluindo passes (€, negativo)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ebitda</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">23</td>
+<td style="text-align: left;">Resultado antes de juros, impostos, depreciações e amortizações (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ebitda_sem_transferencias</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">28</td>
+<td style="text-align: left;">EBITDA sem operações com jogadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resultado_operacional</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">19</td>
+<td style="text-align: left;">Resultado operacional (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>juros</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Juros (€; nalgumas épocas líquidos dos juros obtidos, ver <code>balanco_sad_rc</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resultado_liquido</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Resultado líquido do período (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:v_kpis"><code>v_kpis</code></h2>
+<p><em>Vista · 33 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Indicadores principais por entidade e época</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>entidade_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;"><code>SAD</code>, <code>CLUBE</code> ou <code>CONSOLIDADO</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vendas_servicos</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">Vendas e prestações de serviços: receitas da operação (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gastos_pessoal</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Gastos com pessoal (€; negativo em <code>v_dr</code>, positivo em <code>v_kpis</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resultado_liquido</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Resultado líquido do período (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mais_valias_liquidas</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">Preço de venda − valor contabilístico − custos da venda (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rl_sem_mais_valias</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">17</td>
+<td style="text-align: left;">Resultado líquido − mais-valias com jogadores (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>pct_pessoal_receitas</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">Gastos com pessoal em % das vendas e serviços</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>juros</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">9</td>
+<td style="text-align: left;">Juros (€; nalgumas épocas líquidos dos juros obtidos, ver <code>balanco_sad_rc</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ativo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Ativo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>passivo_total</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Passivo total a 30/06 (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>capital_proprio</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Capital próprio = ativo − passivo (€); no Clube, fundos patrimoniais</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>caixa</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">18</td>
+<td style="text-align: left;">Caixa e depósitos bancários a 30/06 (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:v_resultado_por_entidade"><code>v_resultado_por_entidade</code></h2>
+<p><em>Vista · 14 linhas · épocas 2012/13 a 2025/26</em></p>
+<p>Resultado líquido das três entidades lado a lado</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rl_sad</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Resultado líquido da SAD (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rl_clube</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Resultado líquido do Clube (€)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rl_consolidado</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Resultado líquido do Grupo (€)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:v_taxas_epoca"><code>v_taxas_epoca</code></h2>
+<p><em>Vista · 10 linhas · épocas 2016/17 a 2025/26</em></p>
+<p>Taxas de juro por época (julho a junho): referências de mercado e taxa implícita da dívida da SAD. A taxa do BCE é ponderada pelos dias em vigor.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bce_deposito</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Taxa de depósito do BCE, média da época ponderada pelos dias (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>euribor_12m</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Euribor a 12 meses, média da época (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ot_portugal_10a</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Obrigações do Estado português a 10 anos, média da época (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>credito_empresas_pt</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Crédito novo a empresas em Portugal, média dos meses disponíveis (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vitoria_implicita</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Juros suportados ÷ dívida financeira média da SAD (%)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>meses_euribor</code></td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Número de observações mensais da Euribor na época</td>
 </tr>
 </tbody>
 </table></div>

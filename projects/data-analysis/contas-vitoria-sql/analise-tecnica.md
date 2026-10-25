@@ -253,7 +253,7 @@ A 30/06/2025, a SAD devia **21,2 M€ a intermediários**, três vezes mais do q
 
 **O conceito.** A FIFA proíbe desde 2015 a propriedade de direitos económicos de jogadores por **terceiros** (fundos e investidores que não são clubes). Clubes podem continuar a partilhar percentagens entre si, por exemplo uma "percentagem de futura venda" para o clube de origem.
 
-**No Vitória.** A retenção das vendas (mais-valias ÷ vendas brutas) variou entre 34% e 76% (consulta 12). As aquisições incluem "direitos económicos" separados (217 mil € em 2017/18, 162 mil € em 2018/19).
+**No Vitória.** As mais-valias líquidas variaram entre 34% e 76% das vendas brutas (consulta 12). Este rácio não é a parte do preço que fica no clube: desconta também o valor contabilístico dos jogadores vendidos. As aquisições incluem "direitos económicos" separados (217 mil € em 2017/18, 162 mil € em 2018/19).
 
 **Leitura.** Cada percentagem cedida a outro clube, e cada comissão, reduz o que fica de uma venda. Ter jogadores **100% do clube**, sobretudo formados em casa, é a forma mais simples de reter valor.
 
@@ -367,11 +367,20 @@ A diferença face à referência é o **spread**: o prémio que o mercado cobra 
 
 - **Reta:** lugar previsto = 8,05 − 0,060 × despesas (M€).
 - **Declive:** cada 10 M€ a mais de despesas valem, em média, **0,6 lugares** na tabela.
+- **Incerteza:** o erro-padrão do declive é 0,061. O intervalo de confiança a 95% vai de −0,20 a +0,08 lugares por M€, ou seja, de 2,0 lugares melhor a 0,8 lugares pior por cada 10 M€. **Inclui o zero**: com estes dados, não se pode afirmar que gastar mais esteja associado a melhores lugares.
 - **R² = 0,09:** as despesas explicam só **9%** das diferenças de classificação.
 - **Acima do esperado:** 2016/17 (4.º lugar com 13,3 M€, 3,3 lugares melhor do que o previsto) e 2014/15 (5.º com 8,9 M€).
 - **Abaixo do esperado:** 2013/14 e 2015/16 (10.º lugar) e 2017/18 (9.º com 18,4 M€).
 
-**Leitura.** As despesas triplicaram (de cerca de 11 M€ para 36 M€) e o Vitória continua entre o 5.º e o 7.º lugar. A classificação depende mais de outros fatores (qualidade do recrutamento, estabilidade técnica, formação) do que do orçamento. Com 12 observações, a relação não é estatisticamente sólida: o resultado deve ler-se como "gastar mais não garantiu nada", não como uma lei.
+**Leitura.** As despesas triplicaram (de cerca de 11 M€ para 36 M€) e o Vitória continua entre o 5.º e o 7.º lugar.
+
+**Limitações.**
+- **É uma associação, não uma causa.** A regressão não diz que gastar mais seja inútil: diz que, nestas 12 épocas, as despesas não explicam a classificação. O lugar depende de muitos fatores que o modelo não inclui: qualidade do recrutamento, lesões, treinador, calendário, força dos adversários.
+- **A amostra é pequena** (n = 12) e as épocas não são independentes: o plantel de uma época transita para a seguinte.
+- **A relação pode ser circular.** Uma boa época (Europa, vendas) aumenta as despesas da época seguinte.
+- **O lugar é uma escala ordinal.** A distância entre o 4.º e o 5.º não é igual à distância entre o 9.º e o 10.º. Os pontos seriam uma variável melhor, mas só existem para as épocas mais recentes.
+
+O resultado deve ler-se como "gastar mais não garantiu melhores lugares", não como uma lei.
 
 ## 21. Vendas de jogadores face às receitas
 
@@ -413,7 +422,7 @@ A diferença face à referência é o **spread**: o prémio que o mercado cobra 
 <sub>Ganho face aos 6,9 M€ atuais de direitos TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub>
 
 **Leitura.**
-- **Sozinha, a centralização não equilibra as contas.** No cenário central (250 M€, 6.º lugar), cobre cerca de um quarto do défice.
+- **Sozinha, a centralização não equilibra as contas.** No cenário central (250 M€, 6.º lugar), cobre cerca de um quarto do défice. Todos os valores desta secção são **simulações** com pressupostos explícitos, não previsões.
 - **Combinada, muda o modelo.** Centralização (+4,8 M€) e juros ao nível do mercado (+3,1 a 3,5 M€, ponto 19) somam cerca de 8 M€, perto de 40% do défice. As mais-valias necessárias para o equilíbrio desceriam de cerca de 21 M€ para cerca de 13 M€ por época, abaixo da média recente (19,1 M€). As vendas deixariam de ser uma questão de sobrevivência e passariam a ser uma margem.
 - **O lugar na tabela passa a valer dinheiro todos os anos.** Entre o 4.º e o 9.º lugar há 3,0 M€ de diferença (contrato de 250 M€). Isto reforça a importância de gastar com eficiência (ponto 20): a centralização premeia a classificação, e a classificação depende pouco do orçamento.
 - **Os números são uma ordem de grandeza.** O valor do contrato, a fórmula do mérito (que deverá incluir o histórico e o *ranking* UEFA) e a componente de audiências ainda não são conhecidos. As audiências tendem a favorecer clubes com grandes massas adeptas, o que pode beneficiar o Vitória acima destes valores.

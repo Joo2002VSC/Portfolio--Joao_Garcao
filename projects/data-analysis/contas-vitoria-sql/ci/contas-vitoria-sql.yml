@@ -1,0 +1,32 @@
+# Testes do projeto "As contas do Vitória SC" (projects/data-analysis/contas-vitoria-sql).
+# Corre sempre que algo muda nessa pasta: reconstrói a base, corre as 55 consultas e os testes.
+name: contas-vitoria-sql
+
+on:
+  push:
+    paths: ["projects/data-analysis/contas-vitoria-sql/**", ".github/workflows/contas-vitoria-sql.yml"]
+  pull_request:
+    paths: ["projects/data-analysis/contas-vitoria-sql/**"]
+  workflow_dispatch:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/data-analysis/contas-vitoria-sql
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Reconstruir e validar
+        run: python scripts/construir.py
+      - name: Guardar o relatório dos testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-testes
+          path: projects/data-analysis/contas-vitoria-sql/testes.md

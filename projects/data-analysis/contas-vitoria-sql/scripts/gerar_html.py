@@ -35,6 +35,8 @@ DOCUMENTOS = [
     ("tecnica", "Análise técnica", "analise-tecnica.md"),
     ("verificacao", "Verificação das fontes", "verificacao-fontes.md"),
     ("resultados", "Resultados", "resultados.md"),
+    ("testes", "Testes", "testes.md"),
+    ("dicionario", "Dicionário de dados", "dicionario-dados.md"),
 ]
 PAGINA_DE = {ficheiro: pid for pid, _, ficheiro in DOCUMENTOS}
 
@@ -227,7 +229,7 @@ O projeto em HTML, CSS e JavaScript, em ficheiros separados.
 ## Abrir no Visual Studio Code
 
 1. No VS Code: **File → Open Folder…** e escolhe esta pasta (`site`).
-2. Instala a extensão **Live Server** (o VS Code sugere-a ao abrir a pasta).
+2. Instala a extensão **Live Server**: no VS Code, abre o separador Extensions (⇧⌘X), procura "Live Server" e clica em Install.
 3. Abre `index.html` e clica em **Go Live**, no canto inferior direito.
    A página abre no browser e atualiza sozinha sempre que guardas um ficheiro.
 

@@ -564,9 +564,12 @@ def dispersao_regressao(con):
     mx, my = sum(xs) / n, sum(ys) / n
     b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
     a = my - b * mx
-    r2 = 1 - sum((y - (a + b * x)) ** 2 for x, y in zip(xs, ys)) / sum((y - my) ** 2 for y in ys)
+    sqe = sum((y - (a + b * x)) ** 2 for x, y in zip(xs, ys))
+    r2 = 1 - sqe / sum((y - my) ** 2 for y in ys)
+    ep = (sqe / (n - 2) / sum((x - mx) ** 2 for x in xs)) ** 0.5
+    ic = (b - 2.228 * ep, b + 2.228 * ep)  # t(0,975; 10 graus de liberdade)
     fig, ax = figura("Despesas da SAD vs. classificação",
-                     "Despesas = pessoal + FSE + depreciações e amortizações · Reta de regressão linear (mínimos quadrados), 12 épocas")
+                     "Despesas = pessoal + FSE + depreciações e amortizações · Regressão linear (mínimos quadrados), 2013/14 a 2024/25")
     lim = (5, 40)
     ax.plot(lim, [a + b * lim[0], a + b * lim[1]], color=PRETO, linewidth=2, zorder=2)
     for ep, x, y, fase in rows:
@@ -581,7 +584,9 @@ def dispersao_regressao(con):
     num = lambda v, c: f"{v:.{c}f}".replace(".", ",")
     eq = (f"Lugar previsto = {num(a, 2)} {'−' if b < 0 else '+'} {num(abs(b), 3)} × despesas (M€)\n"
           f"R² = {num(r2, 2)}: as despesas explicam só {r2 * 100:.0f}% das diferenças de lugar.\n"
-          f"Cada 10 M€ a mais valem, em média, {num(abs(b) * 10, 1)} lugares.")
+          f"Cada 10 M€ a mais: {num(abs(b) * 10, 1)} lugares melhor, em média.\n"
+          f"IC a 95%: de {num(ic[1] * 10, 1)} lugares pior a {num(-ic[0] * 10, 1)} melhor (inclui zero).\n"
+          f"n = {n} épocas. Associação, não causa.")
     ax.text(0.985, 0.05, eq, transform=ax.transAxes, ha="right", va="bottom", fontsize=9.5,
             bbox=dict(boxstyle="square,pad=0.6", facecolor=CINZA_CLARO, edgecolor="none"))
     ax.scatter([], [], s=110, color=AMARELO, edgecolor=PRETO, label="Fase de grupos europeia ou mais")

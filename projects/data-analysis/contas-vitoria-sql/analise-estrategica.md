@@ -12,7 +12,7 @@
 
 ## Sumário executivo
 
-- **O problema é estrutural, não conjuntural.** Em 2025/26 a SAD gastou 33,1 M€ em custos operacionais para 15,1 M€ de rendimentos operacionais. O défice de exploração, antes de vender jogadores, foi de **(17,2 M€)**.
+- **O problema é estrutural, não conjuntural.** Em 2025/26 a SAD gastou 33,1 M€ em custos operacionais para 15,1 M€ de rendimentos operacionais: um resultado operacional de **(18,0 M€)** antes de vender jogadores. Sem as depreciações, o EBITDA sem operações com jogadores foi de (17,2 M€).
 - **As vendas de jogadores tapam o buraco, mas não chegam.** Para fechar 2025/26 sem prejuízo, a SAD precisava de ganhar **23,7 M€ líquidos com jogadores** num só ano. Só esteve perto disso uma vez (2024/25, com o recorde de 49,5 M€ em vendas brutas).
 - **A Europa é a variável que mais mexe nas contas.** A diferença entre 2024/25 e 2025/26 explica-se quase toda pelas receitas UEFA: 9,4 M€ contra 1,2 M€. O resultado passou de +7,4 M€ para (11,1 M€).
 - **Gastar mais em salários não comprou classificações.** A correlação entre gastos com pessoal e lugar na Liga é fraca (−0,3). As duas épocas mais caras (2020/21 e 2024/25) acabaram em 7.º e 6.º lugar. O 4.º lugar de 2016/17 custou um terço disso.
@@ -28,14 +28,16 @@ A SAD tem duas "contas" diferentes dentro das suas contas:
 
 | Componente (2025/26) | Valor |
 |:---|---:|
-| Rendimentos operacionais (sem jogadores) | 15,1 M€ |
-| Gastos operacionais (sem jogadores) | (33,1 M€) |
-| **EBITDA sem operações com jogadores** | **(17,2 M€)** |
-| Resultado com direitos de atletas | 12,6 M€ |
-| Resultados financeiros | (5,6 M€) |
-| **Resultado líquido** | **(11,1 M€)** |
+| Rendimentos operacionais (sem jogadores) | 15,10 M€ |
+| Gastos operacionais (sem jogadores, incluindo depreciações) | (33,10 M€) |
+| **Resultado operacional sem operações com jogadores** | **(18,00 M€)** |
+| Resultado com direitos de atletas | 12,59 M€ |
+| Resultados financeiros | (5,60 M€) |
+| Imposto sobre o rendimento | (0,05 M€) |
+| **Resultado líquido** | **(11,06 M€)** |
+| *Para referência:* EBITDA sem operações com jogadores (comunicado) | (17,21 M€) |
 
-<sub>Fonte: comunicado de contas da SAD a 30/06/2026.</sub>
+<sub>Fonte: comunicado de contas da SAD a 30/06/2026. As linhas somam o resultado líquido: 15,10 − 33,10 + 12,59 − 5,60 − 0,05 = −11,06. O EBITDA publicado exclui as depreciações e amortizações de ativos que não são passes de jogadores, que estão incluídas nos 33,10 M€ de gastos. A diferença, de cerca de 0,79 M€, é deduzida (o comunicado não a discrimina). O teste `rec_2025_26` em `scripts/testes.py` verifica esta soma.</sub>
 
 Isto quer dizer que **a atividade normal do clube (jogar futebol, vender bilhetes, televisão, patrocínios) dá prejuízo todos os anos**. A diferença tem de vir da venda de jogadores. É o modelo de "clube vendedor", comum em Portugal, mas com uma margem de segurança muito pequena:
 
@@ -164,7 +166,7 @@ Em 2024/25, a SAD do SC Braga também teve prejuízo, (11,0 M€). A diferença 
 ### Médio prazo (1–3 anos): ajustar o modelo
 
 5. **Teto para os custos do plantel e revisão da estrutura.** Reduzir os gastos com pessoal para um máximo de **100% das receitas recorrentes em dois anos e 85% em quatro**, e cumprir os 70% da UEFA sem depender de vendas. Isto inclui rever os 147 postos não-jogadores, mantendo os que provam retorno (*performance*, *scouting*, formação).
-6. **Plantel mais curto e menos dependente de terceiros.** Menos jogadores emprestados e em co-propriedade, mais jogadores 100% do clube. Subir a retenção nas vendas de 56% para 70% teria valido **mais 7,1 M€** em 2024/25.
+6. **Plantel mais curto e menos dependente de terceiros.** Menos jogadores emprestados e em co-propriedade, mais jogadores 100% do clube. Se as mais-valias tivessem sido 70% das vendas brutas, e não 56%, a SAD teria ganho **mais 7,1 M€** em 2024/25 (menos comissões e menos percentagens cedidas a terceiros).
 7. **Vender no momento certo.** Um calendário de vendas planeado (no verão, com 2–3 ativos preparados por época) em vez de vendas de emergência a meio da época.
 8. **Estabilidade técnica.** Um modelo de jogo e um perfil de treinador definidos pela estrutura, para que as contratações sirvam o projeto e não cada treinador.
 9. **Receitas comerciais e de dia de jogo.** Bilhética, sócios e camarotes renderam cerca de **9 € por espectador e jogo** em 2024/25 (aproximação). Há margem em *hospitality*, eventos no estádio, *merchandising* e patrocínios, sobretudo a pensar no critério de assistências da centralização.

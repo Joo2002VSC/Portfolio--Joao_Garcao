@@ -77,8 +77,9 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 | grupo | epocas | lista | receita_media |
 |---|---|---|---|
-| Com fase de grupos UEFA | 2 | 2019/20, 2024/25 | 21 269 628 |
-| Sem UEFA | 5 | 2018/19, 2020/21, 2021/22, 2022/23, 2023/24 | 13 989 056 |
+| 1. Fase de grupos ou mais | 2 | 2019/20, 2024/25 | 21 269 628 |
+| 2. Só pré-eliminatórias | 2 | 2022/23, 2023/24 | 14 707 941 |
+| 3. Sem Europa | 3 | 2018/19, 2020/21, 2021/22 | 13 509 799 |
 
 ## 7. Capital próprio da SAD: épocas em falência técnica
 
@@ -118,9 +119,9 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 ## 9. Crescimento dos juros da SAD nas últimas 5 épocas (taxa média anual)
 
-| juros_2019_20 | juros_2024_25 | crescimento_anual_pct |
-|---|---|---|
-| 148 684 | 5 006 965 | 102,1 |
+| juros_2019_20 | juros_2024_25 | multiplicador | crescimento_anual_pct |
+|---|---|---|---|
+| 148 684 | 5 006 965 | 33,7 | 102,1 |
 
 ## 10. SAD, Clube e Grupo: resultado líquido lado a lado
 
@@ -143,7 +144,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 ## 11. Passivo do Clube vs passivo da SAD
 
-| epoca | passivo_clube | passivo_sad | sad_vezes_clube |
+| epoca | passivo_clube | passivo_sad | passivo_sad_por_euro_do_clube |
 |---|---|---|---|
 | 2013/14 | 14 280 381 | 11 467 147 | 0,80 |
 | 2014/15 | 12 582 990 | 11 360 570 | 0,90 |
@@ -158,18 +159,18 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2023/24 | 6 057 347 | 67 016 655 | 11,1 |
 | 2024/25 | 6 059 146 | 69 452 913 | 11,5 |
 
-## 12. Transferências: quanto das vendas brutas fica no clube
+## 12. Transferências: mais-valias líquidas face às vendas brutas
 
-| epoca | vendas_brutas | mais_valias_liquidas | pct_retencao | media_movel_3_epocas |
-|---|---|---|---|---|
-| 2017/18 | 10 660 000 | 6 735 474 | 63,2 | 6 735 474 |
-| 2018/19 | 21 744 390 | 7 309 152 | 33,6 | 7 022 313 |
-| 2019/20 | 21 309 347 | 15 009 861 | 70,4 | 9 684 829 |
-| 2020/21 | 17 012 320 | 17 012 320 | 100,0 | 13 110 444 |
-| 2021/22 | 15 217 500 | 11 542 768 | 75,9 | 14 521 649 |
-| 2022/23 | 30 921 739 | 23 216 097 | 75,1 | 17 257 061 |
-| 2023/24 | 14 626 816 | 6 665 467 | 45,6 | 13 808 110 |
-| 2024/25 | 49 518 024 | 27 540 964 | 55,6 | 19 140 842 |
+| epoca | vendas_brutas | custo_vendas | mais_valias_liquidas | mais_valias_sobre_vendas_pct | media_movel_3_epocas |
+|---|---|---|---|---|---|
+| 2017/18 | 10 660 000 | — | 6 735 474 | 63,2 | 6 735 474 |
+| 2018/19 | 21 744 390 | — | 7 309 152 | 33,6 | 7 022 313 |
+| 2019/20 | 21 309 347 | — | 15 009 861 | 70,4 | 9 684 829 |
+| 2020/21 | 17 012 320 | — | 17 012 320 | 100,0 | 13 110 444 |
+| 2021/22 | 15 217 500 | 1 617 071 | 11 542 768 | 75,9 | 14 521 649 |
+| 2022/23 | 30 921 739 | 6 049 650 | 23 216 097 | 75,1 | 17 257 061 |
+| 2023/24 | 14 626 816 | 3 711 075 | 6 665 467 | 45,6 | 13 808 110 |
+| 2024/25 | 49 518 024 | 17 285 567 | 27 540 964 | 55,6 | 19 140 842 |
 
 ## 13. Gastos com pessoal do grupo: atletas vs restante pessoal
 
@@ -604,7 +605,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 ## 46. Intermediários e terceiros: quanto das vendas não fica no clube
 
-| epoca | vendas_brutas | custo_vendas | custo_vendas_pct | retencao_pct |
+| epoca | vendas_brutas | custo_vendas | custo_vendas_pct | mais_valias_sobre_vendas_pct |
 |---|---|---|---|---|
 | 2021/22 | 15 217 500 | 1 617 071 | 10,6 | 75,9 |
 | 2022/23 | 30 921 739 | 6 049 650 | 19,6 | 75,1 |
@@ -693,20 +694,20 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 ## 53. Despesas da SAD vs. classificação: regressão linear (mínimos quadrados)
 
-| epoca | despesas_m | lugar | lugar_previsto | residuo | a_ordenada | b_declive_por_m | r_quadrado | n |
-|---|---|---|---|---|---|---|---|---|
-| 2013/14 | 11,9 | 10 | 7,30 | 2,70 | 8,05 | -0,06 | 0,09 | 12 |
-| 2014/15 | 8,90 | 5 | 7,50 | -2,50 | 8,05 | -0,06 | 0,09 | 12 |
-| 2015/16 | 10,8 | 10 | 7,40 | 2,60 | 8,05 | -0,06 | 0,09 | 12 |
-| 2016/17 | 13,3 | 4 | 7,30 | -3,30 | 8,05 | -0,06 | 0,09 | 12 |
-| 2017/18 | 18,4 | 9 | 7,00 | 2,00 | 8,05 | -0,06 | 0,09 | 12 |
-| 2018/19 | 23,1 | 5 | 6,70 | -1,70 | 8,05 | -0,06 | 0,09 | 12 |
-| 2019/20 | 29,0 | 7 | 6,30 | 0,70 | 8,05 | -0,06 | 0,09 | 12 |
-| 2020/21 | 32,5 | 7 | 6,10 | 0,90 | 8,05 | -0,06 | 0,09 | 12 |
-| 2021/22 | 33,2 | 6 | 6,10 | -0,10 | 8,05 | -0,06 | 0,09 | 12 |
-| 2022/23 | 31,2 | 6 | 6,20 | -0,20 | 8,05 | -0,06 | 0,09 | 12 |
-| 2023/24 | 29,2 | 5 | 6,30 | -1,30 | 8,05 | -0,06 | 0,09 | 12 |
-| 2024/25 | 36,1 | 6 | 5,90 | 0,10 | 8,05 | -0,06 | 0,09 | 12 |
+| epoca | despesas_m | lugar | lugar_previsto | residuo | a_ordenada | b_declive_por_m | erro_padrao_b | ic95_inferior | ic95_superior | r_quadrado | n |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2013/14 | 11,9 | 10 | 7,30 | 2,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2014/15 | 8,90 | 5 | 7,50 | -2,50 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2015/16 | 10,8 | 10 | 7,40 | 2,60 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2016/17 | 13,3 | 4 | 7,30 | -3,30 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2017/18 | 18,4 | 9 | 7,00 | 2,00 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2018/19 | 23,1 | 5 | 6,70 | -1,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2019/20 | 29,0 | 7 | 6,30 | 0,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2020/21 | 32,5 | 7 | 6,10 | 0,90 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2021/22 | 33,2 | 6 | 6,10 | -0,10 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2022/23 | 31,2 | 6 | 6,20 | -0,20 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2023/24 | 29,2 | 5 | 6,30 | -1,30 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2024/25 | 36,1 | 6 | 5,90 | 0,10 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
 
 ## 54. Vendas de jogadores face às receitas, ao longo do tempo
 

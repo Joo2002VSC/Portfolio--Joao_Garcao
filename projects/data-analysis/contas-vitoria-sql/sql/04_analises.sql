@@ -80,21 +80,27 @@ ORDER BY epoca_id;
 
 
 -- @q 6. Épocas com e sem competições europeias: receitas médias
--- Conceitos: CTE, agregação condicional, AVG
-WITH uefa AS (
-    SELECT epoca_id,
-           MAX(CASE WHEN categoria = 'Competições UEFA + Nacionais' THEN valor END) AS competicoes,
-           SUM(valor) AS total
+-- Conceitos: CTE, JOIN, agregação condicional, AVG
+-- A classificação vem do registo desportivo de cada época (desempenho_desportivo),
+-- não de um limiar de receitas.
+WITH receitas AS (
+    SELECT epoca_id, SUM(valor) AS total
     FROM receitas_composicao
     GROUP BY epoca_id
 )
 SELECT
-    CASE WHEN competicoes > 2000000 THEN 'Com fase de grupos UEFA' ELSE 'Sem UEFA' END AS grupo,
-    COUNT(*)                     AS epocas,
-    GROUP_CONCAT(epoca_id, ', ') AS lista,
-    CAST(AVG(total) AS INTEGER)  AS receita_media
-FROM uefa
-GROUP BY grupo;
+    CASE
+        WHEN d.fase_europeia IN ('Fase de grupos', 'Oitavos de final') THEN '1. Fase de grupos ou mais'
+        WHEN d.fase_europeia = 'Pré-eliminatória'                       THEN '2. Só pré-eliminatórias'
+        ELSE                                                                 '3. Sem Europa'
+    END                                AS grupo,
+    COUNT(*)                           AS epocas,
+    GROUP_CONCAT(r.epoca_id, ', ')     AS lista,
+    CAST(AVG(r.total) AS INTEGER)      AS receita_media
+FROM receitas r
+JOIN desempenho_desportivo d ON d.epoca_id = r.epoca_id
+GROUP BY grupo
+ORDER BY grupo;
 
 
 -- @q 7. Capital próprio da SAD: épocas em falência técnica
@@ -127,18 +133,40 @@ ORDER BY epoca_id;
 
 
 -- @q 9. Crescimento dos juros da SAD nas últimas 5 épocas (taxa média anual)
--- Conceitos: subconsultas escalares, potência via exp/ln
-WITH j AS (
-    SELECT epoca_id, -valor AS juros
-    FROM demonstracao_resultados
-    WHERE entidade_id = 'SAD' AND rubrica_id = 'juros'
+-- Conceitos: subconsultas escalares, CTE recursiva para resolver (1 + r)^5 = rácio
+-- Usa bisseção (só somas e multiplicações) em vez de exp()/ln(), que não existem
+-- em todas as instalações de SQLite (por exemplo, no sql.js usado no browser).
+WITH RECURSIVE j AS (
+    SELECT epoca_id, juros_suportados AS juros
+    FROM balanco_sad_rc
+),
+alvo AS (
+    SELECT (SELECT juros FROM j WHERE epoca_id = '2019/20') AS inicio,
+           (SELECT juros FROM j WHERE epoca_id = '2024/25') AS fim
+),
+racio AS (SELECT 1.0 * fim / inicio AS rac FROM alvo),
+bissecao(passo, baixo, alto) AS (
+    SELECT 0, -0.99, 10.0
+    UNION ALL
+    SELECT b.passo + 1,
+           CASE WHEN (1 + (b.baixo + b.alto) / 2) * (1 + (b.baixo + b.alto) / 2)
+                   * (1 + (b.baixo + b.alto) / 2) * (1 + (b.baixo + b.alto) / 2)
+                   * (1 + (b.baixo + b.alto) / 2) < r.rac
+                THEN (b.baixo + b.alto) / 2 ELSE b.baixo END,
+           CASE WHEN (1 + (b.baixo + b.alto) / 2) * (1 + (b.baixo + b.alto) / 2)
+                   * (1 + (b.baixo + b.alto) / 2) * (1 + (b.baixo + b.alto) / 2)
+                   * (1 + (b.baixo + b.alto) / 2) < r.rac
+                THEN b.alto ELSE (b.baixo + b.alto) / 2 END
+    FROM bissecao b, racio r
+    WHERE b.passo < 60
 )
 SELECT
-    (SELECT juros FROM j WHERE epoca_id = '2019/20') AS juros_2019_20,
-    (SELECT juros FROM j WHERE epoca_id = '2024/25') AS juros_2024_25,
-    ROUND(100 * (exp(ln(1.0 * (SELECT juros FROM j WHERE epoca_id = '2024/25')
-                          / (SELECT juros FROM j WHERE epoca_id = '2019/20')) / 5) - 1), 1)
-                                                     AS crescimento_anual_pct;
+    (SELECT inicio FROM alvo)                                     AS juros_2019_20,
+    (SELECT fim FROM alvo)                                        AS juros_2024_25,
+    ROUND(1.0 * (SELECT fim FROM alvo) / (SELECT inicio FROM alvo), 1) AS multiplicador,
+    ROUND(100 * (baixo + alto) / 2, 1)                            AS crescimento_anual_pct
+FROM bissecao
+WHERE passo = 60;
 
 
 -- @q 10. SAD, Clube e Grupo: resultado líquido lado a lado
@@ -155,25 +183,31 @@ ORDER BY epoca_id;
 
 
 -- @q 11. Passivo do Clube vs passivo da SAD
--- Conceitos: self-join da tabela balanco
+-- Conceitos: self-join da tabela balanco, NULLIF para evitar divisão por zero
+-- Só épocas com balanço das duas entidades.
 SELECT
     s.epoca_id                     AS epoca,
     c.passivo_total                AS passivo_clube,
     s.passivo_total                AS passivo_sad,
-    ROUND(1.0 * s.passivo_total / c.passivo_total, 1) AS sad_vezes_clube
+    ROUND(1.0 * s.passivo_total / NULLIF(c.passivo_total, 0), 1) AS passivo_sad_por_euro_do_clube
 FROM balanco s
 JOIN balanco c ON c.epoca_id = s.epoca_id AND c.entidade_id = 'CLUBE'
 WHERE s.entidade_id = 'SAD'
+  AND s.passivo_total IS NOT NULL AND c.passivo_total IS NOT NULL
 ORDER BY s.epoca_id;
 
 
--- @q 12. Transferências: quanto das vendas brutas fica no clube
--- Conceitos: percentagem, filtro em subconsulta, média móvel de 3 épocas
+-- @q 12. Transferências: mais-valias líquidas face às vendas brutas
+-- Conceitos: percentagem com NULLIF, média móvel de 3 épocas
+-- Mais-valia = preço de venda - valor contabilístico do jogador - custos da venda
+-- (intermediários, partes de terceiros, solidariedade). Não é a parte do preço que
+-- entra em caixa: essa depende também dos prazos de pagamento.
 SELECT
     epoca_id               AS epoca,
     vendas_brutas,
+    custo_vendas,
     mais_valias_liquidas,
-    ROUND(100.0 * mais_valias_liquidas / vendas_brutas, 1) AS pct_retencao,
+    ROUND(100.0 * mais_valias_liquidas / NULLIF(vendas_brutas, 0), 1) AS mais_valias_sobre_vendas_pct,
     CAST(AVG(mais_valias_liquidas) OVER (ORDER BY epoca_id
          ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS INTEGER) AS media_movel_3_epocas
 FROM transferencias
@@ -745,7 +779,7 @@ SELECT
     t.vendas_brutas,
     t.custo_vendas,
     ROUND(100.0 * t.custo_vendas / t.vendas_brutas, 1)            AS custo_vendas_pct,
-    ROUND(100.0 * t.mais_valias_liquidas / t.vendas_brutas, 1)    AS retencao_pct
+    ROUND(100.0 * t.mais_valias_liquidas / t.vendas_brutas, 1)    AS mais_valias_sobre_vendas_pct
 FROM transferencias t
 WHERE t.entidade_id = 'SAD' AND t.custo_vendas IS NOT NULL
 UNION ALL
@@ -865,9 +899,15 @@ ajuste AS (
     FROM x, reta r
 ),
 r2 AS (
-    SELECT 1 - SUM((lugar - previsto) * (lugar - previsto)) / SUM((lugar - my) * (lugar - my)) AS r2
+    SELECT 1 - SUM((lugar - previsto) * (lugar - previsto)) / SUM((lugar - my) * (lugar - my)) AS r2,
+           -- Erro-padrão do declive: sqrt( SQE / (n - 2) / Sxx )
+           sqrt(SUM((lugar - previsto) * (lugar - previsto)) / (MAX(n) - 2)
+                / SUM((despesas_m - mx) * (despesas_m - mx)))              AS ep_b
     FROM ajuste
 )
+-- Intervalo de confiança a 95% do declive: b ± t(0,975; n-2) × EP.
+-- Com n = 12, t(0,975; 10) = 2,228. Se o intervalo inclui 0, a relação não é
+-- estatisticamente distinguível de zero. É uma associação, não uma causa.
 SELECT
     a.epoca_id                                   AS epoca,
     ROUND(a.despesas_m, 1)                       AS despesas_m,
@@ -876,6 +916,9 @@ SELECT
     ROUND(a.lugar - a.previsto, 1)               AS residuo,
     ROUND(a.my - a.b * a.mx, 2)                  AS a_ordenada,
     ROUND(a.b, 3)                                AS b_declive_por_m,
+    ROUND(r2.ep_b, 3)                            AS erro_padrao_b,
+    ROUND(a.b - 2.228 * r2.ep_b, 3)              AS ic95_inferior,
+    ROUND(a.b + 2.228 * r2.ep_b, 3)              AS ic95_superior,
     ROUND(r2.r2, 2)                              AS r_quadrado,
     a.n
 FROM ajuste a, r2
