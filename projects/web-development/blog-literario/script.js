@@ -140,13 +140,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =========================
-       CONTADOR ANIMADO (0 → 39)
+       CONTADOR ANIMADO (livros do ano)
     ========================= */
 
     const countEl = document.getElementById("bookCount");
 
     if (countEl) {
-        const target   = parseInt(countEl.getAttribute("data-target"), 10) || 0;
+        // número de livros do ano: vem de assets/dados/estatisticas.js (gerado por SQL), se existir
+        const stats    = window.ESTATISTICAS;
+        const target   = stats ? stats.resumo.lidos_ano_atual
+                               : parseInt(countEl.getAttribute("data-target"), 10) || 0;
         const duration = 1400; // ms
         const start    = performance.now();
 
@@ -187,8 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const fillEl = document.querySelector(".annual-progress-fill");
 
     if (fillEl) {
-        const months = parseInt(fillEl.getAttribute("data-months"), 10) || 0;
+        const stats  = window.ESTATISTICAS;
+        const months = stats ? stats.mes : parseInt(fillEl.getAttribute("data-months"), 10) || 0;
         const total  = parseInt(fillEl.getAttribute("data-total"),  10) || 12;
+        const label  = document.getElementById("annualLabel");
+        if (stats && label) label.textContent = `${months} de ${total} meses de ${stats.ano}`;
         const pct    = Math.round((months / total) * 100);
 
         // Pequeno delay para a animação ser visível

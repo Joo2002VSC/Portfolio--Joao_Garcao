@@ -1,15 +1,11 @@
-"""Importa o CSV exportado do Goodreads para a base de dados SQLite dados/leituras.db.
+"""Importa o CSV exportado do Goodreads (assets/ do blog) para a base de dados
+SQLite dados/leituras.db.
 
-Uso (a partir da pasta leituras-sql/):  python scripts/importar.py
+Uso:  python scripts/importar.py
 """
 import csv
 import sqlite3
-from pathlib import Path
-
-PASTA = Path(__file__).resolve().parent.parent   # leituras-sql/
-CSV = PASTA / "dados" / "goodreads_library_export.csv"
-DB = PASTA / "dados" / "leituras.db"
-SCHEMA = PASTA / "sql" / "01_schema.sql"
+from caminhos import CSV, DB, SCHEMA
 
 
 def limpar_isbn(valor: str) -> str | None:
@@ -31,6 +27,8 @@ def data(valor: str) -> str | None:
 
 
 def main() -> None:
+    DB.parent.mkdir(exist_ok=True)
+    DB.unlink(missing_ok=True)
     con = sqlite3.connect(DB)
     con.executescript(SCHEMA.read_text(encoding="utf-8"))
 

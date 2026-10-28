@@ -17,7 +17,7 @@ Sou licenciado em Línguas Aplicadas e mestrando em Humanidades Digitais, ambos 
 - **[Filologia](./projects/digital-humanities/philology)**: transcrição de um manuscrito do séc. XVIII e glossário de figuras históricas
 - **[NLP](./projects/text-processing/nlp)**: web scraping e análise textual de receitas, em Python
 - **[Blog literário](./projects/web-development/blog-literario)**: projeto pessoal e autodidata em HTML/CSS/JS ([ver site ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/blog-literario/))
-- **[Leituras em SQL](./projects/data-analysis/leituras-sql)**: análise em SQLite dos 133 livros que li, com os dados do blog e do Goodreads
+- **[Leituras em SQL](./projects/data-analysis/leituras-sql)**: análise em SQLite dos livros que li, com os dados do blog e do Goodreads
 
 ## Áreas
 

@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Em Números — estatísticas de leitura de João Garção">
+    <meta name="description" content="Em Números — as leituras de João Garção, analisadas em SQL">
     <link rel="icon" href="assets/logo/Logo.jpeg" type="image/jpeg">
     <title>Em Números · O Meu Blog Literário</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="estatisticas.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="stats-page">
 
 <div class="layout">
     <aside class="sidebar left" aria-hidden="true"></aside>
@@ -40,56 +40,116 @@
         </header>
 
         <!-- HERO -->
-        <section class="stats-hero">
-            <h2 class="section-title">Em Números</h2>
-            <p class="section-subtitle">Uma visão analítica das minhas leituras — de 2020 até hoje</p>
+        <section class="gr-hero">
+            <p class="gr-eyebrow">Em Números</p>
+            <h2 class="gr-title">As minhas leituras, contadas em SQL</h2>
+            <p class="gr-lede">Desde 2020 registo no Goodreads cada livro que leio. Todos os números desta página
+                saem de consultas SQL sobre essa exportação — dados até <span data-k="data"></span>.</p>
 
-            <!-- KPI row -->
-            <div class="kpi-row">
-                <div class="kpi-card">
-                    <span class="kpi-number" data-target="133">0</span>
-                    <span class="kpi-label">livros lidos</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-number" data-target="39">0</span>
-                    <span class="kpi-label">só em 2026</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-number" data-target="32">0</span>
-                    <span class="kpi-label">em 2025</span>
-                </div>
-                <div class="kpi-card">
-                    <span class="kpi-number" data-target="5">0</span>
-                    <span class="kpi-label">Eça de Queirós</span>
-                    <span class="kpi-sublabel">autor mais lido</span>
-                </div>
+            <div class="gr-kpis">
+                <div class="gr-kpi"><span class="gr-kpi-n" data-k="livros"></span><span class="gr-kpi-l">livros lidos</span></div>
+                <div class="gr-kpi"><span class="gr-kpi-n" data-k="paginas"></span><span class="gr-kpi-l">páginas</span></div>
+                <div class="gr-kpi"><span class="gr-kpi-n" data-k="autores"></span><span class="gr-kpi-l">autores diferentes</span></div>
+                <div class="gr-kpi"><span class="gr-kpi-n"><span data-k="nota"></span><span class="gr-star" aria-hidden="true">★</span></span><span class="gr-kpi-l">nota média</span></div>
             </div>
         </section>
 
-        <!-- CHART 1: Livros por ano -->
-        <section class="stats-card">
-            <h3 class="stats-card-title">📅 Livros Lidos por Ano</h3>
-            <div class="bar-chart" id="chartByYear" aria-label="Gráfico de livros lidos por ano"></div>
+        <!-- ANO EM CURSO -->
+        <section class="gr-card gr-year">
+            <div class="gr-year-head">
+                <p class="gr-eyebrow"><span data-k="ano"></span> até agora</p>
+                <p class="gr-year-n"><span data-k="ano_livros"></span> <span class="gr-year-u">livros</span></p>
+                <ul class="gr-chips">
+                    <li data-k="vs_anterior"></li>
+                    <li><span data-k="ano_paginas"></span> páginas</li>
+                    <li><span data-k="ano_ritmo"></span> livros por mês</li>
+                </ul>
+            </div>
+            <figure class="gr-figure">
+                <figcaption class="gr-card-title">Livros acumulados ao longo do ano</figcaption>
+                <div class="gr-legend" id="legendRitmo"></div>
+                <div class="gr-chart" id="chartRitmo"></div>
+            </figure>
+            <details class="gr-data"><summary>Ver dados</summary><div id="tableRitmo"></div></details>
         </section>
 
-        <!-- CHART 2: Ritmo mensal 2026 -->
-        <section class="stats-card">
-            <h3 class="stats-card-title">📆 Ritmo de Leitura em 2026 (por mês)</h3>
-            <div class="bar-chart bar-chart--monthly" id="chartByMonth" aria-label="Gráfico de leituras por mês em 2026"></div>
+        <!-- GRELHA DE GRÁFICOS -->
+        <div class="gr-grid">
+
+            <section class="gr-card">
+                <h3 class="gr-card-title">Livros lidos por ano</h3>
+                <p class="gr-card-sub">Passe o cursor sobre as barras para ver as páginas</p>
+                <div class="gr-chart" id="chartAnos"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableAnos"></div></details>
+            </section>
+
+            <section class="gr-card">
+                <h3 class="gr-card-title"><span data-k="ano"></span>, mês a mês</h3>
+                <p class="gr-card-sub">Passe o cursor sobre um mês para ver os títulos</p>
+                <div class="gr-chart" id="chartMeses"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableMeses"></div></details>
+            </section>
+
+            <section class="gr-card">
+                <h3 class="gr-card-title">Como avalio o que leio</h3>
+                <p class="gr-card-sub">Notas arredondadas à meia estrela · <span data-k="com_nota"></span> livros avaliados</p>
+                <div class="gr-bars" id="chartNotas"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableNotas"></div></details>
+            </section>
+
+            <section class="gr-card">
+                <h3 class="gr-card-title">Autores a que mais volto</h3>
+                <p class="gr-card-sub">Com dois ou mais livros lidos · nota média à direita</p>
+                <div class="gr-bars" id="chartAutores"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableAutores"></div></details>
+            </section>
+
+            <section class="gr-card">
+                <h3 class="gr-card-title">De que época são os livros</h3>
+                <p class="gr-card-sub">Pelo ano da primeira publicação da obra</p>
+                <div class="gr-bars" id="chartEpocas"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableEpocas"></div></details>
+            </section>
+
+            <section class="gr-card">
+                <h3 class="gr-card-title">A extensão pesa na nota?</h3>
+                <p class="gr-card-sub">Nota média por número de páginas</p>
+                <div class="gr-dots" id="chartExtensao"></div>
+                <details class="gr-data"><summary>Ver dados</summary><div id="tableExtensao"></div></details>
+            </section>
+
+        </div>
+
+        <!-- ESTANTE DE FAVORITOS -->
+        <section class="gr-card gr-shelf-card">
+            <h3 class="gr-card-title">A estante de honra</h3>
+            <p class="gr-card-sub"><span class="gr-badge gr-badge--star">★ 5</span> nota máxima &nbsp;·&nbsp; <span class="gr-badge gr-badge--fav">♥</span> estante de favoritos</p>
+            <div class="gr-shelf" id="shelf"></div>
         </section>
 
-        <!-- CHART 3: Distribuição de ratings -->
-        <section class="stats-card">
-            <h3 class="stats-card-title">⭐ Distribuição de Avaliações</h3>
-            <p class="stats-card-note">Apenas livros com avaliação registada</p>
-            <div class="rating-chart" id="chartRatings" aria-label="Distribuição de avaliações"></div>
-        </section>
+        <!-- RODAPÉ DE CURIOSIDADES -->
+        <div class="gr-grid gr-grid--3">
+            <section class="gr-card gr-mini">
+                <h3 class="gr-card-title">A ler agora</h3>
+                <ul class="gr-reading" id="aLer"></ul>
+            </section>
+            <section class="gr-card gr-mini">
+                <h3 class="gr-card-title">A pilha "para ler"</h3>
+                <p class="gr-mini-n" data-k="pilha"></p>
+                <p class="gr-mini-t">livros à espera — cerca de <strong data-k="pilha_anos"></strong> anos ao ritmo dos últimos 12 meses (<span data-k="pilha_ritmo"></span> por mês).</p>
+            </section>
+            <section class="gr-card gr-mini">
+                <h3 class="gr-card-title">Curiosidades</h3>
+                <ul class="gr-facts" id="factos"></ul>
+            </section>
+        </div>
 
-        <!-- CHART 4: Top autores -->
-        <section class="stats-card">
-            <h3 class="stats-card-title">✍️ Autores Mais Lidos</h3>
-            <div class="author-chart" id="chartAuthors" aria-label="Autores mais lidos"></div>
-        </section>
+        <p class="gr-source">
+            Números calculados com <strong>SQLite</strong> a partir da exportação do Goodreads.
+            <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/leituras-sql" target="_blank" rel="noopener">Ver as consultas SQL ↗</a>
+        </p>
+
+        <div class="gr-tip" id="grTip" role="tooltip" hidden></div>
 
     </main>
 
@@ -107,212 +167,8 @@
 </footer>
 
 <script src="script.js"></script>
-<script>
-/* =====================
-   DADOS (extraídos do CSV Goodreads)
-===================== */
-const DATA = {
-    byYear: {
-        "2020": 5,
-        "2021": 1,
-        "2022": 11,
-        "2023": 8,
-        "2024": 20,
-        "2025": 32,
-        "2026": 39
-    },
-    byMonth2026: {
-        "Jan": 2, "Fev": 4, "Mar": 9, "Abr": 3,
-        "Mai": 6, "Jun": 7, "Jul": 1, "Ago": 4,
-        "Set": 2, "Out": 1
-    },
-    ratings: {
-        "1-2 ★": 1,    // 1.5
-        "3 ★": 4,
-        "3.5 ★": 13,   // 3.25+3.5+3.75
-        "4 ★": 46,
-        "4.5 ★": 32,   // 4.25+4.5+4.75
-        "5 ★": 13
-    },
-    topAuthors: [
-        ["Eça de Queirós", 5],
-        ["Fyodor Dostoevsky", 4],
-        ["José Saramago", 4],
-        ["Gabriel García Márquez", 4],
-        ["Suzanne Collins", 3],
-        ["Pepetela", 2],
-        ["Nuno Palma", 2],
-        ["Fernando Pessoa", 2],
-        ["Haruki Murakami", 2],
-        ["José Eduardo Agualusa", 2]
-    ]
-};
-
-/* =====================
-   HELPERS
-===================== */
-function maxVal(obj) { return Math.max(...Object.values(obj)); }
-function pct(v, max) { return Math.round((v / max) * 100); }
-const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d97706';
-
-/* =====================
-   KPI COUNTERS
-===================== */
-document.querySelectorAll(".kpi-number").forEach(el => {
-    const target = parseInt(el.getAttribute("data-target"), 10);
-    const dur = 1200;
-    const start = performance.now();
-    function ease(t) { return 1 - Math.pow(1 - t, 3); }
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            function tick(now) {
-                const p = Math.min((now - start) / dur, 1);
-                el.textContent = Math.round(ease(p) * target);
-                if (p < 1) requestAnimationFrame(tick);
-                else el.textContent = target;
-            }
-            requestAnimationFrame(tick);
-            obs.unobserve(entry.target);
-        });
-    }, { threshold: 0.5 });
-    obs.observe(el);
-});
-
-/* =====================
-   CHART: LIVROS POR ANO
-===================== */
-(function buildYearChart() {
-    const container = document.getElementById("chartByYear");
-    const max = maxVal(DATA.byYear);
-    let html = '<div class="bc-inner">';
-    Object.entries(DATA.byYear).forEach(([yr, v]) => {
-        const p = pct(v, max);
-        const is2026 = yr === "2026";
-        html += `
-        <div class="bc-row">
-            <span class="bc-label">${yr}</span>
-            <div class="bc-track">
-                <div class="bc-fill${is2026 ? ' bc-fill--accent' : ''}" data-width="${p}"></div>
-            </div>
-            <span class="bc-value">${v}</span>
-        </div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-    // animate
-    setTimeout(() => {
-        container.querySelectorAll(".bc-fill").forEach(el => {
-            el.style.width = el.dataset.width + "%";
-        });
-    }, 150);
-})();
-
-/* =====================
-   CHART: MESES 2026
-===================== */
-(function buildMonthChart() {
-    const container = document.getElementById("chartByMonth");
-    const max = maxVal(DATA.byMonth2026);
-    let html = '<div class="bc-inner">';
-    Object.entries(DATA.byMonth2026).forEach(([m, v]) => {
-        const p = pct(v, max);
-        html += `
-        <div class="bc-row">
-            <span class="bc-label">${m}</span>
-            <div class="bc-track">
-                <div class="bc-fill bc-fill--accent" data-width="${p}"></div>
-            </div>
-            <span class="bc-value">${v}</span>
-        </div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-    setTimeout(() => {
-        container.querySelectorAll(".bc-fill").forEach(el => {
-            el.style.width = el.dataset.width + "%";
-        });
-    }, 150);
-})();
-
-/* =====================
-   CHART: RATINGS
-===================== */
-(function buildRatingsChart() {
-    const container = document.getElementById("chartRatings");
-    const max = maxVal(DATA.ratings);
-    let html = '<div class="bc-inner">';
-    Object.entries(DATA.ratings).forEach(([label, v]) => {
-        const p = pct(v, max);
-        html += `
-        <div class="bc-row">
-            <span class="bc-label">${label}</span>
-            <div class="bc-track">
-                <div class="bc-fill bc-fill--gold" data-width="${p}"></div>
-            </div>
-            <span class="bc-value">${v}</span>
-        </div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-    setTimeout(() => {
-        container.querySelectorAll(".bc-fill").forEach(el => {
-            el.style.width = el.dataset.width + "%";
-        });
-    }, 150);
-})();
-
-/* =====================
-   CHART: TOP AUTORES
-===================== */
-(function buildAuthorsChart() {
-    const container = document.getElementById("chartAuthors");
-    const max = DATA.topAuthors[0][1];
-    let html = '<div class="bc-inner">';
-    DATA.topAuthors.forEach(([name, v]) => {
-        const p = pct(v, max);
-        html += `
-        <div class="bc-row">
-            <span class="bc-label bc-label--author">${name}</span>
-            <div class="bc-track">
-                <div class="bc-fill bc-fill--muted" data-width="${p}"></div>
-            </div>
-            <span class="bc-value">${v} livro${v > 1 ? 's' : ''}</span>
-        </div>`;
-    });
-    html += '</div>';
-    container.innerHTML = html;
-    setTimeout(() => {
-        container.querySelectorAll(".bc-fill").forEach(el => {
-            el.style.width = el.dataset.width + "%";
-        });
-    }, 150);
-})();
-
-/* Animate charts when they scroll into view */
-document.querySelectorAll(".stats-card").forEach((card, i) => {
-    card.style.opacity = "0";
-    card.style.transform = "translateY(20px)";
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-                    entry.target.style.opacity = "1";
-                    entry.target.style.transform = "translateY(0)";
-                    // re-trigger bar animations
-                    entry.target.querySelectorAll(".bc-fill").forEach(el => {
-                        el.style.width = "0";
-                        setTimeout(() => { el.style.width = el.dataset.width + "%"; }, 100);
-                    });
-                }, i * 60);
-                obs.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    obs.observe(card);
-});
-</script>
+<script src="assets/dados/estatisticas.js"></script>
+<script src="estatisticas.js"></script>
 
 </body>
 </html>

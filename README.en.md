@@ -17,7 +17,7 @@ I hold a bachelor's degree in Applied Languages and am completing a master's in 
 - **[Philology](./projects/digital-humanities/philology)**: transcription of an 18th-century manuscript and a glossary of historical figures
 - **[NLP](./projects/text-processing/nlp)**: web scraping and text analysis of recipes, in Python
 - **[Literary blog](./projects/web-development/blog-literario)**: personal, self-taught project in HTML/CSS/JS ([view site ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/blog-literario/))
-- **[Reading in SQL](./projects/data-analysis/leituras-sql)**: SQLite analysis of the 133 books I have read, using my blog and Goodreads data
+- **[Reading in SQL](./projects/data-analysis/leituras-sql)**: SQLite analysis of the books I have read, using my blog and Goodreads data
 
 ## Areas
 

@@ -1,16 +1,16 @@
 # Resultados das consultas
 
-_Gerado automaticamente por `gerar_resultados.py`._
+_Gerado automaticamente por `scripts/gerar_resultados.py`._
 
 
 ## 1. Visão geral da biblioteca por estante
 
 | estante           |   livros |   paginas |   media_paginas |
 |:------------------|---------:|----------:|----------------:|
-| to-read           |      187 |     65753 |             355 |
-| read              |      133 |     37290 |             301 |
-| currently-reading |        4 |      2036 |             509 |
-| did-not-finish    |        3 |      1306 |             435 |
+| to-read           |      187 |     65956 |             357 |
+| read              |      134 |     37405 |             299 |
+| currently-reading |        4 |      1834 |             459 |
+| did-not-finish    |        4 |      1826 |             457 |
 
 
 
@@ -24,7 +24,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 |  2023 |        8 |      3208 |             458 |         4.13 |
 |  2024 |       20 |      5685 |             284 |         4.25 |
 |  2025 |       32 |      8672 |             280 |         4    |
-|  2026 |       39 |      8755 |             250 |         4.16 |
+|  2026 |       40 |      8870 |             246 |         4.13 |
 
 
 
@@ -41,7 +41,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 |    07 |        1 |       384 | Não Me Podem Magoar                                                                                                                                                                                                                                                                                                                                                    |
 |    08 |        4 |      1220 | The Origins of Totalitarianism · Belgium - Culture Smart!: The Essential Guide to Customs & Culture (2) · O Jogador · O Enigma de Israel: Uma História do Estado Judaico                                                                                                                                                                                               |
 |    09 |        2 |       779 | Permission to Feel: The Power of Emotional Intelligence to Achieve Well-Being and Success · Portugal e o Ocidente (Portuguese Edition)                                                                                                                                                                                                                                 |
-|    10 |        1 |       322 | O Vício dos Fundos Europeus                                                                                                                                                                                                                                                                                                                                            |
+|    10 |        2 |       437 | A Morte em Veneza · O Vício dos Fundos Europeus                                                                                                                                                                                                                                                                                                                        |
 
 
 
@@ -58,7 +58,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 |    07 |                9 |               32 |
 |    08 |               17 |               36 |
 |    09 |               21 |               38 |
-|    10 |               23 |               39 |
+|    10 |               23 |               40 |
 |    11 |               28 |                  |
 |    12 |               32 |                  |
 
@@ -68,9 +68,9 @@ _Gerado automaticamente por `gerar_resultados.py`._
 
 | faixa        |   livros |   percentagem |
 |:-------------|---------:|--------------:|
-| 5 ★          |       14 |          12.8 |
-| 4 a 4,5 ★    |       77 |          70.6 |
-| 3 a 3,75 ★   |       17 |          15.6 |
+| 5 ★          |       14 |          12.7 |
+| 4 a 4,5 ★    |       77 |          70   |
+| 3 a 3,75 ★   |       18 |          16.4 |
 | menos de 3 ★ |        1 |           0.9 |
 
 
@@ -134,7 +134,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 |:--------------|---------:|-------------:|
 | Antes de 1800 |        2 |         4.5  |
 | Século XIX    |       14 |         3.75 |
-| 1900–1949     |       17 |         4.05 |
+| 1900–1949     |       18 |         4    |
 | 1950–1999     |       27 |         4.15 |
 | 2000–2014     |       25 |         4.21 |
 | 2015 até hoje |       32 |         4.21 |
@@ -145,7 +145,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 
 | paginas         |   livros |   nota_media |
 |:----------------|---------:|-------------:|
-| a) menos de 150 |       15 |         3.93 |
+| a) menos de 150 |       16 |         3.89 |
 | b) 150–299      |       39 |         3.99 |
 | c) 300–449      |       30 |         4.34 |
 | d) 450 ou mais  |       18 |         4.21 |
@@ -183,7 +183,7 @@ _Gerado automaticamente por `gerar_resultados.py`._
 
 |   livros |   media_dias |   lidos_no_1o_mes |
 |---------:|-------------:|------------------:|
-|      115 |          117 |                62 |
+|      116 |          116 |                63 |
 
 
 
@@ -191,5 +191,5 @@ _Gerado automaticamente por `gerar_resultados.py`._
 
 |   livros_para_ler |   paginas |   ritmo_livros_mes |   anos_necessarios |
 |------------------:|----------:|-------------------:|-------------------:|
-|               187 |     65753 |                4.1 |                3.8 |
+|               187 |     65956 |                4.2 |                3.7 |
 

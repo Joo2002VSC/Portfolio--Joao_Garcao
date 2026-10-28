@@ -17,7 +17,7 @@ Je suis titulaire d'une licence en Langues Appliquées et étudiant en master en
 - **[Philologie](./projects/digital-humanities/philology)** : transcription d'un manuscrit du XVIIIe siècle et glossaire de figures historiques
 - **[TAL](./projects/text-processing/nlp)** : web scraping et analyse textuelle de recettes, en Python
 - **[Blog littéraire](./projects/web-development/blog-literario)** : projet personnel et autodidacte en HTML/CSS/JS ([voir le site ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/blog-literario/))
-- **[Lectures en SQL](./projects/data-analysis/leituras-sql)** : analyse SQLite des 133 livres que j'ai lus, à partir des données du blog et de Goodreads
+- **[Lectures en SQL](./projects/data-analysis/leituras-sql)** : analyse SQLite des livres que j'ai lus, à partir des données du blog et de Goodreads
 
 ## Domaines
 

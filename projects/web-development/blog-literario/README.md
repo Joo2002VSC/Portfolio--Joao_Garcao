@@ -14,9 +14,9 @@ Projeto pessoal e autodidata (não foi feito para nenhuma cadeira), em **HTML, C
 - **Autores** e **Obras** favoritas
 - **Sobre** o blog
 
-## Análise SQL
+## Em Números (análise SQL)
 
-Em [`data-analysis/leituras-sql`](../../data-analysis/leituras-sql) está uma análise em **SQLite** do meu histórico de leituras (exportado do Goodreads): ritmo por ano e por mês, notas, autores mais lidos, época de publicação e a pilha de livros por ler.
+A página **Em Números** e a lista **Todas as Leituras** são geradas a partir da exportação do Goodreads (`assets/goodreads_library_export.csv`) com consultas **SQLite**. O código da análise está em [`data-analysis/leituras-sql`](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/leituras-sql).
 
 ## Estrutura
 
@@ -25,5 +25,9 @@ Em [`data-analysis/leituras-sql`](../../data-analysis/leituras-sql) está uma an
 ├── leituras.html, estatisticas.html, autores.html, obras.html, sobre.html
 ├── style.css, leituras.css, estatisticas.css
 ├── script.js
-└── assets/          # capas, fotos de autores, logótipo
+├── estatisticas.js  # gráficos da página Em Números
+├── assets/          # capas, fotos de autores, logótipo
+│   ├── goodreads_library_export.csv
+│   └── dados/       # estatisticas.js e leituras.js (gerados por SQL)
+└── analise-sql/     # análise SQL (no Portfolio: data-analysis/leituras-sql)
 ```
