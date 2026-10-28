@@ -2396,12 +2396,24 @@ html:not(.ready) .app{visibility:hidden}
 .suma-list b.g{color:var(--sg-i)}.suma-list b.r{color:var(--sr-i)}.suma-list b.y{color:var(--sy-i)}.suma-list b.n{color:var(--ink)}
 @media (max-width:640px){.suma-list li{grid-template-columns:1fr;gap:2px}}
 
-/* v1.10.9 — telemóvel: nomes das secções visíveis por baixo dos ícones */
+/* telemóvel: nomes das secções visíveis por baixo dos ícones */
 @media(max-width:720px){
 .nav{gap:2px}
 .nav .label{display:block!important;font-size:11.5px;line-height:1.15;font-weight:600;text-align:center;white-space:nowrap}
 .nav button{grid-template-columns:1fr!important;grid-template-rows:auto auto;justify-items:center!important;gap:4px!important;padding:7px 9px!important;min-width:64px}
 .brand h1,.brand small,.nav-title,.side-note{display:none!important}.brand{flex:none}.brand-mark{width:44px!important;height:44px!important;margin:0!important}.brand-mark img{width:100%;height:100%;object-fit:contain}.sidebar-toggle{display:none!important}.sidebar{scrollbar-width:none}.sidebar::-webkit-scrollbar{display:none}
+}
+
+/* telemóvel em horizontal / tablet: barra lateral com nomes */
+@media(min-width:721px) and (max-width:1100px){
+.app{grid-template-columns:210px 1fr}
+.sidebar{min-width:0;padding:20px 10px;gap:18px}
+.brand h1{display:block!important;font-size:22px}.brand small{display:block!important}
+.brand-mark{margin:0 0 12px!important}
+.nav .label{display:block!important;font-size:13px}
+.nav button{grid-template-columns:26px 1fr!important;justify-items:start!important;gap:10px!important;padding:10px!important}
+.nav-title{display:block!important}.side-note{display:none!important}
+.sidebar-toggle{display:none!important}
 }
 </style>
 <script>
