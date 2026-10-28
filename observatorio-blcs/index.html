@@ -317,9 +317,10 @@ footer.site-footer{display:block;margin-top:34px;padding:0;border-top:0;backgrou
 @media(max-width:900px){.foot-grid{grid-template-columns:1fr;gap:24px;padding:24px 20px}.foot-base{padding:14px 20px}}
 @media print{.tile{box-shadow:none;break-inside:avoid}.tile-go,.foot-col nav,.foot-col:nth-of-type(2),.totop{display:none}footer.site-footer{box-shadow:none}.foot-grid{grid-template-columns:1fr 1fr}}
 </style>
-<noscript><style>html:not(.ready) .app{visibility:visible!important}</style></noscript>
+<noscript><style>.app,.skip-link{display:none!important}.nojs{max-width:70ch;margin:48px auto;padding:24px;font-family:system-ui,sans-serif;line-height:1.55}</style></noscript>
 </head>
 <body>
+<noscript><main class="nojs"><h1>Observatório BLCS</h1><p>Esta dashboard precisa de JavaScript para apresentar os indicadores, gráficos e filtros. Ative o JavaScript, ou abra a ligação num navegador (Safari, Chrome, Firefox, Edge ou Brave), em vez de uma pré-visualização dentro de outra aplicação.</p><p>Sem JavaScript não são apresentados valores por omissão, para que campos vazios não sejam lidos como dados reais.</p></main></noscript>
 <a class="skip-link" href="#main">Saltar para o conteúdo</a>
 <div class="app">
 <button class="sidebar-reopen" id="sidebarReopen" aria-label="Abrir menu">→</button>
@@ -350,7 +351,7 @@ footer.site-footer{display:block;margin-top:34px;padding:0;border-top:0;backgrou
   </header>
 
   <section id="overview" class="page active">
-    <div class="page-intro"><div class="page-no" aria-hidden="true">01</div><div><h3>Visão Geral</h3><p>Os quatro indicadores principais e a série mensal referem-se ao ano selecionado acima. A função desta secção é uma leitura executiva rápida — a leitura metodológica completa está na folha "Sobre os Dados".</p></div></div>
+    <div class="page-intro"><div class="page-no" aria-hidden="true">01</div><div><h3>Visão Geral</h3><p>Os quatro indicadores principais referem-se ao ano selecionado acima; a série mensal cobre sempre janeiro de 2020 a julho de 2026. A função desta secção é uma leitura executiva rápida — a leitura metodológica completa está na folha "Sobre os Dados".</p></div></div>
     <div id="partialNote" class="alert" style="display:none;margin:0 0 16px"><div class="alert-icon">⚠</div><div><b>Ano parcial</b><p>2026 só tem dados até 14/15 de julho (7 meses): não é comparável com um ano completo.</p></div></div>
     <div class="grid kpis">
       <div class="card kpi"><div class="label">Novas inscrições</div><div class="value" id="kpiInscricoes">—</div><div class="delta" id="deltaInscricoes"></div></div>
@@ -517,7 +518,7 @@ footer.site-footer{display:block;margin-top:34px;padding:0;border-top:0;backgrou
       </div>
       <div class="card section-card"><div class="section-head"><h3>Sobre a Classificação</h3><span>Método</span></div>
         <p class="subtle">Área temática derivada do prefixo numérico da cota, mapeado para as 9 classes principais da CDU. Fundos de depósito e bibliotecas parceiras (DP, BPBUM, BLPBD, BE, entre outros) usam números de acesso sequenciais, não CDU — ficam marcados como não classificáveis, não como erro.</p>
-        <div class="callout"><strong>Validação</strong><p>123 735 empréstimos classificados (60,2%), 81 520 não classificáveis por natureza do fundo (39,7%), 303 casos residuais (0,15%). Um erro de regra ('BE' tratado como se tivesse CDU) foi detetado e corrigido por amostragem antes de fechar a extração.</p></div>
+        <div class="callout"><strong>Validação</strong><p>123 720 empréstimos classificados (60,18%), 81 520 não classificáveis por natureza do fundo (39,65%), 358 casos residuais (0,17%), num total de 205 598 empréstimos. Um erro de regra ('BE' tratado como se tivesse CDU) foi detetado e corrigido por amostragem antes de fechar a extração.</p></div>
       </div>
     </div>
     <div class="card section-card" data-tool="lit" id="litCard" style="margin-top:16px">
@@ -744,7 +745,7 @@ buttons.forEach(btn=>btn.addEventListener('click',()=>{
   btn.classList.add('active');
   pages.forEach(p=>p.classList.remove('active'));
   document.getElementById(btn.dataset.page).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  window.scrollTo({top:0,behavior:(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?'auto':'smooth'});
 }));
 
 // ---------- seletor de ano ----------
@@ -778,8 +779,14 @@ document.querySelectorAll('.kpi .label').forEach(el => {
 const appEl = document.querySelector('.app');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebarReopen = document.getElementById('sidebarReopen');
-sidebarToggle.addEventListener('click', () => appEl.classList.add('sidebar-closed'));
-sidebarReopen.addEventListener('click', () => appEl.classList.remove('sidebar-closed'));
+const sidebarEl = document.querySelector('.sidebar');
+function setSidebarClosed(closed){
+  appEl.classList.toggle('sidebar-closed', closed);
+  sidebarEl.inert = closed; sidebarEl.setAttribute('aria-hidden', String(closed));
+  (closed ? sidebarReopen : sidebarToggle).focus();
+}
+sidebarToggle.addEventListener('click', () => setSidebarClosed(true));
+sidebarReopen.addEventListener('click', () => setSidebarClosed(false));
 anos.forEach(a=>{
   const opt = document.createElement('option');
   opt.value = a; opt.textContent = a === '2026' ? '2026 (até jul.)' : a;
@@ -787,7 +794,7 @@ anos.forEach(a=>{
 });
 sel.value = '2025';
 
-function fmt(n){ return (n===null||n===undefined) ? 'sem dados' : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0'); }
+function fmt(n){ return (n===null||n===undefined) ? 'sem dados' : !isFinite(n) ? 'n/d' : String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,'\u00a0'); }
 function pct(n){ return (n===null||n===undefined||!isFinite(n)) ? 'n/d' : n.toLocaleString('pt-PT',{maximumFractionDigits:1})+'%'; }
 function ratio(n){ return (n===null||n===undefined||!isFinite(n)) ? 'n/d' : n.toLocaleString('pt-PT',{maximumFractionDigits:1}); }
 
@@ -818,8 +825,8 @@ function renderYear(ano){
 
   document.getElementById('mAtivacao').textContent = (a.utentes_ativos && a.contas_ativas) ? pct(a.utentes_ativos/a.contas_ativas*100) : 'n/d';
   document.getElementById('mEmpPorAtivo').textContent = (a.emprestimos && a.utentes_ativos) ? ratio(a.emprestimos/a.utentes_ativos) : 'n/d';
-  document.getElementById('mRenovPct').textContent = (a.renovacoes && a.emprestimos) ? pct(a.renovacoes/a.emprestimos*100) : 'n/d';
-  document.getElementById('mResPct').textContent = (a.reservas && a.emprestimos) ? pct(a.reservas/a.emprestimos*100) : 'n/d';
+  document.getElementById('mRenovPct').textContent = (a.renovacoes!=null && a.emprestimos>0) ? pct(a.renovacoes/a.emprestimos*100) : 'n/d';
+  document.getElementById('mResPct').textContent = (a.reservas!=null && a.emprestimos>0) ? pct(a.reservas/a.emprestimos*100) : 'n/d';
 
   document.getElementById('catYearLabel').textContent = ano;
   const catBars = document.getElementById('catBars');
@@ -1100,8 +1107,8 @@ function renderCirculation(ano){
   } else {
     over100Note.style.display = 'none';
   }
-  document.getElementById('cRatioRen').textContent = (a.renovacoes && a.emprestimos) ? pct(a.renovacoes/a.emprestimos*100) : 'n/d';
-  document.getElementById('cRatioRes').textContent = (a.reservas && a.emprestimos) ? pct(a.reservas/a.emprestimos*100) : 'n/d';
+  document.getElementById('cRatioRen').textContent = (a.renovacoes!=null && a.emprestimos>0) ? pct(a.renovacoes/a.emprestimos*100) : 'n/d';
+  document.getElementById('cRatioRes').textContent = (a.reservas!=null && a.emprestimos>0) ? pct(a.reservas/a.emprestimos*100) : 'n/d';
 
   renderSeasonalBreakdown(ano);
   buildCirculationChart(ano);
@@ -1390,7 +1397,7 @@ document.addEventListener('click', e => {
   const g = e.target.closest('[data-goto]'); if(!g) return;
   goPage(g.dataset.goto);
   const t = g.dataset.target;
-  if(t) setTimeout(() => { const el = document.querySelector('[data-tool="'+t+'"]'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 420);
+  if(t) setTimeout(() => { const el = document.querySelector('[data-tool="'+t+'"]'); if(el) el.scrollIntoView({behavior:(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?'auto':'smooth', block:'start'}); }, 420);
 });
 buttons.forEach(b => b.addEventListener('click', () => { sel.style.visibility = ['discoveries','faq','biblioteca'].includes(b.dataset.page) ? 'hidden' : 'visible'; }));
 sel.style.visibility = 'visible';
@@ -1398,7 +1405,7 @@ sel.style.visibility = 'visible';
 (function(){
   const fu=document.getElementById('footUpdate'); if(fu && DATA.meta) fu.textContent = DATA.meta.ultima_atualizacao || '—';
   const ds=document.getElementById('dataStamp'); if(ds && DATA.meta && DATA.meta.ultima_atualizacao) ds.textContent='Dados da BLCS de janeiro de 2020 a 14/15 de julho de 2026 · dashboard atualizada a '+DATA.meta.ultima_atualizacao;
-  const tt=document.getElementById('toTop'); if(tt) tt.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}); });
+  const tt=document.getElementById('toTop'); if(tt) tt.addEventListener('click',()=>{ window.scrollTo({top:0,behavior:(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)?'auto':'smooth'}); });
   document.querySelectorAll('.foot-col [data-goto]').forEach(b=>b.addEventListener('click',()=>window.scrollTo({top:0})));
 })();
 
@@ -1683,7 +1690,7 @@ function renderHeat(){
   const all = []; H.years.forEach(y => { for(let mo=1; mo<=12; mo++){ const c = H.cells[y+mo]; const v = H.disp(y,mo); if(!c.na && v!==null) all.push(v); } });
   const lo = Math.min(...all), hi = Math.max(...all);
   const meanAll = all.reduce((a,b)=>a+b,0)/all.length;
-  const hb = v => { const x = H.eff==='rel' ? v : v/meanAll*100; return x>=110 ? 'hb-g' : x>=95 ? 'hb-w' : x>=85 ? 'hb-y' : 'hb-r'; };
+  const hb = v => { const x = H.eff==='rel' ? Math.round(v) : v/meanAll*100; return x>=110 ? 'hb-g' : x>=95 ? 'hb-w' : x>=85 ? 'hb-y' : 'hb-r'; };
   const label = H.metric==='emp' ? 'Empréstimos' : H.metric==='ent' ? 'Entradas' : 'Empréstimos por 100 entradas';
   const fmtV = v => H.eff==='rel' ? String(Math.round(v)) : (H.metric==='rat' ? f1(v) : fmt(Math.round(v)));
   let h = '<caption class="subtle" style="text-align:left;padding:0 0 6px">'+label+' por mês e ano'+(H.eff==='rel'?' (100 = média do ano)':'')+'. Células cinzentas: não comparáveis ou sem dados.</caption><thead><tr><th><span class="sr-only">Mês</span></th>'+H.years.map(y=>'<th scope="col">'+(y==='2026'?'2026*':y)+'</th>').join('')+'<th scope="col" class="avg">2022–25</th></tr></thead><tbody>';
@@ -1865,7 +1872,7 @@ document.getElementById('versionChip').textContent = 'v1.2 · em desenvolvimento
   const SHORT = {
     discoveries:'Oito leituras do cruzamento dos indicadores, 2020–2025. Esta secção não depende do ano selecionado.',
     biblioteca:'Uma biblioteca de leitura pública dentro da Universidade do Minho, em parceria com o Município de Braga.',
-    overview:'Os indicadores principais e a série mensal do ano selecionado.',
+    overview:'Os indicadores do ano selecionado e a série mensal de 2020 a 2026.',
     readers:'Categoria administrativa, vínculo institucional e inscrições. Idade, género e morada não existem nos dados.',
     circulation:'Empréstimos, devoluções, renovações e reservas do ano selecionado.',
     collections:'Área temática (CDU), títulos mais requisitados e tipo de coleção.',
@@ -2431,6 +2438,25 @@ html:not(.ready) .app{visibility:hidden}
 .up-btn:focus-visible{outline:3px solid var(--brand-dark);outline-offset:3px}
 @media print{.up-btn{display:none!important}}
 @media (prefers-reduced-motion:reduce){.up-btn{transition:none}}
+
+/* revisão: tabelas, botões segmentados, KPI, barras, foco, contraste do cabeçalho, 44 px */
+.table-scroll{max-width:100%;overflow-x:auto}
+#circTable{min-width:380px}
+.share-values{display:none}
+.srch-in:focus-within{outline:3px solid var(--hl);outline-offset:-3px}
+#main:focus{outline:none}
+.masthead::after{content:"";position:absolute;inset:0;background:rgba(10,22,26,.32);pointer-events:none;z-index:0}
+.masthead>*{position:relative;z-index:1}
+.masthead :focus-visible{outline:3px solid #fff!important;outline-offset:2px}
+@media print{.masthead::after{display:none}}
+@media(max-width:1100px){.seg{display:flex;flex-wrap:wrap;overflow:visible}.seg button{flex:0 0 auto}}
+@media(min-width:721px) and (max-width:900px){#readers .kpis,#collections .kpis{grid-template-columns:1fr!important}}
+@media(max-width:430px){.share-values{display:flex;grid-column:1/-1;flex-wrap:wrap;gap:3px 12px;list-style:none;padding:0;margin:6px 0 0;font-size:12px;color:var(--muted)}}
+.share-row{grid-template-columns:104px minmax(0,1fr)}
+.share-track,.share-seg{min-width:0}
+@media(max-width:340px){#catBars .bar-row{grid-template-columns:minmax(0,1.2fr) minmax(36px,.8fr) 96px;gap:6px}}
+@media(pointer:coarse){.pills button,.seg button,.tool-bar button{min-height:44px}.c-toggle,.sidebar-reopen{width:44px;height:44px}}
+@media(max-width:720px){html{scroll-padding-top:84px}}
 </style>
 <script>
 (function(){
@@ -2510,16 +2536,17 @@ function drawLines(pg){
   });
 }
 document.querySelectorAll('.nav button[data-page]').forEach(b=>b.addEventListener('click',()=>{setTimeout(()=>{const pg=document.querySelector('.page.active'); if(pg) drawLines(pg);},80);}));
-let busy=false;
+let busy=false, cuVer=0;
+(function(){var ys=document.getElementById('yearFilter'); if(ys) ys.addEventListener('change',function(){cuVer++; busy=false;});})();
 function countUp(el){
   if(reduce||busy) return; if(el.dataset.cuDone && Date.now()-Number(el.dataset.cuDone)<1500) return; const txt=el.textContent.trim();
   const m=txt.match(/^([\d \s.]+)(,\d+)?(\s*%)?$/); if(!m) return;
   const end=parseFloat(m[1].replace(/[\s .]/g,''));
   if(!isFinite(end)||end<20) return;
   const dec=m[2]?m[2].length-1:0; const target=end+(m[2]?parseFloat('0.'+m[2].slice(1)):0);
-  const t0=performance.now(), D=800;
+  const t0=performance.now(), D=800, v0=cuVer;
   busy=true;
-  (function step(t){const k=Math.min(1,(t-t0)/D), e=1-Math.pow(1-k,3);
+  (function step(t){if(v0!==cuVer) return; const k=Math.min(1,(t-t0)/D), e=1-Math.pow(1-k,3);
     el.textContent=k>=1?txt:(target*e).toLocaleString('pt-PT',{minimumFractionDigits:dec,maximumFractionDigits:dec})+(m[3]||'');
     if(k<1) requestAnimationFrame(step); else {try{mo.takeRecords();}catch(e){} el.dataset.cuDone=String(Date.now()); busy=false;}})(t0);
 }
@@ -2571,8 +2598,10 @@ document.querySelectorAll('.page:not(#faq) details.fold').forEach(d=>{ if(d.clas
     inp.setAttribute('aria-activedescendant','sr0');
   }
   function choose(k){ sel=(k+res.length)%res.length; list.querySelectorAll('li[role=option]').forEach((li,j)=>li.setAttribute('aria-selected',j===sel)); const li=document.getElementById('sr'+sel); if(li){inp.setAttribute('aria-activedescendant','sr'+sel); li.scrollIntoView({block:'nearest'});} }
-  function open(){ last=document.activeElement; build(); inp.value=''; render(); dlg.hidden=false; document.body.style.overflow='hidden'; inp.focus(); }
-  function close(){ dlg.hidden=true; document.body.style.overflow=''; if(last&&last.focus) last.focus(); }
+  var bgEls=[], bgPrev=[];
+  function lockBg(on){ if(on){ bgEls=[].slice.call(document.querySelectorAll('.sidebar,.sidebar-reopen,#main>:not(#srch),#upBtn')); bgPrev=bgEls.map(function(e){return e.inert;}); bgEls.forEach(function(e){e.inert=true;}); } else { bgEls.forEach(function(e,i){e.inert=bgPrev[i];}); bgEls=[]; bgPrev=[]; } }
+  function open(){ last=document.activeElement; build(); inp.value=''; render(); dlg.hidden=false; document.body.style.overflow='hidden'; lockBg(true); inp.focus(); }
+  function close(){ dlg.hidden=true; document.body.style.overflow=''; lockBg(false); if(last&&last.focus) last.focus(); }
   function go(i){
     close();
     const b=document.querySelector('.nav button[data-page="'+i.page+'"]'); if(b&&!document.getElementById(i.page).classList.contains('active')) b.click();
@@ -2589,12 +2618,12 @@ document.querySelectorAll('.page:not(#faq) details.fold').forEach(d=>{ if(d.clas
   inp.addEventListener('keydown',e=>{
     if(e.key==='ArrowDown'){e.preventDefault();choose(sel+1);} else if(e.key==='ArrowUp'){e.preventDefault();choose(sel-1);}
     else if(e.key==='Enter'){e.preventDefault(); if(res[sel]) go(res[sel]);}
-    else if(e.key==='Tab'){e.preventDefault();}
+    else if(e.key==='Tab'){ e.preventDefault(); e.stopPropagation(); document.getElementById('srchClose').focus(); }
   });
   list.addEventListener('click',e=>{const li=e.target.closest('li[data-k]'); if(li) go(res[+li.dataset.k]);});
   list.addEventListener('mousemove',e=>{const li=e.target.closest('li[data-k]'); if(li&&+li.dataset.k!==sel) choose(+li.dataset.k);});
   document.addEventListener('keydown',e=>{
-    if(!dlg.hidden){ if(e.key==='Escape'){e.preventDefault();close();} return; }
+    if(!dlg.hidden){ if(e.key==='Escape'){e.preventDefault();close();} else if(e.key==='Tab'&&document.activeElement===document.getElementById('srchClose')){e.preventDefault();inp.focus();} return; }
     const tg=e.target, typing=tg&&(/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)||tg.isContentEditable);
     if((e.key==='/'&&!typing&&!e.ctrlKey&&!e.metaKey)||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();open();}
   });
@@ -2656,8 +2685,25 @@ b.setAttribute('aria-pressed',String(open));b.textContent=open?'Fechar todos os 
   function q(){if(!f)f=setTimeout(fit,120)}
   window.addEventListener('resize',q);window.addEventListener('load',q);
   document.addEventListener('click',function(){setTimeout(q,150);setTimeout(q,600)});
-  try{new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(m[i].addedNodes.length){q();return}}}).observe(document.body,{childList:true,subtree:true})}catch(e){}
+  try{new MutationObserver(function(m){for(var i=0;i<m.length;i++){var a=m[i].addedNodes;for(var j=0;j<a.length;j++){if(!(a[j].classList&&a[j].classList.contains('share-values'))){q();return}}}}).observe(document.body,{childList:true,subtree:true})}catch(e){}
   q();vis();
+  var f2=0;
+  function vals(){f2=0;document.querySelectorAll('.share-row').forEach(function(r){var old=r.querySelector('.share-values');if(old)old.remove();var hid=r.querySelector('.share-seg.seg-hide');if(!hid)return;var li=[].slice.call(r.querySelectorAll('.share-seg[title]')).map(function(e){return '<li>'+e.title.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</li>'}).join('');if(li){var u=document.createElement('ul');u.className='share-values';u.innerHTML=li;r.appendChild(u);}});}
+  var oldFit=fit; fit=function(){oldFit();if(!f2)f2=setTimeout(vals,30)};
+})();
+
+/* impressão sempre em tema claro; secção atual; tabelas com deslocamento focáveis */
+(function(){
+  var root=document.documentElement,prev=null,printing=false;
+  window.addEventListener('beforeprint',function(){ if(printing)return; printing=true; prev=root.getAttribute('data-theme'); root.setAttribute('data-theme','light'); });
+  window.addEventListener('afterprint',function(){ if(prev===null)root.removeAttribute('data-theme'); else root.setAttribute('data-theme',prev); printing=false; });
+  var nb=[].slice.call(document.querySelectorAll('.nav button[data-page]')),mainEl=document.getElementById('main');
+  function cur(){ nb.forEach(function(b){ if(b.classList.contains('active'))b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }); }
+  nb.forEach(function(b){ b.addEventListener('click',function(){ setTimeout(function(){cur(); if(mainEl) mainEl.focus({preventScroll:true});},0); }); });
+  cur();
+  [].slice.call(document.querySelectorAll('div[style*="overflow-x:auto"], .table-scroll')).forEach(function(d){ if(!d.hasAttribute('tabindex'))d.tabIndex=0; if(!d.hasAttribute('role'))d.setAttribute('role','region'); if(!d.hasAttribute('aria-label')){var h=d.closest('.card,section,.page'),hd=h&&h.querySelector('h3,h4'),base=((hd&&hd.textContent.trim())||'Tabela')+' (tabela com deslocamento horizontal)',lb=base,n=2;while(document.querySelector('[aria-label="'+lb+'"]'))lb=base+' '+(n++);d.setAttribute('aria-label',lb);} });
+  var ct=document.getElementById('circTable');
+  if(ct&&!ct.parentElement.classList.contains('table-scroll')){ var w=document.createElement('div'); w.className='table-scroll'; w.tabIndex=0; w.setAttribute('role','region'); w.setAttribute('aria-label','Circulação anual; tabela com deslocamento horizontal'); ct.before(w); w.appendChild(ct); }
 })();
 </script>
 </body></html>
