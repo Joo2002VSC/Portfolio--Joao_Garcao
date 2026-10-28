@@ -1,7 +1,8 @@
-"""Corre todas as consultas de consultas.sql, grava os resultados em
+"""Corre todas as consultas de sql/02_consultas.sql, grava os resultados em
 resultados.md e gera os gráficos da pasta graficos/.
 
-Uso:  python importar.py && python gerar_resultados.py
+Uso (a partir da pasta leituras-sql/):
+    python scripts/importar.py && python scripts/gerar_resultados.py
 """
 import re
 import sqlite3
@@ -12,11 +13,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-PASTA = Path(__file__).parent
-con = sqlite3.connect(PASTA / "leituras.db")
+PASTA = Path(__file__).resolve().parent.parent   # leituras-sql/
+con = sqlite3.connect(PASTA / "dados" / "leituras.db")
 
 # ---------- 1. resultados.md ----------
-sql = (PASTA / "consultas.sql").read_text(encoding="utf-8")
+sql = (PASTA / "sql" / "02_consultas.sql").read_text(encoding="utf-8")
 blocos = re.split(r"^-- @ ", sql, flags=re.M)[1:]
 
 saida = ["# Resultados das consultas\n",

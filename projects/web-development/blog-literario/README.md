@@ -16,7 +16,7 @@ Projeto pessoal e autodidata (não foi feito para nenhuma cadeira), em **HTML, C
 
 ## Análise SQL
 
-Na pasta [`analise-sql/`](analise-sql/) está uma análise em **SQLite** do meu histórico de leituras (exportado do Goodreads): ritmo por ano e por mês, notas, autores mais lidos, época de publicação e a pilha de livros por ler.
+Em [`data-analysis/leituras-sql`](../../data-analysis/leituras-sql) está uma análise em **SQLite** do meu histórico de leituras (exportado do Goodreads): ritmo por ano e por mês, notas, autores mais lidos, época de publicação e a pilha de livros por ler.
 
 ## Estrutura
 
@@ -25,6 +25,5 @@ Na pasta [`analise-sql/`](analise-sql/) está uma análise em **SQLite** do meu 
 ├── leituras.html, estatisticas.html, autores.html, obras.html, sobre.html
 ├── style.css, leituras.css, estatisticas.css
 ├── script.js
-├── assets/          # capas, fotos de autores, logótipo
-└── analise-sql/     # análise SQL das leituras
+└── assets/          # capas, fotos de autores, logótipo
 ```

@@ -1,6 +1,8 @@
 # 📚 Análise SQL das minhas leituras
 
-Análise em **SQL (SQLite)** dos livros que registo no Goodreads — o mesmo histórico de leituras que alimenta o [blog literário](../README.md). Projeto pessoal e autodidata.
+> 🇬🇧 *A personal SQL project analysing my reading history (327 books exported from Goodreads): reading pace, ratings, favourite authors and publication periods, in SQLite with Python charts.*
+
+Análise em **SQL (SQLite)** dos livros que registo no Goodreads — o mesmo histórico de leituras que alimenta o meu [blog literário](../../web-development/blog-literario). Projeto pessoal e autodidata.
 
 ## O que mostra
 
@@ -50,24 +52,29 @@ Limpeza feita na importação: ISBNs no formato `="978..."`, datas `2026/10/19` 
 ## Estrutura
 
 ```
-analise-sql/
-├── dados/goodreads_library_export.csv   # exportação do Goodreads
-├── schema.sql                           # criação das tabelas
-├── importar.py                          # CSV → leituras.db
-├── consultas.sql                        # as 13 consultas da análise
-├── gerar_resultados.py                  # corre as consultas → resultados.md + gráficos
+leituras-sql/
+├── dados/
+│   ├── goodreads_library_export.csv     # exportação do Goodreads
+│   └── leituras.db                      # base de dados SQLite
+├── sql/
+│   ├── 01_schema.sql                    # criação das tabelas
+│   └── 02_consultas.sql                 # as 13 consultas da análise
+├── scripts/
+│   ├── importar.py                      # CSV → leituras.db
+│   └── gerar_resultados.py              # consultas → resultados.md + gráficos
+├── graficos/
 ├── resultados.md
-└── graficos/
+└── requirements.txt
 ```
 
 ## Como reproduzir
 
 ```bash
-cd analise-sql
-pip install pandas matplotlib tabulate
-python importar.py           # cria leituras.db
-python gerar_resultados.py   # gera resultados.md e os gráficos
-sqlite3 leituras.db          # para explorar à mão
+cd projects/data-analysis/leituras-sql
+pip install -r requirements.txt
+python scripts/importar.py           # cria dados/leituras.db
+python scripts/gerar_resultados.py   # gera resultados.md e os gráficos
+sqlite3 dados/leituras.db            # para explorar à mão
 ```
 
 Para atualizar: exportar de novo a biblioteca no Goodreads (*My Books → Import and export*), substituir o CSV em `dados/` e voltar a correr os dois scripts.

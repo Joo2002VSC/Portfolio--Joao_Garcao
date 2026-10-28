@@ -1,6 +1,6 @@
 -- =============================================================
 --  Análise das minhas leituras — consultas SQL (SQLite)
---  Cada bloco começa com "-- @ Título" para o script gerar_resultados.py
+--  Cada bloco começa com "-- @ Título" para o script scripts/gerar_resultados.py
 -- =============================================================
 
 -- @ 1. Visão geral da biblioteca por estante

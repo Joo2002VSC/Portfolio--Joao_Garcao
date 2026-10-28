@@ -15,6 +15,7 @@ Análise textual (PLN) e estatística: extração de lemas, colocações e sinta
 
 ### Projetos pessoais
 - **[`contas-vitoria-sql/`](./contas-vitoria-sql)**: projeto pessoal (autodidata, fora das cadeiras) — base de dados **SQLite** com as contas do Vitória Sport Clube (SAD, Clube e Grupo consolidado, 2012/13–2025/26), 26 consultas SQL (CTEs, funções de janela, vistas), gráficos em Python e uma análise estratégica que cruza as contas com o desempenho desportivo, as regras da UEFA e a centralização dos direitos TV.
+- **[`leituras-sql/`](./leituras-sql)**: projeto pessoal — análise em **SQLite** do meu histórico de leituras (327 livros do Goodreads, os mesmos do [blog literário](../web-development/blog-literario)): modelo em três tabelas, 13 consultas (CTEs, funções de janela, datas) e gráficos sobre ritmo de leitura, notas, autores e época de publicação.
 
 ---
 
@@ -33,3 +34,4 @@ Textual (NLP) and statistical analysis: lemma extraction, collocations and noun 
 
 ### Personal projects
 - **[`contas-vitoria-sql/`](./contas-vitoria-sql)**: self-directed personal project (not coursework) — a **SQLite** database of Vitória Sport Clube's accounts (SAD, Club and consolidated Group, 2012/13–2025/26), 26 SQL queries (CTEs, window functions, views), Python charts and a strategic analysis linking the accounts to sporting performance, UEFA rules and TV rights centralisation.
+- **[`leituras-sql/`](./leituras-sql)**: personal project — a **SQLite** analysis of my reading history (327 books from Goodreads, the same ones as my [literary blog](../web-development/blog-literario)): a three-table model, 13 queries (CTEs, window functions, dates) and charts on reading pace, ratings, authors and publication period.
