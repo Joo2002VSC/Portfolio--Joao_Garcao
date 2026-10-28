@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Em Números — estatísticas de leitura de João Garção">
+    <link rel="icon" href="assets/logo/Logo.jpeg" type="image/jpeg">
+    <title>Em Números · O Meu Blog Literário</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="estatisticas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="layout">
+    <aside class="sidebar left" aria-hidden="true"></aside>
+
+    <main class="content">
+
+        <!-- HEADER -->
+        <header class="site-header">
+            <div class="header-top">
+                <button class="sepia-toggle" id="sepiaToggle" aria-label="Alternar modo sépia" title="Modo sépia">📜</button>
+                <button class="dark-toggle" id="darkToggle" aria-label="Alternar modo noturno">🌙</button>
+            </div>
+            <img src="assets/logo/Logo.jpeg" class="logo" alt="Logótipo do blog">
+            <h1 class="blog-title">O Meu Blog Literário</h1>
+            <p class="blog-subtitle">Leituras, recensões e reflexões de João Garção</p>
+            <hr class="header-divider">
+            <nav class="main-nav" aria-label="Navegação principal">
+                <a href="index.html">Início</a>
+                <a href="autores.html">Os Meus Autores Favoritos</a>
+                <a href="obras.html">As Minhas Obras Favoritas</a>
+                <a href="leituras.html">Todas as Leituras</a>
+                <a href="estatisticas.html" class="active">Em Números</a>
+                <a href="sobre.html">Mais Sobre o Blog</a>
+            </nav>
+        </header>
+
+        <!-- HERO -->
+        <section class="stats-hero">
+            <h2 class="section-title">Em Números</h2>
+            <p class="section-subtitle">Uma visão analítica das minhas leituras — de 2020 até hoje</p>
+
+            <!-- KPI row -->
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <span class="kpi-number" data-target="133">0</span>
+                    <span class="kpi-label">livros lidos</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-number" data-target="39">0</span>
+                    <span class="kpi-label">só em 2026</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-number" data-target="32">0</span>
+                    <span class="kpi-label">em 2025</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-number" data-target="5">0</span>
+                    <span class="kpi-label">Eça de Queirós</span>
+                    <span class="kpi-sublabel">autor mais lido</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHART 1: Livros por ano -->
+        <section class="stats-card">
+            <h3 class="stats-card-title">📅 Livros Lidos por Ano</h3>
+            <div class="bar-chart" id="chartByYear" aria-label="Gráfico de livros lidos por ano"></div>
+        </section>
+
+        <!-- CHART 2: Ritmo mensal 2026 -->
+        <section class="stats-card">
+            <h3 class="stats-card-title">📆 Ritmo de Leitura em 2026 (por mês)</h3>
+            <div class="bar-chart bar-chart--monthly" id="chartByMonth" aria-label="Gráfico de leituras por mês em 2026"></div>
+        </section>
+
+        <!-- CHART 3: Distribuição de ratings -->
+        <section class="stats-card">
+            <h3 class="stats-card-title">⭐ Distribuição de Avaliações</h3>
+            <p class="stats-card-note">Apenas livros com avaliação registada</p>
+            <div class="rating-chart" id="chartRatings" aria-label="Distribuição de avaliações"></div>
+        </section>
+
+        <!-- CHART 4: Top autores -->
+        <section class="stats-card">
+            <h3 class="stats-card-title">✍️ Autores Mais Lidos</h3>
+            <div class="author-chart" id="chartAuthors" aria-label="Autores mais lidos"></div>
+        </section>
+
+    </main>
+
+    <aside class="sidebar right" aria-hidden="true"></aside>
+</div>
+
+<footer class="footer">
+    <p><strong>O Meu Blog Literário</strong></p>
+    <p>Um espaço pessoal de leitura e reflexão sobre livros</p>
+    <a href="https://www.instagram.com/garcao_jf" target="_blank" rel="noopener" class="footer-instagram">
+        <img src="assets/logoinsta.jpg" alt="Instagram" style="width:20px;height:20px;object-fit:cover;border-radius:4px;vertical-align:middle;">
+        @garcao_jf
+    </a>
+    <p>© 2026 — Todos os direitos reservados</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+/* =====================
+   DADOS (extraídos do CSV Goodreads)
+===================== */
+const DATA = {
+    byYear: {
+        "2020": 5,
+        "2021": 1,
+        "2022": 11,
+        "2023": 8,
+        "2024": 20,
+        "2025": 32,
+        "2026": 39
+    },
+    byMonth2026: {
+        "Jan": 2, "Fev": 4, "Mar": 9, "Abr": 3,
+        "Mai": 6, "Jun": 7, "Jul": 1, "Ago": 4,
+        "Set": 2, "Out": 1
+    },
+    ratings: {
+        "1-2 ★": 1,    // 1.5
+        "3 ★": 4,
+        "3.5 ★": 13,   // 3.25+3.5+3.75
+        "4 ★": 46,
+        "4.5 ★": 32,   // 4.25+4.5+4.75
+        "5 ★": 13
+    },
+    topAuthors: [
+        ["Eça de Queirós", 5],
+        ["Fyodor Dostoevsky", 4],
+        ["José Saramago", 4],
+        ["Gabriel García Márquez", 4],
+        ["Suzanne Collins", 3],
+        ["Pepetela", 2],
+        ["Nuno Palma", 2],
+        ["Fernando Pessoa", 2],
+        ["Haruki Murakami", 2],
+        ["José Eduardo Agualusa", 2]
+    ]
+};
+
+/* =====================
+   HELPERS
+===================== */
+function maxVal(obj) { return Math.max(...Object.values(obj)); }
+function pct(v, max) { return Math.round((v / max) * 100); }
+const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#d97706';
+
+/* =====================
+   KPI COUNTERS
+===================== */
+document.querySelectorAll(".kpi-number").forEach(el => {
+    const target = parseInt(el.getAttribute("data-target"), 10);
+    const dur = 1200;
+    const start = performance.now();
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            function tick(now) {
+                const p = Math.min((now - start) / dur, 1);
+                el.textContent = Math.round(ease(p) * target);
+                if (p < 1) requestAnimationFrame(tick);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(tick);
+            obs.unobserve(entry.target);
+        });
+    }, { threshold: 0.5 });
+    obs.observe(el);
+});
+
+/* =====================
+   CHART: LIVROS POR ANO
+===================== */
+(function buildYearChart() {
+    const container = document.getElementById("chartByYear");
+    const max = maxVal(DATA.byYear);
+    let html = '<div class="bc-inner">';
+    Object.entries(DATA.byYear).forEach(([yr, v]) => {
+        const p = pct(v, max);
+        const is2026 = yr === "2026";
+        html += `
+        <div class="bc-row">
+            <span class="bc-label">${yr}</span>
+            <div class="bc-track">
+                <div class="bc-fill${is2026 ? ' bc-fill--accent' : ''}" data-width="${p}"></div>
+            </div>
+            <span class="bc-value">${v}</span>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    // animate
+    setTimeout(() => {
+        container.querySelectorAll(".bc-fill").forEach(el => {
+            el.style.width = el.dataset.width + "%";
+        });
+    }, 150);
+})();
+
+/* =====================
+   CHART: MESES 2026
+===================== */
+(function buildMonthChart() {
+    const container = document.getElementById("chartByMonth");
+    const max = maxVal(DATA.byMonth2026);
+    let html = '<div class="bc-inner">';
+    Object.entries(DATA.byMonth2026).forEach(([m, v]) => {
+        const p = pct(v, max);
+        html += `
+        <div class="bc-row">
+            <span class="bc-label">${m}</span>
+            <div class="bc-track">
+                <div class="bc-fill bc-fill--accent" data-width="${p}"></div>
+            </div>
+            <span class="bc-value">${v}</span>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    setTimeout(() => {
+        container.querySelectorAll(".bc-fill").forEach(el => {
+            el.style.width = el.dataset.width + "%";
+        });
+    }, 150);
+})();
+
+/* =====================
+   CHART: RATINGS
+===================== */
+(function buildRatingsChart() {
+    const container = document.getElementById("chartRatings");
+    const max = maxVal(DATA.ratings);
+    let html = '<div class="bc-inner">';
+    Object.entries(DATA.ratings).forEach(([label, v]) => {
+        const p = pct(v, max);
+        html += `
+        <div class="bc-row">
+            <span class="bc-label">${label}</span>
+            <div class="bc-track">
+                <div class="bc-fill bc-fill--gold" data-width="${p}"></div>
+            </div>
+            <span class="bc-value">${v}</span>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    setTimeout(() => {
+        container.querySelectorAll(".bc-fill").forEach(el => {
+            el.style.width = el.dataset.width + "%";
+        });
+    }, 150);
+})();
+
+/* =====================
+   CHART: TOP AUTORES
+===================== */
+(function buildAuthorsChart() {
+    const container = document.getElementById("chartAuthors");
+    const max = DATA.topAuthors[0][1];
+    let html = '<div class="bc-inner">';
+    DATA.topAuthors.forEach(([name, v]) => {
+        const p = pct(v, max);
+        html += `
+        <div class="bc-row">
+            <span class="bc-label bc-label--author">${name}</span>
+            <div class="bc-track">
+                <div class="bc-fill bc-fill--muted" data-width="${p}"></div>
+            </div>
+            <span class="bc-value">${v} livro${v > 1 ? 's' : ''}</span>
+        </div>`;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    setTimeout(() => {
+        container.querySelectorAll(".bc-fill").forEach(el => {
+            el.style.width = el.dataset.width + "%";
+        });
+    }, 150);
+})();
+
+/* Animate charts when they scroll into view */
+document.querySelectorAll(".stats-card").forEach((card, i) => {
+    card.style.opacity = "0";
+    card.style.transform = "translateY(20px)";
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    // re-trigger bar animations
+                    entry.target.querySelectorAll(".bc-fill").forEach(el => {
+                        el.style.width = "0";
+                        setTimeout(() => { el.style.width = el.dataset.width + "%"; }, 100);
+                    });
+                }, i * 60);
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    obs.observe(card);
+});
+</script>
+
+</body>
+</html>

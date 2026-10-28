@@ -1,0 +1,218 @@
+/* =========================
+   ESTATÍSTICAS — CSS
+========================= */
+
+/* --- MODO SÉPIA --- */
+body.sepia-mode {
+    --bg: #f5efe0;
+    --surface: #fdf8ee;
+    --text: #3b2f1e;
+    --muted: #7a6349;
+    --accent: #c0832a;
+    --accent-light: #f0d9b0;
+    --shadow: rgba(90, 60, 20, 0.10);
+    --border: rgba(160, 120, 60, 0.20);
+}
+
+/* --- VARIÁVEIS EXTRA --- */
+:root {
+    --border: rgba(0,0,0,0.07);
+    --accent-light: #fef3c7;
+}
+body.dark-mode {
+    --border: rgba(255,255,255,0.08);
+    --accent-light: #451a03;
+}
+
+/* ---- HEADER ---- */
+.header-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 18px 0 20px;
+}
+.blog-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 4px 0 0;
+}
+.sepia-toggle {
+    background: none;
+    border: 1px solid var(--muted);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text);
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+}
+.sepia-toggle:hover {
+    border-color: var(--accent);
+    transform: rotate(-10deg);
+}
+
+/* ---- HERO ---- */
+.stats-hero {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.section-subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: -12px;
+    margin-bottom: 32px;
+}
+
+/* ---- KPI ROW ---- */
+.kpi-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px var(--shadow);
+    padding: 28px 32px 22px;
+    min-width: 120px;
+    text-align: center;
+    flex: 1;
+    max-width: 200px;
+}
+
+.kpi-number {
+    display: block;
+    font-family: "Playfair Display", serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.1;
+}
+
+.kpi-label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.kpi-sublabel {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+/* ---- STATS CARD ---- */
+.stats-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 2px 16px var(--shadow);
+    padding: 32px 36px;
+    margin-bottom: 24px;
+}
+
+.stats-card-title {
+    font-family: "Playfair Display", serif;
+    font-size: 22px;
+    margin: 0 0 6px;
+    color: var(--text);
+}
+
+.stats-card-note {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 20px;
+}
+
+/* ---- BAR CHART ---- */
+.bc-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.bc-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.bc-label {
+    font-size: 13px;
+    color: var(--muted);
+    min-width: 48px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.bc-label--author {
+    min-width: 180px;
+    text-align: right;
+    font-size: 13px;
+}
+
+.bc-track {
+    flex: 1;
+    height: 26px;
+    background: var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.bc-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 6px;
+    transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: var(--muted);
+    opacity: 0.5;
+}
+
+.bc-fill--accent {
+    background: var(--accent);
+    opacity: 1;
+}
+
+.bc-fill--gold {
+    background: #f59e0b;
+    opacity: 1;
+}
+
+.bc-fill--muted {
+    background: var(--text);
+    opacity: 0.25;
+}
+
+body.dark-mode .bc-fill--muted {
+    opacity: 0.4;
+}
+
+.bc-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 40px;
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .kpi-row { gap: 10px; }
+    .kpi-card { padding: 20px 16px 16px; min-width: 90px; }
+    .kpi-number { font-size: 36px; }
+    .stats-card { padding: 24px 20px; }
+    .bc-label--author { min-width: 110px; font-size: 11px; }
+    .bc-label { min-width: 32px; }
+}

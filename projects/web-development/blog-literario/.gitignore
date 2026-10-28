@@ -1,0 +1,7 @@
+.DS_Store
+**/.DS_Store
+
+# Base de dados gerada por analise-sql/importar.py
+analise-sql/leituras.db
+analise-sql/*.db-journal
+__pycache__/

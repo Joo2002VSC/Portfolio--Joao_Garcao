@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="O Meu Blog Literário — recensões mensais, autores favoritos e reflexões sobre livros.">
+
+    <link rel="icon" href="assets/logo/Logo.jpeg" type="image/jpeg">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="O Meu Blog Literário">
+    <meta property="og:description" content="Um espaço pessoal de leitura e reflexão sobre livros.">
+    <meta property="og:image" content="assets/logo/Logo.jpeg">
+    <meta property="og:type" content="website">
+
+    <title>O Meu Blog Literário</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="estatisticas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar left" aria-hidden="true"></aside>
+
+    <main class="content">
+
+        <!-- HEADER -->
+        <header class="site-header">
+
+            <div class="header-top">
+                <button class="sepia-toggle" id="sepiaToggle" aria-label="Alternar modo sépia" title="Modo sépia">📜</button>
+                <button class="dark-toggle" id="darkToggle" aria-label="Alternar modo noturno">🌙</button>
+            </div>
+
+            <img src="assets/logo/Logo.jpeg" class="logo" alt="Logótipo do blog O Meu Blog Literário">
+
+            <h1 class="blog-title">O Meu Blog Literário</h1>
+            <p class="blog-subtitle">Leituras, recensões e reflexões de João Garção</p>
+            <hr class="header-divider">
+
+            <div class="books-counter" aria-label="Livros lidos em 2026">
+                <span class="books-counter-number" id="bookCount" data-target="39">0</span>
+                <span class="books-counter-label">livros lidos em 2026</span>
+            </div>
+
+            <div class="annual-progress" aria-label="Progresso anual de leituras">
+                <div class="annual-progress-bar">
+                    <div class="annual-progress-fill" data-months="9" data-total="12"></div>
+                </div>
+                <p class="annual-progress-label">9 de 12 meses · meta: 48 livros</p>
+            </div>
+
+            <nav class="main-nav" aria-label="Navegação principal">
+                <a href="index.html" class="active">Início</a>
+                <a href="autores.html">Os Meus Autores Favoritos</a>
+                <a href="obras.html">As Minhas Obras Favoritas</a>
+                <a href="leituras.html">Todas as Leituras</a>
+                <a href="estatisticas.html">Em Números</a>
+                <a href="sobre.html">Mais Sobre o Blog</a>
+            </nav>
+
+        </header>
+
+        <!-- CITAÇÃO EM DESTAQUE -->
+        <blockquote class="featured-quote">
+            <span class="featured-quote-text" id="featuredQuote"></span>
+            <cite class="featured-quote-cite" id="featuredCite"></cite>
+        </blockquote>
+
+        <!-- LIVROS DO MÊS -->
+        <section class="months" aria-label="Livros do mês">
+
+            <h2 class="section-title">Livros do Mês</h2>
+            <p class="section-subtitle">Uma leitura por mês, ao longo de 2026</p>
+
+            <div class="search-filter-bar">
+                <input
+                    type="search"
+                    id="bookSearch"
+                    class="search-input"
+                    placeholder="Pesquisar título ou autor…"
+                    aria-label="Pesquisar livros">
+                <div class="filter-tags" id="filterTags" aria-label="Filtrar por género">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="filosofia">Filosofia</button>
+                    <button class="filter-btn" data-filter="poesia">Poesia</button>
+                    <button class="filter-btn" data-filter="romance">Romance</button>
+                    <button class="filter-btn" data-filter="realismo-magico">Realismo Mágico</button>
+                    <button class="filter-btn" data-filter="memorias">Memórias</button>
+                    <button class="filter-btn" data-filter="autobiografia">Autobiografia</button>
+                    <button class="filter-btn" data-filter="psicologia">Psicologia</button>
+                </div>
+            </div>
+
+            <!-- JANEIRO -->
+            <article class="month">
+                <a href="janeiro.html" class="month-link" aria-label="Ver recensão de Janeiro — A Casa dos Espíritos">
+                    <img src="assets/janeiro/casa-dos-espiritos.jpg"
+                         alt="Capa do livro A Casa dos Espíritos"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Janeiro — <span class="book-title-italic">A Casa dos Espíritos</span></h3>
+                        <p class="month-author">Isabel Allende</p>
+                        <p class="month-meta">1982</p>
+                        <span class="genre-tag" data-genre="realismo-magico">Realismo Mágico</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 4 de 5 estrelas">★★★★☆</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Uma saga familiar épica que atravessa gerações no Chile, entre magia, amor e turbulência política.</div>
+                </a>
+            </article>
+
+            <!-- FEVEREIRO -->
+            <article class="month">
+                <a href="fevereiro.html" class="month-link" aria-label="Ver recensão de Fevereiro — Notes from Underground">
+                    <img src="assets/fevereiro/notes-from-underground.jpg"
+                         alt="Capa do livro Notes from Underground"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Fevereiro — <span class="book-title-italic">Notes from Underground</span></h3>
+                        <p class="month-author">Fyodor Dostoevsky</p>
+                        <p class="month-meta">1864</p>
+                        <span class="genre-tag" data-genre="filosofia">Ficção Filosófica</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 4 de 5 estrelas">★★★★☆</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Um monólogo perturbador de um homem ressentido e isolado — um dos primeiros anti-heróis da literatura.</div>
+                </a>
+            </article>
+
+            <!-- MARÇO -->
+            <article class="month">
+                <a href="marco.html" class="month-link" aria-label="Ver recensão de Março — Kobzar">
+                    <img src="assets/marco/kobzar.jpg"
+                         alt="Capa do livro Kobzar"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Março — <span class="book-title-italic">Kobzar</span></h3>
+                        <p class="month-author">Taras Shevchenko</p>
+                        <p class="month-meta">1840</p>
+                        <span class="genre-tag" data-genre="poesia">Poesia</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 5 de 5 estrelas">★★★★★</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">A obra fundacional da literatura ucraniana — poemas que celebram a identidade e a liberdade de um povo.</div>
+                </a>
+            </article>
+
+            <!-- ABRIL -->
+            <article class="month">
+                <a href="abril.html" class="month-link" aria-label="Ver recensão de Abril — Ficções">
+                    <img src="assets/abril/ficcoes.jpg"
+                         alt="Capa do livro Ficções"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Abril — <span class="book-title-italic">Ficções</span></h3>
+                        <p class="month-author">Jorge Luis Borges</p>
+                        <p class="month-meta">1944</p>
+                        <span class="genre-tag" data-genre="filosofia">Contos Filosóficos</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 5 de 5 estrelas">★★★★★</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Labirintos, infinitos e paradoxos — contos que expandem os limites da realidade e da imaginação.</div>
+                </a>
+            </article>
+
+            <!-- MAIO -->
+            <article class="month">
+                <a href="maio.html" class="month-link" aria-label="Ver recensão de Maio — Meditações">
+                    <img src="assets/maio/meditacoes.jpg"
+                         alt="Capa do livro Meditações"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Maio — <span class="book-title-italic">Meditações</span></h3>
+                        <p class="month-author">Marco Aurélio</p>
+                        <p class="month-meta">167 d.C.</p>
+                        <span class="genre-tag" data-genre="filosofia">Filosofia</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 4 de 5 estrelas">★★★★☆</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">O diário íntimo de um imperador estóico — reflexões sobre virtude, razão e a efemeridade da vida.</div>
+                </a>
+            </article>
+
+            <!-- JUNHO -->
+            <article class="month">
+                <a href="junho.html" class="month-link" aria-label="Ver recensão de Junho — As Minhas Aventuras no País dos Sovietes">
+                    <img src="assets/junho/asminhasaventurasnopaisdossovietes.jpg"
+                         alt="Capa do livro As Minhas Aventuras no País dos Sovietes"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Junho — <span class="book-title-italic">As Minhas Aventuras no País dos Sovietes</span></h3>
+                        <p class="month-author">José Milhazes</p>
+                        <p class="month-meta">2017</p>
+                        <span class="genre-tag" data-genre="memorias">Memórias</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 4 de 5 estrelas">★★★★☆</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Um jornalista português narra a sua experiência na União Soviética — um testemunho único de um mundo desaparecido.</div>
+                </a>
+            </article>
+
+            <!-- JULHO -->
+            <article class="month">
+                <a href="julho.html" class="month-link" aria-label="Ver recensão de Julho — Não Me Podem Magoar">
+                    <img src="assets/julho/nao-me-podem-magoar.jpg"
+                         alt="Capa do livro Não Me Podem Magoar"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Julho — <span class="book-title-italic">Não Me Podem Magoar</span></h3>
+                        <p class="month-author">David Goggins</p>
+                        <p class="month-meta">2023</p>
+                        <span class="genre-tag" data-genre="autobiografia">Autobiografia</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 5 de 5 estrelas">★★★★★</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">A história brutal e inspiradora de um homem que transformou a adversidade extrema em força mental inabalável.</div>
+                </a>
+            </article>
+
+            <!-- AGOSTO -->
+            <article class="month">
+                <a href="agosto.html" class="month-link" aria-label="Ver recensão de Agosto — O Jogador">
+                    <img src="assets/agosto/ojogador.jpg"
+                         alt="Capa do livro O Jogador"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Agosto — <span class="book-title-italic">O Jogador</span></h3>
+                        <p class="month-author">Fyodor Dostoevsky</p>
+                        <p class="month-meta">1867</p>
+                        <span class="genre-tag" data-genre="romance">Romance</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 4 de 5 estrelas">★★★★☆</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Uma novela intensa sobre vício, obsessão e amor — escrita pelo próprio Dostoevsky enquanto lutava contra o jogo.</div>
+                </a>
+            </article>
+
+            <!-- SETEMBRO -->
+            <article class="month">
+                <a href="setembro.html" class="month-link" aria-label="Ver recensão de Setembro — Permissão para Sentir">
+                    <img src="assets/setembro/permissaoparasentir.jpg"
+                         alt="Capa do livro Permissão para Sentir"
+                         class="month-cover"
+                         loading="lazy">
+                    <div class="month-info">
+                        <h3>Setembro — <span class="book-title-italic">Permissão para Sentir</span></h3>
+                        <p class="month-author">Marc Brackett</p>
+                        <p class="month-meta">2021</p>
+                        <span class="genre-tag" data-genre="psicologia">Psicologia</span>
+                        <div class="month-rating star-animate" aria-label="Avaliação: 5 de 5 estrelas">★★★★★</div>
+                    </div>
+                    <span class="month-arrow" aria-hidden="true">›</span>
+                    <div class="month-tooltip">Um psicólogo de Yale explora a inteligência emocional e ensina a identificar, nomear e gerir as emoções.</div>
+                </a>
+            </article>
+
+            <!-- SEPARADOR -->
+            <div class="months-divider" aria-hidden="true">
+                <span>Em breve</span>
+            </div>
+
+            <!-- OUTUBRO -->
+            <article class="month month-current">
+                <div class="month-info month-info-placeholder">
+                    <div class="current-badge">📖 Leitura Atual</div>
+                    <h3>Outubro</h3>
+                    <p class="month-author">Livro a ser revelado em breve</p>
+                    <p class="month-placeholder-text">Volta em breve!</p>
+                </div>
+            </article>
+
+            <!-- NOVEMBRO -->
+            <article class="month month-placeholder">
+                <div class="month-info month-info-placeholder">
+                    <h3>Novembro</h3>
+                    <p class="month-author">Livro por definir</p>
+                    <p class="month-placeholder-text">Volta em breve!</p>
+                </div>
+            </article>
+
+            <!-- DEZEMBRO -->
+            <article class="month month-placeholder">
+                <div class="month-info month-info-placeholder">
+                    <h3>Dezembro</h3>
+                    <p class="month-author">Livro por definir</p>
+                    <p class="month-placeholder-text">Volta em breve!</p>
+                </div>
+            </article>
+
+        </section>
+
+    </main>
+
+    <aside class="sidebar right" aria-hidden="true"></aside>
+
+</div>
+
+<footer class="footer">
+    <p><strong>O Meu Blog Literário</strong></p>
+    <p>Um espaço pessoal de leitura e reflexão sobre livros</p>
+    <a href="https://www.instagram.com/garcao_jf" target="_blank" rel="noopener" class="footer-instagram">
+        <img src="assets/logoinsta.jpg" alt="Instagram" style="width:20px; height:20px; object-fit:cover; border-radius:4px; vertical-align:middle;">
+        @garcao_jf
+    </a>
+    <p>© 2026 — Todos os direitos reservados</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
