@@ -1,42 +1,23 @@
-# João Garção
+# Observatório BLCS
 
-<img src="assets/foto.jpg" alt="João Garção" width="150" align="right">
+Dashboard de análise da atividade da Biblioteca Lúcio Craveiro da Silva (2020–2026), desenvolvida no âmbito do Mestrado em Humanidades Digitais da Universidade do Minho.
 
-**Humanidades Digitais · Tecnologias da Linguagem · Análise de Texto**
+## Direitos de autor e propriedade intelectual
 
-[🇵🇹 Português](README.md) · [🇬🇧 English](README.en.md) · [🇫🇷 Français](README.fr.md)
+© 2026 João Garção. Todos os direitos reservados.
 
-<br clear="right">
+O desenvolvimento, a estrutura, o código-fonte, a organização visual e as funcionalidades da dashboard Observatório BLCS constituem uma criação intelectual desenvolvida por João Garção no âmbito do projeto académico de Mestrado em Humanidades Digitais da Universidade do Minho.
 
----
+Salvo indicação expressa em contrário, os direitos de autor relativos aos elementos originais desenvolvidos neste projeto encontram-se reservados ao respetivo autor.
 
-Sou licenciado em Línguas Aplicadas e mestrando em Humanidades Digitais, ambos na Universidade do Minho. Combino linguística e tradução com programação e conservação de património.
+A disponibilização pública deste repositório destina-se à demonstração, consulta e documentação do projeto. Não constitui, por si só, uma concessão de licença para reprodução, redistribuição, modificação ou exploração comercial do código-fonte.
 
-## Destaques
+O relatório académico associado a este projeto é disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional (CC BY 4.0). Esta reserva de direitos aplica-se ao código-fonte e à dashboard, não ao relatório.
 
-- **[Filologia](./projects/digital-humanities/philology)**: transcrição de um manuscrito do séc. XVIII e glossário de figuras históricas
-- **[NLP](./projects/text-processing/nlp)**: web scraping e análise textual de receitas, em Python
-- **[Blog literário](./projects/web-development/blog-literario)**: projeto pessoal e autodidata em HTML/CSS/JS ([ver site ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/blog-literario/))
-- **[Leituras em SQL](./projects/data-analysis/leituras-sql)**: análise em SQLite dos livros que li, com os dados do blog e do Goodreads
+Os dados institucionais, documentos, designações, logótipos e outros materiais pertencentes à Biblioteca Lúcio Craveiro da Silva ou a terceiros permanecem sujeitos aos respetivos direitos e condições de utilização.
 
-## Áreas
+A utilização de componentes, bibliotecas, fontes ou outros recursos de terceiros encontra-se sujeita às respetivas licenças e condições de utilização.
 
-| Área | Conteúdo |
-|---|---|
-| [`digital-humanities`](./projects/digital-humanities) | Filologia, anotação de documentos (XML, LaTeX) |
-| [`text-processing`](./projects/text-processing) | PLN e análise de texto |
-| [`language-services`](./projects/language-services) | Tradução e tradução automática |
-| [`literary-studies`](./projects/literary-studies) | Análise e crítica literária |
-| [`knowledge-engineering`](./projects/knowledge-engineering) | Ontologias e representação de conhecimento |
-| [`digital-innovation`](./projects/digital-innovation) | Inovação, empreendedorismo e validação de ideias de negócio |
-| [`artificial-intelligence`](./projects/artificial-intelligence) | Chatbot institucional baseado em RAG e resumos teóricos, da cadeira de Introdução à Inteligência Artificial |
-| [`data-analysis`](./projects/data-analysis) | Análise e visualização de dados |
-| [`web-development`](./projects/web-development) | UX/UI e desenvolvimento web |
+Para pedidos de autorização relativos à utilização, adaptação ou redistribuição dos elementos originais deste projeto, deverá ser obtido consentimento prévio do respetivo titular dos direitos.
 
-## Idiomas
-
-Português (nativo) · Inglês (C2) · Francês (B2) · Neerlandês (A2) · Italiano (A2)
-
-## CV
-
-[Descarregar o CV (PDF)](./about/CV-Joao-Garcao.pdf)
+**Contacto:** joaogarcao2002@gmail.com
