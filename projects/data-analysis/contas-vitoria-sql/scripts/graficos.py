@@ -87,7 +87,28 @@ def figura(titulo, subtitulo, altura=5.6, base=0.14):
     return fig, ax
 
 
+# Emblema do Vitória SC no canto superior direito de cada gráfico.
+EMBLEMA = RAIZ / "relatorio" / "assets" / "emblema-vitoria-sc-pequeno.png"
+
+
+def emblema(fig, x=0.985, y=None, altura=0.5):
+    """Põe o emblema com o canto direito em x e o centro vertical em y (fração da figura).
+
+    Por omissão, centra-o na faixa amarela do título (0,62 polegadas de altura).
+    """
+    if not EMBLEMA.exists():
+        return
+    from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+    img = plt.imread(EMBLEMA)
+    if y is None:
+        y = 1 - 0.31 / fig.get_size_inches()[1]
+    caixa = OffsetImage(img, zoom=altura * 72 / img.shape[0])  # dpi_cor: 72 pontos por polegada
+    fig.add_artist(AnnotationBbox(caixa, (x, y), xycoords="figure fraction", box_alignment=(1, 0.5),
+                                  frameon=False, pad=0, zorder=5))
+
+
 def guardar(fig, nome, fonte=FONTE):
+    emblema(fig)
     fig.patches.append(Rectangle((0, 0), 1, 0.006, transform=fig.transFigure,
                                  color=AMARELO, zorder=0))
     fig.text(0.035, 0.03, fonte, fontsize=8, color=CINZA_ESCURO)
@@ -141,6 +162,7 @@ def capa(con):
         fig.text(x + 0.015, 0.37, rot, fontsize=8.5, fontweight="bold", color=TEXTO_2)
         fig.text(x + 0.015, 0.22, val, fontsize=21, color=PRETO, **TITULO)
         fig.text(x + 0.015, 0.125, nota, fontsize=8.5, color=TEXTO_2)
+    emblema(fig, x=0.965, y=0.76, altura=1.75)
     fig.savefig(OUT / "00_capa.png", dpi=170)
     plt.close(fig)
     print("  00_capa.png")

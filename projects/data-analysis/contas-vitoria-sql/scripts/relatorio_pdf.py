@@ -75,7 +75,28 @@ def consulta(con, numero):
     return q(con, bloco.split("\n", 1)[1])
 
 
+EMBLEMA = PASTA / "assets" / "emblema-vitoria-sc-pequeno.png"
+
+
+def emblema(ax, altura=0.36):
+    """Emblema no canto superior direito, por cima da área do gráfico (linha da legenda)."""
+    from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+    img = plt.imread(EMBLEMA)
+    caixa = OffsetImage(img, zoom=altura * 72 / img.shape[0])  # dpi_cor: 72 pontos por polegada
+    topo = 1
+    legenda = ax.get_legend()
+    if legenda is not None:  # se a legenda estiver por cima do gráfico, o emblema fica acima dela
+        ax.figure.canvas.draw()
+        caixa_leg = legenda.get_window_extent().transformed(ax.transAxes.inverted())
+        if caixa_leg.y0 >= 0.95:
+            topo = caixa_leg.y1
+    ax.add_artist(AnnotationBbox(caixa, (1, topo), xycoords="axes fraction", box_alignment=(1, 0),
+                                 xybox=(0, 4), boxcoords="offset points", frameon=False, pad=0,
+                                 annotation_clip=False))
+
+
 def guardar(fig, nome):
+    emblema(fig.axes[0], altura=0.3 if fig.get_size_inches()[0] < 4 else 0.36)
     GRAF.mkdir(parents=True, exist_ok=True)
     fig.savefig(GRAF / f"{nome}.svg", bbox_inches="tight", pad_inches=0.02)
     fig.savefig(GRAF / f"{nome}.png", dpi=200, bbox_inches="tight", pad_inches=0.1, facecolor="white")
