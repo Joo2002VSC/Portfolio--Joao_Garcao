@@ -91,7 +91,7 @@ body.dark-mode {
 
 .kpi-number {
     display: block;
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 48px;
     font-weight: 600;
     color: var(--accent);
@@ -123,7 +123,7 @@ body.dark-mode {
 }
 
 .stats-card-title {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 22px;
     margin: 0 0 6px;
     color: var(--text);
@@ -219,61 +219,61 @@ body.dark-mode .bc-fill--muted {
 
 
 /* =========================================================
-   EM NÚMEROS — tema Goodreads (bege) · body.stats-page
+   EM NÚMEROS — bege, bordô e dourado · body.stats-page
 ========================================================= */
 body.stats-page,
 body.stats-page.sepia-mode {
     /* variáveis do blog, para o cabeçalho e o rodapé combinarem */
     --bg: #F4F1EA;
     --surface: #FBF9F4;
-    --text: #382110;
-    --muted: #6B5A45;
-    --accent: #00635D;
-    --accent-light: #E6EFEC;
-    --shadow: rgba(56, 33, 16, 0.06);
-    --border: #E3DCCB;
+    --text: #2B1D14;
+    --muted: #66574A;
+    --accent: #8C2F39;
+    --accent-light: #F3E3E1;
+    --shadow: rgba(43, 29, 20, 0.06);
+    --border: #E3DACB;
 
-    --gr-ink: #382110;
-    --gr-ink-2: #6B5A45;
-    --gr-ink-3: #8C7B64;
-    --gr-rule: #E3DCCB;
-    --gr-track: #EEE8DB;
-    --gr-teal: #008A7B;
-    --gr-teal-ink: #00635D;
-    --gr-orange: #C76E1A;
-    --gr-tan: #D3C5A8;
+    --gr-ink: #2B1D14;
+    --gr-ink-2: #66574A;
+    --gr-ink-3: #8A7B6B;
+    --gr-rule: #E3DACB;
+    --gr-track: #EEE7DA;
+    --gr-hi: #8C2F39;        /* bordô  */
+    --gr-hi-ink: #7A2530;
+    --gr-gold: #B8862B;      /* dourado */
+    --gr-tan: #D9CBB0;
     --gr-paper: #FBF9F4;
-    --gr-spine-0: #E9E1CF;
-    --gr-spine-1: #E2EBE6;
-    --gr-spine-2: #F1E2CF;
+    --gr-spine-0: #EADFCB;
+    --gr-spine-1: #F1E1DF;
+    --gr-spine-2: #EFE3C8;
     --gr-spine-3: #E6E0D6;
 }
 body.stats-page.sepia-mode { --bg: #EFE8D8; --surface: #F8F3E7; --gr-paper: #F8F3E7; }
 
 body.stats-page.dark-mode {
-    --bg: #1E1914;
-    --surface: #2A231C;
-    --text: #EFE6D6;
-    --muted: #BFB09A;
-    --accent: #5CC2B4;
-    --accent-light: #233A35;
+    --bg: #1F1916;
+    --surface: #27201D;
+    --text: #EFE6DA;
+    --muted: #BDAE9C;
+    --accent: #E08890;
+    --accent-light: #3A2326;
     --shadow: rgba(0, 0, 0, 0.35);
-    --border: #3D342A;
+    --border: #3D3330;
 
-    --gr-ink: #EFE6D6;
-    --gr-ink-2: #BFB09A;
-    --gr-ink-3: #988A75;
-    --gr-rule: #3D342A;
-    --gr-track: #352D24;
-    --gr-teal: #2A9D8F;
-    --gr-teal-ink: #5CC2B4;
-    --gr-orange: #C98235;
-    --gr-tan: #5E5141;
-    --gr-paper: #2A231C;
-    --gr-spine-0: #3A3127;
-    --gr-spine-1: #2C3A35;
-    --gr-spine-2: #3D3125;
-    --gr-spine-3: #342E28;
+    --gr-ink: #EFE6DA;
+    --gr-ink-2: #BDAE9C;
+    --gr-ink-3: #968776;
+    --gr-rule: #3D3330;
+    --gr-track: #332A26;
+    --gr-hi: #C9545F;
+    --gr-hi-ink: #E08890;
+    --gr-gold: #B88D38;
+    --gr-tan: #5A4B40;
+    --gr-paper: #27201D;
+    --gr-spine-0: #352C27;
+    --gr-spine-1: #3A2A2B;
+    --gr-spine-2: #3A3123;
+    --gr-spine-3: #322B27;
 }
 
 body.stats-page { background: var(--bg); color: var(--gr-ink); }
@@ -282,16 +282,16 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
 /* ---------- hero ---------- */
 .gr-hero { text-align: center; margin: 8px auto 28px; max-width: 680px; }
 .gr-eyebrow {
-    font: 600 11px/1 "Inter", sans-serif;
+    font: 600 11px/1 "Source Sans 3", sans-serif;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--gr-teal-ink);
+    color: var(--gr-hi-ink);
     margin: 0 0 10px;
 }
 .gr-title {
-    font-family: "Playfair Display", serif;
-    font-weight: 600;
-    font-size: clamp(28px, 4.4vw, 40px);
+    font-family: "Libre Baskerville", serif;
+    font-weight: 700;
+    font-size: clamp(24px, 3.8vw, 34px);
     line-height: 1.15;
     color: var(--gr-ink);
     margin: 0 0 14px;
@@ -303,26 +303,26 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
     grid-template-columns: repeat(4, 1fr);
     background: var(--gr-paper);
     border: 1px solid var(--gr-rule);
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
 }
 .gr-kpi { padding: 20px 10px 18px; display: flex; flex-direction: column; gap: 6px; }
 .gr-kpi + .gr-kpi { border-left: 1px solid var(--gr-rule); }
 .gr-kpi-n {
-    font-family: "Playfair Display", serif;
-    font-size: 34px;
-    font-weight: 600;
+    font-family: "Libre Baskerville", serif;
+    font-size: 28px;
+    font-weight: 700;
     line-height: 1;
     color: var(--gr-ink);
 }
 .gr-kpi-l { font-size: 12px; color: var(--gr-ink-2); }
-.gr-star { color: var(--gr-orange); font-size: .62em; margin-left: 3px; vertical-align: .32em; }
+.gr-star { color: var(--gr-gold); font-size: .62em; margin-left: 3px; vertical-align: .32em; }
 
 /* ---------- cartões ---------- */
 .gr-card {
     background: var(--gr-paper);
     border: 1px solid var(--gr-rule);
-    border-radius: 14px;
+    border-radius: 0;
     padding: 24px 24px 18px;
     margin-bottom: 20px;
     box-shadow: 0 1px 0 var(--shadow);
@@ -332,9 +332,9 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
 }
 .gr-card.is-in, .gr-hero.is-in { opacity: 1; transform: none; }
 .gr-card-title {
-    font-family: "Playfair Display", serif;
-    font-size: 19px;
-    font-weight: 600;
+    font-family: "Libre Baskerville", serif;
+    font-size: 17px;
+    font-weight: 700;
     color: var(--gr-ink);
     margin: 0 0 4px;
     display: block;
@@ -350,57 +350,57 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
 .gr-year .gr-data { grid-column: 1 / -1; }
 .gr-year-head { padding-top: 6px; }
 .gr-year-n {
-    font-family: "Playfair Display", serif;
-    font-size: 76px;
-    font-weight: 600;
+    font-family: "Libre Baskerville", serif;
+    font-size: 64px;
+    font-weight: 700;
     line-height: .95;
-    color: var(--gr-teal-ink);
+    color: var(--gr-hi-ink);
     margin: 4px 0 14px;
 }
-.gr-year-u { font-size: 22px; color: var(--gr-ink); font-weight: 400; }
+.gr-year-u { font-size: 20px; color: var(--gr-ink); font-weight: 400; }
 .gr-chips { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
 .gr-chips li {
     font-size: 12.5px;
     color: var(--gr-ink);
     background: var(--gr-track);
-    border-radius: 999px;
+    border-radius: 0;
     padding: 5px 12px;
     width: fit-content;
 }
-.gr-chips li:first-child { background: var(--accent-light); color: var(--gr-teal-ink); font-weight: 600; }
+.gr-chips li:first-child { background: var(--accent-light); color: var(--gr-hi-ink); font-weight: 600; }
 .gr-figure { margin: 0; min-width: 0; }
 
 .gr-legend { display: flex; gap: 16px; margin: 6px 0 4px; font-size: 12px; color: var(--gr-ink-2); }
 .gr-key { display: inline-flex; align-items: center; gap: 6px; }
-.gr-key-line { display: inline-block; width: 16px; height: 2px; border-radius: 2px; }
-.gr-key-line.s-ant { background: var(--gr-orange); }
-.gr-key-line.s-atu { background: var(--gr-teal); }
+.gr-key-line { display: inline-block; width: 16px; height: 2px; border-radius: 0; }
+.gr-key-line.s-ant { background: var(--gr-gold); }
+.gr-key-line.s-atu { background: var(--gr-hi); }
 
 /* ---------- SVG ---------- */
 .gr-chart { position: relative; }
 .gr-svg { width: 100%; height: auto; display: block; overflow: visible; }
 .gr-grid-l { stroke: var(--gr-rule); stroke-width: 1; }
 .gr-base { stroke: var(--gr-ink-3); stroke-width: 1; opacity: .6; }
-.gr-ax { font: 10.5px "Inter", sans-serif; fill: var(--gr-ink-3); }
-.gr-val { font: 600 11px "Inter", sans-serif; fill: var(--gr-ink); }
-.gr-end { font: 600 11.5px "Inter", sans-serif; fill: var(--gr-ink); }
+.gr-ax { font: 10.5px "Source Sans 3", sans-serif; fill: var(--gr-ink-3); }
+.gr-val { font: 600 11px "Source Sans 3", sans-serif; fill: var(--gr-ink); }
+.gr-end { font: 600 11.5px "Source Sans 3", sans-serif; fill: var(--gr-ink); }
 .gr-hit { fill: transparent; cursor: crosshair; }
 .gr-col .gr-hit { cursor: default; }
 .gr-col:hover .gr-hit { fill: var(--gr-track); opacity: .55; }
 
 .gr-bar { transform-box: fill-box; transform-origin: bottom; }
-.gr-bar.is-hi { fill: var(--gr-teal); }
+.gr-bar.is-hi { fill: var(--gr-hi); }
 .gr-bar.is-lo { fill: var(--gr-tan); }
 .gr-card:not(.is-in) .gr-bar { transform: scaleY(0); }
 .gr-card.is-in .gr-bar { transform: scaleY(1); transition: transform .7s cubic-bezier(.3,.7,.3,1) var(--d, 0ms); }
 
 .gr-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.gr-line.s-ant { stroke: var(--gr-orange); }
-.gr-line.s-atu { stroke: var(--gr-teal); }
-.gr-area.s-atu { fill: var(--gr-teal); opacity: .09; }
+.gr-line.s-ant { stroke: var(--gr-gold); }
+.gr-line.s-atu { stroke: var(--gr-hi); }
+.gr-area.s-atu { fill: var(--gr-hi); opacity: .09; }
 .gr-dot { stroke: var(--gr-paper); stroke-width: 2; }
-.gr-dot.s-ant { fill: var(--gr-orange); }
-.gr-dot.s-atu { fill: var(--gr-teal); }
+.gr-dot.s-ant { fill: var(--gr-gold); }
+.gr-dot.s-atu { fill: var(--gr-hi); }
 .gr-cross { stroke: var(--gr-ink-3); stroke-width: 1; opacity: .5; }
 
 /* ---------- barras horizontais ---------- */
@@ -419,18 +419,18 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
     display: block;
     height: 100%;
     width: var(--w);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0;
     transform-origin: left;
 }
 .gr-card:not(.is-in) .gr-row-fill { transform: scaleX(0); }
 .gr-card.is-in .gr-row-fill { transform: scaleX(1); transition: transform .7s cubic-bezier(.3,.7,.3,1) var(--d, 0ms); }
-.gr-row-fill--teal { background: var(--gr-teal); }
-.gr-row-fill--orange { background: var(--gr-orange); }
+.gr-row-fill--hi { background: var(--gr-hi); }
+.gr-row-fill--gold { background: var(--gr-gold); }
 .gr-row:hover .gr-row-fill { filter: brightness(1.08); }
 .gr-row-v { font-weight: 600; color: var(--gr-ink); }
 .gr-row-x { color: var(--gr-ink-2); font-size: 11.5px; min-width: 34px; text-align: right; }
 .gr-row-x .gr-star { font-size: .9em; vertical-align: 0; margin-left: 2px; }
-.gr-stars { color: var(--gr-orange); letter-spacing: 1px; font-size: 13px; }
+.gr-stars { color: var(--gr-gold); letter-spacing: 1px; font-size: 13px; }
 
 /* ---------- dot plot ---------- */
 .gr-drow, .gr-dscale { grid-template-columns: minmax(96px, 38%) 1fr 34px; }
@@ -446,7 +446,7 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
     background: var(--gr-tan);
     box-shadow: 0 0 0 2px var(--gr-paper);
 }
-.gr-ddot.is-hi { background: var(--gr-teal); }
+.gr-ddot.is-hi { background: var(--gr-hi); }
 .gr-dscale { margin-top: -2px; }
 .gr-drow-axis { position: relative; height: 14px; font-size: 10.5px; color: var(--gr-ink-3); }
 .gr-drow-axis i { position: absolute; font-style: normal; transform: translateX(-50%); }
@@ -458,14 +458,14 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
     gap: 12px;
     padding-bottom: 14px;
     border-bottom: 6px solid var(--gr-tan);
-    border-radius: 0 0 3px 3px;
+    border-radius: 0;
 }
 .gr-book {
     position: relative;
     display: flex; flex-direction: column; gap: 4px;
     padding: 12px 12px 10px 16px;
     min-height: 104px;
-    border-radius: 3px 8px 8px 3px;
+    border-radius: 0;
     background: var(--gr-spine-0);
     box-shadow: inset 4px 0 0 rgba(56,33,16,.12);
     transition: transform .2s ease;
@@ -474,29 +474,29 @@ body.stats-page { background: var(--bg); color: var(--gr-ink); }
 .gr-book[style*="--h:2"] { background: var(--gr-spine-2); }
 .gr-book[style*="--h:3"] { background: var(--gr-spine-3); }
 .gr-book:hover { transform: translateY(-3px); }
-.gr-book-t { font: italic 600 14px/1.25 "Playfair Display", serif; color: var(--gr-ink); }
+.gr-book-t { font: italic 400 13px/1.35 "Libre Baskerville", serif; color: var(--gr-ink); }
 .gr-book-a { font-size: 11.5px; color: var(--gr-ink-2); }
 .gr-book-b { margin-top: auto; display: flex; gap: 6px; padding-top: 6px; }
 .gr-badge {
     display: inline-flex; align-items: center; justify-content: center;
-    font: 600 10.5px/1 "Inter", sans-serif;
-    padding: 4px 7px; border-radius: 999px;
+    font: 600 10.5px/1 "Source Sans 3", sans-serif;
+    padding: 4px 7px; border-radius: 0;
 }
-.gr-badge--star { background: var(--gr-orange); color: #fff; }
+.gr-badge--star { background: var(--gr-gold); color: #fff; }
 .gr-badge--soft { background: transparent; color: var(--gr-ink-2); border: 1px solid var(--gr-rule); }
-.gr-badge--fav { background: var(--gr-teal-ink); color: #fff; }
+.gr-badge--fav { background: var(--gr-hi-ink); color: #fff; }
 body.stats-page.dark-mode .gr-badge--star,
 body.stats-page.dark-mode .gr-badge--fav { color: #1E1914; }
-body.stats-page.dark-mode .gr-badge--fav { background: var(--gr-teal); }
+body.stats-page.dark-mode .gr-badge--fav { background: var(--gr-hi); }
 
 /* ---------- mini-cartões ---------- */
 .gr-mini { display: flex; flex-direction: column; }
 .gr-reading { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.gr-reading li { display: flex; flex-direction: column; gap: 2px; padding-left: 12px; border-left: 3px solid var(--gr-teal); }
+.gr-reading li { display: flex; flex-direction: column; gap: 2px; padding-left: 12px; border-left: 3px solid var(--gr-hi); }
 .gr-mini-n {
-    font-family: "Playfair Display", serif;
-    font-size: 54px; font-weight: 600; line-height: 1;
-    color: var(--gr-orange);
+    font-family: "Libre Baskerville", serif;
+    font-size: 46px; font-weight: 700; line-height: 1;
+    color: var(--gr-gold);
     margin: 10px 0 8px;
 }
 .gr-mini-t, .gr-facts { font-size: 13px; line-height: 1.55; color: var(--gr-ink-2); margin: 0; }
@@ -507,7 +507,7 @@ body.stats-page.dark-mode .gr-badge--fav { background: var(--gr-teal); }
 /* ---------- ver dados ---------- */
 .gr-data { margin-top: 12px; font-size: 12px; }
 .gr-data summary {
-    cursor: pointer; color: var(--gr-teal-ink); font-weight: 500;
+    cursor: pointer; color: var(--gr-hi-ink); font-weight: 500;
     list-style: none; width: fit-content;
 }
 .gr-data summary::-webkit-details-marker { display: none; }
@@ -524,7 +524,7 @@ body.stats-page.dark-mode .gr-badge--fav { background: var(--gr-teal); }
     background: var(--gr-ink);
     color: var(--gr-paper);
     font-size: 12px; line-height: 1.45;
-    padding: 9px 11px; border-radius: 8px;
+    padding: 9px 11px; border-radius: 0;
     box-shadow: 0 6px 20px rgba(56, 33, 16, .22);
 }
 .gr-tip b { display: block; margin-bottom: 3px; }
@@ -535,13 +535,13 @@ body.stats-page.dark-mode .gr-tip { background: #EFE6D6; color: #2A231C; }
 
 /* ---------- fonte ---------- */
 .gr-source { text-align: center; font-size: 12.5px; color: var(--gr-ink-2); margin: 8px 0 40px; }
-.gr-source a { color: var(--gr-teal-ink); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; }
+.gr-source a { color: var(--gr-hi-ink); font-weight: 500; text-decoration: none; border-bottom: 1px solid currentColor; }
 
 /* ---------- responsivo ---------- */
 @media (max-width: 760px) {
     .gr-grid, .gr-grid--3 { grid-template-columns: 1fr; }
     .gr-year { grid-template-columns: 1fr; }
-    .gr-year-n { font-size: 60px; }
+    .gr-year-n { font-size: 52px; }
     .gr-chips { flex-direction: row; flex-wrap: wrap; }
 }
 @media (max-width: 520px) {
@@ -553,3 +553,9 @@ body.stats-page.dark-mode .gr-tip { background: #EFE6D6; color: #2A231C; }
 @media (prefers-reduced-motion: reduce) {
     .gr-card, .gr-bar, .gr-row-fill { transition: none !important; }
 }
+
+/* cantos em bico também no cabeçalho desta página */
+body.stats-page .site-header,
+body.stats-page .main-nav a,
+body.stats-page .logo,
+body.stats-page .footer { border-radius: 0; }

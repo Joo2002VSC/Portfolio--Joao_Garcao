@@ -1,0 +1,1042 @@
+{
+ "gerado": "2026-11-01",
+ "unidade": "EUR",
+ "entidades": [
+  {
+   "id": "SAD",
+   "nome": "Vitória Sport Clube - Futebol, SAD",
+   "descricao": "Sociedade desportiva: futebol profissional, transferências, UEFA, direitos TV"
+  },
+  {
+   "id": "CLUBE",
+   "nome": "Vitória Sport Clube (associação)",
+   "descricao": "Associação-mãe: Estádio D. Afonso Henriques, Academia, modalidades, maioria da SAD"
+  },
+  {
+   "id": "CONSOLIDADO",
+   "nome": "Grupo Vitória SC (Clube + SAD)",
+   "descricao": "Contas consolidadas, com eliminações intra-grupo"
+  }
+ ],
+ "epocas": [
+  "2012/13",
+  "2013/14",
+  "2014/15",
+  "2015/16",
+  "2016/17",
+  "2017/18",
+  "2018/19",
+  "2019/20",
+  "2020/21",
+  "2021/22",
+  "2022/23",
+  "2023/24",
+  "2024/25",
+  "2025/26"
+ ],
+ "kpis": [
+  {
+   "entidade": "CLUBE",
+   "epoca": "2014/15",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": -489000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 12582990,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2015/16",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": -254000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 10821526,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2016/17",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": 800000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 9922715,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2017/18",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": 303000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 8863528,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2018/19",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": 747000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 7450152,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2019/20",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": -355000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 6679290,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2020/21",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": -560000,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": null,
+   "passivo_total": 7794117,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2021/22",
+   "vendas_servicos": 3820069,
+   "gastos_pessoal": 1234881,
+   "resultado_liquido": -311962,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 32.3,
+   "juros": 151287,
+   "ativo_total": null,
+   "passivo_total": 7541213,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2022/23",
+   "vendas_servicos": 4124394,
+   "gastos_pessoal": 1352207,
+   "resultado_liquido": -354034,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 32.8,
+   "juros": 172317,
+   "ativo_total": null,
+   "passivo_total": 5798437,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2023/24",
+   "vendas_servicos": 4354268,
+   "gastos_pessoal": 1397956,
+   "resultado_liquido": -1134830,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 32.1,
+   "juros": 312998,
+   "ativo_total": null,
+   "passivo_total": 6057347,
+   "capital_proprio": null,
+   "caixa": null
+  },
+  {
+   "entidade": "CLUBE",
+   "epoca": "2024/25",
+   "vendas_servicos": 4884492,
+   "gastos_pessoal": 1609227,
+   "resultado_liquido": -1036024,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 32.9,
+   "juros": 322872,
+   "ativo_total": 30393362,
+   "passivo_total": 6059146,
+   "capital_proprio": 24334216,
+   "caixa": 231258
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2017/18",
+   "vendas_servicos": null,
+   "gastos_pessoal": 10018603,
+   "resultado_liquido": 1040853,
+   "mais_valias_liquidas": 6735474,
+   "rl_sem_mais_valias": -5694621,
+   "pct_pessoal_receitas": null,
+   "juros": 492980,
+   "ativo_total": 57162267,
+   "passivo_total": 29640006,
+   "capital_proprio": 27522261,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "vendas_servicos": null,
+   "gastos_pessoal": 12677230,
+   "resultado_liquido": 1516708,
+   "mais_valias_liquidas": 7309152,
+   "rl_sem_mais_valias": -5792444,
+   "pct_pessoal_receitas": null,
+   "juros": 551709,
+   "ativo_total": 56729533,
+   "passivo_total": 27934654,
+   "capital_proprio": 28794880,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "vendas_servicos": null,
+   "gastos_pessoal": 17428111,
+   "resultado_liquido": -145067,
+   "mais_valias_liquidas": 9514525,
+   "rl_sem_mais_valias": -9659592,
+   "pct_pessoal_receitas": null,
+   "juros": 303274,
+   "ativo_total": 57668995,
+   "passivo_total": 29153517,
+   "capital_proprio": 28515478,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "vendas_servicos": null,
+   "gastos_pessoal": 21805595,
+   "resultado_liquido": -9606457,
+   "mais_valias_liquidas": 9070741,
+   "rl_sem_mais_valias": -18677198,
+   "pct_pessoal_receitas": null,
+   "juros": 834104,
+   "ativo_total": 85852039,
+   "passivo_total": 67505082,
+   "capital_proprio": 18346958,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "vendas_servicos": null,
+   "gastos_pessoal": 20862136,
+   "resultado_liquido": -14041656,
+   "mais_valias_liquidas": 3927125,
+   "rl_sem_mais_valias": -17968781,
+   "pct_pessoal_receitas": null,
+   "juros": 1787379,
+   "ativo_total": 62217414,
+   "passivo_total": 57912112,
+   "capital_proprio": 4305302,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "vendas_servicos": null,
+   "gastos_pessoal": 16954906,
+   "resultado_liquido": 6365870,
+   "mais_valias_liquidas": 14265148,
+   "rl_sem_mais_valias": -7899278,
+   "pct_pessoal_receitas": null,
+   "juros": 1899277,
+   "ativo_total": 68346813,
+   "passivo_total": 58311382,
+   "capital_proprio": 10035430,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "vendas_servicos": null,
+   "gastos_pessoal": 18344016,
+   "resultado_liquido": -15858297,
+   "mais_valias_liquidas": 2910879,
+   "rl_sem_mais_valias": -18769176,
+   "pct_pessoal_receitas": null,
+   "juros": 4007090,
+   "ativo_total": 66553810,
+   "passivo_total": 72376677,
+   "capital_proprio": -5822867,
+   "caixa": null
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "vendas_servicos": 24734263,
+   "gastos_pessoal": 22136984,
+   "resultado_liquido": 6574295,
+   "mais_valias_liquidas": 27540964,
+   "rl_sem_mais_valias": -20966669,
+   "pct_pessoal_receitas": 89.5,
+   "juros": 5329836,
+   "ativo_total": 73966964,
+   "passivo_total": 73659018,
+   "capital_proprio": 307946,
+   "caixa": null
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2012/13",
+   "vendas_servicos": null,
+   "gastos_pessoal": null,
+   "resultado_liquido": -4028960,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": null,
+   "juros": null,
+   "ativo_total": 11450856,
+   "passivo_total": 13944816,
+   "capital_proprio": -2493960,
+   "caixa": 1857826
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2013/14",
+   "vendas_servicos": 8900528,
+   "gastos_pessoal": 4621871,
+   "resultado_liquido": -2613518,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 51.9,
+   "juros": 31159,
+   "ativo_total": 6359669,
+   "passivo_total": 11467147,
+   "capital_proprio": -5107478,
+   "caixa": 28057
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2014/15",
+   "vendas_servicos": 6786697,
+   "gastos_pessoal": 4413612,
+   "resultado_liquido": 1253617,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 65.0,
+   "juros": -1174,
+   "ativo_total": 7506709,
+   "passivo_total": 11360570,
+   "capital_proprio": -3853861,
+   "caixa": 1029197
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2015/16",
+   "vendas_servicos": 6226662,
+   "gastos_pessoal": 5278997,
+   "resultado_liquido": 363894,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 84.8,
+   "juros": 4093,
+   "ativo_total": 11397916,
+   "passivo_total": 11922883,
+   "capital_proprio": -524968,
+   "caixa": 1077956
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2016/17",
+   "vendas_servicos": 10535891,
+   "gastos_pessoal": 6758553,
+   "resultado_liquido": 2787463,
+   "mais_valias_liquidas": null,
+   "rl_sem_mais_valias": null,
+   "pct_pessoal_receitas": 64.1,
+   "juros": -1746,
+   "ativo_total": 15159718,
+   "passivo_total": 12897223,
+   "capital_proprio": 2262495,
+   "caixa": 155877
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2017/18",
+   "vendas_servicos": 9822148,
+   "gastos_pessoal": 8843968,
+   "resultado_liquido": 809585,
+   "mais_valias_liquidas": 6735474,
+   "rl_sem_mais_valias": -5925889,
+   "pct_pessoal_receitas": 90.0,
+   "juros": 269386,
+   "ativo_total": 26166280,
+   "passivo_total": 23094200,
+   "capital_proprio": 3072080,
+   "caixa": 1333022
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2018/19",
+   "vendas_servicos": 12558787,
+   "gastos_pessoal": 11559940,
+   "resultado_liquido": 1207980,
+   "mais_valias_liquidas": 7309152,
+   "rl_sem_mais_valias": -6101172,
+   "pct_pessoal_receitas": 92.0,
+   "juros": 361520,
+   "ativo_total": 26249880,
+   "passivo_total": 22085733,
+   "capital_proprio": 4164147,
+   "caixa": 1434193
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2019/20",
+   "vendas_servicos": 17014051,
+   "gastos_pessoal": 16100077,
+   "resultado_liquido": 274480,
+   "mais_valias_liquidas": 15009861,
+   "rl_sem_mais_valias": -14735381,
+   "pct_pessoal_receitas": 94.6,
+   "juros": 148684,
+   "ativo_total": 27855542,
+   "passivo_total": 23453154,
+   "capital_proprio": 4402388,
+   "caixa": 3926658
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2020/21",
+   "vendas_servicos": 10334411,
+   "gastos_pessoal": 20655205,
+   "resultado_liquido": -8246496,
+   "mais_valias_liquidas": 17012320,
+   "rl_sem_mais_valias": -25258816,
+   "pct_pessoal_receitas": 199.9,
+   "juros": 684768,
+   "ativo_total": 57846652,
+   "passivo_total": 61690760,
+   "capital_proprio": -3844108,
+   "caixa": 3961128
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2021/22",
+   "vendas_servicos": 11285014,
+   "gastos_pessoal": 19627255,
+   "resultado_liquido": -13729694,
+   "mais_valias_liquidas": 11542768,
+   "rl_sem_mais_valias": -25272462,
+   "pct_pessoal_receitas": 173.9,
+   "juros": 1636092,
+   "ativo_total": 34542943,
+   "passivo_total": 52116745,
+   "capital_proprio": -17573802,
+   "caixa": 77642
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2022/23",
+   "vendas_servicos": 13159010,
+   "gastos_pessoal": 15602700,
+   "resultado_liquido": 1739904,
+   "mais_valias_liquidas": 23216097,
+   "rl_sem_mais_valias": -21476193,
+   "pct_pessoal_receitas": 118.6,
+   "juros": 1726960,
+   "ativo_total": 36487875,
+   "passivo_total": 52957515,
+   "capital_proprio": -16469640,
+   "caixa": 138410
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2023/24",
+   "vendas_servicos": 12900965,
+   "gastos_pessoal": 16946060,
+   "resultado_liquido": -14723467,
+   "mais_valias_liquidas": 6665467,
+   "rl_sem_mais_valias": -21388934,
+   "pct_pessoal_receitas": 131.4,
+   "juros": 3694091,
+   "ativo_total": 35823548,
+   "passivo_total": 67016655,
+   "capital_proprio": -31193107,
+   "caixa": 78684
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2024/25",
+   "vendas_servicos": 22584987,
+   "gastos_pessoal": 20526758,
+   "resultado_liquido": 7610319,
+   "mais_valias_liquidas": 27540964,
+   "rl_sem_mais_valias": -19930645,
+   "pct_pessoal_receitas": 90.9,
+   "juros": 5006965,
+   "ativo_total": 45426643,
+   "passivo_total": 69452913,
+   "capital_proprio": -24026270,
+   "caixa": 2745259
+  },
+  {
+   "entidade": "SAD",
+   "epoca": "2025/26",
+   "vendas_servicos": 14880806,
+   "gastos_pessoal": 21730779,
+   "resultado_liquido": -11063043,
+   "mais_valias_liquidas": 16055187,
+   "rl_sem_mais_valias": -27118230,
+   "pct_pessoal_receitas": 146.0,
+   "juros": 7075959,
+   "ativo_total": 48466756,
+   "passivo_total": 85298806,
+   "capital_proprio": -36832050,
+   "caixa": 505042
+  }
+ ],
+ "desporto": [
+  {
+   "epoca": "2012/13",
+   "posicao_liga": 9,
+   "pontos": 40,
+   "media_espectadores": 13129,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": "Taça de Portugal"
+  },
+  {
+   "epoca": "2013/14",
+   "posicao_liga": 10,
+   "pontos": 35,
+   "media_espectadores": 11194,
+   "competicao_europeia": "Liga Europa",
+   "fase_europeia": "Fase de grupos",
+   "trofeu": null
+  },
+  {
+   "epoca": "2014/15",
+   "posicao_liga": 5,
+   "pontos": 55,
+   "media_espectadores": 15906,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": null
+  },
+  {
+   "epoca": "2015/16",
+   "posicao_liga": 10,
+   "pontos": 40,
+   "media_espectadores": 12422,
+   "competicao_europeia": "Liga Europa",
+   "fase_europeia": "Pré-eliminatória",
+   "trofeu": null
+  },
+  {
+   "epoca": "2016/17",
+   "posicao_liga": 4,
+   "pontos": 62,
+   "media_espectadores": 18756,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": null
+  },
+  {
+   "epoca": "2017/18",
+   "posicao_liga": 9,
+   "pontos": 43,
+   "media_espectadores": 16015,
+   "competicao_europeia": "Liga Europa",
+   "fase_europeia": "Fase de grupos",
+   "trofeu": null
+  },
+  {
+   "epoca": "2018/19",
+   "posicao_liga": 5,
+   "pontos": 52,
+   "media_espectadores": 18249,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": null
+  },
+  {
+   "epoca": "2019/20",
+   "posicao_liga": 7,
+   "pontos": 50,
+   "media_espectadores": 16910,
+   "competicao_europeia": "Liga Europa",
+   "fase_europeia": "Fase de grupos",
+   "trofeu": null
+  },
+  {
+   "epoca": "2020/21",
+   "posicao_liga": 7,
+   "pontos": 43,
+   "media_espectadores": 0,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": null
+  },
+  {
+   "epoca": "2021/22",
+   "posicao_liga": 6,
+   "pontos": 48,
+   "media_espectadores": 11441,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": null
+  },
+  {
+   "epoca": "2022/23",
+   "posicao_liga": 6,
+   "pontos": 53,
+   "media_espectadores": 16116,
+   "competicao_europeia": "Liga Conferência",
+   "fase_europeia": "Pré-eliminatória",
+   "trofeu": null
+  },
+  {
+   "epoca": "2023/24",
+   "posicao_liga": 5,
+   "pontos": 63,
+   "media_espectadores": 17388,
+   "competicao_europeia": "Liga Conferência",
+   "fase_europeia": "Pré-eliminatória",
+   "trofeu": null
+  },
+  {
+   "epoca": "2024/25",
+   "posicao_liga": 6,
+   "pontos": 54,
+   "media_espectadores": 18447,
+   "competicao_europeia": "Liga Conferência",
+   "fase_europeia": "Oitavos de final",
+   "trofeu": null
+  },
+  {
+   "epoca": "2025/26",
+   "posicao_liga": 9,
+   "pontos": 42,
+   "media_espectadores": null,
+   "competicao_europeia": null,
+   "fase_europeia": null,
+   "trofeu": "Taça da Liga"
+  }
+ ],
+ "receitas": [
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Direitos TV",
+   "valor": 7000000
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Sócios e Camarotes",
+   "valor": 2356007
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1795100
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Outros",
+   "valor": 1719676
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 793884
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Merchandising",
+   "valor": 741051
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Subsídios",
+   "valor": 474180
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 273613
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2018/19",
+   "categoria": "Bilhética",
+   "valor": 221731
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Direitos TV",
+   "valor": 7000000
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 5426490
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Sócios e Camarotes",
+   "valor": 2254465
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1694816
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Merchandising",
+   "valor": 742464
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Bilhética",
+   "valor": 707802
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Outros",
+   "valor": 687679
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Subsídios",
+   "valor": 327013
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2019/20",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 320138
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Direitos TV",
+   "valor": 7000000
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Sócios e Camarotes",
+   "valor": 1503143
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 956875
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 822452
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Merchandising",
+   "valor": 620558
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Outros",
+   "valor": 451136
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Subsídios",
+   "valor": 302823
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 218633
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2020/21",
+   "categoria": "Bilhética",
+   "valor": 0
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Direitos TV",
+   "valor": 6922619
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1967997
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Sócios e Camarotes",
+   "valor": 1842784
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Merchandising",
+   "valor": 794071
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 743101
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Subsídios",
+   "valor": 422612
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Outros",
+   "valor": 379799
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Bilhética",
+   "valor": 171831
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2021/22",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 33723
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Direitos TV",
+   "valor": 6922619
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Sócios e Camarotes",
+   "valor": 2325654
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1994455
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Merchandising",
+   "valor": 991884
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 906806
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 899996
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Subsídios",
+   "valor": 791514
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Outros",
+   "valor": 536490
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2022/23",
+   "categoria": "Bilhética",
+   "valor": 338699
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Direitos TV",
+   "valor": 6922619
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1903965
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Sócios e Camarotes",
+   "valor": 1478889
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Merchandising",
+   "valor": 962233
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 959332
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Outros",
+   "valor": 569189
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Bilhética",
+   "valor": 424314
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Subsídios",
+   "valor": 284868
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2023/24",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 202357
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Competições UEFA + Nacionais",
+   "valor": 9720482
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Direitos TV",
+   "valor": 6922619
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Patrocínios e Publicidade",
+   "valor": 1793255
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Sócios e Camarotes",
+   "valor": 1768526
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Merchandising",
+   "valor": 947279
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Bilhética",
+   "valor": 886969
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Outros",
+   "valor": 569189
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Mecanismo Solidariedade",
+   "valor": 516936
+  },
+  {
+   "entidade": "CONSOLIDADO",
+   "epoca": "2024/25",
+   "categoria": "Subsídios",
+   "valor": 253134
+  }
+ ]
+}

@@ -53,7 +53,7 @@ body.dark-mode {
 
 body {
     margin: 0;
-    font-family: "Inter", sans-serif;
+    font-family: "Source Sans 3", sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.75;
@@ -222,7 +222,7 @@ body.sepia-mode .sepia-toggle {
 
 /* TÍTULO */
 .blog-title {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 38px;
     font-weight: 600;
     margin: 0 0 6px;
@@ -291,7 +291,7 @@ body.sepia-mode .sepia-toggle {
 }
 
 .books-counter-number {
-    font-family: "Inter", sans-serif;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: var(--accent);
@@ -350,7 +350,7 @@ body.sepia-mode .sepia-toggle {
 
 .section-title {
     text-align: center;
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 28px;
     margin-bottom: 10px;
     color: var(--text);
@@ -430,7 +430,7 @@ body.sepia-mode .sepia-toggle {
 }
 
 .month-info h3 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 4px;
@@ -527,7 +527,7 @@ body.sepia-mode .sepia-toggle {
 .search-input {
     width: 100%;
     padding: 11px 18px;
-    font-family: "Inter", sans-serif;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 14px;
     background: var(--surface);
     color: var(--text);
@@ -554,7 +554,7 @@ body.sepia-mode .sepia-toggle {
 }
 
 .filter-btn {
-    font-family: "Inter", sans-serif;
+    font-family: "Source Sans 3", sans-serif;
     font-size: 11px;
     font-weight: 500;
     padding: 4px 12px;
@@ -614,7 +614,7 @@ body.sepia-mode .sepia-toggle {
 
 .featured-quote::before {
     content: "\201C";
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 64px;
     color: var(--accent);
     opacity: 0.2;
@@ -625,7 +625,7 @@ body.sepia-mode .sepia-toggle {
 }
 
 .featured-quote-text {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 17px;
     font-style: italic;
     color: var(--text);
@@ -885,7 +885,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 }
 
 .author-text h2 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 26px;
     margin: 0 0 8px;
 }
@@ -926,7 +926,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 
 .post h2,
 .about h2 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     color: var(--accent);
     margin-top: 0;
 }
@@ -957,7 +957,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 }
 
 .about-profile-text h2 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 26px;
     margin: 0 0 10px;
 }
@@ -998,7 +998,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 }
 
 .book-hero-text h2 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 30px;
     margin: 0 0 6px;
     font-style: italic;
@@ -1040,7 +1040,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 .book-synopsis h2,
 .book-review h2,
 .book-quote h2 {
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     color: var(--accent);
     margin-top: 0;
     font-size: 20px;
@@ -1052,7 +1052,7 @@ body.dark-mode .genre-tag[data-genre="psicologia"]     { background: #082f49; co
 
 .book-quote blockquote {
     margin: 0;
-    font-family: "Playfair Display", serif;
+    font-family: "Libre Baskerville", serif;
     font-size: 19px;
     font-style: italic;
     color: var(--text);

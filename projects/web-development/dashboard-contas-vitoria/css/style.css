@@ -1,0 +1,117 @@
+/* Dashboard Vitória SC · estilos
+   Mesma identidade do projeto contas-vitoria-sql: preto, amarelo e letra Archivo.
+   As cores das séries foram validadas para daltonismo (ver README). */
+
+@font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url("../fontes/ArchivoExpanded-ExtraBold.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Archivo"; font-weight: 400; src: url("../fontes/Archivo-Regular.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Archivo"; font-weight: 700; src: url("../fontes/Archivo-Bold.ttf") format("truetype"); font-display: swap; }
+
+:root {
+  color-scheme: light;
+  --amarelo: #F5D510; --preto: #111111;
+  --fundo: #F4F4F1; --cartao: #FFFFFF;
+  --texto: #111111; --suave: #5F5D5E; --mudo: #8A8889;
+  --linha: #E4E3DF; --grelha: #EDECE8;
+  --serie-1: #2a78d6; --serie-2: #eb6834; --serie-3: #1baf7a; --neutro: #A9A7A8;
+  --subida: #1f7a3a; --descida: #b03a2e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --fundo: #111111; --cartao: #1A1A19;
+    --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8A8889;
+    --linha: #2E2E2C; --grelha: #262624;
+    --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --neutro: #6F6D6E;
+    --subida: #5cc27a; --descida: #f07b6e;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --fundo: #111111; --cartao: #1A1A19;
+  --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8A8889;
+  --linha: #2E2E2C; --grelha: #262624;
+  --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --neutro: #6F6D6E;
+  --subida: #5cc27a; --descida: #f07b6e;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fundo); color: var(--texto);
+  font: 400 15px/1.55 "Archivo", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration-color: var(--amarelo); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.dentro { max-width: 1120px; margin: 0 auto; }
+
+/* ---------- Cabeçalho ---------- */
+header.topo { background: var(--preto); color: #fff; padding-top: 28px; padding-bottom: 22px; }
+header.topo .sobre { margin: 0 0 6px; font-size: 13px; color: #A9A7A8; }
+header.topo h1 { margin: 0; font: 800 clamp(24px, 4.6vw, 40px)/1.05 "Archivo Expanded", sans-serif;
+  color: var(--amarelo); text-transform: uppercase; letter-spacing: .01em; }
+header.topo .sub { margin: 8px 0 0; color: #D6D4D5; font-size: 14px; }
+
+/* ---------- Filtros ---------- */
+.filtros { position: sticky; top: 0; z-index: 5; background: var(--preto);
+  border-bottom: 4px solid var(--amarelo); padding-top: 10px; padding-bottom: 12px; }
+.filtros .dentro { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 18px; }
+.campo { display: flex; flex-direction: column; gap: 4px; }
+.rotulo { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #A9A7A8; }
+select { font: 700 14px "Archivo", sans-serif; color: #fff; background: #222; border: 1px solid #3a3a3a;
+  border-radius: 4px; padding: 7px 28px 7px 10px; min-height: 36px; appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, #F5D510 50%), linear-gradient(135deg, #F5D510 50%, transparent 50%);
+  background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+select:focus-visible, .segmentos button:focus-visible, .tema:focus-visible, .ver-tabela:focus-visible {
+  outline: 2px solid var(--amarelo); outline-offset: 2px; }
+.segmentos { display: flex; background: #222; border: 1px solid #3a3a3a; border-radius: 4px; padding: 2px; }
+.segmentos button { font: 700 14px "Archivo", sans-serif; color: #ddd; background: none; border: 0;
+  border-radius: 3px; padding: 6px 12px; min-height: 30px; cursor: pointer; }
+.segmentos button:hover { color: #fff; }
+.segmentos button[aria-checked="true"] { background: var(--amarelo); color: var(--preto); }
+.tema { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px;
+  border: 1px solid #3a3a3a; background: #222; color: var(--amarelo); cursor: pointer; }
+
+/* ---------- Indicadores ---------- */
+main { padding-top: 26px; padding-bottom: 40px; }
+.titulo-seccao { font: 800 18px/1.2 "Archivo Expanded", sans-serif; text-transform: uppercase; margin: 0 0 14px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.kpi { background: var(--cartao); border: 1px solid var(--linha); border-radius: 8px; padding: 14px 16px; }
+.kpi .nome { font-size: 13px; color: var(--suave); margin: 0; }
+.kpi .valor { font: 700 26px/1.15 "Archivo", sans-serif; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
+.kpi .valor.negativo { color: var(--descida); }
+.kpi .delta { font-size: 13px; color: var(--mudo); margin: 0; font-variant-numeric: tabular-nums; }
+.kpi .delta .sobe { color: var(--subida); font-weight: 700; }
+.kpi .delta .desce { color: var(--descida); font-weight: 700; }
+.kpi.vazio .valor { color: var(--mudo); }
+.nota { color: var(--suave); font-size: 14px; margin: 12px 0 0; }
+
+/* ---------- Cartões dos gráficos ---------- */
+.grelha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.cartao { background: var(--cartao); border: 1px solid var(--linha); border-radius: 8px; padding: 18px 18px 14px;
+  display: flex; flex-direction: column; min-width: 0; }
+.cartao.largo { grid-column: 1 / -1; }
+.cartao header { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; margin-bottom: 10px; }
+.cartao h3 { margin: 0; font-size: 16px; font-weight: 700; grid-column: 1; }
+.cartao header p { margin: 0; font-size: 13px; color: var(--suave); grid-column: 1; }
+.ver-tabela { grid-column: 2; grid-row: 1 / span 2; align-self: start; font: 700 12px "Archivo", sans-serif;
+  color: var(--suave); background: none; border: 1px solid var(--linha); border-radius: 4px; padding: 5px 9px; cursor: pointer; }
+.ver-tabela:hover { color: var(--texto); }
+.tela { position: relative; height: 300px; }
+.cartao.largo .tela { height: 340px; }
+.vazio-grafico { position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+  color: var(--mudo); font-size: 14px; padding: 20px; }
+
+.tabela { overflow-x: auto; max-height: 340px; }
+.tabela table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+.tabela th, .tabela td { padding: 6px 10px; border-bottom: 1px solid var(--linha); text-align: right; white-space: nowrap; }
+.tabela th:first-child, .tabela td:first-child { text-align: left; }
+.tabela thead th { position: sticky; top: 0; background: var(--cartao); color: var(--suave); font-weight: 700; }
+
+footer { border-top: 1px solid var(--linha); color: var(--suave); font-size: 13px; padding-top: 18px; padding-bottom: 30px; }
+footer p { margin: 0 0 6px; max-width: 760px; }
+
+@media (max-width: 760px) {
+  .filtros { position: static; }
+  .grelha { grid-template-columns: minmax(0, 1fr); }
+  .tela, .cartao.largo .tela { height: 280px; }
+  .tema { margin-left: 0; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi .valor { font-size: 21px; }
+}

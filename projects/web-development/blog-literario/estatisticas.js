@@ -72,10 +72,9 @@
         $(id).innerHTML = `<table><thead><tr>${cab.map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>` +
             linhas.map(l => `<tr>${l.map(c => `<td>${c}</td>`).join("")}</tr>`).join("") + "</tbody></table>";
     }
-    // coluna com topo arredondado (4px) e base reta
-    function colPath(x, y, w, h, r = 4) {
-        r = Math.min(r, w / 2, h);
-        return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
+    // coluna retangular, com cantos em bico
+    function colPath(x, y, w, h) {
+        return `M${x},${y + h}V${y}H${x + w}V${y + h}Z`;
     }
 
     /* ---------- gráfico de colunas (SVG) ---------- */
@@ -108,7 +107,7 @@
     }
 
     /* ---------- barras horizontais (HTML) ---------- */
-    function barras(id, dados, { cor = "teal", rotulo = x => x.k, valor = x => x.v, extra, tooltip }) {
+    function barras(id, dados, { cor = "hi", rotulo = x => x.k, valor = x => x.v, extra, tooltip }) {
         const max = Math.max(...dados.map(x => x.v));
         $(id).innerHTML = dados.map((x, i) => `
             <div class="gr-row" data-i="${i}">
@@ -212,7 +211,7 @@
     ========================================================= */
     const notas = [...D.notas].reverse().map(x => ({ k: x.estrelas, v: x.livros }));
     barras("chartNotas", notas, {
-        cor: "orange",
+        cor: "gold",
         rotulo: x => `<span class="gr-stars">${estrelasTxt(x.k)}</span>`,
         valor: x => `${x.v}`,
         tooltip: x => `<b>${fmt(x.k, x.k % 1 ? 1 : 0)} estrelas</b><span class="gr-tip-row">${x.v} livros<em>${fmt(x.v / comNota * 100)}%</em></span>`
