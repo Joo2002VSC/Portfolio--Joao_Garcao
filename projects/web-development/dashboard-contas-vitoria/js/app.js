@@ -1,42 +1,41 @@
 // Dashboard Vitória SC · lógica do painel
 // 1. carrega data/contas.json (gerado por scripts/exportar_json.py)
 // 2. guarda o estado dos filtros
-// 3. desenha indicadores e gráficos sempre que um filtro muda
+// 3. desenha indicadores e gráficos; quando um filtro muda, atualiza-os com transição
 
 /* ====================== Estado e dados ====================== */
 
+// Ordem e cores das entidades como no gráfico 01 do projeto SQL: SAD a preto, Grupo a cinzento, Clube a amarelo
 const ENTIDADES = [
-  { id: "SAD", nome: "SAD", cor: "--serie-1" },
-  { id: "CLUBE", nome: "Clube", cor: "--serie-2" },
-  { id: "CONSOLIDADO", nome: "Consolidado", cor: "--serie-3" },
+  { id: "SAD", nome: "SAD", serie: "SAD", cor: "--tinta" },
+  { id: "CONSOLIDADO", nome: "Consolidado", serie: "Grupo consolidado", cor: "--serie-cinza" },
+  { id: "CLUBE", nome: "Clube", serie: "Clube", cor: "--amarelo" },
 ];
+const ORDEM_FILTRO = ["SAD", "CLUBE", "CONSOLIDADO"];
 
 const estado = { entidade: "SAD", inicio: null, fim: null, epoca: null };
-const vistas = {};   // "grafico" ou "tabela", por cartão
-const graficos = {}; // instâncias Chart.js, por cartão
+const vistas = {};        // "grafico" ou "tabela", por cartão
+const graficos = {};      // instâncias Chart.js, por cartão
+const vistos = new Set(); // cartões que já entraram no ecrã (só esses são desenhados)
+const valoresKPI = {};    // último valor mostrado em cada indicador (para a contagem)
 let DADOS = null;
 
-/** Linha de indicadores de uma entidade numa época (ou undefined) */
 const kpi = (entidade, epoca) => DADOS.kpis.find(l => l.entidade === entidade && l.epoca === epoca);
+const nomeEntidade = id => ENTIDADES.find(e => e.id === id).nome;
 
-/** Épocas dentro do intervalo escolhido nos filtros */
 function epocasVisiveis() {
   const i = DADOS.epocas.indexOf(estado.inicio), f = DADOS.epocas.indexOf(estado.fim);
   return DADOS.epocas.slice(Math.min(i, f), Math.max(i, f) + 1);
 }
 
-/** Série de valores de um campo, alinhada com as épocas visíveis (null onde não há dados) */
+/** Série de valores de um campo, alinhada com as épocas (null onde não há dados) */
 function serie(entidade, campo, epocas = epocasVisiveis()) {
   return epocas.map(e => kpi(entidade, e)?.[campo] ?? null);
 }
 
-const nomeEntidade = id => ENTIDADES.find(e => e.id === id).nome;
+/* ====================== Cores (lidas do CSS, mudam com o tema) ====================== */
 
-/* ====================== Cores (lidas do CSS) ====================== */
-
-function cor(nome) {
-  return getComputedStyle(document.documentElement).getPropertyValue(nome).trim();
-}
+const cor = nome => getComputedStyle(document.documentElement).getPropertyValue(nome).trim();
 
 function aplicarTemaChart() {
   Chart.defaults.font.family = '"Archivo", system-ui, sans-serif';
@@ -45,33 +44,34 @@ function aplicarTemaChart() {
   Chart.defaults.borderColor = cor("--grelha");
 }
 
-/* ====================== Opções comuns dos gráficos ====================== */
+/* ====================== Peças comuns ====================== */
 
-function opcoesBase({ eixoY = "M€", indice = true } = {}) {
+function opcoesBase({ indice = true, legenda = true } = {}) {
   return {
     responsive: true,
     maintainAspectRatio: false,
-    animation: { duration: 250 },
     interaction: indice ? { mode: "index", intersect: false } : { mode: "nearest", intersect: true },
+    layout: { padding: { top: 4, right: 6 } },
     plugins: {
       legend: {
-        position: "top", align: "start",
-        labels: { usePointStyle: true, pointStyle: "rectRounded", boxWidth: 10, boxHeight: 10, padding: 14, color: cor("--texto") },
+        display: legenda, position: "top", align: "start",
+        labels: { boxWidth: 22, boxHeight: 10, padding: 16, color: cor("--texto"), font: { size: 13 } },
       },
+      // Caixa preta com título amarelo, nos dois temas
       tooltip: {
-        backgroundColor: cor("--cartao"), titleColor: cor("--texto"), bodyColor: cor("--texto"), footerColor: cor("--suave"),
-        borderColor: cor("--linha"), borderWidth: 1, padding: 10, cornerRadius: 6, boxPadding: 4, usePointStyle: true,
-        titleFont: { weight: "700" }, footerFont: { weight: "400" },
+        backgroundColor: "#111111", titleColor: "#F5D510", bodyColor: "#FFFFFF", footerColor: "#C9C7C8",
+        borderColor: "#F5D510", borderWidth: 1, padding: 11, cornerRadius: 2, boxPadding: 5,
+        titleFont: { family: '"Archivo Expanded", sans-serif', weight: "800", size: 12 },
+        footerFont: { weight: "400" },
         callbacks: { label: c => ` ${c.dataset.label}: ${Formato.euros(c.raw)}` },
         filter: c => c.raw !== null,
       },
     },
     scales: {
-      x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkipPadding: 10 } },
+      x: { grid: { display: false }, border: { color: cor("--grelha") }, ticks: { maxRotation: 0, autoSkipPadding: 10, color: cor("--suave") } },
       y: {
-        title: { display: !!eixoY, text: eixoY, color: cor("--mudo") },
-        ticks: { callback: v => Formato.eixo(v) },
-        grid: { color: c => (c.tick.value === 0 ? cor("--mudo") : cor("--grelha")), lineWidth: c => (c.tick.value === 0 ? 1.5 : 1) },
+        ticks: { callback: v => Formato.eixo(v), color: cor("--suave") },
+        grid: { color: c => (c.tick.value === 0 ? cor("--tinta") : cor("--grelha")), lineWidth: c => (c.tick.value === 0 ? 1.4 : 1) },
         border: { display: false },
       },
     },
@@ -79,25 +79,43 @@ function opcoesBase({ eixoY = "M€", indice = true } = {}) {
 }
 
 const barra = (label, data, corVar) => ({
-  label, data, backgroundColor: cor(corVar), borderRadius: 4, borderSkipped: "start",
-  maxBarThickness: 26, categoryPercentage: 0.78, barPercentage: 0.92,
+  label, data,
+  backgroundColor: cor(corVar),
+  // O amarelo leva contorno, como nos gráficos do projeto SQL
+  borderColor: corVar === "--amarelo" ? cor("--tinta") : cor(corVar),
+  borderWidth: corVar === "--amarelo" ? 1 : 0,
+  borderRadius: 0, borderSkipped: false,
+  maxBarThickness: 28, categoryPercentage: 0.8, barPercentage: 0.9,
 });
 
-const linha = (label, data, corVar) => ({
-  label, data, borderColor: cor(corVar), backgroundColor: cor(corVar),
-  borderWidth: 2, pointRadius: 3, pointHoverRadius: 6, pointBorderColor: cor("--cartao"), pointBorderWidth: 2,
-  tension: 0.25, spanGaps: false,
+/** Linha principal: preta, marcadores cheios. Secundária: cinzenta, marcadores ocos. */
+const linha = (label, data, corVar, oca = false) => ({
+  label, data, borderColor: cor(corVar), backgroundColor: oca ? cor("--cartao") : cor(corVar),
+  borderWidth: 2.6, pointRadius: 4.5, pointHoverRadius: 7, pointBorderWidth: oca ? 2.4 : 0,
+  pointBorderColor: cor(corVar), pointStyle: "circle", tension: 0, spanGaps: false,
 });
+
+/** Área amarela entre duas linhas, só onde a série de cima ultrapassa a de baixo */
+const areaAcima = indiceAlvo => ({ target: indiceAlvo, above: cor("--area"), below: "rgba(0,0,0,0)" });
+
+function tabelaSeries(labels, datasets) {
+  return {
+    colunas: ["Época", ...datasets.map(d => d.label)],
+    linhas: labels.map((l, i) => [l, ...datasets.map(d => Formato.euros(d.data[i]))]),
+  };
+}
 
 /* ====================== Definição de cada gráfico ====================== */
-// Cada função devolve { config } para o Chart.js, { vazio: "mensagem" }, e { tabela } para a vista em tabela.
+// Cada função devolve { tipo, config, tabela } ou { vazio: "mensagem" }.
 
 const DEFINICOES = {
   resultado() {
     const epocas = epocasVisiveis();
-    const datasets = ENTIDADES.map(e => barra(e.nome, serie(e.id, "resultado_liquido", epocas), e.cor));
+    const datasets = ENTIDADES.map(e => barra(e.serie, serie(e.id, "resultado_liquido", epocas), e.cor));
+    const opcoes = opcoesBase();
     return {
-      config: { type: "bar", data: { labels: epocas, datasets }, options: opcoesBase() },
+      tipo: "bar",
+      config: { type: "bar", data: { labels: epocas, datasets }, options: opcoes, plugins: [rotulosBarras] },
       tabela: tabelaSeries(epocas, datasets),
     };
   },
@@ -106,16 +124,15 @@ const DEFINICOES = {
     const ent = estado.entidade, epocas = epocasVisiveis();
     const rl = serie(ent, "resultado_liquido", epocas), sem = serie(ent, "rl_sem_mais_valias", epocas);
     if (sem.every(v => v === null)) {
-      return { vazio: `Não há dados de transferências para ${nomeEntidade(ent) === "Clube" ? "o Clube" : nomeEntidade(ent)} neste intervalo. Escolhe a SAD ou o Consolidado.` };
+      return { vazio: `Não há dados de transferências para ${ent === "CLUBE" ? "o Clube" : nomeEntidade(ent)} neste intervalo. Escolhe a SAD ou o Consolidado.` };
     }
-    // Só mostra as épocas em que existe o valor sem mais-valias, para comparar par a par
     const idx = epocas.map((_, i) => i).filter(i => sem[i] !== null);
     const labels = idx.map(i => epocas[i]);
     const datasets = [
-      barra("Resultado líquido", idx.map(i => rl[i]), "--serie-1"),
-      barra("Sem mais-valias", idx.map(i => sem[i]), "--serie-2"),
+      barra("Resultado líquido", idx.map(i => rl[i]), "--tinta"),
+      barra("Sem mais-valias", idx.map(i => sem[i]), "--serie-cinza"),
     ];
-    return { config: { type: "bar", data: { labels, datasets }, options: opcoesBase() }, tabela: tabelaSeries(labels, datasets) };
+    return { tipo: "bar", config: { type: "bar", data: { labels, datasets }, options: opcoesBase() }, tabela: tabelaSeries(labels, datasets) };
   },
 
   pessoal() {
@@ -126,29 +143,48 @@ const DEFINICOES = {
     }
     const pct = serie(ent, "pct_pessoal_receitas", epocas);
     const opcoes = opcoesBase();
+    opcoes.plugins.legend.labels.usePointStyle = true;
     opcoes.plugins.tooltip.callbacks.footer = itens => {
       const p = pct[itens[0].dataIndex];
       return p === null ? "" : `Pessoal = ${Formato.percentagem(p)} das receitas`;
     };
     opcoes.scales.y.beginAtZero = true;
-    const datasets = [linha("Vendas e serviços", receitas, "--serie-1"), linha("Gastos com pessoal", pessoal, "--serie-2")];
+    const datasets = [
+      linha("Receitas (vendas e serviços)", receitas, "--tinta"),
+      { ...linha("Gastos com pessoal", pessoal, "--serie-cinza-escuro", true), fill: areaAcima(0) },
+    ];
     const tabela = tabelaSeries(epocas, datasets);
     tabela.colunas.push("Pessoal / receitas");
     tabela.linhas.forEach((l, i) => l.push(Formato.percentagem(pct[i])));
-    return { config: { type: "line", data: { labels: epocas, datasets }, options: opcoes }, tabela };
+    return { tipo: "line", config: { type: "line", data: { labels: epocas, datasets }, options: opcoes }, tabela };
   },
 
   balanco() {
     const ent = estado.entidade, epocas = epocasVisiveis();
-    const datasets = [
-      linha("Ativo", serie(ent, "ativo_total", epocas), "--serie-1"),
-      linha("Passivo", serie(ent, "passivo_total", epocas), "--serie-2"),
-      linha("Capital próprio", serie(ent, "capital_proprio", epocas), "--serie-3"),
-    ];
-    if (datasets.every(d => d.data.every(v => v === null))) {
+    const passivo = serie(ent, "passivo_total", epocas), ativo = serie(ent, "ativo_total", epocas);
+    const capital = serie(ent, "capital_proprio", epocas);
+    if (passivo.every(v => v === null) && ativo.every(v => v === null)) {
       return { vazio: `Sem dados de balanço para ${nomeEntidade(ent)} neste intervalo.` };
     }
-    return { config: { type: "line", data: { labels: epocas, datasets }, options: opcoesBase() }, tabela: tabelaSeries(epocas, datasets) };
+    const opcoes = opcoesBase();
+    opcoes.plugins.legend.labels.usePointStyle = true;
+    opcoes.plugins.tooltip.callbacks.footer = itens => {
+      const c = capital[itens[0].dataIndex];
+      return c === null ? "" : `Capital próprio: ${Formato.euros(c)}`;
+    };
+    opcoes.scales.y.beginAtZero = true;
+    const datasets = [
+      { ...linha("Passivo", passivo, "--tinta"), fill: areaAcima(1) },
+      linha("Ativo", ativo, "--serie-cinza-escuro", true),
+    ];
+    const tabela = tabelaSeries(epocas, datasets);
+    tabela.colunas.push("Capital próprio");
+    tabela.linhas.forEach((l, i) => l.push(Formato.euros(capital[i])));
+    return {
+      tipo: "line",
+      config: { type: "line", data: { labels: epocas, datasets }, options: opcoes, plugins: [rotuloCapital] },
+      tabela,
+    };
   },
 
   receitas() {
@@ -156,22 +192,28 @@ const DEFINICOES = {
     const com = [...new Set(DADOS.receitas.map(r => r.epoca))].sort();
     const epoca = com.includes(estado.epoca) ? estado.epoca : com[com.length - 1];
     document.querySelectorAll(".epoca-receitas").forEach(el =>
-      (el.textContent = epoca === estado.epoca ? epoca : `${epoca} (última com dados)`));
+      (el.textContent = epoca === estado.epoca ? epoca : `${epoca} (última época com dados)`));
     const linhas = DADOS.receitas.filter(r => r.epoca === epoca).sort((a, b) => b.valor - a.valor);
     const total = linhas.reduce((s, r) => s + r.valor, 0);
-    const opcoes = opcoesBase({ eixoY: null, indice: false });
+
+    const opcoes = opcoesBase({ indice: false, legenda: false });
     opcoes.indexAxis = "y";
     opcoes.interaction = { mode: "nearest", axis: "y", intersect: false };
-    opcoes.plugins.legend.display = false;
+    opcoes.layout.padding.right = 64; // espaço para os valores à direita das barras
     opcoes.plugins.tooltip.callbacks.label = c => ` ${Formato.euros(c.raw)} · ${Formato.percentagem((c.raw / total) * 100)} do total`;
     opcoes.scales = {
-      x: { beginAtZero: true, ticks: { callback: v => Formato.eixo(v) }, title: { display: true, text: "M€", color: cor("--mudo") },
-           grid: { color: cor("--grelha") }, border: { display: false } },
-      y: { grid: { display: false }, ticks: { color: cor("--texto") } },
+      x: { beginAtZero: true, ticks: { callback: v => Formato.eixo(v), color: cor("--suave") }, grid: { color: cor("--grelha") }, border: { display: false } },
+      y: { grid: { display: false }, border: { color: cor("--tinta"), width: 1.4 }, ticks: { color: cor("--texto"), font: { size: 12.5 } } },
     };
-    const datasets = [{ ...barra("Receitas", linhas.map(r => r.valor), "--serie-1"), borderSkipped: "start", maxBarThickness: 20 }];
+    // A maior fatia a amarelo, as restantes a preto
+    const base = barra("Receitas", linhas.map(r => r.valor), "--tinta");
+    base.backgroundColor = linhas.map((_, i) => (i === 0 ? cor("--amarelo") : cor("--tinta")));
+    base.borderColor = cor("--tinta");
+    base.borderWidth = linhas.map((_, i) => (i === 0 ? 1 : 0));
+    base.maxBarThickness = 22;
     return {
-      config: { type: "bar", data: { labels: linhas.map(r => r.categoria), datasets }, options: opcoes },
+      tipo: "hbar",
+      config: { type: "bar", data: { labels: linhas.map(r => r.categoria), datasets: [base] }, options: opcoes, plugins: [valoresBarras] },
       tabela: {
         colunas: ["Categoria", "Valor", "Peso"],
         linhas: [...linhas.map(r => [r.categoria, Formato.euros(r.valor), Formato.percentagem((r.valor / total) * 100)]),
@@ -188,27 +230,27 @@ const DEFINICOES = {
     }).filter(Boolean);
     if (!pontos.length) return { vazio: "Sem épocas com gastos e classificação neste intervalo." };
 
-    const destaque = cor("--amarelo");
-    const opcoes = opcoesBase({ eixoY: null, indice: false });
-    opcoes.plugins.legend.display = false;
+    const opcoes = opcoesBase({ indice: false, legenda: false });
     opcoes.plugins.tooltip.callbacks = {
       title: i => i[0].raw.epoca,
       label: c => [` ${c.raw.y}.º lugar · ${c.raw.pts} pontos`, ` Pessoal: ${Formato.euros(c.raw.x)}`, c.raw.europa ? ` ${c.raw.europa}` : ""].filter(Boolean),
     };
     opcoes.scales = {
-      x: { title: { display: true, text: "Gastos com pessoal da SAD (M€)", color: cor("--mudo") }, ticks: { callback: v => Formato.eixo(v) },
+      x: { title: { display: true, text: "Gastos com pessoal da SAD", color: cor("--suave") }, ticks: { callback: v => Formato.eixo(v), color: cor("--suave") },
            grid: { color: cor("--grelha") }, border: { display: false } },
-      y: { reverse: true, min: 1, max: 12, ticks: { stepSize: 1, callback: v => `${v}.º` },
-           title: { display: true, text: "Lugar na Liga", color: cor("--mudo") }, grid: { color: cor("--grelha") }, border: { display: false } },
+      y: { reverse: true, min: 1, max: 12, ticks: { stepSize: 1, callback: v => `${v}.º`, color: cor("--suave") },
+           title: { display: true, text: "Lugar na Liga", color: cor("--suave") }, grid: { color: cor("--grelha") }, border: { display: false } },
     };
-    const eDestaque = p => p.epoca === estado.epoca;
+    const destaque = p => p.epoca === estado.epoca;
     const datasets = [{
       label: "Épocas", data: pontos,
-      backgroundColor: pontos.map(p => (eDestaque(p) ? destaque : cor("--serie-1"))),
-      borderColor: pontos.map(p => (eDestaque(p) ? cor("--texto") : cor("--cartao"))),
-      borderWidth: 2, pointRadius: pontos.map(p => (eDestaque(p) ? 9 : 6)), pointHoverRadius: 9,
+      backgroundColor: pontos.map(p => (destaque(p) ? cor("--amarelo") : cor("--tinta"))),
+      borderColor: pontos.map(p => (destaque(p) ? cor("--tinta") : cor("--cartao"))),
+      borderWidth: pontos.map(p => (destaque(p) ? 2 : 1.5)),
+      pointRadius: pontos.map(p => (destaque(p) ? 10 : 7)), pointHoverRadius: 10,
     }];
     return {
+      tipo: "scatter",
       config: { type: "scatter", data: { datasets }, options: opcoes, plugins: [rotulosEpocas] },
       tabela: {
         colunas: ["Época", "Gastos com pessoal", "Lugar", "Pontos", "Europa"],
@@ -218,67 +260,145 @@ const DEFINICOES = {
   },
 };
 
-/** Plugin: escreve a época junto a cada ponto da dispersão (texto pequeno, cor de texto, não da série) */
-const rotulosEpocas = {
-  id: "rotulosEpocas",
+/* ====================== Rótulos diretos (plugins) ====================== */
+
+/** Valores dentro das barras grandes da SAD, na vertical, como no gráfico 01 do projeto SQL */
+const rotulosBarras = {
+  id: "rotulosBarras",
   afterDatasetsDraw(chart) {
-    const { ctx } = chart;
     const meta = chart.getDatasetMeta(0);
+    if (meta.hidden) return;
+    const { ctx } = chart;
     ctx.save();
-    ctx.textBaseline = "middle";
-    // Desenha primeiro a época em destaque; as outras só se não colidirem com rótulos já escritos
-    const ocupados = [];
-    const ordem = meta.data.map((_, i) => i)
-      .sort((a, b) => (chart.data.datasets[0].data[b].epoca === estado.epoca) - (chart.data.datasets[0].data[a].epoca === estado.epoca));
-    ocupados.push(...meta.data.map(pt => ({ x: pt.x - 7, y: pt.y - 7, w: 14, h: 14 })));
-    ordem.forEach(i => {
-      const ponto = meta.data[i];
-      const p = chart.data.datasets[0].data[i];
-      const forte = p.epoca === estado.epoca;
-      ctx.font = `${forte ? 700 : 400} 11px "Archivo", sans-serif`;
-      ctx.fillStyle = forte ? cor("--texto") : cor("--mudo");
-      const larg = ctx.measureText(p.epoca).width;
-      const direita = ponto.x + 12 + larg < chart.chartArea.right;
-      const x = direita ? ponto.x + 11 : ponto.x - 11 - larg;
-      const caixa = { x, y: ponto.y - 7, w: larg, h: 14 };
-      const proprio = ocupados.findIndex(o => o.x === ponto.x - 7 && o.y === ponto.y - 7);
-      const outros = ocupados.filter((_, j) => j !== proprio);
-      if (!forte && outros.some(o => caixa.x < o.x + o.w && caixa.x + caixa.w > o.x && caixa.y < o.y + o.h && caixa.y + caixa.h > o.y)) return;
-      ocupados.push(caixa);
-      ctx.textAlign = "left";
-      ctx.fillText(p.epoca, x, ponto.y);
+    ctx.font = '700 11px "Archivo", sans-serif';
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    meta.data.forEach((b, i) => {
+      const v = chart.data.datasets[0].data[i];
+      if (v === null || Math.abs(v) < 5e6) return;
+      const texto = Formato.euros(v);
+      const altura = Math.abs(b.base - b.y), larg = ctx.measureText(texto).width;
+      if (altura < larg + 14 || b.width < 12) return; // não cabe (ou a barra ainda está a crescer)
+      ctx.save();
+      ctx.translate(b.x, (b.y + b.base) / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = v < 0 ? cor("--rotulo-neg") : cor("--rotulo-pos");
+      ctx.fillText(texto, 0, 0);
+      ctx.restore();
     });
     ctx.restore();
   },
 };
 
-/** Converte datasets do Chart.js numa tabela simples (época × séries) */
-function tabelaSeries(labels, datasets) {
-  return {
-    colunas: ["Época", ...datasets.map(d => d.label)],
-    linhas: labels.map((l, i) => [l, ...datasets.map(d => Formato.euros(d.data[i]))]),
-  };
-}
+/** Nota do capital próprio na última época visível, como no gráfico 05 do projeto SQL */
+const rotuloCapital = {
+  id: "rotuloCapital",
+  afterDatasetsDraw(chart) {
+    const [ps, at] = [chart.getDatasetMeta(0), chart.getDatasetMeta(1)];
+    if (ps.hidden || at.hidden) return;
+    const dados = chart.data.datasets;
+    let i = dados[0].data.length - 1;
+    while (i >= 0 && (dados[0].data[i] === null || dados[1].data[i] === null)) i--;
+    if (i < 0) return;
+    const capital = dados[1].data[i] - dados[0].data[i];
+    if (capital >= 0) return;
+    // Escreve o texto dentro da área amarela, no troço mais largo das últimas épocas
+    const ok = k => k >= 0 && dados[0].data[k] !== null && dados[1].data[k] !== null;
+    // (o último troço tende a ser íngreme, por isso prefere-se o anterior, se tiver espaço)
+    let melhor = null;
+    for (const k of [i - 1, i - 2, i]) {
+      if (!ok(k) || !ok(k - 1)) continue;
+      const topo = Math.max(ps.data[k].y, ps.data[k - 1].y), fundo = Math.min(at.data[k].y, at.data[k - 1].y);
+      if (fundo - topo >= 52) { melhor = { x: (ps.data[k].x + ps.data[k - 1].x) / 2, y: (topo + fundo) / 2 }; break; }
+    }
+    if (!melhor) return; // área demasiado estreita para três linhas
+    const { ctx } = chart;
+    ctx.save();
+    ctx.font = '700 12px "Archivo", sans-serif';
+    ctx.fillStyle = cor("--texto");
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const meia = ctx.measureText("Capital próprio").width / 2 + 4;
+    const x = Math.min(Math.max(melhor.x, chart.chartArea.left + meia), chart.chartArea.right - meia), y = melhor.y;
+    [`Capital próprio`, Formato.euros(capital), `em ${chart.data.labels[i]}`]
+      .forEach((t, k) => ctx.fillText(t, x, y + (k - 1) * 15));
+    ctx.restore();
+  },
+};
 
-/* ====================== Desenho ====================== */
+/** Valor no fim de cada barra horizontal */
+const valoresBarras = {
+  id: "valoresBarras",
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.font = '700 11.5px "Archivo", sans-serif';
+    ctx.fillStyle = cor("--texto");
+    ctx.textBaseline = "middle";
+    chart.getDatasetMeta(0).data.forEach((b, i) => {
+      ctx.fillText(Formato.euros(chart.data.datasets[0].data[i]), b.x + 6, b.y);
+    });
+    ctx.restore();
+  },
+};
 
-function desenharCartao(cartao) {
+/** Época junto a cada ponto da dispersão; a época em destaque primeiro, as outras só se não colidirem */
+const rotulosEpocas = {
+  id: "rotulosEpocas",
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart;
+    const meta = chart.getDatasetMeta(0), dados = chart.data.datasets[0].data;
+    const ocupados = meta.data.map(pt => ({ x: pt.x - 8, y: pt.y - 8, w: 16, h: 16 }));
+    const sobrepoe = (r, ignorar) => ocupados.some((o, j) => j !== ignorar && r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
+    const ordem = meta.data.map((_, i) => i).sort((a, b) => (dados[b].epoca === estado.epoca) - (dados[a].epoca === estado.epoca));
+    ctx.save();
+    ctx.textBaseline = "middle"; ctx.textAlign = "left";
+    ordem.forEach(i => {
+      const pt = meta.data[i], forte = dados[i].epoca === estado.epoca;
+      ctx.font = `${forte ? 700 : 400} 11.5px "Archivo", sans-serif`;
+      ctx.fillStyle = forte ? cor("--texto") : cor("--suave");
+      const larg = ctx.measureText(dados[i].epoca).width;
+      const direita = pt.x + 14 + larg < chart.chartArea.right;
+      const x = direita ? pt.x + 13 : pt.x - 13 - larg;
+      const caixa = { x, y: pt.y - 7, w: larg, h: 14 };
+      if (!forte && sobrepoe(caixa, i)) return;
+      ocupados.push(caixa);
+      ctx.fillText(dados[i].epoca, x, pt.y);
+    });
+    ctx.restore();
+  },
+};
+
+/* ====================== Desenho dos cartões ====================== */
+
+function areaDoCartao(cartao) { return cartao.querySelector(".tela, .tabela"); }
+
+function desenharCartao(cartao, { recriar = false } = {}) {
   const id = cartao.dataset.grafico;
-  const tela = cartao.querySelector(".tela, .tabela");
-  graficos[id]?.destroy();
-  delete graficos[id];
-
+  if (!vistos.has(id)) return; // ainda não chegou ao ecrã: desenha-se quando chegar
   const def = DEFINICOES[id]();
   const botao = cartao.querySelector(".ver-tabela");
   botao.hidden = !!def.vazio;
 
-  // Repõe a área do gráfico
+  const emGrafico = !def.vazio && vistas[id] === "grafico";
+  const atual = graficos[id];
+
+  // Mesmo tipo de gráfico já no ecrã: atualiza os dados e deixa o Chart.js fazer a transição
+  if (emGrafico && atual && !recriar && atual.$tipo === def.tipo) {
+    def.config.options.animation = Animacoes.transicao();
+    atual.data = def.config.data;
+    atual.options = def.config.options;
+    atual.update();
+    return;
+  }
+
+  atual?.destroy();
+  delete graficos[id];
   const nova = document.createElement("div");
   if (def.vazio) {
     nova.className = "tela";
-    nova.innerHTML = `<p class="vazio-grafico"></p>`;
-    nova.firstChild.textContent = def.vazio;
-  } else if (vistas[id] === "tabela") {
+    const p = document.createElement("p");
+    p.className = "vazio-grafico"; p.textContent = def.vazio;
+    nova.appendChild(p);
+  } else if (!emGrafico) {
     nova.className = "tabela";
     nova.appendChild(criarTabela(def.tabela));
   } else {
@@ -288,8 +408,19 @@ function desenharCartao(cartao) {
     canvas.setAttribute("aria-label", cartao.querySelector("h3").textContent);
     nova.appendChild(canvas);
   }
-  tela.replaceWith(nova);
-  if (!def.vazio && vistas[id] !== "tabela") graficos[id] = new Chart(nova.querySelector("canvas"), def.config);
+  areaDoCartao(cartao).replaceWith(nova);
+  if (emGrafico) {
+    const entrada = Animacoes.entrada(def.tipo);
+    if (entrada === false) def.config.options.animation = false;
+    else {
+      const { y, radius, ...geral } = entrada;
+      def.config.options.animation = geral;
+      def.config.options.animations = { ...(y && { y }), ...(radius && { radius }) };
+    }
+    const grafico = new Chart(nova.querySelector("canvas"), def.config);
+    grafico.$tipo = def.tipo;
+    graficos[id] = grafico;
+  }
 }
 
 function criarTabela({ colunas, linhas }) {
@@ -306,74 +437,95 @@ function criarTabela({ colunas, linhas }) {
 const INDICADORES = [
   { campo: "vendas_servicos", nome: "Vendas e serviços", bom: "sobe" },
   { campo: "gastos_pessoal", nome: "Gastos com pessoal", bom: "desce" },
-  { campo: "resultado_liquido", nome: "Resultado líquido", bom: "sobe", sinal: true },
-  { campo: "rl_sem_mais_valias", nome: "Resultado sem mais-valias", bom: "sobe", sinal: true },
+  { campo: "resultado_liquido", nome: "Resultado líquido", bom: "sobe" },
+  { campo: "rl_sem_mais_valias", nome: "Sem mais-valias", bom: "sobe" },
   { campo: "passivo_total", nome: "Passivo", bom: "desce" },
-  { campo: "capital_proprio", nome: "Capital próprio", bom: "sobe", sinal: true },
+  { campo: "capital_proprio", nome: "Capital próprio", bom: "sobe" },
 ];
+
+function construirKPIs() {
+  const caixa = document.getElementById("kpis");
+  INDICADORES.forEach((ind, i) => {
+    const div = document.createElement("div");
+    div.className = "kpi"; div.style.setProperty("--i", i); div.dataset.campo = ind.campo;
+    div.innerHTML = `<p class="nome"></p><p class="valor"></p><p class="delta"></p>`;
+    div.querySelector(".nome").textContent = ind.nome;
+    caixa.appendChild(div);
+  });
+}
 
 function desenharKPIs() {
   const { entidade, epoca } = estado;
   const anterior = DADOS.epocas[DADOS.epocas.indexOf(epoca) - 1];
   const atual = kpi(entidade, epoca), antes = anterior ? kpi(entidade, anterior) : null;
-
   document.getElementById("kpi-entidade").textContent = nomeEntidade(entidade);
   document.getElementById("kpi-epoca").textContent = epoca;
 
-  const caixa = document.getElementById("kpis");
-  caixa.innerHTML = "";
   INDICADORES.forEach(ind => {
+    const div = document.querySelector(`.kpi[data-campo="${ind.campo}"]`);
     const v = atual?.[ind.campo] ?? null, a = antes?.[ind.campo] ?? null;
-    const div = document.createElement("div");
-    div.className = "kpi" + (v === null ? " vazio" : "");
-    const nome = document.createElement("p"); nome.className = "nome"; nome.textContent = ind.nome;
-    const valor = document.createElement("p");
-    valor.className = "valor" + (ind.sinal && v < 0 ? " negativo" : "");
-    valor.textContent = v === null ? "sem dados" : Formato.euros(v);
-    const delta = document.createElement("p"); delta.className = "delta";
+    const elValor = div.querySelector(".valor"), delta = div.querySelector(".delta");
+    div.classList.toggle("vazio", v === null);
+    if (v === null) elValor.textContent = "sem dados";
+    else Animacoes.contar(elValor, valoresKPI[ind.campo] ?? null, v, Formato.euros);
+    valoresKPI[ind.campo] = v;
+
+    delta.textContent = "";
     if (v !== null && a !== null && v !== a) {
       const d = v - a, melhor = (d > 0) === (ind.bom === "sobe");
       const s = document.createElement("span");
       s.className = melhor ? "sobe" : "desce";
       s.textContent = `${d > 0 ? "▲" : "▼"} ${Formato.variacao(d)}`;
       delta.append(s, ` face a ${anterior}`);
-    } else {
-      delta.textContent = v === null ? " " : "sem época anterior para comparar";
+    } else if (v !== null) {
+      delta.textContent = "sem época anterior para comparar";
     }
-    div.append(nome, valor, delta);
-    caixa.appendChild(div);
   });
 
-  // Contexto desportivo da época
   const d = DADOS.desporto.find(x => x.epoca === epoca);
   const partes = d ? [`${d.posicao_liga}.º lugar na Liga, ${d.pontos} pontos`,
     d.competicao_europeia && `${d.competicao_europeia} (${d.fase_europeia.toLowerCase()})`,
     d.trofeu && `vencedor da ${d.trofeu}`].filter(Boolean) : [];
-  document.getElementById("kpi-desporto").textContent = partes.length ? `Em campo: ${partes.join(" · ")}.` : "";
-  document.querySelectorAll(".epoca-destaque").forEach(el => (el.textContent = epoca));
+  const campo = document.getElementById("kpi-desporto");
+  campo.textContent = partes.length ? `Em campo: ${partes.join(" · ")}.` : "";
+  campo.hidden = !partes.length;
 }
 
-function desenharTudo() {
+function desenharTudo(opcoes) {
   aplicarTemaChart();
   desenharKPIs();
-  document.querySelectorAll(".cartao[data-grafico]").forEach(desenharCartao);
+  document.querySelectorAll(".cartao[data-grafico]").forEach(c => desenharCartao(c, opcoes));
 }
 
 /* ====================== Filtros ====================== */
 
+function moverIndicador() {
+  const caixa = document.getElementById("f-entidade");
+  const ativo = caixa.querySelector('button[aria-checked="true"]');
+  const ind = caixa.querySelector(".indicador");
+  ind.style.width = `${ativo.offsetWidth}px`;
+  ind.style.transform = `translateX(${ativo.offsetLeft}px)`;
+}
+
 function preencherFiltros() {
   const segmentos = document.getElementById("f-entidade");
-  ENTIDADES.forEach(e => {
+  const indicador = document.createElement("span");
+  indicador.className = "indicador"; indicador.setAttribute("aria-hidden", "true");
+  segmentos.appendChild(indicador);
+  ORDEM_FILTRO.forEach(id => {
     const b = document.createElement("button");
-    b.type = "button"; b.role = "radio"; b.textContent = e.nome; b.dataset.id = e.id;
-    b.setAttribute("aria-checked", String(e.id === estado.entidade));
+    b.type = "button"; b.setAttribute("role", "radio"); b.textContent = nomeEntidade(id); b.dataset.id = id;
+    b.setAttribute("aria-checked", String(id === estado.entidade));
     b.addEventListener("click", () => {
-      estado.entidade = e.id;
+      if (estado.entidade === id) return;
+      estado.entidade = id;
       segmentos.querySelectorAll("button").forEach(x => x.setAttribute("aria-checked", String(x === b)));
+      moverIndicador();
       desenharTudo();
     });
     segmentos.appendChild(b);
   });
+  addEventListener("resize", moverIndicador);
 
   const selects = { inicio: "f-inicio", fim: "f-fim", epoca: "f-epoca" };
   Object.entries(selects).forEach(([chave, id]) => {
@@ -382,19 +534,20 @@ function preencherFiltros() {
     s.value = estado[chave];
     s.addEventListener("change", () => {
       estado[chave] = s.value;
-      // Mantém o intervalo coerente: início nunca depois do fim
       if (DADOS.epocas.indexOf(estado.inicio) > DADOS.epocas.indexOf(estado.fim)) {
         [estado.inicio, estado.fim] = [estado.fim, estado.inicio];
         document.getElementById("f-inicio").value = estado.inicio;
         document.getElementById("f-fim").value = estado.fim;
       }
-      desenharTudo();
+      // Mudar o intervalo muda o número de épocas: aí recria-se o gráfico (as barras voltam a crescer)
+      desenharTudo({ recriar: chave !== "epoca" });
     });
   });
 }
 
-function prepararBotoesTabela() {
-  document.querySelectorAll(".cartao[data-grafico]").forEach(cartao => {
+function prepararCartoes() {
+  const cartoes = [...document.querySelectorAll(".cartao[data-grafico]")];
+  cartoes.forEach(cartao => {
     const id = cartao.dataset.grafico;
     vistas[id] = "grafico";
     const b = document.createElement("button");
@@ -402,9 +555,15 @@ function prepararBotoesTabela() {
     b.addEventListener("click", () => {
       vistas[id] = vistas[id] === "grafico" ? "tabela" : "grafico";
       b.textContent = vistas[id] === "grafico" ? "Ver tabela" : "Ver gráfico";
-      desenharCartao(cartao);
+      desenharCartao(cartao, { recriar: true });
     });
-    cartao.querySelector("header").appendChild(b);
+    cartao.querySelector(".cabeca").appendChild(b);
+  });
+  // Cada cartão entra (e o seu gráfico anima-se) quando chega ao ecrã
+  Animacoes.observar(cartoes, cartao => {
+    cartao.classList.add("visivel");
+    vistos.add(cartao.dataset.grafico);
+    setTimeout(() => desenharCartao(cartao, { recriar: true }), Animacoes.reduzido ? 0 : 180);
   });
 }
 
@@ -417,21 +576,22 @@ function prepararTema() {
     const escuroAgora = raiz.dataset.theme ? raiz.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
     raiz.dataset.theme = escuroAgora ? "light" : "dark";
     try { localStorage.setItem("tema", raiz.dataset.theme); } catch { /* ignora */ }
-    desenharTudo();
+    desenharTudo({ recriar: true });
   });
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (!raiz.dataset.theme) desenharTudo(); });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { if (!raiz.dataset.theme) desenharTudo({ recriar: true }); });
 }
 
 /* ====================== Arranque ====================== */
 
 async function iniciar() {
+  document.documentElement.classList.add("js");
   try {
     const r = await fetch("data/contas.json");
     if (!r.ok) throw new Error(r.status);
     DADOS = await r.json();
   } catch (erro) {
     document.querySelector("main .dentro").innerHTML =
-      `<p class="nota">Não foi possível carregar <code>data/contas.json</code>. Abre a página através de um servidor
+      `<p class="em-campo">Não foi possível carregar <code>data/contas.json</code>. Abre a página através de um servidor
        (por exemplo, a extensão Live Server do VS Code ou <code>python -m http.server</code>), não diretamente do disco.</p>`;
     console.error(erro);
     return;
@@ -440,15 +600,17 @@ async function iniciar() {
   const ep = DADOS.epocas;
   estado.inicio = ep[0];
   estado.fim = ep[ep.length - 1];
-  // Época em destaque: a mais recente com resultado da SAD
   estado.epoca = [...ep].reverse().find(e => kpi("SAD", e)?.resultado_liquido != null);
   document.getElementById("intervalo-total").textContent = `${ep[0]} – ${ep[ep.length - 1]}`;
 
   prepararTema();
+  construirKPIs();
   preencherFiltros();
-  prepararBotoesTabela();
   await document.fonts.ready;
-  desenharTudo();
+  moverIndicador();
+  aplicarTemaChart();
+  desenharKPIs();
+  prepararCartoes();
 }
 
 iniciar();

@@ -32,9 +32,11 @@ vsc_contas.db  ──►  scripts/exportar_json.py  ──►  data/contas.json 
 | Ficheiro | Conteúdo |
 |:---|:---|
 | `index.html` | Estrutura da página: filtros, indicadores e cartões dos gráficos |
-| `css/style.css` | Identidade visual (preto, amarelo, letra Archivo), modo escuro, layout responsivo |
+| `css/style.css` | Identidade visual do projeto SQL, animações de entrada, modo escuro, layout responsivo |
 | `js/app.js` | Estado dos filtros, indicadores, definição de cada gráfico e vista em tabela |
-| `js/formato.js` | Formatação de números em português (M€, mil €, percentagens) |
+| `js/formato.js` | Formatação de números em português (M€, mil €, negativos entre parênteses) |
+| `js/animacoes.js` | Animações de entrada, transições entre filtros e contagem dos indicadores |
+| `img/emblema.png` | Emblema do clube, o mesmo do projeto SQL |
 | `js/vendor/chart.umd.min.js` | [Chart.js](https://www.chartjs.org/) 4 (licença MIT), incluído no repositório |
 | `scripts/exportar_json.py` | Lê a base SQLite e gera `data/contas.json` |
 | `data/contas.json` | Os dados que o dashboard usa |
@@ -42,7 +44,8 @@ vsc_contas.db  ──►  scripts/exportar_json.py  ──►  data/contas.json 
 **Escolhas técnicas**
 - JavaScript puro, sem frameworks nem passo de compilação: o código lê-se diretamente.
 - Cada gráfico é uma função que devolve a configuração do Chart.js e a tabela equivalente, a partir do estado dos filtros.
-- As cores das séries foram validadas para daltonismo, em modo claro e escuro, e a identidade de cada série nunca depende só da cor (legenda e tabela).
+- A estética segue a do projeto SQL: faixas amarelas com o emblema, títulos em Archivo Expanded, séries a preto, cinzento e amarelo, e valores negativos entre parênteses, como nas demonstrações financeiras. A identidade de cada série nunca depende só da cor (legenda, rótulos e tabela).
+- **Animações** (`js/animacoes.js`): os cartões entram quando chegam ao ecrã (`IntersectionObserver`); as barras crescem a partir do zero e as linhas sobem ponto a ponto; os indicadores contam até ao valor novo; ao mudar de entidade, os gráficos transformam-se em vez de se redesenharem. Tudo fica estático se o sistema pedir menos movimento (`prefers-reduced-motion`).
 - Épocas sem dados ficam em branco, em vez de serem interpoladas.
 
 ### Abrir localmente
@@ -79,7 +82,7 @@ Interactive JavaScript dashboard of Vitória Sport Clube's accounts from 2012/13
 
 **What you can explore:** season KPIs with year-on-year change; net result by entity; how much the result depends on player sales; revenue vs. staff costs; balance sheet; revenue mix; staff costs vs. league position. Filters for entity, season range and highlighted season; every chart has a **table view**; light and dark mode.
 
-**Built with** plain HTML, CSS and JavaScript plus Chart.js 4, no framework or build step. A small Python script (`scripts/exportar_json.py`) exports the SQLite views to `data/contas.json`. Series colours were checked for colour-blind safety in both themes.
+**Built with** plain HTML, CSS and JavaScript plus Chart.js 4, no framework or build step. A small Python script (`scripts/exportar_json.py`) exports the SQLite views to `data/contas.json`. It follows the look of the SQL project (yellow bands, club emblem, black/grey/yellow series) and adds animations: cards slide in on scroll, bars grow and lines rise point by point, KPIs count up, and charts morph when filters change, all disabled under `prefers-reduced-motion`.
 
 **Run locally:** `python -m http.server` in this folder, then open `http://localhost:8000`.
 
@@ -91,7 +94,7 @@ Tableau de bord interactif en JavaScript sur les comptes du Vitória Sport Clube
 
 **À explorer :** indicateurs de la saison avec variation annuelle ; résultat net par entité ; dépendance aux ventes de joueurs ; recettes et frais de personnel ; bilan ; composition des recettes ; frais de personnel et classement en championnat. Filtres par entité, intervalle de saisons et saison mise en avant ; chaque graphique a une **vue en tableau** ; modes clair et sombre.
 
-**Réalisé avec** HTML, CSS et JavaScript, plus Chart.js 4, sans framework ni compilation. Un petit script Python (`scripts/exportar_json.py`) exporte les vues SQLite vers `data/contas.json`. Les couleurs des séries ont été vérifiées pour le daltonisme dans les deux thèmes.
+**Réalisé avec** HTML, CSS et JavaScript, plus Chart.js 4, sans framework ni compilation. Un petit script Python (`scripts/exportar_json.py`) exporte les vues SQLite vers `data/contas.json`. Il reprend l'esthétique du projet SQL (bandeaux jaunes, emblème du club, séries en noir, gris et jaune) et ajoute des animations : cartes qui apparaissent au défilement, barres qui poussent et lignes qui montent point par point, indicateurs qui comptent, graphiques qui se transforment au changement de filtre, le tout désactivé avec `prefers-reduced-motion`.
 
 **Lancer en local :** `python -m http.server` dans ce dossier, puis ouvrir `http://localhost:8000`.
 

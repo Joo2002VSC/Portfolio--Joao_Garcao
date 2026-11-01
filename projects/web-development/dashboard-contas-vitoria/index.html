@@ -4,19 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard Vitória SC</title>
-  <meta name="description" content="Dashboard interativo das contas do Vitória Sport Clube (SAD, Clube e Consolidado), 2012/13 a 2025/26.">
+  <meta name="description" content="Dashboard interativo das contas do Vitória Sport Clube (SAD, Clube e Grupo consolidado), 2012/13 a 2025/26.">
+  <link rel="icon" href="img/emblema.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="topo gutter">
+  <!-- Capa: a mesma faixa amarela da capa do projeto SQL -->
+  <header class="capa gutter">
     <div class="dentro">
-      <p class="sobre">Projeto em JavaScript · dados do projeto <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a></p>
-      <h1>As contas do Vitória SC</h1>
-      <p class="sub">SAD, Clube e Consolidado · <span id="intervalo-total">2012/13 – 2025/26</span> · valores em euros</p>
+      <div class="capa-texto">
+        <h1>As contas do Vitória SC</h1>
+        <p class="sub">Dashboard interativo · SAD, Clube e Grupo consolidado · <span id="intervalo-total">2012/13 – 2025/26</span></p>
+        <p class="tags">JavaScript <span>·</span> Chart.js <span>·</span> SQLite</p>
+      </div>
+      <img class="emblema" src="img/emblema.png" alt="Emblema do Vitória Sport Clube" width="120" height="175">
     </div>
   </header>
 
-  <!-- Filtros: uma única linha, aplicam-se a todo o painel -->
+  <!-- Filtros: barra preta com filete amarelo, como a navegação do projeto SQL -->
   <section class="filtros gutter" aria-label="Filtros">
     <div class="dentro">
       <div class="campo">
@@ -35,65 +40,67 @@
         <span class="rotulo">Época em destaque</span>
         <select id="f-epoca"></select>
       </label>
-      <button class="tema" id="f-tema" type="button" aria-label="Mudar entre modo claro e escuro" title="Modo claro / escuro"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
+      <button class="tema" id="f-tema" type="button" aria-label="Mudar entre modo claro e escuro" title="Modo claro / escuro">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+      </button>
     </div>
   </section>
 
   <main class="gutter">
     <div class="dentro">
       <section aria-labelledby="t-kpis">
-        <h2 id="t-kpis" class="titulo-seccao"><span id="kpi-entidade">SAD</span> em <span id="kpi-epoca">2025/26</span></h2>
+        <h2 id="t-kpis" class="faixa-titulo"><span id="kpi-entidade">SAD</span> em <span id="kpi-epoca">2025/26</span></h2>
         <div class="kpis" id="kpis"></div>
-        <p class="nota" id="kpi-desporto"></p>
+        <p class="em-campo" id="kpi-desporto"></p>
       </section>
 
       <div class="grelha">
         <article class="cartao largo" data-grafico="resultado">
-          <header>
-            <h3>Resultado líquido por entidade</h3>
-            <p>Lucro ou prejuízo de cada época. Clica na legenda para esconder uma entidade.</p>
-          </header>
-          <div class="tela"><canvas aria-label="Gráfico de barras do resultado líquido por entidade e época" role="img"></canvas></div>
+          <header class="faixa"><h3>Resultado líquido por entidade</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>SAD, Grupo consolidado e Clube, por época (exercício a 30 de junho). Clica na legenda para esconder uma entidade.</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
 
         <article class="cartao" data-grafico="maisvalias">
-          <header>
-            <h3>Quanto vale a venda de jogadores</h3>
-            <p>Resultado líquido com e sem as mais-valias das transferências.</p>
-          </header>
-          <div class="tela"><canvas aria-label="Resultado líquido com e sem mais-valias" role="img"></canvas></div>
+          <header class="faixa"><h3>Quanto vale a venda de jogadores</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>Resultado líquido com e sem as mais-valias das transferências.</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
 
         <article class="cartao" data-grafico="pessoal">
-          <header>
-            <h3>Receitas e gastos com pessoal</h3>
-            <p>Vendas e serviços contra salários e encargos. A percentagem aparece ao passar o rato.</p>
-          </header>
-          <div class="tela"><canvas aria-label="Receitas e gastos com pessoal por época" role="img"></canvas></div>
+          <header class="faixa"><h3>Receitas vs. gastos com pessoal</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>A área amarela marca as épocas em que os salários superaram as receitas.</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
 
         <article class="cartao" data-grafico="balanco">
-          <header>
-            <h3>Balanço a 30 de junho</h3>
-            <p>Ativo, passivo e capital próprio. Abaixo de zero, o passivo supera o ativo.</p>
-          </header>
-          <div class="tela"><canvas aria-label="Ativo, passivo e capital próprio por época" role="img"></canvas></div>
+          <header class="faixa"><h3>Ativo vs. passivo</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>Balanço a 30 de junho. A área amarela é o capital próprio negativo (passivo &gt; ativo).</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
 
         <article class="cartao" data-grafico="receitas">
-          <header>
-            <h3>De onde vem o dinheiro · <span class="epoca-receitas">2024/25</span></h3>
-            <p>Composição das receitas do grupo (contas consolidadas).</p>
-          </header>
-          <div class="tela"><canvas aria-label="Composição das receitas do grupo na época em destaque" role="img"></canvas></div>
+          <header class="faixa"><h3>De onde vem o dinheiro</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>Composição das receitas do grupo (contas consolidadas) em <strong class="epoca-receitas">2024/25</strong>.</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
 
         <article class="cartao largo" data-grafico="desporto">
-          <header>
-            <h3>Gastar mais traz melhores classificações?</h3>
-            <p>Gastos com pessoal da SAD e lugar na Liga, uma época por ponto. O 1.º lugar fica em cima.</p>
-          </header>
-          <div class="tela"><canvas aria-label="Dispersão entre gastos com pessoal e classificação na Liga" role="img"></canvas></div>
+          <header class="faixa"><h3>Gastar mais dá melhores classificações?</h3><img src="img/emblema.png" alt="" width="26" height="38"></header>
+          <div class="corpo">
+            <div class="cabeca"><p>Gastos com pessoal da SAD e lugar na Liga, uma época por ponto. O 1.º lugar fica em cima.</p></div>
+            <div class="tela"></div>
+          </div>
         </article>
       </div>
     </div>
@@ -101,15 +108,16 @@
 
   <footer class="gutter">
     <div class="dentro">
-      <p>Fonte: Relatórios e Contas do Vitória SC, organizados em SQLite no projeto
+      <p>Fontes: Relatórios e Contas da Vitória SC SAD e VSC Contas (vitoriasempre.net), organizados em SQLite no projeto
         <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a>.
-        Cada época usa os valores do seu próprio relatório. Épocas sem dados aparecem em branco.</p>
-      <p>Feito por João Garção · HTML, CSS e JavaScript com <a href="https://www.chartjs.org/">Chart.js</a>.</p>
+        Valores negativos entre parênteses, como nas demonstrações financeiras. Épocas sem dados aparecem em branco.</p>
+      <p>Análise: João Garção · HTML, CSS e JavaScript com <a href="https://www.chartjs.org/">Chart.js</a>.</p>
     </div>
   </footer>
 
   <script src="js/vendor/chart.umd.min.js"></script>
   <script src="js/formato.js"></script>
+  <script src="js/animacoes.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

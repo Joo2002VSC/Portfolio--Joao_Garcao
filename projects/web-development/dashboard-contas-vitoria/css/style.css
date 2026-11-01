@@ -1,6 +1,6 @@
 /* Dashboard Vitória SC · estilos
-   Mesma identidade do projeto contas-vitoria-sql: preto, amarelo e letra Archivo.
-   As cores das séries foram validadas para daltonismo (ver README). */
+   Identidade do projeto contas-vitoria-sql: faixas amarelas, letra Archivo Expanded nos títulos,
+   séries a preto, cinzento e amarelo, emblema no canto de cada gráfico. */
 
 @font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url("../fontes/ArchivoExpanded-ExtraBold.ttf") format("truetype"); font-display: swap; }
 @font-face { font-family: "Archivo"; font-weight: 400; src: url("../fontes/Archivo-Regular.ttf") format("truetype"); font-display: swap; }
@@ -8,29 +8,33 @@
 
 :root {
   color-scheme: light;
-  --amarelo: #F5D510; --preto: #111111;
-  --fundo: #F4F4F1; --cartao: #FFFFFF;
-  --texto: #111111; --suave: #5F5D5E; --mudo: #8A8889;
-  --linha: #E4E3DF; --grelha: #EDECE8;
-  --serie-1: #2a78d6; --serie-2: #eb6834; --serie-3: #1baf7a; --neutro: #A9A7A8;
+  /* Paleta dos documentos financeiros do clube (igual a scripts/graficos.py do projeto SQL) */
+  --amarelo: #F5D510; --amarelo-claro: #FAEB8A; --preto: #111111;
+  --cinza-escuro: #6F6D6E; --cinza: #A9A7A8; --cinza-claro: #EBEBEB; --texto-2: #4A4949;
+
+  --fundo: #FFFFFF; --cartao: #FFFFFF; --texto: #111111; --suave: #4A4949; --mudo: #6F6D6E;
+  --linha: #E2E2E2; --grelha: #EBEBEB; --azulejo: #EBEBEB;
+  /* Papéis das séries: "tinta" é a série principal (preto no claro, quase branco no escuro) */
+  --tinta: #111111; --serie-cinza: #A9A7A8; --serie-cinza-escuro: #6F6D6E; --area: rgba(245, 213, 16, .55);
+  --rotulo-pos: #FFFFFF; --rotulo-neg: #F5D510;
   --subida: #1f7a3a; --descida: #b03a2e;
 }
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --fundo: #111111; --cartao: #1A1A19;
-    --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8A8889;
-    --linha: #2E2E2C; --grelha: #262624;
-    --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --neutro: #6F6D6E;
+    --fundo: #111111; --cartao: #181818; --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8F8D8E;
+    --linha: #2C2C2C; --grelha: #262626; --azulejo: #1F1F1F;
+    --tinta: #EDEDED; --serie-cinza: #6F6D6E; --serie-cinza-escuro: #A9A7A8; --area: rgba(245, 213, 16, .5);
+    --rotulo-pos: #111111; --rotulo-neg: #111111;
     --subida: #5cc27a; --descida: #f07b6e;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --fundo: #111111; --cartao: #1A1A19;
-  --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8A8889;
-  --linha: #2E2E2C; --grelha: #262624;
-  --serie-1: #3987e5; --serie-2: #d95926; --serie-3: #199e70; --neutro: #6F6D6E;
+  --fundo: #111111; --cartao: #181818; --texto: #EDEDED; --suave: #B4B2B3; --mudo: #8F8D8E;
+  --linha: #2C2C2C; --grelha: #262626; --azulejo: #1F1F1F;
+  --tinta: #EDEDED; --serie-cinza: #6F6D6E; --serie-cinza-escuro: #A9A7A8; --area: rgba(245, 213, 16, .5);
+  --rotulo-pos: #111111; --rotulo-neg: #111111;
   --subida: #5cc27a; --descida: #f07b6e;
 }
 
@@ -41,77 +45,123 @@ a { color: inherit; text-decoration-color: var(--amarelo); text-decoration-thick
 .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .dentro { max-width: 1120px; margin: 0 auto; }
 
-/* ---------- Cabeçalho ---------- */
-header.topo { background: var(--preto); color: #fff; padding-top: 28px; padding-bottom: 22px; }
-header.topo .sobre { margin: 0 0 6px; font-size: 13px; color: #A9A7A8; }
-header.topo h1 { margin: 0; font: 800 clamp(24px, 4.6vw, 40px)/1.05 "Archivo Expanded", sans-serif;
-  color: var(--amarelo); text-transform: uppercase; letter-spacing: .01em; }
-header.topo .sub { margin: 8px 0 0; color: #D6D4D5; font-size: 14px; }
+/* ---------- Capa amarela ---------- */
+.capa { background: var(--amarelo); color: var(--preto); overflow: hidden; }
+.capa .dentro { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 36px 32px; }
+.capa h1 { margin: 0; font: 800 clamp(26px, 5.2vw, 54px)/1.02 "Archivo Expanded", sans-serif; text-transform: uppercase; letter-spacing: .005em; }
+.capa .sub { margin: 14px 0 0; font-size: clamp(14px, 1.8vw, 18px); }
+.capa .tags { margin: 14px 0 0; font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: #3a3a3a; }
+.capa .tags span { margin: 0 6px; }
+.capa .emblema { width: clamp(64px, 11vw, 120px); height: auto; flex: none; filter: drop-shadow(0 2px 0 rgba(0,0,0,.08)); }
 
-/* ---------- Filtros ---------- */
-.filtros { position: sticky; top: 0; z-index: 5; background: var(--preto);
-  border-bottom: 4px solid var(--amarelo); padding-top: 10px; padding-bottom: 12px; }
+/* ---------- Filtros (barra preta, filete amarelo) ---------- */
+.filtros { position: sticky; top: 0; z-index: 5; background: var(--preto); border-bottom: 4px solid var(--amarelo);
+  padding-top: 10px; padding-bottom: 12px; }
 .filtros .dentro { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 18px; }
 .campo { display: flex; flex-direction: column; gap: 4px; }
-.rotulo { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #A9A7A8; }
+.rotulo { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--cinza); }
 select { font: 700 14px "Archivo", sans-serif; color: #fff; background: #222; border: 1px solid #3a3a3a;
-  border-radius: 4px; padding: 7px 28px 7px 10px; min-height: 36px; appearance: none; cursor: pointer;
+  border-radius: 3px; padding: 7px 28px 7px 10px; min-height: 36px; appearance: none; cursor: pointer;
   background-image: linear-gradient(45deg, transparent 50%, #F5D510 50%), linear-gradient(135deg, #F5D510 50%, transparent 50%);
-  background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
-select:focus-visible, .segmentos button:focus-visible, .tema:focus-visible, .ver-tabela:focus-visible {
-  outline: 2px solid var(--amarelo); outline-offset: 2px; }
-.segmentos { display: flex; background: #222; border: 1px solid #3a3a3a; border-radius: 4px; padding: 2px; }
-.segmentos button { font: 700 14px "Archivo", sans-serif; color: #ddd; background: none; border: 0;
-  border-radius: 3px; padding: 6px 12px; min-height: 30px; cursor: pointer; }
+  background-position: calc(100% - 15px) 50%, calc(100% - 10px) 50%; background-size: 5px 5px; background-repeat: no-repeat;
+  transition: border-color .2s; }
+select:hover { border-color: var(--amarelo); }
+select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid var(--amarelo); outline-offset: 2px; }
+.segmentos { position: relative; display: flex; background: #222; border: 1px solid #3a3a3a; border-radius: 3px; padding: 2px; }
+.segmentos .indicador { position: absolute; top: 2px; bottom: 2px; left: 0; width: 0; background: var(--amarelo); border-radius: 2px;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), width .35s cubic-bezier(.2,.8,.2,1); }
+.segmentos button { position: relative; font: 700 14px "Archivo", sans-serif; color: #ddd; background: none; border: 0;
+  border-radius: 2px; padding: 6px 12px; min-height: 30px; cursor: pointer; transition: color .25s; }
 .segmentos button:hover { color: #fff; }
-.segmentos button[aria-checked="true"] { background: var(--amarelo); color: var(--preto); }
-.tema { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 4px;
-  border: 1px solid #3a3a3a; background: #222; color: var(--amarelo); cursor: pointer; }
+.segmentos button[aria-checked="true"] { color: var(--preto); }
+.tema { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 3px;
+  border: 1px solid #3a3a3a; background: #222; color: var(--amarelo); cursor: pointer; transition: transform .4s; }
+.tema:hover { transform: rotate(180deg); }
 
 /* ---------- Indicadores ---------- */
-main { padding-top: 26px; padding-bottom: 40px; }
-.titulo-seccao { font: 800 18px/1.2 "Archivo Expanded", sans-serif; text-transform: uppercase; margin: 0 0 14px; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
-.kpi { background: var(--cartao); border: 1px solid var(--linha); border-radius: 8px; padding: 14px 16px; }
-.kpi .nome { font-size: 13px; color: var(--suave); margin: 0; }
-.kpi .valor { font: 700 26px/1.15 "Archivo", sans-serif; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
-.kpi .valor.negativo { color: var(--descida); }
-.kpi .delta { font-size: 13px; color: var(--mudo); margin: 0; font-variant-numeric: tabular-nums; }
+main { padding-top: 30px; padding-bottom: 44px; }
+.faixa-titulo { display: inline-block; background: var(--amarelo); color: var(--preto); margin: 0 0 16px; padding: 10px 16px;
+  font: 800 clamp(15px, 2.2vw, 20px)/1.2 "Archivo Expanded", sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); gap: 12px; }
+.kpi { background: var(--azulejo); padding: 16px 16px 14px; display: flex; flex-direction: column; min-height: 132px; }
+.kpi .nome { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--suave); margin: 0; }
+.kpi .valor { font: 800 clamp(19px, 2.2vw, 24px)/1.15 "Archivo Expanded", sans-serif; margin: auto 0 6px; padding-top: 14px;
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+.kpi .delta { font-size: 12.5px; color: var(--suave); margin: 0; font-variant-numeric: tabular-nums; }
 .kpi .delta .sobe { color: var(--subida); font-weight: 700; }
 .kpi .delta .desce { color: var(--descida); font-weight: 700; }
-.kpi.vazio .valor { color: var(--mudo); }
-.nota { color: var(--suave); font-size: 14px; margin: 12px 0 0; }
+.kpi.vazio .valor { color: var(--mudo); font-size: 17px; }
+.em-campo { color: var(--suave); font-size: 14px; margin: 14px 0 0; padding-left: 12px; border-left: 4px solid var(--amarelo); }
 
-/* ---------- Cartões dos gráficos ---------- */
-.grelha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
-.cartao { background: var(--cartao); border: 1px solid var(--linha); border-radius: 8px; padding: 18px 18px 14px;
+/* ---------- Cartões no formato dos gráficos do projeto SQL ---------- */
+.grelha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 34px; }
+.cartao { background: var(--cartao); border: 1px solid var(--linha); border-bottom: 5px solid var(--amarelo);
   display: flex; flex-direction: column; min-width: 0; }
 .cartao.largo { grid-column: 1 / -1; }
-.cartao header { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; margin-bottom: 10px; }
-.cartao h3 { margin: 0; font-size: 16px; font-weight: 700; grid-column: 1; }
-.cartao header p { margin: 0; font-size: 13px; color: var(--suave); grid-column: 1; }
-.ver-tabela { grid-column: 2; grid-row: 1 / span 2; align-self: start; font: 700 12px "Archivo", sans-serif;
-  color: var(--suave); background: none; border: 1px solid var(--linha); border-radius: 4px; padding: 5px 9px; cursor: pointer; }
-.ver-tabela:hover { color: var(--texto); }
-.tela { position: relative; height: 300px; }
-.cartao.largo .tela { height: 340px; }
+.faixa { background: var(--amarelo); color: var(--preto); display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 12px 10px 18px; min-height: 58px; }
+.faixa h3 { margin: 0; font: 800 clamp(13px, 1.6vw, 16px)/1.2 "Archivo Expanded", sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+.faixa img { height: 38px; width: auto; flex: none; }
+.corpo { padding: 14px 18px 12px; display: flex; flex-direction: column; flex: 1; }
+.cabeca { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 10px; }
+.cabeca p { margin: 0; font-size: 13.5px; color: var(--suave); }
+.ver-tabela { flex: none; font: 700 12px "Archivo", sans-serif; color: var(--texto); background: none;
+  border: 2px solid var(--linha); border-radius: 3px; padding: 4px 9px; cursor: pointer; transition: border-color .2s, background .2s; }
+.ver-tabela:hover { border-color: var(--amarelo); }
+.tela { position: relative; height: 310px; }
+.cartao.largo .tela { height: 360px; }
 .vazio-grafico { position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
-  color: var(--mudo); font-size: 14px; padding: 20px; }
+  color: var(--mudo); font-size: 14px; padding: 20px; margin: 0; }
 
-.tabela { overflow-x: auto; max-height: 340px; }
-.tabela table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
-.tabela th, .tabela td { padding: 6px 10px; border-bottom: 1px solid var(--linha); text-align: right; white-space: nowrap; }
+.tabela { overflow-x: auto; max-height: 360px; }
+.tabela table { border-collapse: collapse; width: 100%; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tabela th, .tabela td { padding: 7px 10px; text-align: right; white-space: nowrap; }
 .tabela th:first-child, .tabela td:first-child { text-align: left; }
-.tabela thead th { position: sticky; top: 0; background: var(--cartao); color: var(--suave); font-weight: 700; }
+.tabela thead th { position: sticky; top: 0; background: var(--preto); color: #fff; font-weight: 700; }
+.tabela td { border-bottom: 1px solid var(--linha); }
+.tabela tbody tr:nth-child(even) td { background: var(--azulejo); }
 
-footer { border-top: 1px solid var(--linha); color: var(--suave); font-size: 13px; padding-top: 18px; padding-bottom: 30px; }
-footer p { margin: 0 0 6px; max-width: 760px; }
+footer { color: var(--suave); font-size: 13px; padding-top: 18px; padding-bottom: 30px; border-top: 5px solid var(--amarelo); }
+footer p { margin: 0 0 6px; max-width: 820px; }
+
+/* ====================== Animações ======================
+   Entrada da capa, dos indicadores e dos cartões; os gráficos animam-se em js/animacoes.js. */
+@keyframes subir { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes emblema { from { opacity: 0; transform: translateY(-10px) rotate(-8deg) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes faixa { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes trocar { 0% { opacity: .2; transform: translateY(6px); } 100% { opacity: 1; transform: none; } }
+
+.capa h1 { animation: subir .7s cubic-bezier(.2,.8,.2,1) both; }
+.capa .sub { animation: subir .7s .12s cubic-bezier(.2,.8,.2,1) both; }
+.capa .tags { animation: subir .7s .22s cubic-bezier(.2,.8,.2,1) both; }
+.capa .emblema { animation: emblema .9s .15s cubic-bezier(.2,.8,.2,1) both; }
+.faixa-titulo { transform-origin: left; animation: faixa .6s .3s cubic-bezier(.2,.8,.2,1) both; }
+.kpi { animation: subir .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.35s + var(--i, 0) * 70ms); }
+.kpi:hover { transform: translateY(-2px); transition: transform .2s; }
+
+/* Os cartões entram quando chegam ao ecrã (a classe .visivel é posta por IntersectionObserver) */
+.js .cartao { opacity: 0; transform: translateY(24px); transition: opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1); }
+.js .cartao.visivel { opacity: 1; transform: none; }
+.js .cartao .faixa h3 { transition: letter-spacing .6s .1s; letter-spacing: .08em; }
+.js .cartao.visivel .faixa h3 { letter-spacing: .01em; }
+.cartao .faixa img { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.cartao:hover .faixa img { transform: rotate(-6deg) scale(1.08); }
+.tabela { animation: trocar .35s ease-out; }
+.vazio-grafico { animation: trocar .35s ease-out; }
 
 @media (max-width: 760px) {
   .filtros { position: static; }
   .grelha { grid-template-columns: minmax(0, 1fr); }
-  .tela, .cartao.largo .tela { height: 280px; }
+  .tela, .cartao.largo .tela { height: 290px; }
   .tema { margin-left: 0; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .kpi .valor { font-size: 21px; }
+  .kpi { min-height: 118px; }
+  .kpi .valor { font-size: 17px; }
+  .capa .dentro { padding-block: 26px 22px; }
+}
+
+/* Quem pede menos movimento no sistema operativo vê tudo estático */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .cartao { opacity: 1; transform: none; }
 }
