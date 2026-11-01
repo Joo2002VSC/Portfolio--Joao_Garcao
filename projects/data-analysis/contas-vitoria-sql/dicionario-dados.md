@@ -16,7 +16,7 @@ Gerado por `scripts/dicionario.py` a partir de `vsc_contas.db` e dos comentário
 
 ## Índice
 
-[`auditoria`](#auditoria) · [`balanco`](#balanco) · [`balanco_rubrica`](#balanco_rubrica) · [`balanco_sad_rc`](#balanco_sad_rc) · [`bce_taxa`](#bce_taxa) · [`cash_flow`](#cash_flow) · [`demonstracao_resultados`](#demonstracao_resultados) · [`desempenho_desportivo`](#desempenho_desportivo) · [`divergencia`](#divergencia) · [`divida`](#divida) · [`entidade`](#entidade) · [`epoca`](#epoca) · [`evento`](#evento) · [`financiamento_detalhe`](#financiamento_detalhe) · [`fonte`](#fonte) · [`gastos_pessoal_composicao`](#gastos_pessoal_composicao) · [`operacao_jogador`](#operacao_jogador) · [`partes_relacionadas`](#partes_relacionadas) · [`passes_jogadores`](#passes_jogadores) · [`pessoal_sad`](#pessoal_sad) · [`receitas_composicao`](#receitas_composicao) · [`reexpressao`](#reexpressao) · [`rubrica`](#rubrica) · [`taxa_referencia`](#taxa_referencia) · [`transferencias`](#transferencias) · [`treinador`](#treinador) · [`v_dr`](#v_dr) · [`v_kpis`](#v_kpis) · [`v_resultado_por_entidade`](#v_resultado_por_entidade) · [`v_taxas_epoca`](#v_taxas_epoca)
+[`auditoria`](#auditoria) · [`balanco`](#balanco) · [`balanco_rubrica`](#balanco_rubrica) · [`balanco_sad_rc`](#balanco_sad_rc) · [`bce_taxa`](#bce_taxa) · [`cash_flow`](#cash_flow) · [`demonstracao_resultados`](#demonstracao_resultados) · [`desempenho_desportivo`](#desempenho_desportivo) · [`detalhe_rubrica`](#detalhe_rubrica) · [`divergencia`](#divergencia) · [`divida`](#divida) · [`entidade`](#entidade) · [`epoca`](#epoca) · [`evento`](#evento) · [`financiamento_detalhe`](#financiamento_detalhe) · [`fonte`](#fonte) · [`gastos_pessoal_composicao`](#gastos_pessoal_composicao) · [`operacao_jogador`](#operacao_jogador) · [`partes_relacionadas`](#partes_relacionadas) · [`passes_jogadores`](#passes_jogadores) · [`pessoal_sad`](#pessoal_sad) · [`receitas_composicao`](#receitas_composicao) · [`reexpressao`](#reexpressao) · [`rubrica`](#rubrica) · [`taxa_referencia`](#taxa_referencia) · [`transferencias`](#transferencias) · [`treinador`](#treinador) · [`v_dr`](#v_dr) · [`v_kpis`](#v_kpis) · [`v_resultado_por_entidade`](#v_resultado_por_entidade) · [`v_taxas_epoca`](#v_taxas_epoca)
 
 ## `auditoria`
 
@@ -139,6 +139,21 @@ Desempenho desportivo da equipa principal em cada época
 | `fase_europeia` | TEXT |  | 7 | Fase mais avançada atingida na Europa |
 | `trofeu` | TEXT |  | 12 | Troféu conquistado na época |
 | `nota` | TEXT |  | 12 | Observação sobre o valor ou a época |
+
+## `detalhe_rubrica`
+
+*Tabela · 48 linhas · épocas 2024/25 a 2025/26*
+
+Detalhe das rubricas da DR da SAD segundo as notas do R&C (vendas e serviços, FSE, outros rendimentos e outros gastos). Valores em euros, positivos.
+
+| Coluna | Tipo | Chave | Em falta | Descrição |
+|:---|:---|:---|---:|:---|
+| `epoca_id` | TEXT | PK · FK → `epoca.epoca_id` |  | Época desportiva, `AAAA/AA` |
+| `nota` | TEXT | PK |  | número da nota do anexo |
+| `grupo` | TEXT |  |  | rubrica da demonstração de resultados |
+| `rubrica` | TEXT | PK |  | linha de detalhe |
+| `valor` | INTEGER |  |  | Valor em euros |
+| `documento` | TEXT |  |  | Documento e nota de origem (Relatório e Contas) |
 
 ## `divergencia`
 

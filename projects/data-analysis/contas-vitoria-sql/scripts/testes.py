@@ -201,6 +201,20 @@ def main():
                            AND rl_sem_mais_valias != resultado_liquido - mais_valias_liquidas""").fetchall()
     r.registar("ok" if not erros else "falha", "Resultado sem mais-valias = resultado líquido − mais-valias",
                ", ".join(e for (e,) in erros) or "todas as épocas")
+    mapa = {"15": "vendas_servicos", "17": "fse", "19": "outros_rendimentos", "20": "outros_gastos"}
+    erros, avisos_det = [], []
+    for nota, rubrica in mapa.items():
+        for epoca, soma, dr in con.execute(f"""SELECT d.epoca_id, SUM(d.valor), ABS(r.valor) FROM detalhe_rubrica d
+                JOIN demonstracao_resultados r ON r.epoca_id = d.epoca_id AND r.entidade_id = 'SAD'
+                AND r.rubrica_id = '{rubrica}' WHERE d.nota = '{nota}' GROUP BY d.epoca_id"""):
+            if abs(soma - dr) > 4:
+                (avisos_det if epoca == "2024/25" else erros).append(
+                    f"nota {nota} {epoca}: {soma:,} € vs {dr:,} €".replace(",", " "))
+    r.registar("ok" if not erros else "falha", "Detalhe das notas 15, 17, 19 e 20 soma o valor da DR",
+               "; ".join(erros) or "2025/26; 2024/25 sem diferenças além da reexpressão")
+    for aviso in avisos_det:
+        r.registar("aviso", "Detalhe de 2024/25 ≠ DR original (comparativo reexpresso no R&C 2025/26)",
+                   aviso + ": mais-valias corrigidas na reexpressão (nota 2.3)")
     erros = con.execute("""SELECT data_ref || ' ' || instrumento FROM financiamento_detalhe
                            WHERE menos_1_ano > total OR total < 0""").fetchall()
     r.registar("ok" if not erros else "falha", "Dívida por instrumento: parte de curto prazo ≤ total",

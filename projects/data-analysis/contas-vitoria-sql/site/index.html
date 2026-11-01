@@ -26,7 +26,7 @@
 <hr />
 <h2 id="projeto:resumo">Resumo</h2>
 <p>Base de dados <strong>SQLite</strong> com as contas do <strong>Vitória Sport Clube</strong> em três perspetivas: a <strong>SAD</strong> (futebol profissional), o <strong>Clube</strong> (associação-mãe) e o <strong>Grupo consolidado</strong>. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.</p>
-<p>Sobre essa base, <strong>55 consultas SQL</strong> respondem a uma pergunta central: <em>as contas do Vitória são sustentáveis sem a venda de jogadores?</em></p>
+<p>Sobre essa base, <strong>59 consultas SQL</strong> respondem a uma pergunta central: <em>as contas do Vitória são sustentáveis sem a venda de jogadores?</em></p>
 <p><strong>Perguntas de investigação</strong></p>
 <div class="tabela"><table>
 <thead>
@@ -166,9 +166,11 @@
 <p><img alt="Vendas vs. receitas" src="img/17_vendas_vs_receitas.png" loading="lazy" /></p>
 <p><strong>11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.</strong> O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).</p>
 <p><img alt="Centralização e equilíbrio" src="img/18_centralizacao_equilibrio.png" loading="lazy" /></p>
+<p><strong>13. As vendas de jogadores nunca pagaram os gastos.</strong> Em nove épocas, as mais-valias cobriram entre 20% e 72% dos gastos operacionais; em 2025/26 cobriram 40%, e ficaram por cobrir 24,2 M€, mais do que todas as receitas da operação (14,9 M€). Os gastos operacionais duplicaram desde 2017/18, para um máximo de 40,3 M€. O relatório em PDF <a href="../relatorio/rendimentos-gastos-transferencias.pdf" target="_blank" rel="noopener">Rendimentos, gastos e transferências</a> detalha a evolução de cada rubrica.</p>
+<p><img alt="Gastos operacionais, receitas de transferências e saldo" src="img/01_gastos_transferencias_saldo.png" loading="lazy" /></p>
 <p>O <a href="#tecnica:18-painel-de-indicadores-financeiros">painel de indicadores</a> junta a margem corrente (negativa em todas as épocas), a rendibilidade do ativo, a dívida face às receitas e o cash flow operacional.</p>
 <p><strong>12. As contas de 2025/26 mudaram a leitura do passado.</strong> O Relatório e Contas de 2025/26 corrigiu sete erros de 2024/25: custo amortizado não aplicado, uma provisão FIFA, comissões de uma venda, juros não especializados, inventários, imparidades e direitos económicos que já não eram ativos. O capital próprio de 30/06/2025 baixou 1,7 M€. A demonstração dos fluxos de caixa foi refeita: o fluxo operacional de 2024/25 passou de +0,9 M€ para <strong>(18,9 M€)</strong>, porque 36,5 M€ de recebimentos de clientes tinham ido diretamente para os financiadores, para amortizar créditos antecipados. Na nova apresentação, a operação consumiu 19 M€ de caixa em cada uma das duas últimas épocas, cobertos com nova dívida.</p>
-<p>Os resultados completos das 55 consultas estão em <a href="#resultados"><code>resultados.md</code></a>.</p>
+<p>Os resultados completos das 59 consultas estão em <a href="#resultados"><code>resultados.md</code></a>.</p>
 <h2 id="projeto:relatórios">Relatórios</h2>
 <div class="tabela"><table>
 <thead>
@@ -191,12 +193,16 @@
 <td style="text-align: left;">Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias</td>
 </tr>
 <tr>
+<td style="text-align: left;"><strong><a href="../relatorio/rendimentos-gastos-transferencias.pdf" target="_blank" rel="noopener">Rendimentos, gastos e transferências</a></strong> (PDF, 7 páginas)</td>
+<td style="text-align: left;">Gastos operacionais face às receitas de transferências e saldo, evolução das rubricas de rendimentos e de gastos desde 2013/14 e detalhe das notas do R&amp;C 2025/26</td>
+</tr>
+<tr>
 <td style="text-align: left;"><strong><a href="#testes">Testes</a></strong></td>
 <td style="text-align: left;">Resultado dos testes automáticos de integridade, coerência contabilística e reconciliação</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong><a href="#dicionario">Dicionário de dados</a></strong></td>
-<td style="text-align: left;">As 30 tabelas e vistas, coluna a coluna</td>
+<td style="text-align: left;">As 31 tabelas e vistas, coluna a coluna</td>
 </tr>
 </tbody>
 </table></div>
@@ -319,6 +325,10 @@
 <tr>
 <td style="text-align: left;"><code>treinador</code></td>
 <td style="text-align: left;">Treinadores principais e interinos desde 2015</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>detalhe_rubrica</code></td>
+<td style="text-align: left;">Detalhe das notas 15, 17, 19 e 20 do R&amp;C 2025/26 (vendas e serviços, FSE, outros rendimentos e outros gastos), 2024/25 e 2025/26</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>taxa_referencia</code> · <code>bce_taxa</code></td>
@@ -470,14 +480,15 @@ python scripts/construir.py --rapido   # só base de dados, consultas e testes (
 </code></pre>
 <p>O comando pára no primeiro erro. Os passos também podem correr um a um:</p>
 <pre><code class="language-bash">python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 59 consultas e gera resultados.md
 python scripts/testes.py            # testes de qualidade e reconciliação → testes.md
 python scripts/dicionario.py        # dicionário de dados → dicionario-dados.md
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
 python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
+python scripts/relatorio_pdf.py     # gera o relatório PDF (requer: pip install playwright; playwright install chromium)
 </code></pre>
-<p><strong>Qualidade e reconciliação.</strong> <a href="#testes"><code>testes.md</code></a> mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 55 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O <a href="#dicionario">dicionário de dados</a> descreve as 30 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.</p>
+<p><strong>Qualidade e reconciliação.</strong> <a href="#testes"><code>testes.md</code></a> mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 59 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O <a href="#dicionario">dicionário de dados</a> descreve as 31 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.</p>
 <p><strong>Integração contínua.</strong> O ficheiro <a href="ci/contas-vitoria-sql.yml"><code>ci/contas-vitoria-sql.yml</code></a> é uma GitHub Action que reconstrói a base e corre os testes sempre que algo muda nesta pasta. Para a ativar, copia-o para <code>.github/workflows/</code> na raiz do repositório.</p>
 <p><strong>Resolução de problemas</strong></p>
 <div class="tabela"><table>
@@ -522,7 +533,7 @@ ORDER BY epoca_id;
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     55 consultas de análise
+│   └── 04_analises.sql     59 consultas de análise
 ├── scripts/
 │   ├── construir.py        Reconstrói e valida tudo com um comando
 │   ├── build_db.py         Constrói vsc_contas.db
@@ -532,10 +543,12 @@ ORDER BY epoca_id;
 │   ├── graficos.py         Gera os gráficos
 │   ├── cabecalhos.py       Gera as faixas de título do README
 │   ├── gerar_html.py       Gera a versão HTML
+│   ├── relatorio_pdf.py    Gera o relatório PDF (com modelo_relatorio.html)
 │   ├── modelo.html         Modelo da versão HTML
 │   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
 ├── ci/                     GitHub Action com os testes (copiar para .github/workflows/)
+├── relatorio/              Relatório PDF &quot;Rendimentos, gastos e transferências&quot;, fonte HTML e gráficos
 ├── html/                   Versão HTML autónoma, com consola SQL
 ├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
@@ -569,7 +582,7 @@ ORDER BY epoca_id;
 <li><strong>Funcionários.</strong> São números médios anuais. Em 2012/13 são os funcionários transferidos para a SAD em abril de 2013 (época parcial). A categoria "pessoal de apoio ao futebol profissional" só existe desde 2021/22.</li>
 </ul>
 <h2 id="projeto:identidade-visual">Identidade visual</h2>
-<p>Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo <code>#F5D510</code>, preto <code>#111111</code> e cinzentos <code>#6F6D6E</code> e <code>#EBEBEB</code>. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por <code>scripts/cabecalhos.py</code>. A tipografia é a <a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Archivo">Archivo</a>, da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta <code>fontes/</code> (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.</p>
+<p>Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo <code>#F5D510</code>, preto <code>#111111</code> e cinzentos <code>#6F6D6E</code> e <code>#EBEBEB</code>. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por <code>scripts/cabecalhos.py</code>. O relatório PDF usa o emblema do Vitória Sport Clube, propriedade do clube, apenas para identificar o clube analisado. A tipografia é a <a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Archivo">Archivo</a>, da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta <code>fontes/</code> (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.</p>
 <hr />
 <p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p>
 </article>
@@ -6878,11 +6891,644 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
+<h2 id="resultados:56-gastos-operacionais-vs-receitas-de-transferências-e-saldo">56. Gastos operacionais vs. receitas de transferências e saldo</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>epoca</th>
+<th>gastos_operacionais</th>
+<th>vendas_brutas</th>
+<th>receitas_transferencias</th>
+<th>saldo</th>
+<th>transferencias_cobrem_pct</th>
+<th>receitas_operacao</th>
+<th>saldo_com_receitas_operacao</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2017/18</td>
+<td>19 838 667</td>
+<td>10 660 000</td>
+<td>6 735 474</td>
+<td>-13 103 193</td>
+<td>34,0</td>
+<td>9 822 148</td>
+<td>-3 281 045</td>
+</tr>
+<tr>
+<td>2018/19</td>
+<td>25 082 363</td>
+<td>21 744 390</td>
+<td>7 309 152</td>
+<td>-17 773 211</td>
+<td>29,1</td>
+<td>12 558 787</td>
+<td>-5 214 424</td>
+</tr>
+<tr>
+<td>2019/20</td>
+<td>32 196 891</td>
+<td>21 309 347</td>
+<td>15 009 861</td>
+<td>-17 187 030</td>
+<td>46,6</td>
+<td>17 014 051</td>
+<td>-172 979</td>
+</tr>
+<tr>
+<td>2020/21</td>
+<td>35 391 835</td>
+<td>17 012 320</td>
+<td>17 012 320</td>
+<td>-18 379 515</td>
+<td>48,1</td>
+<td>10 334 411</td>
+<td>-8 045 104</td>
+</tr>
+<tr>
+<td>2021/22</td>
+<td>35 511 792</td>
+<td>15 217 500</td>
+<td>11 542 768</td>
+<td>-23 969 024</td>
+<td>32,5</td>
+<td>11 285 014</td>
+<td>-12 684 010</td>
+</tr>
+<tr>
+<td>2022/23</td>
+<td>33 677 445</td>
+<td>30 921 739</td>
+<td>23 216 097</td>
+<td>-10 461 348</td>
+<td>68,9</td>
+<td>13 159 010</td>
+<td>2 697 662</td>
+</tr>
+<tr>
+<td>2023/24</td>
+<td>32 813 851</td>
+<td>14 626 816</td>
+<td>6 665 467</td>
+<td>-26 148 384</td>
+<td>20,3</td>
+<td>12 900 965</td>
+<td>-13 247 419</td>
+</tr>
+<tr>
+<td>2024/25</td>
+<td>38 334 162</td>
+<td>49 518 024</td>
+<td>27 540 964</td>
+<td>-10 793 198</td>
+<td>71,8</td>
+<td>22 584 987</td>
+<td>11 791 789</td>
+</tr>
+<tr>
+<td>2025/26</td>
+<td>40 283 996</td>
+<td>30 820 000</td>
+<td>16 055 187</td>
+<td>-24 228 809</td>
+<td>39,9</td>
+<td>14 880 806</td>
+<td>-9 348 003</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="resultados:57-evolução-das-rubricas-de-rendimentos-operacionais-da-sad">57. Evolução das rubricas de rendimentos operacionais da SAD</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>epoca</th>
+<th>vendas_servicos</th>
+<th>subsidios</th>
+<th>outros_rendimentos</th>
+<th>total_rendimentos</th>
+<th>outros_rendimentos_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013/14</td>
+<td>8 900 528</td>
+<td>47 318</td>
+<td>1 508 534</td>
+<td>10 456 380</td>
+<td>14,4</td>
+</tr>
+<tr>
+<td>2014/15</td>
+<td>6 786 697</td>
+<td>48 255</td>
+<td>4 301 110</td>
+<td>11 136 062</td>
+<td>38,6</td>
+</tr>
+<tr>
+<td>2015/16</td>
+<td>6 226 662</td>
+<td>50 773</td>
+<td>5 116 350</td>
+<td>11 393 785</td>
+<td>44,9</td>
+</tr>
+<tr>
+<td>2016/17</td>
+<td>10 535 891</td>
+<td>139 613</td>
+<td>6 234 899</td>
+<td>16 910 403</td>
+<td>36,9</td>
+</tr>
+<tr>
+<td>2017/18</td>
+<td>9 822 148</td>
+<td>145 970</td>
+<td>10 970 761</td>
+<td>20 938 879</td>
+<td>52,4</td>
+</tr>
+<tr>
+<td>2018/19</td>
+<td>12 558 787</td>
+<td>9 381</td>
+<td>14 362 820</td>
+<td>26 930 988</td>
+<td>53,3</td>
+</tr>
+<tr>
+<td>2019/20</td>
+<td>17 014 051</td>
+<td>163 567</td>
+<td>15 494 489</td>
+<td>32 672 107</td>
+<td>47,4</td>
+</tr>
+<tr>
+<td>2020/21</td>
+<td>10 334 411</td>
+<td>59 486</td>
+<td>17 497 369</td>
+<td>27 891 266</td>
+<td>62,7</td>
+</tr>
+<tr>
+<td>2021/22</td>
+<td>11 285 014</td>
+<td>64 130</td>
+<td>12 143 813</td>
+<td>23 492 957</td>
+<td>51,7</td>
+</tr>
+<tr>
+<td>2022/23</td>
+<td>13 159 010</td>
+<td>282 784</td>
+<td>23 791 505</td>
+<td>37 233 299</td>
+<td>63,9</td>
+</tr>
+<tr>
+<td>2023/24</td>
+<td>12 900 965</td>
+<td>106 373</td>
+<td>8 865 536</td>
+<td>21 872 874</td>
+<td>40,5</td>
+</tr>
+<tr>
+<td>2024/25</td>
+<td>22 584 987</td>
+<td>48 544</td>
+<td>28 817 437</td>
+<td>51 450 968</td>
+<td>56,0</td>
+</tr>
+<tr>
+<td>2025/26</td>
+<td>14 880 806</td>
+<td>357 389</td>
+<td>19 638 622</td>
+<td>34 876 817</td>
+<td>56,3</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="resultados:58-evolução-das-rubricas-de-gastos-operacionais-da-sad">58. Evolução das rubricas de gastos operacionais da SAD</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>epoca</th>
+<th>pessoal</th>
+<th>fse</th>
+<th>depreciacoes</th>
+<th>mercadorias</th>
+<th>outros_gastos</th>
+<th>imparidades_provisoes</th>
+<th>total_gastos</th>
+<th>pessoal_pct</th>
+<th>variacao_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2013/14</td>
+<td>4 621 871</td>
+<td>3 891 074</td>
+<td>3 356 173</td>
+<td>154 796</td>
+<td>998 623</td>
+<td>7 363</td>
+<td>13 029 900</td>
+<td>35,5</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2014/15</td>
+<td>4 413 612</td>
+<td>3 235 328</td>
+<td>1 201 758</td>
+<td>274 582</td>
+<td>257 894</td>
+<td>487 872</td>
+<td>9 871 046</td>
+<td>44,7</td>
+<td>-24,2</td>
+</tr>
+<tr>
+<td>2015/16</td>
+<td>5 278 997</td>
+<td>4 347 617</td>
+<td>1 190 607</td>
+<td>355 749</td>
+<td>225 359</td>
+<td>-447 700</td>
+<td>10 950 629</td>
+<td>48,2</td>
+<td>10,9</td>
+</tr>
+<tr>
+<td>2016/17</td>
+<td>6 758 553</td>
+<td>4 849 388</td>
+<td>1 737 722</td>
+<td>357 800</td>
+<td>266 892</td>
+<td>0</td>
+<td>13 970 355</td>
+<td>48,4</td>
+<td>27,6</td>
+</tr>
+<tr>
+<td>2017/18</td>
+<td>8 843 968</td>
+<td>5 471 720</td>
+<td>4 034 406</td>
+<td>480 702</td>
+<td>1 007 871</td>
+<td>0</td>
+<td>19 838 667</td>
+<td>44,6</td>
+<td>42,0</td>
+</tr>
+<tr>
+<td>2018/19</td>
+<td>11 559 940</td>
+<td>5 981 676</td>
+<td>5 523 046</td>
+<td>525 659</td>
+<td>1 492 042</td>
+<td>0</td>
+<td>25 082 363</td>
+<td>46,1</td>
+<td>26,4</td>
+</tr>
+<tr>
+<td>2019/20</td>
+<td>16 100 077</td>
+<td>6 919 038</td>
+<td>5 960 690</td>
+<td>319 888</td>
+<td>2 698 831</td>
+<td>198 367</td>
+<td>32 196 891</td>
+<td>50,0</td>
+<td>28,4</td>
+</tr>
+<tr>
+<td>2020/21</td>
+<td>20 655 205</td>
+<td>5 045 147</td>
+<td>6 815 353</td>
+<td>497 677</td>
+<td>1 895 430</td>
+<td>483 023</td>
+<td>35 391 835</td>
+<td>58,4</td>
+<td>9,90</td>
+</tr>
+<tr>
+<td>2021/22</td>
+<td>19 627 255</td>
+<td>5 822 670</td>
+<td>7 769 947</td>
+<td>542 627</td>
+<td>893 371</td>
+<td>855 922</td>
+<td>35 511 792</td>
+<td>55,3</td>
+<td>0,30</td>
+</tr>
+<tr>
+<td>2022/23</td>
+<td>15 602 700</td>
+<td>7 385 387</td>
+<td>8 242 185</td>
+<td>508 492</td>
+<td>1 788 893</td>
+<td>149 788</td>
+<td>33 677 445</td>
+<td>46,3</td>
+<td>-5,20</td>
+</tr>
+<tr>
+<td>2023/24</td>
+<td>16 946 060</td>
+<td>7 628 896</td>
+<td>4 672 921</td>
+<td>479 517</td>
+<td>2 863 469</td>
+<td>222 988</td>
+<td>32 813 851</td>
+<td>51,6</td>
+<td>-2,60</td>
+</tr>
+<tr>
+<td>2024/25</td>
+<td>20 526 758</td>
+<td>10 032 690</td>
+<td>5 541 431</td>
+<td>654 102</td>
+<td>1 520 697</td>
+<td>58 484</td>
+<td>38 334 162</td>
+<td>53,5</td>
+<td>16,8</td>
+</tr>
+<tr>
+<td>2025/26</td>
+<td>21 730 779</td>
+<td>8 997 162</td>
+<td>6 964 397</td>
+<td>772 962</td>
+<td>1 817 758</td>
+<td>938</td>
+<td>40 283 996</td>
+<td>53,9</td>
+<td>5,10</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="resultados:59-detalhe-das-rubricas-no-rc-202526-o-que-mudou-face-a-202425">59. Detalhe das rubricas no R&amp;C 2025/26: o que mudou face a 2024/25</h2>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>nota</th>
+<th>grupo</th>
+<th>rubrica</th>
+<th>valor_2024_25</th>
+<th>valor_2025_26</th>
+<th>variacao</th>
+<th>variacao_pct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Direitos televisivos</td>
+<td>6 922 619</td>
+<td>6 922 619</td>
+<td>0</td>
+<td>0,00</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Publicidade e patrocínios</td>
+<td>2 009 296</td>
+<td>2 306 533</td>
+<td>297 237</td>
+<td>14,8</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Bilheteira, quotização e pack-sócio</td>
+<td>2 438 222</td>
+<td>1 975 548</td>
+<td>-462 674</td>
+<td>-19,0</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Prémios de competições (nacionais e UEFA)</td>
+<td>9 720 482</td>
+<td>1 629 469</td>
+<td>-8 091 013</td>
+<td>-83,2</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Venda de mercadorias</td>
+<td>947 279</td>
+<td>1 037 932</td>
+<td>90 653</td>
+<td>9,60</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Mecanismo de solidariedade</td>
+<td>516 936</td>
+<td>938 009</td>
+<td>421 073</td>
+<td>81,5</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Vendas e serviços prestados</td>
+<td>Outros serviços</td>
+<td>30 153</td>
+<td>70 697</td>
+<td>40 544</td>
+<td>134,5</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Outros serviços especializados</td>
+<td>2 396 802</td>
+<td>2 518 821</td>
+<td>122 019</td>
+<td>5,10</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Despesas com provas</td>
+<td>3 266 637</td>
+<td>1 554 580</td>
+<td>-1 712 057</td>
+<td>-52,4</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Deslocações e estadas</td>
+<td>1 186 211</td>
+<td>1 338 554</td>
+<td>152 343</td>
+<td>12,8</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Materiais</td>
+<td>522 628</td>
+<td>868 926</td>
+<td>346 298</td>
+<td>66,3</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Rendas e alugueres</td>
+<td>748 773</td>
+<td>842 936</td>
+<td>94 163</td>
+<td>12,6</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Outros serviços diversos</td>
+<td>769 300</td>
+<td>841 510</td>
+<td>72 210</td>
+<td>9,40</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Pessoal do Clube ao serviço da SAD</td>
+<td>823 973</td>
+<td>702 323</td>
+<td>-121 650</td>
+<td>-14,8</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fornecimentos e serviços externos</td>
+<td>Energia e fluidos</td>
+<td>318 365</td>
+<td>329 512</td>
+<td>11 147</td>
+<td>3,50</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Outros rendimentos e ganhos</td>
+<td>Ganhos com alienação de passes e outros investimentos</td>
+<td>26 385 026</td>
+<td>17 209 377</td>
+<td>-9 175 649</td>
+<td>-34,8</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Outros rendimentos e ganhos</td>
+<td>Compensação financeira de atletas alienados</td>
+<td>1 396 329</td>
+<td>1 626 970</td>
+<td>230 641</td>
+<td>16,5</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Outros rendimentos e ganhos</td>
+<td>Apostas (Placard), seguros e outros rendimentos suplementares</td>
+<td>453 373</td>
+<td>486 026</td>
+<td>32 653</td>
+<td>7,20</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Outros rendimentos e ganhos</td>
+<td>Outros</td>
+<td>130 535</td>
+<td>316 249</td>
+<td>185 714</td>
+<td>142,3</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Outros gastos e perdas</td>
+<td>Perdas com alienação e rescisão de passes</td>
+<td>700 191</td>
+<td>1 011 203</td>
+<td>311 012</td>
+<td>44,4</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Outros gastos e perdas</td>
+<td>Outros (donativos, impostos e diversos)</td>
+<td>316 142</td>
+<td>285 283</td>
+<td>-30 859</td>
+<td>-9,80</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Outros gastos e perdas</td>
+<td>Multas e penalidades</td>
+<td>313 004</td>
+<td>249 198</td>
+<td>-63 806</td>
+<td>-20,4</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Outros gastos e perdas</td>
+<td>Correções de exercícios anteriores</td>
+<td>132 393</td>
+<td>149 926</td>
+<td>17 533</td>
+<td>13,2</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Outros gastos e perdas</td>
+<td>Quotizações (Liga)</td>
+<td>58 968</td>
+<td>122 147</td>
+<td>63 179</td>
+<td>107,1</td>
+</tr>
+</tbody>
+</table></div>
 </article>
 <article class="pagina" id="p-testes" data-pagina="testes">
 <h1 id="testes:testes-de-qualidade-e-reconciliação">Testes de qualidade e reconciliação</h1>
 <p>Gerado por <code>scripts/testes.py</code>. Corre-o depois de <code>build_db.py</code>.</p>
-<p><strong>38 testes aprovados · 0 falhados · 8 avisos</strong></p>
+<p><strong>39 testes aprovados · 0 falhados · 9 avisos</strong></p>
 <p>Python 3.13.17 · SQLite 3.45.1 · Linux</p>
 <h2 id="testes:1-integridade-da-base-de-dados">1. Integridade da base de dados</h2>
 <div class="tabela"><table>
@@ -6980,6 +7626,16 @@ ORDER BY epoca_id;
 <td style="text-align: center;">✓</td>
 <td style="text-align: left;">Resultado sem mais-valias = resultado líquido − mais-valias</td>
 <td style="text-align: left;">todas as épocas</td>
+</tr>
+<tr>
+<td style="text-align: center;">✓</td>
+<td style="text-align: left;">Detalhe das notas 15, 17, 19 e 20 soma o valor da DR</td>
+<td style="text-align: left;">2025/26; 2024/25 sem diferenças além da reexpressão</td>
+</tr>
+<tr>
+<td style="text-align: center;">⚠</td>
+<td style="text-align: left;">Detalhe de 2024/25 ≠ DR original (comparativo reexpresso no R&amp;C 2025/26)</td>
+<td style="text-align: left;">nota 19 2024/25: 28 365 263 € vs 28 817 437 €: mais-valias corrigidas na reexpressão (nota 2.3)</td>
 </tr>
 <tr>
 <td style="text-align: center;">✓</td>
@@ -7127,7 +7783,7 @@ ORDER BY epoca_id;
 <tbody>
 <tr>
 <td style="text-align: center;">✓</td>
-<td style="text-align: left;">As 55 consultas correm sem erros</td>
+<td style="text-align: left;">As 59 consultas correm sem erros</td>
 <td style="text-align: left;"></td>
 </tr>
 <tr>
@@ -7218,7 +7874,7 @@ ORDER BY epoca_id;
 </tbody>
 </table></div>
 <h2 id="dicionario:índice">Índice</h2>
-<p><a href="#dicionario:auditoria"><code>auditoria</code></a> · <a href="#dicionario:balanco"><code>balanco</code></a> · <a href="#dicionario:balanco_rubrica"><code>balanco_rubrica</code></a> · <a href="#dicionario:balanco_sad_rc"><code>balanco_sad_rc</code></a> · <a href="#dicionario:bce_taxa"><code>bce_taxa</code></a> · <a href="#dicionario:cash_flow"><code>cash_flow</code></a> · <a href="#dicionario:demonstracao_resultados"><code>demonstracao_resultados</code></a> · <a href="#dicionario:desempenho_desportivo"><code>desempenho_desportivo</code></a> · <a href="#dicionario:divergencia"><code>divergencia</code></a> · <a href="#dicionario:divida"><code>divida</code></a> · <a href="#dicionario:entidade"><code>entidade</code></a> · <a href="#dicionario:epoca"><code>epoca</code></a> · <a href="#dicionario:evento"><code>evento</code></a> · <a href="#dicionario:financiamento_detalhe"><code>financiamento_detalhe</code></a> · <a href="#dicionario:fonte"><code>fonte</code></a> · <a href="#dicionario:gastos_pessoal_composicao"><code>gastos_pessoal_composicao</code></a> · <a href="#dicionario:operacao_jogador"><code>operacao_jogador</code></a> · <a href="#dicionario:partes_relacionadas"><code>partes_relacionadas</code></a> · <a href="#dicionario:passes_jogadores"><code>passes_jogadores</code></a> · <a href="#dicionario:pessoal_sad"><code>pessoal_sad</code></a> · <a href="#dicionario:receitas_composicao"><code>receitas_composicao</code></a> · <a href="#dicionario:reexpressao"><code>reexpressao</code></a> · <a href="#dicionario:rubrica"><code>rubrica</code></a> · <a href="#dicionario:taxa_referencia"><code>taxa_referencia</code></a> · <a href="#dicionario:transferencias"><code>transferencias</code></a> · <a href="#dicionario:treinador"><code>treinador</code></a> · <a href="#dicionario:v_dr"><code>v_dr</code></a> · <a href="#dicionario:v_kpis"><code>v_kpis</code></a> · <a href="#dicionario:v_resultado_por_entidade"><code>v_resultado_por_entidade</code></a> · <a href="#dicionario:v_taxas_epoca"><code>v_taxas_epoca</code></a></p>
+<p><a href="#dicionario:auditoria"><code>auditoria</code></a> · <a href="#dicionario:balanco"><code>balanco</code></a> · <a href="#dicionario:balanco_rubrica"><code>balanco_rubrica</code></a> · <a href="#dicionario:balanco_sad_rc"><code>balanco_sad_rc</code></a> · <a href="#dicionario:bce_taxa"><code>bce_taxa</code></a> · <a href="#dicionario:cash_flow"><code>cash_flow</code></a> · <a href="#dicionario:demonstracao_resultados"><code>demonstracao_resultados</code></a> · <a href="#dicionario:desempenho_desportivo"><code>desempenho_desportivo</code></a> · <a href="#dicionario:detalhe_rubrica"><code>detalhe_rubrica</code></a> · <a href="#dicionario:divergencia"><code>divergencia</code></a> · <a href="#dicionario:divida"><code>divida</code></a> · <a href="#dicionario:entidade"><code>entidade</code></a> · <a href="#dicionario:epoca"><code>epoca</code></a> · <a href="#dicionario:evento"><code>evento</code></a> · <a href="#dicionario:financiamento_detalhe"><code>financiamento_detalhe</code></a> · <a href="#dicionario:fonte"><code>fonte</code></a> · <a href="#dicionario:gastos_pessoal_composicao"><code>gastos_pessoal_composicao</code></a> · <a href="#dicionario:operacao_jogador"><code>operacao_jogador</code></a> · <a href="#dicionario:partes_relacionadas"><code>partes_relacionadas</code></a> · <a href="#dicionario:passes_jogadores"><code>passes_jogadores</code></a> · <a href="#dicionario:pessoal_sad"><code>pessoal_sad</code></a> · <a href="#dicionario:receitas_composicao"><code>receitas_composicao</code></a> · <a href="#dicionario:reexpressao"><code>reexpressao</code></a> · <a href="#dicionario:rubrica"><code>rubrica</code></a> · <a href="#dicionario:taxa_referencia"><code>taxa_referencia</code></a> · <a href="#dicionario:transferencias"><code>transferencias</code></a> · <a href="#dicionario:treinador"><code>treinador</code></a> · <a href="#dicionario:v_dr"><code>v_dr</code></a> · <a href="#dicionario:v_kpis"><code>v_kpis</code></a> · <a href="#dicionario:v_resultado_por_entidade"><code>v_resultado_por_entidade</code></a> · <a href="#dicionario:v_taxas_epoca"><code>v_taxas_epoca</code></a></p>
 <h2 id="dicionario:auditoria"><code>auditoria</code></h2>
 <p><em>Tabela · 14 linhas · épocas 2012/13 a 2025/26</em></p>
 <p>Parecer do auditor (certificação legal de contas) e artigo 35.º do CSC</p>
@@ -7694,6 +8350,64 @@ ORDER BY epoca_id;
 <td style="text-align: left;"></td>
 <td style="text-align: right;">12</td>
 <td style="text-align: left;">Observação sobre o valor ou a época</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="dicionario:detalhe_rubrica"><code>detalhe_rubrica</code></h2>
+<p><em>Tabela · 48 linhas · épocas 2024/25 a 2025/26</em></p>
+<p>Detalhe das rubricas da DR da SAD segundo as notas do R&amp;C (vendas e serviços, FSE, outros rendimentos e outros gastos). Valores em euros, positivos.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Coluna</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Chave</th>
+<th style="text-align: right;">Em falta</th>
+<th style="text-align: left;">Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>epoca_id</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK · FK → <code>epoca.epoca_id</code></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Época desportiva, <code>AAAA/AA</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>nota</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">número da nota do anexo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>grupo</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">rubrica da demonstração de resultados</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rubrica</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;">PK</td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">linha de detalhe</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>valor</code></td>
+<td style="text-align: left;">INTEGER</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Valor em euros</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>documento</code></td>
+<td style="text-align: left;">TEXT</td>
+<td style="text-align: left;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: left;">Documento e nota de origem (Relatório e Contas)</td>
 </tr>
 </tbody>
 </table></div>

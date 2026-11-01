@@ -166,6 +166,9 @@ def main():
              ["epoca", "indicador", "valor_original", "valor_reexpresso", "documento"],
              {"valor_original", "valor_reexpresso"})
     carregar("treinadores.csv", "treinador", ["periodo", "treinador", "tipo"], set())
+    destino["epoca"] = "epoca_id"
+    carregar("detalhe_rubricas.csv", "detalhe_rubrica",
+             ["epoca", "nota", "grupo", "rubrica", "valor", "documento"], {"valor"})
 
     for r in ler_csv("taxas_referencia.csv"):
         con.execute("INSERT INTO taxa_referencia VALUES (?, ?, ?, ?)",

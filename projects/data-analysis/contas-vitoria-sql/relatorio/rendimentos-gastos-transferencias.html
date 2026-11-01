@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Rendimentos, gastos e transferências · Vitória SC – Futebol, SAD</title>
+<style>
+@font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url("../fontes/ArchivoExpanded-ExtraBold.ttf"); }
+@font-face { font-family: "Archivo"; font-weight: 400; src: url("../fontes/Archivo-Regular.ttf"); }
+@font-face { font-family: "Archivo"; font-weight: 700; src: url("../fontes/Archivo-Bold.ttf"); }
+
+/* Identidade: amarelo e preto dos documentos financeiros do clube, cinzentos neutros,
+   Archivo Expanded nos títulos e números, Archivo no texto. Página A4 com grelha
+   de margens de 18 mm e faixa amarela como elemento de assinatura. */
+:root {
+  --amarelo: #F5D510; --amarelo-suave: #FCF1A6; --preto: #111111;
+  --cinza-escuro: #4A4949; --cinza: #8C8A8B; --linha: #DCDBDB; --zebra: #F6F5F3;
+  --titulo: "Archivo Expanded", "Archivo", sans-serif;
+  --texto: "Archivo", "Helvetica Neue", Arial, sans-serif;
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; color: var(--preto); }
+body { font: 400 9.4pt/1.45 var(--texto); -webkit-print-color-adjust: exact; print-color-adjust: exact; font-variant-numeric: tabular-nums; }
+
+.pagina { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; break-after: page;
+  padding: 0 18mm; display: flex; flex-direction: column; }
+.pagina:last-child { page-break-after: auto; break-after: auto; }
+
+/* Cabeçalho e rodapé das páginas interiores */
+.cabecalho { display: flex; align-items: center; gap: 4mm; padding: 9mm 0 3.2mm; border-bottom: 1.2mm solid var(--amarelo); }
+.cabecalho img { height: 10mm; }
+.cabecalho .titulo-curto { font: 800 8pt var(--titulo); text-transform: uppercase; letter-spacing: .03em; }
+.cabecalho .entidade { margin-left: auto; font-size: 7.6pt; color: var(--cinza-escuro); }
+.corpo { flex: 1; padding-top: 6mm; display: flex; flex-direction: column; min-height: 0; }
+.rodape { display: flex; justify-content: space-between; align-items: center; gap: 8mm; padding: 3mm 0 8mm;
+  border-top: .3mm solid var(--linha); font-size: 6.8pt; color: var(--cinza); }
+.rodape .num { font: 800 8pt var(--titulo); color: var(--preto); }
+
+/* Tipografia */
+.seccao-num { display: inline-block; align-self: flex-start; margin: 0 0 2.5mm; padding: .8mm 2.6mm; background: var(--preto); color: var(--amarelo);
+  font: 800 8pt var(--titulo); letter-spacing: .06em; text-transform: uppercase; }
+h2 { font: 800 17pt/1.15 var(--titulo); margin: 0 0 3mm; letter-spacing: -.005em; text-wrap: balance; }
+h3 { font: 800 9.5pt var(--titulo); text-transform: uppercase; letter-spacing: .04em; margin: 6mm 0 2.5mm;
+  padding-bottom: 1.2mm; border-bottom: .6mm solid var(--preto); }
+h4 { font: 700 9pt var(--texto); margin: 3mm 0 1.5mm; }
+h4 span { font-weight: 400; color: var(--cinza); font-size: 7.6pt; margin-left: 1.5mm; }
+.lead { font-size: 10pt; line-height: 1.5; margin: 0 0 4mm; max-width: 165mm; color: #222; }
+.nota { font-size: 6.9pt; line-height: 1.45; color: var(--cinza-escuro); margin: 2.5mm 0 0; }
+code { font: 6.8pt ui-monospace, Menlo, monospace; background: var(--zebra); padding: 0 1mm; }
+figure { margin: 0 0 3.5mm; }
+figure img { width: 100%; display: block; }
+
+/* Tabelas */
+table { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+th { background: var(--preto); color: #fff; font-weight: 700; text-align: right; padding: 1.5mm 1.8mm; white-space: nowrap; }
+th.t, th:first-child { text-align: left; }
+td { padding: 1.15mm 1.8mm; border-bottom: .25mm solid var(--linha); }
+td.n { text-align: right; white-space: nowrap; }
+td.forte { font-weight: 700; }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+tr.destaque td { background: var(--amarelo-suave) !important; font-weight: 700; border-bottom: .5mm solid var(--preto); }
+
+/* Síntese */
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; margin: 2mm 0 1mm; }
+.kpi { border-top: 1.4mm solid var(--amarelo); background: var(--zebra); padding: 4mm 4.5mm 4.5mm; display: flex; flex-direction: column; gap: 1.5mm; }
+.kpi .v { font: 800 22pt/1 var(--titulo); }
+.kpi .v small { font-size: 11pt; }
+.kpi .l { font-size: 8pt; color: var(--cinza-escuro); line-height: 1.35; }
+.kpi.escuro { background: var(--preto); border-top-color: var(--amarelo); }
+.kpi.escuro .v { color: var(--amarelo); }
+.kpi.escuro .l { color: #ddd; }
+.conclusoes { margin: 0; padding-left: 0; list-style: none; counter-reset: c; display: grid; gap: 2.6mm; }
+.conclusoes li { counter-increment: c; display: grid; grid-template-columns: 9mm 1fr; align-items: start; font-size: 9pt; line-height: 1.45; }
+.conclusoes li::before { content: counter(c, decimal-leading-zero); font: 800 9pt var(--titulo); color: var(--preto);
+  background: var(--amarelo); height: 6mm; width: 6mm; display: grid; place-items: center; font-size: 7pt; }
+.indice { list-style: none; margin: 0; padding: 0; counter-reset: i; }
+.indice li { counter-increment: i; display: flex; gap: 3mm; padding: 1.6mm 0; border-bottom: .25mm solid var(--linha); font-size: 9pt; }
+.indice li::before { content: counter(i, decimal-leading-zero); font: 800 8pt var(--titulo); color: var(--cinza); width: 7mm; }
+.indice li span:last-child { margin-left: auto; font: 800 8pt var(--titulo); }
+
+/* Duas colunas */
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+.duas > div { min-width: 0; }
+.tabelas-pequenas table { font-size: 6.9pt; }
+.tabelas-pequenas td { padding: .8mm 1.6mm; }
+.compacta td { padding: .8mm 1.8mm; }
+.texto p { font-size: 8.4pt; margin: 0 0 2mm; }
+.texto h4 { margin-top: 3.5mm; font: 800 8.2pt var(--titulo); text-transform: uppercase; letter-spacing: .04em; }
+.assinatura { margin-top: 6mm !important; font: 800 10pt var(--titulo); border-top: 1.2mm solid var(--amarelo); padding-top: 3mm; }
+.assinatura span { font: 400 8pt var(--texto); color: var(--cinza-escuro); }
+
+/* Capa */
+.capa { padding: 0; background: #fff; }
+.capa-faixa { position: absolute; left: 0; top: 0; bottom: 0; width: 13mm; background: var(--amarelo); }
+.capa-topo { position: absolute; left: 30mm; top: 24mm; display: flex; align-items: center; gap: 7mm; }
+.capa-emblema { width: 46mm; }
+.capa-entidade { font: 800 11pt/1.3 var(--titulo); text-transform: uppercase; letter-spacing: .05em; border-left: 1.2mm solid var(--preto); padding-left: 5mm; }
+.capa-titulo { position: absolute; left: 30mm; right: 20mm; top: 116mm; }
+.sobretitulo { font: 700 9pt var(--texto); text-transform: uppercase; letter-spacing: .14em; color: var(--cinza-escuro); margin: 0 0 5mm; }
+.capa h1 { font: 800 40pt/1.02 var(--titulo); margin: 0 0 7mm; letter-spacing: -.01em; }
+.subtitulo { font-size: 12pt; line-height: 1.45; max-width: 125mm; color: #333; margin: 0; }
+.capa-numeros { position: absolute; left: 13mm; right: 0; bottom: 30mm; background: var(--preto); color: #fff; display: grid;
+  grid-template-columns: repeat(3, 1fr); padding: 8mm 17mm 8mm 17mm; gap: 6mm; }
+.capa-numeros div { display: flex; flex-direction: column; gap: 2mm; border-left: .8mm solid var(--amarelo); padding-left: 4mm; }
+.capa-numeros .v { font: 800 17pt var(--titulo); color: var(--amarelo); }
+.capa-numeros .l { font-size: 7.8pt; color: #ccc; line-height: 1.35; }
+.capa-rodape { position: absolute; left: 30mm; right: 18mm; bottom: 12mm; display: flex; justify-content: space-between; font-size: 7.8pt; color: var(--cinza-escuro); }
+</style>
+</head>
+<body>
+<section class="pagina capa">
+  <div class="capa-faixa"></div>
+  <div class="capa-topo">
+    <img class="capa-emblema" src="assets/emblema-vitoria-sc.png" alt="Emblema do Vitória Sport Clube">
+    <div class="capa-entidade">Vitória SC<br>Futebol, SAD</div>
+  </div>
+  <div class="capa-titulo">
+    <p class="sobretitulo">Análise financeira · 2013/14 a 2025/26</p>
+    <h1>Rendimentos,<br>gastos e<br>transferências</h1>
+    <p class="subtitulo">Quanto custa a operação da SAD, quanto rendem as vendas de jogadores e o que fica por cobrir.</p>
+  </div>
+  <div class="capa-numeros">
+    <div><span class="v">40,3 M€</span><span class="l">gastos operacionais em 2025/26</span></div>
+    <div><span class="v">16,1 M€</span><span class="l">receitas de transferências em 2025/26</span></div>
+    <div><span class="v">(24,2) M€</span><span class="l">saldo a cobrir pela operação</span></div>
+  </div>
+  <div class="capa-rodape">
+    <span>João Garção · Mestrado em Humanidades Digitais, Universidade do Minho</span>
+    <span>Novembro de 2026</span>
+  </div></section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">Síntese</p>
+  <h2>O essencial em quatro números</h2>
+  <div class="kpis">
+    <div class="kpi"><span class="v">40,3<small> M€</small></span><span class="l">Gastos operacionais em 2025/26, o máximo da série (5,1% face a 2024/25)</span></div>
+    <div class="kpi"><span class="v">16,1<small> M€</small></span><span class="l">Mais-valias com a venda de jogadores (30,8 M€ em vendas brutas)</span></div>
+    <div class="kpi escuro"><span class="v">(24,2)<small> M€</small></span><span class="l">Saldo entre transferências e gastos: o que a operação teria de cobrir</span></div>
+    <div class="kpi"><span class="v">40%</span><span class="l">Parte dos gastos coberta pelas transferências (média de 43% desde 2017/18)</span></div>
+  </div>
+  <h3>Principais conclusões</h3>
+  <ol class="conclusoes">
+    <li><div><strong>As transferências nunca chegaram para pagar os gastos.</strong> Em nove épocas, as mais-valias cobriram entre 20% e 72% dos gastos operacionais. O saldo foi sempre negativo, entre (10,5) M€ (2022/23) e (26,1) M€ (2023/24).</div></li>
+    <li><div><strong>Os gastos duplicaram em oito épocas.</strong> Passaram de 19,8 M€ em 2017/18 para 40,3 M€ em 2025/26. Os gastos com pessoal são a maior rubrica: 54% do total em 2025/26.</div></li>
+    <li><div><strong>Mais de metade dos rendimentos vem de "outros rendimentos".</strong> É aqui que entram as mais-valias com jogadores: 56% dos rendimentos operacionais em 2025/26, contra 14% em 2013/14.</div></li>
+    <li><div><strong>Sem Europa, as receitas da operação caem um terço.</strong> Entre 2024/25 e 2025/26, os prémios de competições passaram de 9,7 para 1,6 M€ e as vendas e serviços de 22,6 para 14,9 M€. Os gastos não acompanharam a descida: subiram 1,9 M€.</div></li>
+  </ol>
+  <h3>Conteúdo</h3>
+  <ol class="indice">
+    <li><span>Gastos operacionais vs. receitas de transferências</span><span>03</span></li>
+    <li><span>Evolução das rubricas de rendimentos</span><span>04</span></li>
+    <li><span>Evolução das rubricas de gastos operacionais</span><span>05</span></li>
+    <li><span>2025/26 em detalhe: notas do Relatório e Contas</span><span>06</span></li>
+    <li><span>Notas metodológicas e fontes</span><span>07</span></li>
+  </ol></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">02 / 07</span>
+  </footer>
+</section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">01</p>
+  <h2>Gastos operacionais vs. receitas de transferências</h2>
+  <p class="lead">As vendas de jogadores são a segunda fonte de rendimento da SAD, mas nunca cobriram os gastos operacionais. Em 2025/26 cobriram 40%: ficaram por cobrir 24,2 M€, mais do que todas as receitas da operação (14,9 M€).</p>
+  <figure><img src="graficos/01_gastos_transferencias_saldo.svg" alt="Gastos operacionais, receitas de transferências e saldo por época"></figure>
+  <table><thead><tr><th class="t">Época</th><th class="n">Gastos operacionais</th><th class="n">Vendas brutas</th><th class="n">Receitas de transferências</th><th class="n">Saldo</th><th class="n">Cobertura</th><th class="n">Saldo com receitas da operação</th></tr></thead><tbody><tr><td class="">2017/18</td><td class="n">(19,8)</td><td class="n">10,7</td><td class="n">6,7</td><td class="n forte">(13,1)</td><td class="n">34%</td><td class="n">(3,3)</td></tr><tr><td class="">2018/19</td><td class="n">(25,1)</td><td class="n">21,7</td><td class="n">7,3</td><td class="n forte">(17,8)</td><td class="n">29%</td><td class="n">(5,2)</td></tr><tr><td class="">2019/20</td><td class="n">(32,2)</td><td class="n">21,3</td><td class="n">15,0</td><td class="n forte">(17,2)</td><td class="n">47%</td><td class="n">(0,2)</td></tr><tr><td class="">2020/21</td><td class="n">(35,4)</td><td class="n">17,0</td><td class="n">17,0</td><td class="n forte">(18,4)</td><td class="n">48%</td><td class="n">(8,0)</td></tr><tr><td class="">2021/22</td><td class="n">(35,5)</td><td class="n">15,2</td><td class="n">11,5</td><td class="n forte">(24,0)</td><td class="n">32%</td><td class="n">(12,7)</td></tr><tr><td class="">2022/23</td><td class="n">(33,7)</td><td class="n">30,9</td><td class="n">23,2</td><td class="n forte">(10,5)</td><td class="n">69%</td><td class="n">2,7</td></tr><tr><td class="">2023/24</td><td class="n">(32,8)</td><td class="n">14,6</td><td class="n">6,7</td><td class="n forte">(26,1)</td><td class="n">20%</td><td class="n">(13,2)</td></tr><tr><td class="">2024/25</td><td class="n">(38,3)</td><td class="n">49,5</td><td class="n">27,5</td><td class="n forte">(10,8)</td><td class="n">72%</td><td class="n">11,8</td></tr><tr class="destaque"><td class="">2025/26</td><td class="n">(40,3)</td><td class="n">30,8</td><td class="n">16,1</td><td class="n forte">(24,2)</td><td class="n">40%</td><td class="n">(9,3)</td></tr></tbody></table>
+  <p class="nota">Valores em M€; negativos entre parênteses. Gastos operacionais = mercadorias + FSE + pessoal + depreciações e amortizações (inclui passes) + outros gastos + imparidades + provisões. Receitas de transferências = mais-valias líquidas com a venda de passes. Cobertura = receitas de transferências ÷ gastos. Saldo com receitas da operação = saldo + vendas e serviços prestados. Consulta SQL 56. Em 2020/21, a fonte só indica as mais-valias, usadas também como vendas brutas.</p></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">03 / 07</span>
+  </footer>
+</section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">02</p>
+  <h2>Evolução das rubricas de rendimentos</h2>
+  <p class="lead">Os rendimentos operacionais passaram de 10,5 M€ em 2013/14 para 34,9 M€ em 2025/26, com um máximo de 51,5 M€ em 2024/25. O crescimento veio sobretudo dos outros rendimentos, onde se registam as mais-valias com jogadores; as vendas e serviços dependem da Europa.</p>
+  <figure><img src="graficos/02_rubricas_rendimentos.svg" alt="Rubricas de rendimentos por época"></figure>
+  <table><thead><tr><th class="t">Época</th><th class="n">Vendas e serviços</th><th class="n">Subsídios</th><th class="n">Outros rendimentos</th><th class="n">Total</th><th class="n">Peso de outros rendimentos</th></tr></thead><tbody><tr><td class="">2013/14</td><td class="n">8,9</td><td class="n">0,05</td><td class="n">1,5</td><td class="n forte">10,5</td><td class="n">14%</td></tr><tr><td class="">2014/15</td><td class="n">6,8</td><td class="n">0,05</td><td class="n">4,3</td><td class="n forte">11,1</td><td class="n">39%</td></tr><tr><td class="">2015/16</td><td class="n">6,2</td><td class="n">0,05</td><td class="n">5,1</td><td class="n forte">11,4</td><td class="n">45%</td></tr><tr><td class="">2016/17</td><td class="n">10,5</td><td class="n">0,14</td><td class="n">6,2</td><td class="n forte">16,9</td><td class="n">37%</td></tr><tr><td class="">2017/18</td><td class="n">9,8</td><td class="n">0,15</td><td class="n">11,0</td><td class="n forte">20,9</td><td class="n">52%</td></tr><tr><td class="">2018/19</td><td class="n">12,6</td><td class="n">0,01</td><td class="n">14,4</td><td class="n forte">26,9</td><td class="n">53%</td></tr><tr><td class="">2019/20</td><td class="n">17,0</td><td class="n">0,16</td><td class="n">15,5</td><td class="n forte">32,7</td><td class="n">47%</td></tr><tr><td class="">2020/21</td><td class="n">10,3</td><td class="n">0,06</td><td class="n">17,5</td><td class="n forte">27,9</td><td class="n">63%</td></tr><tr><td class="">2021/22</td><td class="n">11,3</td><td class="n">0,06</td><td class="n">12,1</td><td class="n forte">23,5</td><td class="n">52%</td></tr><tr><td class="">2022/23</td><td class="n">13,2</td><td class="n">0,28</td><td class="n">23,8</td><td class="n forte">37,2</td><td class="n">64%</td></tr><tr><td class="">2023/24</td><td class="n">12,9</td><td class="n">0,11</td><td class="n">8,9</td><td class="n forte">21,9</td><td class="n">40%</td></tr><tr><td class="">2024/25</td><td class="n">22,6</td><td class="n">0,05</td><td class="n">28,8</td><td class="n forte">51,5</td><td class="n">56%</td></tr><tr class="destaque"><td class="">2025/26</td><td class="n">14,9</td><td class="n">0,36</td><td class="n">19,6</td><td class="n forte">34,9</td><td class="n">56%</td></tr></tbody></table>
+  <p class="nota">Valores em M€. Vendas e serviços prestados = direitos TV, prémios de competições, bilheteira, quotas, patrocínios, mercadorias e mecanismo de solidariedade. Outros rendimentos = sobretudo mais-valias com a alienação de passes, compensações por atletas vendidos em anos anteriores e receitas de apostas. Consulta SQL 57.</p></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">04 / 07</span>
+  </footer>
+</section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">03</p>
+  <h2>Evolução das rubricas de gastos operacionais</h2>
+  <p class="lead">Os gastos operacionais triplicaram desde 2013/14 (13,0 → 40,3 M€). Os gastos com pessoal multiplicaram-se por 4,7 e pesam hoje mais de metade do total. Ao contrário das receitas, os gastos quase nunca descem: só caíram em 3 das 12 épocas.</p>
+  <figure><img src="graficos/03_rubricas_gastos.svg" alt="Rubricas de gastos operacionais por época"></figure>
+  <table><thead><tr><th class="t">Época</th><th class="n">Pessoal</th><th class="n">FSE</th><th class="n">Depreciações</th><th class="n">Mercadorias</th><th class="n">Outros gastos</th><th class="n">Imparid. e provisões</th><th class="n">Total</th><th class="n">Pessoal %</th><th class="n">Var.</th></tr></thead><tbody><tr><td class="">2013/14</td><td class="n">4,6</td><td class="n">3,9</td><td class="n">3,4</td><td class="n">0,15</td><td class="n">1,0</td><td class="n">0,01</td><td class="n forte">13,0</td><td class="n">36%</td><td class="n">—</td></tr><tr><td class="">2014/15</td><td class="n">4,4</td><td class="n">3,2</td><td class="n">1,2</td><td class="n">0,27</td><td class="n">0,3</td><td class="n">0,49</td><td class="n forte">9,9</td><td class="n">45%</td><td class="n">-24%</td></tr><tr><td class="">2015/16</td><td class="n">5,3</td><td class="n">4,3</td><td class="n">1,2</td><td class="n">0,36</td><td class="n">0,2</td><td class="n">(0,45)</td><td class="n forte">11,0</td><td class="n">48%</td><td class="n">11%</td></tr><tr><td class="">2016/17</td><td class="n">6,8</td><td class="n">4,8</td><td class="n">1,7</td><td class="n">0,36</td><td class="n">0,3</td><td class="n">0,00</td><td class="n forte">14,0</td><td class="n">48%</td><td class="n">28%</td></tr><tr><td class="">2017/18</td><td class="n">8,8</td><td class="n">5,5</td><td class="n">4,0</td><td class="n">0,48</td><td class="n">1,0</td><td class="n">0,00</td><td class="n forte">19,8</td><td class="n">45%</td><td class="n">42%</td></tr><tr><td class="">2018/19</td><td class="n">11,6</td><td class="n">6,0</td><td class="n">5,5</td><td class="n">0,53</td><td class="n">1,5</td><td class="n">0,00</td><td class="n forte">25,1</td><td class="n">46%</td><td class="n">26%</td></tr><tr><td class="">2019/20</td><td class="n">16,1</td><td class="n">6,9</td><td class="n">6,0</td><td class="n">0,32</td><td class="n">2,7</td><td class="n">0,20</td><td class="n forte">32,2</td><td class="n">50%</td><td class="n">28%</td></tr><tr><td class="">2020/21</td><td class="n">20,7</td><td class="n">5,0</td><td class="n">6,8</td><td class="n">0,50</td><td class="n">1,9</td><td class="n">0,48</td><td class="n forte">35,4</td><td class="n">58%</td><td class="n">10%</td></tr><tr><td class="">2021/22</td><td class="n">19,6</td><td class="n">5,8</td><td class="n">7,8</td><td class="n">0,54</td><td class="n">0,9</td><td class="n">0,86</td><td class="n forte">35,5</td><td class="n">55%</td><td class="n">0%</td></tr><tr><td class="">2022/23</td><td class="n">15,6</td><td class="n">7,4</td><td class="n">8,2</td><td class="n">0,51</td><td class="n">1,8</td><td class="n">0,15</td><td class="n forte">33,7</td><td class="n">46%</td><td class="n">-5%</td></tr><tr><td class="">2023/24</td><td class="n">16,9</td><td class="n">7,6</td><td class="n">4,7</td><td class="n">0,48</td><td class="n">2,9</td><td class="n">0,22</td><td class="n forte">32,8</td><td class="n">52%</td><td class="n">-3%</td></tr><tr><td class="">2024/25</td><td class="n">20,5</td><td class="n">10,0</td><td class="n">5,5</td><td class="n">0,65</td><td class="n">1,5</td><td class="n">0,06</td><td class="n forte">38,3</td><td class="n">54%</td><td class="n">17%</td></tr><tr class="destaque"><td class="">2025/26</td><td class="n">21,7</td><td class="n">9,0</td><td class="n">7,0</td><td class="n">0,77</td><td class="n">1,8</td><td class="n">0,00</td><td class="n forte">40,3</td><td class="n">54%</td><td class="n">5%</td></tr></tbody></table>
+  <p class="nota">Valores em M€; imparidades e provisões líquidas de reversões (valor negativo = reversão). Depreciações incluem a amortização dos passes de jogadores. Outros gastos incluem as menos-valias com jogadores, multas e quotizações. Consulta SQL 58.</p></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">05 / 07</span>
+  </footer>
+</section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">04</p>
+  <h2>2025/26 em detalhe: notas do Relatório e Contas</h2>
+  <p class="lead">As notas 15, 17, 19 e 20 do R&C 2025/26 decompõem as rubricas e comparam-nas com 2024/25. A queda das receitas está quase toda nos prémios de competições (−8,1 M€); nos gastos, a única descida relevante foi nas despesas com provas, também ligadas à Europa (−1,7 M€).</p>
+  <div class="duas">
+    <div><h4>Vendas e serviços prestados <span>nota 15</span></h4><figure><img src="graficos/04_detalhe_vendas_servicos.svg" alt="Detalhe das vendas e serviços prestados"></figure></div>
+    <div><h4>Fornecimentos e serviços externos <span>nota 17</span></h4><figure><img src="graficos/05_detalhe_fse.svg" alt="Detalhe dos fornecimentos e serviços externos"></figure></div>
+  </div>
+  <div class="duas tabelas-pequenas">
+    <div><table><thead><tr><th class="t">Rubrica</th><th class="n">2024/25</th><th class="n">2025/26</th><th class="n">Var.</th></tr></thead><tbody><tr><td class="">Direitos televisivos</td><td class="n">6,92</td><td class="n">6,92</td><td class="n forte">0,00</td></tr><tr><td class="">Publicidade e patrocínios</td><td class="n">2,01</td><td class="n">2,31</td><td class="n forte">0,30</td></tr><tr><td class="">Bilheteira, quotização e pack-sócio</td><td class="n">2,44</td><td class="n">1,98</td><td class="n forte">(0,46)</td></tr><tr><td class="">Prémios de competições (nacionais e UEFA)</td><td class="n">9,72</td><td class="n">1,63</td><td class="n forte">(8,09)</td></tr><tr><td class="">Venda de mercadorias</td><td class="n">0,95</td><td class="n">1,04</td><td class="n forte">0,09</td></tr><tr><td class="">Mecanismo de solidariedade</td><td class="n">0,52</td><td class="n">0,94</td><td class="n forte">0,42</td></tr><tr><td class="">Outros serviços</td><td class="n">0,03</td><td class="n">0,07</td><td class="n forte">0,04</td></tr></tbody></table></div>
+    <div><table><thead><tr><th class="t">Rubrica</th><th class="n">2024/25</th><th class="n">2025/26</th><th class="n">Var.</th></tr></thead><tbody><tr><td class="">Outros serviços especializados</td><td class="n">2,40</td><td class="n">2,52</td><td class="n forte">0,12</td></tr><tr><td class="">Despesas com provas</td><td class="n">3,27</td><td class="n">1,55</td><td class="n forte">(1,71)</td></tr><tr><td class="">Deslocações e estadas</td><td class="n">1,19</td><td class="n">1,34</td><td class="n forte">0,15</td></tr><tr><td class="">Materiais</td><td class="n">0,52</td><td class="n">0,87</td><td class="n forte">0,35</td></tr><tr><td class="">Rendas e alugueres</td><td class="n">0,75</td><td class="n">0,84</td><td class="n forte">0,09</td></tr><tr><td class="">Outros serviços diversos</td><td class="n">0,77</td><td class="n">0,84</td><td class="n forte">0,07</td></tr><tr><td class="">Pessoal do Clube ao serviço da SAD</td><td class="n">0,82</td><td class="n">0,70</td><td class="n forte">(0,12)</td></tr><tr><td class="">Energia e fluidos</td><td class="n">0,32</td><td class="n">0,33</td><td class="n forte">0,01</td></tr></tbody></table></div>
+  </div>
+  <h4>Outros rendimentos e outros gastos <span>notas 19 e 20</span></h4>
+  <div class="compacta"><table><thead><tr><th class="t">Nota</th><th class="t">Rubrica</th><th class="n">2024/25</th><th class="n">2025/26</th><th class="n">Var.</th></tr></thead><tbody><tr><td class="">19</td><td class="">Ganhos com alienação de passes e outros investimentos</td><td class="n">26,39</td><td class="n">17,21</td><td class="n forte">(9,18)</td></tr><tr><td class="">19</td><td class="">Compensação financeira de atletas alienados</td><td class="n">1,40</td><td class="n">1,63</td><td class="n forte">0,23</td></tr><tr><td class="">19</td><td class="">Apostas (Placard), seguros e outros rendimentos suplementares</td><td class="n">0,45</td><td class="n">0,49</td><td class="n forte">0,03</td></tr><tr><td class="">19</td><td class="">Outros</td><td class="n">0,13</td><td class="n">0,32</td><td class="n forte">0,19</td></tr><tr><td class="">20</td><td class="">Perdas com alienação e rescisão de passes</td><td class="n">0,70</td><td class="n">1,01</td><td class="n forte">0,31</td></tr><tr><td class="">20</td><td class="">Outros (donativos, impostos e diversos)</td><td class="n">0,32</td><td class="n">0,29</td><td class="n forte">(0,03)</td></tr><tr><td class="">20</td><td class="">Multas e penalidades</td><td class="n">0,31</td><td class="n">0,25</td><td class="n forte">(0,06)</td></tr><tr><td class="">20</td><td class="">Correções de exercícios anteriores</td><td class="n">0,13</td><td class="n">0,15</td><td class="n forte">0,02</td></tr><tr><td class="">20</td><td class="">Quotizações (Liga)</td><td class="n">0,06</td><td class="n">0,12</td><td class="n forte">0,06</td></tr></tbody></table></div>
+  <p class="nota">Valores em M€. 2024/25 tal como apresentado no R&C 2025/26 (reexpresso): na nota 19, os ganhos com passes de 2024/25 são 0,45 M€ inferiores aos do R&C 2024/25, por causa da correção do custo amortizado. Consulta SQL 59 e tabela <code>detalhe_rubrica</code>.</p></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">06 / 07</span>
+  </footer>
+</section>
+<section class="pagina">
+  <header class="cabecalho">
+    <img src="assets/emblema-vitoria-sc-pequeno.png" alt="">
+    <span class="titulo-curto">Rendimentos, gastos e transferências</span>
+    <span class="entidade">Vitória SC – Futebol, SAD · 2013/14–2025/26</span>
+  </header>
+  <div class="corpo">
+  <p class="seccao-num">05</p>
+  <h2>Notas metodológicas e fontes</h2>
+  <div class="duas texto">
+    <div>
+      <h4>Fontes</h4>
+      <p>Demonstrações de resultados e notas dos Relatórios e Contas da Vitória SC – Futebol, SAD, de 2012/13 a 2025/26, conferidas documento a documento, e dashboard VSC Contas (vitoriasempre.net) para a decomposição de épocas antigas. Todos os valores estão na base SQLite <code>vsc_contas.db</code> e são lidos pelas consultas 56 a 59 de <code>sql/04_analises.sql</code>.</p>
+      <h4>Convenções</h4>
+      <p>Valores em milhões de euros, arredondados a uma casa decimal; negativos entre parênteses, como nas demonstrações financeiras. Épocas de 1 de julho a 30 de junho. Cada época usa os valores do seu próprio Relatório e Contas; a reexpressão de 2024/25 feita no R&C 2025/26 está registada à parte (tabela <code>reexpressao</code>).</p>
+      <h4>Definições</h4>
+      <p><strong>Gastos operacionais:</strong> todos os gastos antes de juros e impostos, incluindo a amortização dos passes. <strong>Receitas de transferências:</strong> mais-valias líquidas, isto é, preço de venda menos valor contabilístico do jogador e custos da venda (comissões, partes de terceiros, solidariedade e, em 2025/26, efeito do custo amortizado). <strong>Saldo:</strong> receitas de transferências menos gastos operacionais.</p>
+    </div>
+    <div>
+      <h4>Limitações</h4>
+      <p>As mais-valias de 2020/21 e anteriores vêm do VSC Contas; as vendas brutas de 2020/21 não estão disponíveis. A decomposição das notas 15 a 20 só foi registada para 2024/25 e 2025/26. O R&C 2025/26 ainda está sujeito a aprovação da assembleia geral da SAD.</p>
+      <h4>Qualidade dos dados</h4>
+      <p>A base é validada por testes automáticos (<code>scripts/testes.py</code>): a soma das rubricas operacionais bate com o resultado operacional em nove épocas, e o detalhe das notas 15, 17, 19 e 20 soma o valor de cada rubrica da demonstração de resultados.</p>
+      <h4>Emblema e autoria</h4>
+      <p>O emblema é propriedade do Vitória Sport Clube e é usado apenas para identificar o clube analisado. Este relatório é uma análise independente, sem ligação oficial ao clube ou à SAD.</p>
+      <p class="assinatura">João Garção<br><span>github.com/Joo2002VSC</span></p>
+    </div>
+  </div></div>
+  <footer class="rodape">
+    <span>Análise independente de João Garção a partir dos Relatórios e Contas da SAD. Sem ligação oficial ao Vitória Sport Clube.</span>
+    <span class="num">07 / 07</span>
+  </footer>
+</section>
+</body>
+</html>

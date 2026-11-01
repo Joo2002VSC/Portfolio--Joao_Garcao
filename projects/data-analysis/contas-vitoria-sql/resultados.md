@@ -775,3 +775,82 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 300 M€ | 4.º | 15 448 421 | 8 525 802 | -22 812 603 | 14 286 800 | 37,4 |
 | 300 M€ | 6.º | 14 052 631 | 7 130 012 | -22 812 603 | 15 682 590 | 31,3 |
 | 300 M€ | 9.º | 11 958 947 | 5 036 328 | -22 812 603 | 17 776 274 | 22,1 |
+
+## 56. Gastos operacionais vs. receitas de transferências e saldo
+
+| epoca | gastos_operacionais | vendas_brutas | receitas_transferencias | saldo | transferencias_cobrem_pct | receitas_operacao | saldo_com_receitas_operacao |
+|---|---|---|---|---|---|---|---|
+| 2017/18 | 19 838 667 | 10 660 000 | 6 735 474 | -13 103 193 | 34,0 | 9 822 148 | -3 281 045 |
+| 2018/19 | 25 082 363 | 21 744 390 | 7 309 152 | -17 773 211 | 29,1 | 12 558 787 | -5 214 424 |
+| 2019/20 | 32 196 891 | 21 309 347 | 15 009 861 | -17 187 030 | 46,6 | 17 014 051 | -172 979 |
+| 2020/21 | 35 391 835 | 17 012 320 | 17 012 320 | -18 379 515 | 48,1 | 10 334 411 | -8 045 104 |
+| 2021/22 | 35 511 792 | 15 217 500 | 11 542 768 | -23 969 024 | 32,5 | 11 285 014 | -12 684 010 |
+| 2022/23 | 33 677 445 | 30 921 739 | 23 216 097 | -10 461 348 | 68,9 | 13 159 010 | 2 697 662 |
+| 2023/24 | 32 813 851 | 14 626 816 | 6 665 467 | -26 148 384 | 20,3 | 12 900 965 | -13 247 419 |
+| 2024/25 | 38 334 162 | 49 518 024 | 27 540 964 | -10 793 198 | 71,8 | 22 584 987 | 11 791 789 |
+| 2025/26 | 40 283 996 | 30 820 000 | 16 055 187 | -24 228 809 | 39,9 | 14 880 806 | -9 348 003 |
+
+## 57. Evolução das rubricas de rendimentos operacionais da SAD
+
+| epoca | vendas_servicos | subsidios | outros_rendimentos | total_rendimentos | outros_rendimentos_pct |
+|---|---|---|---|---|---|
+| 2013/14 | 8 900 528 | 47 318 | 1 508 534 | 10 456 380 | 14,4 |
+| 2014/15 | 6 786 697 | 48 255 | 4 301 110 | 11 136 062 | 38,6 |
+| 2015/16 | 6 226 662 | 50 773 | 5 116 350 | 11 393 785 | 44,9 |
+| 2016/17 | 10 535 891 | 139 613 | 6 234 899 | 16 910 403 | 36,9 |
+| 2017/18 | 9 822 148 | 145 970 | 10 970 761 | 20 938 879 | 52,4 |
+| 2018/19 | 12 558 787 | 9 381 | 14 362 820 | 26 930 988 | 53,3 |
+| 2019/20 | 17 014 051 | 163 567 | 15 494 489 | 32 672 107 | 47,4 |
+| 2020/21 | 10 334 411 | 59 486 | 17 497 369 | 27 891 266 | 62,7 |
+| 2021/22 | 11 285 014 | 64 130 | 12 143 813 | 23 492 957 | 51,7 |
+| 2022/23 | 13 159 010 | 282 784 | 23 791 505 | 37 233 299 | 63,9 |
+| 2023/24 | 12 900 965 | 106 373 | 8 865 536 | 21 872 874 | 40,5 |
+| 2024/25 | 22 584 987 | 48 544 | 28 817 437 | 51 450 968 | 56,0 |
+| 2025/26 | 14 880 806 | 357 389 | 19 638 622 | 34 876 817 | 56,3 |
+
+## 58. Evolução das rubricas de gastos operacionais da SAD
+
+| epoca | pessoal | fse | depreciacoes | mercadorias | outros_gastos | imparidades_provisoes | total_gastos | pessoal_pct | variacao_pct |
+|---|---|---|---|---|---|---|---|---|---|
+| 2013/14 | 4 621 871 | 3 891 074 | 3 356 173 | 154 796 | 998 623 | 7 363 | 13 029 900 | 35,5 | — |
+| 2014/15 | 4 413 612 | 3 235 328 | 1 201 758 | 274 582 | 257 894 | 487 872 | 9 871 046 | 44,7 | -24,2 |
+| 2015/16 | 5 278 997 | 4 347 617 | 1 190 607 | 355 749 | 225 359 | -447 700 | 10 950 629 | 48,2 | 10,9 |
+| 2016/17 | 6 758 553 | 4 849 388 | 1 737 722 | 357 800 | 266 892 | 0 | 13 970 355 | 48,4 | 27,6 |
+| 2017/18 | 8 843 968 | 5 471 720 | 4 034 406 | 480 702 | 1 007 871 | 0 | 19 838 667 | 44,6 | 42,0 |
+| 2018/19 | 11 559 940 | 5 981 676 | 5 523 046 | 525 659 | 1 492 042 | 0 | 25 082 363 | 46,1 | 26,4 |
+| 2019/20 | 16 100 077 | 6 919 038 | 5 960 690 | 319 888 | 2 698 831 | 198 367 | 32 196 891 | 50,0 | 28,4 |
+| 2020/21 | 20 655 205 | 5 045 147 | 6 815 353 | 497 677 | 1 895 430 | 483 023 | 35 391 835 | 58,4 | 9,90 |
+| 2021/22 | 19 627 255 | 5 822 670 | 7 769 947 | 542 627 | 893 371 | 855 922 | 35 511 792 | 55,3 | 0,30 |
+| 2022/23 | 15 602 700 | 7 385 387 | 8 242 185 | 508 492 | 1 788 893 | 149 788 | 33 677 445 | 46,3 | -5,20 |
+| 2023/24 | 16 946 060 | 7 628 896 | 4 672 921 | 479 517 | 2 863 469 | 222 988 | 32 813 851 | 51,6 | -2,60 |
+| 2024/25 | 20 526 758 | 10 032 690 | 5 541 431 | 654 102 | 1 520 697 | 58 484 | 38 334 162 | 53,5 | 16,8 |
+| 2025/26 | 21 730 779 | 8 997 162 | 6 964 397 | 772 962 | 1 817 758 | 938 | 40 283 996 | 53,9 | 5,10 |
+
+## 59. Detalhe das rubricas no R&C 2025/26: o que mudou face a 2024/25
+
+| nota | grupo | rubrica | valor_2024_25 | valor_2025_26 | variacao | variacao_pct |
+|---|---|---|---|---|---|---|
+| 15 | Vendas e serviços prestados | Direitos televisivos | 6 922 619 | 6 922 619 | 0 | 0,00 |
+| 15 | Vendas e serviços prestados | Publicidade e patrocínios | 2 009 296 | 2 306 533 | 297 237 | 14,8 |
+| 15 | Vendas e serviços prestados | Bilheteira, quotização e pack-sócio | 2 438 222 | 1 975 548 | -462 674 | -19,0 |
+| 15 | Vendas e serviços prestados | Prémios de competições (nacionais e UEFA) | 9 720 482 | 1 629 469 | -8 091 013 | -83,2 |
+| 15 | Vendas e serviços prestados | Venda de mercadorias | 947 279 | 1 037 932 | 90 653 | 9,60 |
+| 15 | Vendas e serviços prestados | Mecanismo de solidariedade | 516 936 | 938 009 | 421 073 | 81,5 |
+| 15 | Vendas e serviços prestados | Outros serviços | 30 153 | 70 697 | 40 544 | 134,5 |
+| 17 | Fornecimentos e serviços externos | Outros serviços especializados | 2 396 802 | 2 518 821 | 122 019 | 5,10 |
+| 17 | Fornecimentos e serviços externos | Despesas com provas | 3 266 637 | 1 554 580 | -1 712 057 | -52,4 |
+| 17 | Fornecimentos e serviços externos | Deslocações e estadas | 1 186 211 | 1 338 554 | 152 343 | 12,8 |
+| 17 | Fornecimentos e serviços externos | Materiais | 522 628 | 868 926 | 346 298 | 66,3 |
+| 17 | Fornecimentos e serviços externos | Rendas e alugueres | 748 773 | 842 936 | 94 163 | 12,6 |
+| 17 | Fornecimentos e serviços externos | Outros serviços diversos | 769 300 | 841 510 | 72 210 | 9,40 |
+| 17 | Fornecimentos e serviços externos | Pessoal do Clube ao serviço da SAD | 823 973 | 702 323 | -121 650 | -14,8 |
+| 17 | Fornecimentos e serviços externos | Energia e fluidos | 318 365 | 329 512 | 11 147 | 3,50 |
+| 19 | Outros rendimentos e ganhos | Ganhos com alienação de passes e outros investimentos | 26 385 026 | 17 209 377 | -9 175 649 | -34,8 |
+| 19 | Outros rendimentos e ganhos | Compensação financeira de atletas alienados | 1 396 329 | 1 626 970 | 230 641 | 16,5 |
+| 19 | Outros rendimentos e ganhos | Apostas (Placard), seguros e outros rendimentos suplementares | 453 373 | 486 026 | 32 653 | 7,20 |
+| 19 | Outros rendimentos e ganhos | Outros | 130 535 | 316 249 | 185 714 | 142,3 |
+| 20 | Outros gastos e perdas | Perdas com alienação e rescisão de passes | 700 191 | 1 011 203 | 311 012 | 44,4 |
+| 20 | Outros gastos e perdas | Outros (donativos, impostos e diversos) | 316 142 | 285 283 | -30 859 | -9,80 |
+| 20 | Outros gastos e perdas | Multas e penalidades | 313 004 | 249 198 | -63 806 | -20,4 |
+| 20 | Outros gastos e perdas | Correções de exercícios anteriores | 132 393 | 149 926 | 17 533 | 13,2 |
+| 20 | Outros gastos e perdas | Quotizações (Liga) | 58 968 | 122 147 | 63 179 | 107,1 |

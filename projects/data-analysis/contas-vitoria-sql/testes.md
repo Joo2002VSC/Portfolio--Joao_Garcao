@@ -2,7 +2,7 @@
 
 Gerado por `scripts/testes.py`. Corre-o depois de `build_db.py`.
 
-**38 testes aprovados · 0 falhados · 8 avisos**
+**39 testes aprovados · 0 falhados · 9 avisos**
 
 Python 3.13.17 · SQLite 3.45.1 · Linux
 
@@ -30,6 +30,8 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 | ⚠ | Passes: valor final de 2024/25 reexpresso no ano seguinte | diferença de 848 170 € (custo amortizado e direitos económicos abatidos  nota 2.3 do R&C 2025/26) |
 | ✓ | DR da SAD: soma das rubricas operacionais = resultado operacional | épocas com todas as rubricas: 2014/15, 2015/16, 2019/20, 2020/21, 2021/22, 2022/23, 2023/24, 2024/25, 2025/26 |
 | ✓ | Resultado sem mais-valias = resultado líquido − mais-valias | todas as épocas |
+| ✓ | Detalhe das notas 15, 17, 19 e 20 soma o valor da DR | 2025/26; 2024/25 sem diferenças além da reexpressão |
+| ⚠ | Detalhe de 2024/25 ≠ DR original (comparativo reexpresso no R&C 2025/26) | nota 19 2024/25: 28 365 263 € vs 28 817 437 €: mais-valias corrigidas na reexpressão (nota 2.3) |
 | ✓ | Dívida por instrumento: parte de curto prazo ≤ total | sem incoerências |
 | ⚠ | `rec_2025_26`: linhas do comunicado somam o resultado líquido | -11 062 106 € vs -11 063 043 € · diferença de 937 € não discriminada no comunicado |
 | ⚠ | `rec_2025_26`: EBITDA publicado ≠ rendimentos − gastos | diferença de 0,79 M€: depreciações de ativos não desportivos (deduzida) |
@@ -64,7 +66,7 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 
 | Resultado | Teste | Detalhe |
 |:---:|:---|:---|
-| ✓ | As 55 consultas correm sem erros |  |
+| ✓ | As 59 consultas correm sem erros |  |
 | ✓ | Todas as consultas devolvem pelo menos uma linha |  |
 | ✓ | Nenhuma consulta usa funções que não existem no SQLite do browser (ln, log, pow) |  |
 

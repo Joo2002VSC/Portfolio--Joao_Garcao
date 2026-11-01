@@ -25,7 +25,7 @@
 
 Base de dados **SQLite** com as contas do **Vitória Sport Clube** em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação-mãe) e o **Grupo consolidado**. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.
 
-Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
+Sobre essa base, **59 consultas SQL** respondem a uma pergunta central: *as contas do Vitória são sustentáveis sem a venda de jogadores?*
 
 **Perguntas de investigação**
 
@@ -107,11 +107,15 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Centralização e equilíbrio](graficos/18_centralizacao_equilibrio.png)
 
+**13. As vendas de jogadores nunca pagaram os gastos.** Em nove épocas, as mais-valias cobriram entre 20% e 72% dos gastos operacionais; em 2025/26 cobriram 40%, e ficaram por cobrir 24,2 M€, mais do que todas as receitas da operação (14,9 M€). Os gastos operacionais duplicaram desde 2017/18, para um máximo de 40,3 M€. O relatório em PDF [Rendimentos, gastos e transferências](relatorio/rendimentos-gastos-transferencias.pdf) detalha a evolução de cada rubrica.
+
+![Gastos operacionais, receitas de transferências e saldo](relatorio/graficos/01_gastos_transferencias_saldo.png)
+
 O [painel de indicadores](analise-tecnica.md#18-painel-de-indicadores-financeiros) junta a margem corrente (negativa em todas as épocas), a rendibilidade do ativo, a dívida face às receitas e o cash flow operacional.
 
 **12. As contas de 2025/26 mudaram a leitura do passado.** O Relatório e Contas de 2025/26 corrigiu sete erros de 2024/25: custo amortizado não aplicado, uma provisão FIFA, comissões de uma venda, juros não especializados, inventários, imparidades e direitos económicos que já não eram ativos. O capital próprio de 30/06/2025 baixou 1,7 M€. A demonstração dos fluxos de caixa foi refeita: o fluxo operacional de 2024/25 passou de +0,9 M€ para **(18,9 M€)**, porque 36,5 M€ de recebimentos de clientes tinham ido diretamente para os financiadores, para amortizar créditos antecipados. Na nova apresentação, a operação consumiu 19 M€ de caixa em cada uma das duas últimas épocas, cobertos com nova dívida.
 
-Os resultados completos das 55 consultas estão em [`resultados.md`](resultados.md).
+Os resultados completos das 59 consultas estão em [`resultados.md`](resultados.md).
 
 <a id="relatórios"></a>
 <img src="graficos/cabecalhos/04_relatorios.png" alt="Relatórios" width="100%">
@@ -121,8 +125,9 @@ Os resultados completos das 55 consultas estão em [`resultados.md`](resultados.
 | **[Análise estratégica](analise-estrategica.md)** | Diagnóstico, finanças vs. desempenho desportivo, enquadramento económico e 12 recomendações com cenários |
 | **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas |
 | **[Verificação das fontes](verificacao-fontes.md)** | Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias |
+| **[Rendimentos, gastos e transferências](relatorio/rendimentos-gastos-transferencias.pdf)** (PDF, 7 páginas) | Gastos operacionais face às receitas de transferências e saldo, evolução das rubricas de rendimentos e de gastos desde 2013/14 e detalhe das notas do R&C 2025/26 |
 | **[Testes](testes.md)** | Resultado dos testes automáticos de integridade, coerência contabilística e reconciliação |
-| **[Dicionário de dados](dicionario-dados.md)** | As 30 tabelas e vistas, coluna a coluna |
+| **[Dicionário de dados](dicionario-dados.md)** | As 31 tabelas e vistas, coluna a coluna |
 
 | | |
 |:---:|:---:|
@@ -189,6 +194,7 @@ erDiagram
 | `auditoria` | Opinião do auditor, ênfases e incertezas materiais por época |
 | `reexpressao` | Valores originais e reexpressos de 2024/25 (balanço, resultado, juros e fluxos de caixa) |
 | `treinador` | Treinadores principais e interinos desde 2015 |
+| `detalhe_rubrica` | Detalhe das notas 15, 17, 19 e 20 do R&C 2025/26 (vendas e serviços, FSE, outros rendimentos e outros gastos), 2024/25 e 2025/26 |
 | `taxa_referencia` · `bce_taxa` | Euribor a 12 meses, obrigações do Estado a 10 anos, crédito a empresas em Portugal e taxas diretoras do BCE |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
 | `balanco` | Ativo, passivo, capital próprio e caixa a 30 de junho (SAD: valores dos R&C) |
@@ -251,15 +257,16 @@ O comando pára no primeiro erro. Os passos também podem correr um a um:
 
 ```bash
 python scripts/build_db.py          # cria vsc_contas.db (só biblioteca padrão)
-python scripts/correr_analises.py   # corre as 55 consultas e gera resultados.md
+python scripts/correr_analises.py   # corre as 59 consultas e gera resultados.md
 python scripts/testes.py            # testes de qualidade e reconciliação → testes.md
 python scripts/dicionario.py        # dicionário de dados → dicionario-dados.md
 python scripts/graficos.py          # gera os gráficos em graficos/
 python scripts/cabecalhos.py        # gera as faixas de título do README
 python scripts/gerar_html.py --site # gera html/contas-vitoria.html e a pasta site/
+python scripts/relatorio_pdf.py     # gera o relatório PDF (requer: pip install playwright; playwright install chromium)
 ```
 
-**Qualidade e reconciliação.** [`testes.md`](testes.md) mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 55 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O [dicionário de dados](dicionario-dados.md) descreve as 30 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.
+**Qualidade e reconciliação.** [`testes.md`](testes.md) mostra o resultado dos testes: integridade (chaves e épocas), coerência contabilística (ativo = passivo + capital próprio, subtotais, movimentos do plantel), reconciliação de 17 números citados nos relatórios com a base de dados, e execução das 59 consultas. Os avisos explicam os casos conhecidos (valores repetidos na fonte, diferenças de arredondamento). O [dicionário de dados](dicionario-dados.md) descreve as 31 tabelas e vistas, coluna a coluna, com unidades, sinais e proveniência.
 
 **Integração contínua.** O ficheiro [`ci/contas-vitoria-sql.yml`](ci/contas-vitoria-sql.yml) é uma GitHub Action que reconstrói a base e corre os testes sempre que algo muda nesta pasta. Para a ativar, copia-o para `.github/workflows/` na raiz do repositório.
 
@@ -293,7 +300,7 @@ contas-vitoria-sql/
 │   ├── 01_schema.sql       Tabelas, chaves e restrições
 │   ├── 02_dimensoes.sql    Épocas, entidades e rubricas
 │   ├── 03_vistas.sql       Vistas reutilizáveis
-│   └── 04_analises.sql     55 consultas de análise
+│   └── 04_analises.sql     59 consultas de análise
 ├── scripts/
 │   ├── construir.py        Reconstrói e valida tudo com um comando
 │   ├── build_db.py         Constrói vsc_contas.db
@@ -303,10 +310,12 @@ contas-vitoria-sql/
 │   ├── graficos.py         Gera os gráficos
 │   ├── cabecalhos.py       Gera as faixas de título do README
 │   ├── gerar_html.py       Gera a versão HTML
+│   ├── relatorio_pdf.py    Gera o relatório PDF (com modelo_relatorio.html)
 │   ├── modelo.html         Modelo da versão HTML
 │   └── vendor/             sql.js (SQLite em WebAssembly, licença MIT)
 ├── graficos/               Gráficos PNG (e cabecalhos/ com as faixas)
 ├── ci/                     GitHub Action com os testes (copiar para .github/workflows/)
+├── relatorio/              Relatório PDF "Rendimentos, gastos e transferências", fonte HTML e gráficos
 ├── html/                   Versão HTML autónoma, com consola SQL
 ├── site/                   Versão web em HTML, CSS e JavaScript separados
 ├── fontes/                 Archivo e Archivo Expanded (licença OFL)
@@ -345,7 +354,7 @@ As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 <a id="identidade-visual"></a>
 <img src="graficos/cabecalhos/08_identidade-visual.png" alt="Identidade visual" width="100%">
 
-Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D510`, preto `#111111` e cinzentos `#6F6D6E` e `#EBEBEB`. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por `scripts/cabecalhos.py`. A tipografia é a [Archivo](https://fonts.google.com/specimen/Archivo), da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta `fontes/` (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.
+Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D510`, preto `#111111` e cinzentos `#6F6D6E` e `#EBEBEB`. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por `scripts/cabecalhos.py`. O relatório PDF usa o emblema do Vitória Sport Clube, propriedade do clube, apenas para identificar o clube analisado. A tipografia é a [Archivo](https://fonts.google.com/specimen/Archivo), da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta `fontes/` (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.
 
 ---
 

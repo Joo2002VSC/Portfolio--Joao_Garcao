@@ -981,3 +981,102 @@ SELECT
     ROUND(100.0 * (tv_centralizada - tv_atual) / -base.defice, 1)  AS pct_do_defice_coberto
 FROM sim, base, tv
 ORDER BY contrato, n;
+
+
+-- =====================================================================
+-- RENDIMENTOS, GASTOS E TRANSFERÊNCIAS
+-- =====================================================================
+
+
+-- @q 56. Gastos operacionais vs. receitas de transferências e saldo
+-- Gastos operacionais = mercadorias + FSE + pessoal + depreciações e amortizações
+-- (inclui passes) + outros gastos + imparidades + provisões.
+-- Receitas de transferências = mais-valias líquidas com a venda de passes.
+-- Saldo = receitas de transferências - gastos operacionais: o que falta cobrir
+-- com as receitas da operação (TV, bilheteira, patrocínios, prémios).
+WITH g AS (
+    SELECT epoca_id,
+           -SUM(CASE WHEN rubrica_id IN ('cmvmc', 'fse', 'gastos_pessoal', 'depreciacoes',
+                                         'outros_gastos', 'imparidades', 'provisoes')
+                     THEN valor END)                                        AS gastos_operacionais,
+           SUM(CASE WHEN rubrica_id = 'vendas_servicos' THEN valor END)     AS receitas_operacao
+    FROM demonstracao_resultados
+    WHERE entidade_id = 'SAD'
+    GROUP BY epoca_id
+)
+SELECT
+    g.epoca_id                                                   AS epoca,
+    g.gastos_operacionais,
+    t.vendas_brutas,
+    t.mais_valias_liquidas                                       AS receitas_transferencias,
+    t.mais_valias_liquidas - g.gastos_operacionais               AS saldo,
+    ROUND(100.0 * t.mais_valias_liquidas / g.gastos_operacionais, 1) AS transferencias_cobrem_pct,
+    g.receitas_operacao,
+    g.receitas_operacao + t.mais_valias_liquidas - g.gastos_operacionais AS saldo_com_receitas_operacao
+FROM g
+JOIN transferencias t ON t.epoca_id = g.epoca_id AND t.entidade_id = 'SAD'
+WHERE g.gastos_operacionais IS NOT NULL
+ORDER BY g.epoca_id;
+
+
+-- @q 57. Evolução das rubricas de rendimentos operacionais da SAD
+-- Outros rendimentos incluem as mais-valias com jogadores.
+SELECT
+    epoca_id                                                                  AS epoca,
+    MAX(CASE WHEN rubrica_id = 'vendas_servicos'      THEN valor END)         AS vendas_servicos,
+    MAX(CASE WHEN rubrica_id = 'subsidios_exploracao' THEN valor END)         AS subsidios,
+    MAX(CASE WHEN rubrica_id = 'outros_rendimentos'   THEN valor END)         AS outros_rendimentos,
+    SUM(CASE WHEN rubrica_id IN ('vendas_servicos', 'subsidios_exploracao', 'outros_rendimentos')
+             THEN valor END)                                                  AS total_rendimentos,
+    ROUND(100.0 * MAX(CASE WHEN rubrica_id = 'outros_rendimentos' THEN valor END)
+          / SUM(CASE WHEN rubrica_id IN ('vendas_servicos', 'subsidios_exploracao', 'outros_rendimentos')
+                     THEN valor END), 1)                                      AS outros_rendimentos_pct
+FROM demonstracao_resultados
+WHERE entidade_id = 'SAD'
+GROUP BY epoca_id
+HAVING MAX(CASE WHEN rubrica_id = 'vendas_servicos' THEN valor END) IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 58. Evolução das rubricas de gastos operacionais da SAD
+-- Valores positivos; pessoal_pct = peso dos gastos com pessoal no total.
+WITH r AS (
+    SELECT epoca_id,
+           -MAX(CASE WHEN rubrica_id = 'gastos_pessoal' THEN valor END)          AS pessoal,
+           -MAX(CASE WHEN rubrica_id = 'fse'            THEN valor END)          AS fse,
+           -MAX(CASE WHEN rubrica_id = 'depreciacoes'   THEN valor END)          AS depreciacoes,
+           -MAX(CASE WHEN rubrica_id = 'cmvmc'          THEN valor END)          AS mercadorias,
+           -MAX(CASE WHEN rubrica_id = 'outros_gastos'  THEN valor END)          AS outros_gastos,
+           -COALESCE(MAX(CASE WHEN rubrica_id = 'imparidades' THEN valor END), 0)
+           -COALESCE(MAX(CASE WHEN rubrica_id = 'provisoes'   THEN valor END), 0) AS imparidades_provisoes
+    FROM demonstracao_resultados
+    WHERE entidade_id = 'SAD'
+    GROUP BY epoca_id
+)
+SELECT
+    epoca_id                                                            AS epoca,
+    pessoal, fse, depreciacoes, mercadorias, outros_gastos, imparidades_provisoes,
+    pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes AS total_gastos,
+    ROUND(100.0 * pessoal / (pessoal + fse + depreciacoes + mercadorias + outros_gastos
+                             + imparidades_provisoes), 1)              AS pessoal_pct,
+    ROUND(100.0 * (pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes)
+          / LAG(pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes)
+                OVER (ORDER BY epoca_id) - 100, 1)                     AS variacao_pct
+FROM r
+WHERE pessoal IS NOT NULL AND fse IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 59. Detalhe das rubricas no R&C 2025/26: o que mudou face a 2024/25
+SELECT
+    a.nota,
+    a.grupo,
+    a.rubrica,
+    b.valor                                   AS valor_2024_25,
+    a.valor                                   AS valor_2025_26,
+    a.valor - b.valor                         AS variacao,
+    ROUND(100.0 * (a.valor - b.valor) / NULLIF(b.valor, 0), 1) AS variacao_pct
+FROM detalhe_rubrica a
+JOIN detalhe_rubrica b ON b.nota = a.nota AND b.rubrica = a.rubrica AND b.epoca_id = '2024/25'
+WHERE a.epoca_id = '2025/26'
+ORDER BY a.nota, a.valor DESC;
