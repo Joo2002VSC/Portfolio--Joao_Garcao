@@ -2,87 +2,98 @@
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english) · 🇫🇷 [Français](#-français)
 
-**[Ver o dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/dashboard-contas-vitoria/)**
+**[Abrir o dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/dashboard-contas-vitoria/)**
 
 ---
 
 ## 🇵🇹 Português
 
-Dashboard interativo, em JavaScript, com as contas do Vitória Sport Clube entre 2012/13 e 2025/26: SAD, Clube e contas consolidadas. É a camada visual do meu projeto de análise em SQL, [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql): os dados saem da base SQLite, passam para JSON e chegam ao browser.
+Dashboard interativo sobre as contas do Vitória Sport Clube entre 2012/13 e 2025/26: a SAD, o Clube e o Grupo consolidado. É a camada visual do meu projeto de análise em SQL, [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql). Todos os indicadores saem das **59 consultas SQL** desse projeto: o dashboard não refaz cálculos, mostra os resultados das consultas.
 
-### O que se pode explorar
+### O que tem
 
-- **Indicadores da época**: receitas, gastos com pessoal, resultado líquido (com e sem mais-valias), passivo e capital próprio, com a variação face à época anterior e o desempenho em campo.
-- **Resultado líquido por entidade**: SAD, Clube e Consolidado lado a lado.
-- **Venda de jogadores**: quanto do resultado depende das mais-valias com transferências.
-- **Receitas e gastos com pessoal**, com o peso dos salários nas receitas.
-- **Balanço**: ativo, passivo e capital próprio a 30 de junho.
-- **Composição das receitas** do grupo (TV, UEFA, patrocínios, sócios…).
-- **Gastos vs. classificação**: os gastos com pessoal da SAD contra o lugar na Liga.
+| Secção | Perguntas a que responde | Consultas |
+|:---|:---|:---|
+| **Visão geral** | Indicadores da época em destaque (SAD, Clube ou Grupo), as cinco perguntas de investigação do projeto, resultado por entidade e dependência das vendas | 2, 6, 10, 27, 28, 31, 52–55 |
+| **Receitas e transferências** | De onde vêm os rendimentos; peso da TV, da Europa e da venda de jogadores; mais-valias, múltiplo de venda, intermediários, passes, solidariedade | 5, 12, 21, 40, 41, 46, 47, 54, 57 |
+| **Custos e pessoal** | Gastos por rubrica, gastos face a receitas e vendas, salários face a receitas, custos fixos, rácio da UEFA, funcionários e remunerações | 3, 31–33, 42, 45, 56, 58 |
+| **Balanço e dívida** | Capital próprio, endividamento e liquidez, dívida financeira e instrumentos, juros face ao mercado, fluxos de caixa, fundo de maneio, artigo 35.º, reexpressão de 2024/25 | 7, 11, 15, 27–30, 36–39, 43, 51, 52 |
+| **Desporto** | Regressão entre despesas e classificação (R², intervalo de confiança), custo por ponto, espectadores, treinadores | 20, 34, 49, 50, 53 |
+| **Cenários** | Ponto de equilíbrio e centralização dos direitos TV (simulações ilustrativas) | 25, 26, 48, 55 |
+| **Consultas SQL** | Explorador das 59 consultas: pesquisa, código com realce, resultado ordenável e exportação para CSV | 1–59 |
 
-**Filtros:** entidade, intervalo de épocas e época em destaque. Cada gráfico tem um botão **Ver tabela** com os números exatos. Há modo claro e escuro.
+Cada gráfico tem:
+- um **título em forma de pergunta**;
+- uma **conclusão calculada a partir dos dados filtrados**;
+- um botão **Ver tabela** com os valores exatos;
+- a **ligação à consulta SQL** de onde vem.
+
+**Filtros:** intervalo de épocas, época em destaque (assinalada em todos os gráficos) e botão para repor os filtros. Os filtros ficam no endereço da página, por isso uma vista filtrada pode ser partilhada.
 
 ### Como funciona
 
 ```
-vsc_contas.db  ──►  scripts/exportar_json.py  ──►  data/contas.json  ──►  js/app.js + Chart.js
- (SQLite, vista v_kpis)        (Python)                                     (browser)
+contas-vitoria-sql/                     dashboard-contas-vitoria/
+  vsc_contas.db  ─┐
+  sql/04_analises.sql ─┼─► scripts/exportar_json.py ─► data/consultas.json ─┐
+  vista v_kpis  ──┘        (corre as 59 consultas      data/contas.json    ─┴─► js/ (browser)
+                            e verifica a coerência)
 ```
 
-| Ficheiro | Conteúdo |
+| Ficheiro | Responsabilidade |
 |:---|:---|
-| `index.html` | Estrutura da página: filtros, indicadores e cartões dos gráficos |
-| `css/style.css` | Identidade visual do projeto SQL, animações de entrada, modo escuro, layout responsivo |
-| `js/app.js` | Estado dos filtros, indicadores, definição de cada gráfico e vista em tabela |
-| `js/formato.js` | Formatação de números em português (M€, mil €, negativos entre parênteses) |
+| `scripts/exportar_json.py` | Lê `04_analises.sql`, corre cada consulta na base SQLite e grava título, secção, conceitos SQL, código e resultado. Pára se uma verificação falhar (ex.: ativo − passivo ≠ capital próprio) |
+| `js/dados.js` | Carrega e valida os JSON; acesso às consultas; funções numéricas seguras (nulos, divisões por zero) |
+| `js/formato.js` | Números em português europeu (parênteses nos negativos, M€, %, p.p.) e metadados das colunas |
+| `js/paineis.js` | Definição de cada visualização: pergunta, consulta, gráfico e conclusão |
+| `js/graficos.js` | Cores do tema, opções comuns e plugins do Chart.js (época em destaque, linhas de referência) |
+| `js/tabelas.js` | Tabelas ordenáveis e acessíveis; exportação CSV (separador `;`, para o Excel em português) |
+| `js/explorador.js` | Explorador das consultas SQL |
 | `js/animacoes.js` | Animações de entrada, transições entre filtros e contagem dos indicadores |
-| `img/emblema.png` | Emblema do clube, o mesmo do projeto SQL |
-| `js/vendor/chart.umd.min.js` | [Chart.js](https://www.chartjs.org/) 4 (licença MIT), incluído no repositório |
-| `scripts/exportar_json.py` | Lê a base SQLite e gera `data/contas.json` |
-| `data/contas.json` | Os dados que o dashboard usa |
+| `js/app.js` | Estado, navegação entre secções, filtros e indicadores |
 
 **Escolhas técnicas**
-- JavaScript puro, sem frameworks nem passo de compilação: o código lê-se diretamente.
-- Cada gráfico é uma função que devolve a configuração do Chart.js e a tabela equivalente, a partir do estado dos filtros.
-- A estética segue a do projeto SQL: faixas amarelas com o emblema, títulos em Archivo Expanded, séries a preto, cinzento e amarelo, e valores negativos entre parênteses, como nas demonstrações financeiras. A identidade de cada série nunca depende só da cor (legenda, rótulos e tabela).
-- **Animações** (`js/animacoes.js`): os cartões entram quando chegam ao ecrã (`IntersectionObserver`); as barras crescem a partir do zero e as linhas sobem ponto a ponto; os indicadores contam até ao valor novo; ao mudar de entidade, os gráficos transformam-se em vez de se redesenharem. Tudo fica estático se o sistema pedir menos movimento (`prefers-reduced-motion`).
-- Épocas sem dados ficam em branco, em vez de serem interpoladas.
+- **JavaScript sem frameworks** (módulos ES) e Chart.js 4, incluído no repositório. Não há passo de compilação.
+- **Uma só escala por gráfico.** Quando duas medidas têm unidades diferentes, ficam em gráficos separados ou passam para o tooltip.
+- **A cor tem significado.** Preto, cinzento e amarelo, como no projeto SQL. O amarelo assinala o que ultrapassa um limite, por exemplo salários acima de 100% das receitas ou o rácio da UEFA acima de 70%. A identidade das séries nunca depende só da cor: há legenda, conclusão e tabela.
+- **Acessibilidade (WCAG 2.2 AA):**
+  - HTML semântico e ligação para saltar para o conteúdo;
+  - navegação completa por teclado;
+  - gráficos com descrição e alternativa em tabela;
+  - contraste verificado em modo claro e escuro;
+  - respeito pela opção `prefers-reduced-motion`.
+- **Desempenho:** cada gráfico só é desenhado quando aparece no ecrã. Ao mudar um filtro, os gráficos atualizam-se em vez de se redesenharem.
 
 ### Abrir localmente
 
-O dashboard lê um ficheiro JSON, por isso precisa de um servidor (o browser bloqueia a leitura a partir do disco):
+O dashboard lê ficheiros JSON, por isso precisa de um servidor:
 
 ```bash
-# na pasta do dashboard
-python -m http.server
+python -m http.server     # na pasta do dashboard
 # abrir http://localhost:8000
 ```
 
-Ou, no VS Code, abrir a pasta e usar a extensão **Live Server**.
-
 ### Atualizar os dados
-
-Se a base de dados do projeto SQL mudar:
 
 ```bash
 python scripts/exportar_json.py
-# ou indicando outro caminho
-python scripts/exportar_json.py --db caminho/para/vsc_contas.db
 ```
 
-### Fonte e limitações
+### Limitações conhecidas
 
-Relatórios e Contas do Vitória SC, organizados no projeto [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql), onde estão as fontes, a verificação e as limitações. Cada época usa os valores do seu próprio relatório. Nem todas as entidades têm dados para todas as épocas (o Clube, por exemplo, não tem dados de transferências).
+- **Cobertura das entidades.** O Clube e o Grupo consolidado têm menos épocas e menos rubricas do que a SAD, e ainda não têm contas de 2025/26. Vários indicadores só existem para a SAD.
+- **Consulta 14 do projeto SQL.** O título diz 30/06/2025, mas o resultado mistura linhas de 30/06/2025 e de 30/06/2026. O dashboard usa a consulta 39 e assinala o problema no explorador.
+- **Rácio da UEFA (consulta 45).** É uma aproximação ao regulamento. Nas duas primeiras épocas, a média das mais-valias usa menos de três épocas.
+- **Cenários de centralização.** São ilustrativos, porque o modelo de repartição dos direitos TV ainda não está definido.
+- **Regressão desporto/despesas.** Usa 13 épocas: é uma associação, não uma relação de causa e efeito.
 
 ---
 
 ## 🇬🇧 English
 
-Interactive JavaScript dashboard of Vitória Sport Clube's accounts from 2012/13 to 2025/26: the SAD (the professional football company), the Club and the consolidated group. It is the visual layer of my SQL analysis project, [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql): data flows from SQLite to JSON to the browser.
+Interactive dashboard of Vitória Sport Clube's accounts (2012/13–2025/26): the SAD (professional football company), the Club and the consolidated group. Every figure comes from the **59 SQL queries** of my [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) project. A Python script runs them against the SQLite database, checks consistency and exports the results to JSON; the browser only presents them.
 
-**What you can explore:** season KPIs with year-on-year change; net result by entity; how much the result depends on player sales; revenue vs. staff costs; balance sheet; revenue mix; staff costs vs. league position. Filters for entity, season range and highlighted season; every chart has a **table view**; light and dark mode.
-
-**Built with** plain HTML, CSS and JavaScript plus Chart.js 4, no framework or build step. A small Python script (`scripts/exportar_json.py`) exports the SQLite views to `data/contas.json`. It follows the look of the SQL project (yellow bands, club emblem, black/grey/yellow series) and adds animations: cards slide in on scroll, bars grow and lines rise point by point, KPIs count up, and charts morph when filters change, all disabled under `prefers-reduced-motion`.
+Seven sections: overview, revenue and transfers, costs and staff, balance sheet and debt, sport, scenarios, and an **SQL explorer** (search, highlighted code, sortable results, CSV export). Each chart asks a question, shows a conclusion computed from the filtered data, has a table view and links back to its query. Built with plain JavaScript modules and Chart.js, accessible (keyboard, screen readers, reduced motion) and responsive.
 
 **Run locally:** `python -m http.server` in this folder, then open `http://localhost:8000`.
 
@@ -90,11 +101,9 @@ Interactive JavaScript dashboard of Vitória Sport Clube's accounts from 2012/13
 
 ## 🇫🇷 Français
 
-Tableau de bord interactif en JavaScript sur les comptes du Vitória Sport Clube de 2012/13 à 2025/26 : la SAD (société de football professionnel), le Club et les comptes consolidés. C'est la couche visuelle de mon projet d'analyse SQL, [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) : les données passent de SQLite à JSON, puis au navigateur.
+Tableau de bord interactif sur les comptes du Vitória Sport Clube (2012/13–2025/26) : la SAD (société de football professionnel), le Club et le groupe consolidé. Tous les indicateurs proviennent des **59 requêtes SQL** de mon projet [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql). Un script Python les exécute sur la base SQLite, vérifie la cohérence et exporte les résultats en JSON ; le navigateur ne fait que les présenter.
 
-**À explorer :** indicateurs de la saison avec variation annuelle ; résultat net par entité ; dépendance aux ventes de joueurs ; recettes et frais de personnel ; bilan ; composition des recettes ; frais de personnel et classement en championnat. Filtres par entité, intervalle de saisons et saison mise en avant ; chaque graphique a une **vue en tableau** ; modes clair et sombre.
-
-**Réalisé avec** HTML, CSS et JavaScript, plus Chart.js 4, sans framework ni compilation. Un petit script Python (`scripts/exportar_json.py`) exporte les vues SQLite vers `data/contas.json`. Il reprend l'esthétique du projet SQL (bandeaux jaunes, emblème du club, séries en noir, gris et jaune) et ajoute des animations : cartes qui apparaissent au défilement, barres qui poussent et lignes qui montent point par point, indicateurs qui comptent, graphiques qui se transforment au changement de filtre, le tout désactivé avec `prefers-reduced-motion`.
+Sept sections : vue d'ensemble, recettes et transferts, coûts et personnel, bilan et dette, sport, scénarios et un **explorateur SQL** (recherche, code en couleur, résultats triables, export CSV). Chaque graphique pose une question, affiche une conclusion calculée sur les données filtrées, propose une vue en tableau et renvoie à sa requête. Réalisé en JavaScript (modules ES) avec Chart.js, accessible et adapté au mobile.
 
 **Lancer en local :** `python -m http.server` dans ce dossier, puis ouvrir `http://localhost:8000`.
 
