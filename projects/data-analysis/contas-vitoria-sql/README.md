@@ -31,13 +31,13 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 
 | # | Pergunta | Resposta curta | Onde |
 |:---:|:---|:---|:---|
-| 1 | A atividade corrente cobre os custos recorrentes? | Não. A margem corrente sem vendas foi negativa em todas as épocas; em média faltaram 20,9 M€ por época (2022/23–2024/25). | Conclusões 1–2, consultas 2, 42, 51 |
-| 2 | Quanto pesam as vendas de jogadores e a Europa? | As vendas superaram sempre as receitas da operação (2,19 € por cada euro em 2024/25). A fase de grupos europeia sobe as receitas médias de 14,0 para 21,3 M€. | Conclusões 5 e 10, consultas 6, 54 |
-| 3 | A dívida é sustentável e a que custo? | É cara e curta: taxa implícita de 14,6% (12 p.p. acima da Euribor) e 92% a vencer em menos de um ano. | Conclusões 3, 4 e 9, consultas 27–30, 52 |
-| 4 | Gastar mais traz melhores classificações? | Não se consegue demonstrar: R² = 0,09 e o intervalo de confiança do efeito inclui o zero. | Conclusão 6, consultas 22, 53 |
-| 5 | Que combinação reduz a dependência das vendas? | Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 40% do défice. O resto exige cortar custos ou manter vendas. | Conclusão 11, consultas 48, 55 |
+| 1 | A atividade corrente cobre os custos recorrentes? | Não. A margem corrente sem vendas foi negativa em todas as épocas; em média faltaram 22,8 M€ por época (2023/24–2025/26). | Conclusões 1–2, consultas 2, 42, 51 |
+| 2 | Quanto pesam as vendas de jogadores e a Europa? | As vendas superaram sempre as receitas da operação (2,07 € por cada euro em 2025/26). A fase de grupos europeia sobe as receitas médias de 14,0 para 21,3 M€. | Conclusões 5 e 10, consultas 6, 54 |
+| 3 | A dívida é sustentável e a que custo? | É cara e curta: taxa implícita de 14,9% (12,5 p.p. acima da Euribor) e 94% a vencer em menos de um ano (30/06/2026). | Conclusões 3, 4 e 9, consultas 27–30, 52 |
+| 4 | Gastar mais traz melhores classificações? | Não se consegue demonstrar: R² = 0,02 em 13 épocas e o intervalo de confiança do efeito inclui o zero. | Conclusão 6, consultas 22, 53 |
+| 5 | Que combinação reduz a dependência das vendas? | Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 37% do défice. O resto exige cortar custos ou manter vendas. | Conclusão 11, consultas 48, 55 |
 
-**✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 13 Relatórios e Contas de 2012/13 a 2024/25 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
+**✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 14 Relatórios e Contas de 2012/13 a 2025/26 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
 > Projeto pessoal e autodidata de análise de dados. Não tem qualquer ligação oficial ao Vitória Sport Clube.
 
@@ -47,31 +47,33 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 | Indicador | 2023/24 | 2024/25 | 2025/26 |
 |:---|---:|---:|---:|
 | Lugar na Liga · Europa | 5.º · pré-eliminatória | 6.º · oitavos da Liga Conferência | 9.º · sem Europa |
-| Receitas (vendas e serviços / operacionais) | 12,9 M€ | **22,6 M€** | 15,1 M€ |
-| Gastos com pessoal | (16,9 M€) | (20,5 M€) | — |
-| Mais-valias com jogadores | 6,7 M€ | **27,5 M€** | — |
+| Receitas (vendas e serviços) | 12,9 M€ | **22,6 M€** | 14,9 M€ |
+| Gastos com pessoal | (16,9 M€) | (20,5 M€) | **(21,7 M€)** |
+| Mais-valias com jogadores | 6,7 M€ | **27,5 M€** | 16,1 M€ |
 | **Resultado líquido** | **(14,7 M€)** | **7,6 M€** | **(11,1 M€)** |
-| Resultado sem mais-valias | (21,4 M€) | (19,9 M€) | — |
-| Capital próprio | (31,2 M€) | (24,0 M€) | (36,8 M€) |
+| Resultado sem mais-valias | (21,4 M€) | (19,9 M€) | **(27,1 M€)** |
+| Dívida financeira (30/06) | 34,0 M€ | 34,6 M€ | **40,8 M€** |
+| Capital próprio (30/06) | (31,2 M€) | (24,0 M€) | **(36,8 M€)** |
+| Funcionários (média) | 200 | 229 | **302** |
 
-<sub>Valores negativos entre parênteses, como nas demonstrações financeiras. 2025/26: comunicado de contas da SAD (indicadores resumidos, base reexpressa).</sub>
+<sub>Valores negativos entre parênteses, como nas demonstrações financeiras. Cada época com os valores do seu próprio Relatório e Contas; 2024/25 foi depois reexpressa (resultado de 7,36 M€, capital próprio de (25,8 M€)), ver a tabela `reexpressao`.</sub>
 
 <a id="principais-conclusões"></a>
 <img src="graficos/cabecalhos/03_conclusoes.png" alt="Principais conclusões" width="100%">
 
-**1. A SAD vive das vendas de jogadores.** Nas oito épocas com dados de transferências, o resultado sem mais-valias seria sempre negativo, entre (5,9 M€) e (25,3 M€). O recorde de 2024/25 só existe graças a 27,5 M€ de mais-valias.
+**1. A SAD vive das vendas de jogadores.** Nas nove épocas com dados de transferências, o resultado sem mais-valias seria sempre negativo, entre (5,9 M€) e (27,1 M€). O pior valor é o de 2025/26: mesmo com 16,1 M€ de mais-valias, a SAD perdeu 11,1 M€. O recorde de 2024/25 só existiu graças a 27,5 M€ de mais-valias.
 
 ![Dependência das vendas de jogadores](graficos/03_dependencia_vendas_jogadores.png)
 
-**2. Os salários ultrapassaram as receitas durante quatro épocas.** Entre 2020/21 e 2023/24, os gastos com pessoal ficaram entre 119% e 200% das vendas e serviços.
+**2. Os salários ultrapassaram as receitas em cinco das últimas seis épocas.** Entre 2020/21 e 2023/24, os gastos com pessoal ficaram entre 119% e 200% das vendas e serviços. Em 2025/26, sem Europa, voltaram a 146%, com um recorde de 21,7 M€ em gastos com pessoal.
 
 ![Receitas vs. gastos com pessoal](graficos/02_receitas_vs_pessoal_sad.png)
 
-**3. A SAD só teve capital próprio positivo em 4 das 14 épocas** (2016/17 a 2019/20). Desde 2020/21, o passivo supera o ativo: o capital próprio chegou a (36,8 M€) a 30/06/2026, e o passivo a 85,3 M€. O rácio de endividamento de 2023/24 (1,87) foi o mais alto da história da SAD.
+**3. A SAD só teve capital próprio positivo em 4 das 14 épocas** (2016/17 a 2019/20). Desde 2020/21, o passivo supera o ativo: o capital próprio chegou a (36,8 M€) a 30/06/2026, e o passivo a 85,3 M€. O passivo corrente excede o ativo corrente em 52,5 M€. O rácio de endividamento de 2023/24 (1,87) foi o mais alto da história da SAD; em 2025/26 foi de 1,76.
 
 ![Ativo vs. passivo da SAD](graficos/05_balanco_sad.png)
 
-**4. A dívida ficou mais cara e mais curta.** A dívida financeira passou de 1,2 M€ (2019/20) para 34,6 M€ (2024/25), e os juros de 149 mil € para 5,0 M€, cerca de 34 vezes mais. A taxa de juro implícita subiu de cerca de 6% para **15%**, e os juros já pesam 22% das receitas. A 30/06/2025, 92% da dívida financeira vencia em menos de um ano, e a liquidez geral está abaixo de 0,5 desde 2021/22.
+**4. A dívida ficou mais cara e mais curta.** A dívida financeira passou de 1,2 M€ (2019/20) para 40,8 M€ (30/06/2026), e os juros dos financiamentos de 149 mil € para 5,6 M€, cerca de 38 vezes mais. A taxa de juro implícita subiu de cerca de 6% para **15%**, e os juros já pesam 38% das receitas. A 30/06/2026, 94% da dívida financeira vencia em menos de um ano; o empréstimo principal (MSD, 12,5%) vence a 31/12/2026. A liquidez geral está abaixo de 0,5 desde 2021/22 (0,27 em 2025/26).
 
 ![Dívida financeira e juros](graficos/07_divida_e_juros.png)
 
@@ -81,11 +83,11 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Composição das receitas](graficos/04_composicao_receitas.png)
 
-**6. Gastar mais não garantiu melhores classificações.** Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, em 12 épocas, cada 10 M€ a mais valem, em média, só 0,6 lugares, e as despesas explicam apenas 9% das diferenças de classificação (R² = 0,09). O intervalo de confiança a 95% do declive inclui o zero: é uma associação fraca, não uma relação de causa e efeito. O 4.º lugar de 2016/17 custou 13,3 M€; o 7.º lugar de 2020/21 custou 32,5 M€.
+**6. Gastar mais não garantiu melhores classificações.** Numa regressão linear entre as despesas da SAD (pessoal, FSE e amortizações) e o lugar na Liga, em 13 épocas, cada 10 M€ a mais valem, em média, só 0,3 lugares, e as despesas explicam apenas 2% das diferenças de classificação (R² = 0,02). O intervalo de confiança a 95% do declive inclui o zero: é uma associação fraca, não uma relação de causa e efeito. O 4.º lugar de 2016/17 custou 13,3 M€; o 9.º lugar de 2025/26 custou 37,7 M€, a despesa mais alta de sempre.
 
 ![Despesas vs. classificação](graficos/16_despesas_vs_classificacao.png)
 
-**7. A estrutura cresceu mais depressa do que a equipa.** A SAD passou de 59 funcionários em 2012/13 para **229 em 2024/25**, um recorde. Os jogadores quase duplicaram (42 → 82), mas o restante pessoal (treinadores, staff e apoio) multiplicou-se por mais de 8 (17 → 147). Hoje há 1,8 não-jogadores por cada jogador, contra 0,4 em 2012/13. A remuneração média por jogador subiu de 80 mil € (2016/17) para 134 mil € (2024/25).
+**7. A estrutura cresceu mais depressa do que a equipa.** A SAD passou de 59 funcionários em 2012/13 para **302 em 2025/26**, um recorde (mais 73 num só ano). Os jogadores quase triplicaram (42 → 118), mas o restante pessoal (treinadores, staff e apoio) multiplicou-se por mais de 10 (17 → 184). Há 1,6 não-jogadores por cada jogador, contra 0,4 em 2012/13. A remuneração média por jogador subiu de 80 mil € (2016/17) para 134 mil € (2024/25) e desceu para 96 mil € em 2025/26, porque o número de jogadores aumentou muito mais do que a massa salarial.
 
 ![Funcionários da SAD](graficos/09_funcionarios.png)
 
@@ -93,19 +95,21 @@ Sobre essa base, **55 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Resultado líquido por entidade](graficos/01_resultado_por_entidade.png)
 
-**9. O Vitória paga juros muito acima do mercado.** Em 2024/25, a taxa implícita da dívida foi de 14,6%, contra 2,6% da Euribor a 12 meses e 3,0% das obrigações do Estado português: um spread de 12 pontos percentuais. Em 2019/20, com juros negativos na zona euro, a SAD pagou 9,6%, 21 vezes a taxa do Estado. À taxa média do crédito às empresas em Portugal, os juros seriam 3,1 a 3,5 M€ mais baixos por ano.
+**9. O Vitória paga juros muito acima do mercado.** Em 2025/26, a taxa implícita da dívida foi de 14,9% (o próprio relatório fala em "cerca de 15%"), contra 2,4% da Euribor a 12 meses e 3,2% das obrigações do Estado português: um spread de 12,5 pontos percentuais. Em 2019/20, com juros negativos na zona euro, a SAD pagou 9,6%, 21 vezes a taxa do Estado. À taxa média do crédito às empresas em Portugal, os juros seriam 3,5 a 3,9 M€ mais baixos por ano.
 
 ![Taxas de juro](graficos/15_taxas_de_juro.png)
 
-**10. A SAD vende sempre mais em jogadores do que fatura na operação.** Em todas as épocas desde 2017/18, as vendas brutas de jogadores superaram as receitas de bilheteira, TV, patrocínios e sócios. Em 2024/25 foram 2,19 € de vendas por cada euro de receita, e a média de três épocas subiu de 1,09 € para 1,89 €.
+**10. A SAD vende sempre mais em jogadores do que fatura na operação.** Em todas as épocas desde 2017/18, as vendas brutas de jogadores superaram as receitas de bilheteira, TV, patrocínios e sócios. Em 2024/25 foram 2,19 € de vendas por cada euro de receita, e em 2025/26 foram 2,07 €. A média de três épocas subiu de 1,09 € (2017/18) para 1,80 € (2025/26).
 
 ![Vendas vs. receitas](graficos/17_vendas_vs_receitas.png)
 
-**11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.** O défice antes de vendas foi de 20,9 M€ por época (média 2022/23–2024/25). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quarto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 21 M€ para 13 M€ por época.
+**11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.** O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).
 
 ![Centralização e equilíbrio](graficos/18_centralizacao_equilibrio.png)
 
 O [painel de indicadores](analise-tecnica.md#18-painel-de-indicadores-financeiros) junta a margem corrente (negativa em todas as épocas), a rendibilidade do ativo, a dívida face às receitas e o cash flow operacional.
+
+**12. As contas de 2025/26 mudaram a leitura do passado.** O Relatório e Contas de 2025/26 corrigiu sete erros de 2024/25: custo amortizado não aplicado, uma provisão FIFA, comissões de uma venda, juros não especializados, inventários, imparidades e direitos económicos que já não eram ativos. O capital próprio de 30/06/2025 baixou 1,7 M€. A demonstração dos fluxos de caixa foi refeita: o fluxo operacional de 2024/25 passou de +0,9 M€ para **(18,9 M€)**, porque 36,5 M€ de recebimentos de clientes tinham ido diretamente para os financiadores, para amortizar créditos antecipados. Na nova apresentação, a operação consumiu 19 M€ de caixa em cada uma das duas últimas épocas, cobertos com nova dívida.
 
 Os resultados completos das 55 consultas estão em [`resultados.md`](resultados.md).
 
@@ -183,7 +187,7 @@ erDiagram
 | `financiamento_detalhe` | Dívida financeira por instrumento (empréstimos, factoring, Apollo, locações) |
 | `partes_relacionadas` | Fluxos e saldos entre o Clube, a SAD e a V Sports |
 | `auditoria` | Opinião do auditor, ênfases e incertezas materiais por época |
-| `reexpressao` | Valores originais e reexpressos de 2024/25 |
+| `reexpressao` | Valores originais e reexpressos de 2024/25 (balanço, resultado, juros e fluxos de caixa) |
 | `treinador` | Treinadores principais e interinos desde 2015 |
 | `taxa_referencia` · `bce_taxa` | Euribor a 12 meses, obrigações do Estado a 10 anos, crédito a empresas em Portugal e taxas diretoras do BCE |
 | `demonstracao_resultados` | Demonstração de resultados em formato longo (entidade × época × rubrica) |
@@ -320,18 +324,19 @@ contas-vitoria-sql/
 
 Os dados financeiros vêm de duas fontes:
 
-- **Relatórios e Contas da Vitória SC – Futebol, SAD de 2012/13 a 2024/25** ([vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/)): balanço, dívida financeira, juros, número de funcionários e gastos com pessoal da SAD, verificados documento a documento (ver [verificação das fontes](verificacao-fontes.md)).
+- **Relatórios e Contas da Vitória SC – Futebol, SAD de 2012/13 a 2025/26** ([vitoriasc.pt/documentos](https://vitoriasc.pt/documentos/)): balanço, dívida financeira, juros, número de funcionários e gastos com pessoal da SAD, verificados documento a documento (ver [verificação das fontes](verificacao-fontes.md)).
 - **[VSC Contas](https://vitoriasempre.net/contas-vsc/)**, um dashboard não oficial: demonstração de resultados detalhada, composição das receitas, transferências, Clube e consolidado. Os balanços da SAD de 2014/15 a 2016/17 publicados no site estavam errados e foram substituídos pelos dos R&C.
 
 As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 
 - **Cobertura desigual.** A SAD tem a demonstração de resultados completa em quase todas as épocas. O Clube só tem dados detalhados a partir de 2021/22. O consolidado começa em 2017/18.
-- **Valores repetidos.** Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas, e "Outros" repete-se em 2023/24 e 2024/25. Provavelmente são valores de preenchimento e não dados reais.
+- **Valores repetidos.** Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas. A nota 15 do R&C 2025/26 confirma esse valor em 2024/25 e 2025/26: é o valor fixo do contrato, não um valor de preenchimento. "Outros" repete-se em 2023/24 e 2024/25, o que continua por confirmar.
 - **Números diferentes para a mesma coisa.** As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
 - **Rácio de custos do plantel.** A consulta 45 segue a fórmula da UEFA, mas sem as comissões de agentes (não há dados separados), por isso subestima o rácio.
 - **Simulações.** A centralização dos direitos TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.
-- **Contas reexpressas e 2025/26.** A SAD reexpressou os valores de 2024/25 nas contas de 2025/26 (resultado de 7,4 M€ em vez de 7,6 M€). Esta base usa os valores originalmente publicados para 2024/25; os valores reexpressos estão na tabela `reexpressao` (consulta 36). Para 2025/26 só existem os indicadores resumidos do comunicado de contas, cujas rubricas não coincidem todas com as dos anos anteriores.
+- **Contas reexpressas.** O R&C 2025/26 reexpressou 2024/25 (resultado de 7,36 M€ em vez de 7,61 M€; capital próprio de (25,8 M€) em vez de (24,0 M€)) e reclassificou os fluxos de caixa. Esta base usa, para cada época, os valores do seu próprio relatório, para que as séries sejam comparáveis com o que foi publicado na altura. Os valores reexpressos estão na tabela `reexpressao` (consulta 36). Por isso, o valor do plantel no fim de 2024/25 (10,4 M€) não coincide com o valor inicial de 2025/26 (9,6 M€, reexpresso).
+- **2025/26.** O R&C 2025/26 foi aprovado pelo Conselho de Administração a 26/10/2026 e ainda está sujeito a aprovação da Assembleia Geral. Os juros suportados (7,08 M€) passaram a incluir o efeito financeiro do custo amortizado; para a taxa implícita usam-se só os juros dos financiamentos (5,61 M€, nota 4.7), comparáveis com as épocas anteriores. Ainda não há contas do Clube nem do Grupo consolidado para 2025/26, nem a composição consolidada das receitas.
 - **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.
 - **Juros.** A tabela `balanco_sad_rc` guarda os juros suportados brutos, tal como nos R&C. A rubrica "juros" da demonstração de resultados (origem: VSC Contas) é, nalgumas épocas, líquida dos juros obtidos. A taxa de juro implícita inclui encargos de factoring e de antecipação de receitas, por isso fica acima da taxa nominal dos empréstimos.
 - **Taxas de referência.** BCE (taxas diretoras), euribor-rates.eu (Euribor a 12 meses, primeiro dia útil de cada mês), OCDE via FRED (obrigações do Estado português a 10 anos) e Banco de Portugal (crédito novo a empresas, só os meses que foi possível recolher). A taxa implícita do Vitória não é diretamente comparável a uma taxa nominal, porque inclui comissões de factoring e antecipação.

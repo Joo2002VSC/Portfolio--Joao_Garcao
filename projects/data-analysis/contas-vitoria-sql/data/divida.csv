@@ -5,3 +5,9 @@ data_ref,credor,tipo,total,menos_1_ano,entre_1_3_anos,mais_3_anos,nota
 2025-06-30,Locações Financeiras,financeira,48670,19130,29539,0,Residual
 2025-06-30,Intermediários desportivos,operacional,21226481,,,,Corrente + não corrente
 2025-06-30,Clubes vendedores,operacional,4717818,,,,Passes adquiridos ainda por pagar
+2026-06-30,MSD & Fasanara,financeira,25332987,25332987,0,0,"Taxas de 11% a 12,5%; MSD prorrogado até 31/12/2026"
+2026-06-30,Score (antecipação TV 2026/27),financeira,6450170,6450170,0,0,Consignação das receitas TV de 2026/27; 11%
+2026-06-30,Factoring,financeira,8517273,6443106,2074167,0,Cessão de créditos com recurso
+2026-06-30,Locações Financeiras,financeira,529665,155173,374492,0,
+2026-06-30,Intermediários desportivos,operacional,23564078,15759136,7804942,,Corrente (incl. acréscimos) + não corrente
+2026-06-30,Clubes vendedores,operacional,6806356,5226981,1579375,,Passes adquiridos ainda por pagar

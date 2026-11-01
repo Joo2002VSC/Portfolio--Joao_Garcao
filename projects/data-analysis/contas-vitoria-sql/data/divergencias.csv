@@ -39,3 +39,5 @@ CSV VitóriaSCContasSAD,2023/24,Caixa e Equivalentes,1523585.02,78684.27,1444900
 Excel HistóricoContasSAD,2023/24,Ativo Total,38823548.4,35823548.4,3000000.0,"gralha: 38,8 M€ em vez de 35,8 M€ (as parcelas corrente e não corrente estão certas)"
 Excel HistóricoContasSAD,2016/17,Pessoal: rem_pessoal_administrativo,313868.33,312868.33,1000.0,"gralha: 313 868,33 em vez de 312 868,33"
 Excel HistóricoContasSAD,2020/21,Pessoal: rem_treinadores,1242836.91,1636456.86,-393619.95,usa o valor reclassificado no R&C 2021/22 (sem o pessoal de apoio); não é um erro
+Site VSC Contas,2023/24,Provisões,-149013,-57515.46,-91497.54,valor de 2022/23 repetido; detetado pelo teste de soma das rubricas operacionais
+Site VSC Contas,2024/25,Imparidades,0,-58483.75,58483.75,imparidade de dívidas a receber em falta; detetada pelo teste de soma das rubricas operacionais

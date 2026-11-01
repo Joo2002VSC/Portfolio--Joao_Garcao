@@ -122,7 +122,7 @@ def main():
 
     for r in ler_csv("balanco_sad_rc.csv"):
         valores = [dinheiro(r[k]) for k in list(r)[1:-1]]
-        con.execute("INSERT INTO balanco_sad_rc VALUES (?" + ", ?" * 13 + ")",
+        con.execute("INSERT INTO balanco_sad_rc VALUES (?" + ", ?" * 14 + ")",
                     [r["epoca"], *valores, r["documento"]])
 
     for r in ler_csv("pessoal_sad.csv"):

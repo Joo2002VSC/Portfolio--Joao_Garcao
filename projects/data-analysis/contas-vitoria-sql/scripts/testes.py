@@ -54,11 +54,19 @@ RECONCILIACAO = [
      "SELECT 1.0 * t.vendas_brutas / d.vendas_servicos FROM transferencias t JOIN v_dr d "
      "ON d.epoca_id = t.epoca_id AND d.entidade_id = 'SAD' WHERE t.entidade_id='SAD' AND t.epoca_id='2024/25'",
      2.19, 0.005),
-    ("Défice antes de vendas, média 2022/23–2024/25 (M€)",
+    ("Défice antes de vendas, média 2023/24–2025/26 (M€)",
      "SELECT AVG(rl_sem_mais_valias) / 1e6 FROM v_kpis WHERE entidade_id='SAD' "
-     "AND epoca_id BETWEEN '2022/23' AND '2024/25'", -20.9, 0.05),
+     "AND epoca_id BETWEEN '2023/24' AND '2025/26'", -22.8, 0.05),
+    ("Resultado sem mais-valias 2025/26 (M€)",
+     "SELECT rl_sem_mais_valias / 1e6 FROM v_kpis WHERE entidade_id='SAD' AND epoca_id='2025/26'", -27.1, 0.05),
+    ("Taxa de juro implícita 2025/26 (%)",
+     "SELECT vitoria_implicita FROM v_taxas_epoca WHERE epoca_id='2025/26'", 14.9, 0.05),
+    ("Funcionários da SAD 2025/26",
+     "SELECT funcionarios FROM pessoal_sad WHERE epoca_id='2025/26'", 302, 0),
+    ("Fundo de maneio a 30/06/2026 (M€)",
+     "SELECT (ativo_corrente - passivo_corrente) / 1e6 FROM balanco_sad_rc WHERE epoca_id='2025/26'", -52.5, 0.05),
     ("Rácio UEFA de custos do plantel 2024/25 (%) · consulta 45", ("q45", "2024/25", "racio_pct"), 44.7, 0.05),
-    ("R² da regressão despesas vs. lugar · consulta 53", ("q53", "2024/25", "r_quadrado"), 0.09, 0.005),
+    ("R² da regressão despesas vs. lugar · consulta 53", ("q53", "2025/26", "r_quadrado"), 0.02, 0.005),
 ]
 
 
@@ -164,11 +172,30 @@ def main():
     r.registar("ok" if not erros else "falha",
                "Passes: valor inicial + aquisições − amortizações − saídas = valor final",
                ", ".join(e for (e,) in erros) or "todas as épocas (tolerância de 4 €: oito valores arredondados ao euro)")
-    erros = con.execute("""SELECT a.epoca_id FROM passes_jogadores a JOIN passes_jogadores b
-                           ON b.epoca_id = (SELECT MIN(epoca_id) FROM passes_jogadores WHERE epoca_id > a.epoca_id)
-                           WHERE ABS(a.valor_liquido_fim - b.valor_liquido_inicio) > 1""").fetchall()
+    quebras = con.execute("""SELECT a.epoca_id, b.documento LIKE '%reexpresso%',
+                                    a.valor_liquido_fim - b.valor_liquido_inicio
+                             FROM passes_jogadores a JOIN passes_jogadores b
+                             ON b.epoca_id = (SELECT MIN(epoca_id) FROM passes_jogadores WHERE epoca_id > a.epoca_id)
+                             WHERE ABS(a.valor_liquido_fim - b.valor_liquido_inicio) > 1""").fetchall()
+    erros = [e for e, reexp, _ in quebras if not reexp]
     r.registar("ok" if not erros else "falha", "Passes: valor final de uma época = valor inicial da seguinte",
-               ", ".join(e for (e,) in erros) or "sem quebras")
+               ", ".join(erros) or "sem quebras não explicadas")
+    for e, reexp, dif in quebras:
+        if reexp:
+            r.registar("aviso", f"Passes: valor final de {e} reexpresso no ano seguinte",
+                       f"diferença de {dif:,.0f} € (custo amortizado e direitos económicos abatidos, nota 2.3 do R&C 2025/26)".replace(",", " "))
+    erros = con.execute("""SELECT epoca_id FROM demonstracao_resultados d WHERE entidade_id = 'SAD' AND rubrica_id = 'resultado_operacional'
+                           AND (SELECT COUNT(*) FROM demonstracao_resultados x WHERE x.entidade_id = 'SAD' AND x.epoca_id = d.epoca_id
+                                AND x.rubrica_id IN ('vendas_servicos','cmvmc','fse','gastos_pessoal','subsidios_exploracao',
+                                     'imparidades','provisoes','outros_rendimentos','outros_gastos','depreciacoes')) = 10
+                           AND ABS(valor - (SELECT SUM(valor) FROM demonstracao_resultados x WHERE x.entidade_id = 'SAD'
+                                AND x.epoca_id = d.epoca_id AND x.rubrica_id IN ('vendas_servicos','cmvmc','fse','gastos_pessoal',
+                                'subsidios_exploracao','imparidades','provisoes','outros_rendimentos','outros_gastos','depreciacoes'))) > 2""").fetchall()
+    completas = [e for (e,) in con.execute("""SELECT epoca_id FROM demonstracao_resultados WHERE entidade_id = 'SAD'
+                     AND rubrica_id IN ('vendas_servicos','cmvmc','fse','gastos_pessoal','subsidios_exploracao','imparidades',
+                     'provisoes','outros_rendimentos','outros_gastos','depreciacoes') GROUP BY epoca_id HAVING COUNT(*) = 10""")]
+    r.registar("ok" if not erros else "falha", "DR da SAD: soma das rubricas operacionais = resultado operacional",
+               ", ".join(e for (e,) in erros) or f"épocas com todas as rubricas: {', '.join(completas)}")
     erros = con.execute("""SELECT epoca_id FROM v_kpis WHERE entidade_id = 'SAD'
                            AND mais_valias_liquidas IS NOT NULL
                            AND rl_sem_mais_valias != resultado_liquido - mais_valias_liquidas""").fetchall()

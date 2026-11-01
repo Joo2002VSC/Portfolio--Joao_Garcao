@@ -2,7 +2,7 @@
 
 Gerado por `scripts/testes.py`. Corre-o depois de `build_db.py`.
 
-**33 testes aprovados · 0 falhados · 7 avisos**
+**38 testes aprovados · 0 falhados · 8 avisos**
 
 Python 3.13.17 · SQLite 3.45.1 · Linux
 
@@ -26,10 +26,12 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 | ✓ | Soma das rubricas de gastos com pessoal = total | épocas com remunerações decompostas (2016/17 em diante) |
 | ⚠ | Remunerações sem decomposição por categoria | 2012/13, 2013/14, 2014/15, 2015/16: os R&C dessas épocas só dão o total |
 | ✓ | Passes: valor inicial + aquisições − amortizações − saídas = valor final | todas as épocas (tolerância de 4 €: oito valores arredondados ao euro) |
-| ✓ | Passes: valor final de uma época = valor inicial da seguinte | sem quebras |
+| ✓ | Passes: valor final de uma época = valor inicial da seguinte | sem quebras não explicadas |
+| ⚠ | Passes: valor final de 2024/25 reexpresso no ano seguinte | diferença de 848 170 € (custo amortizado e direitos económicos abatidos  nota 2.3 do R&C 2025/26) |
+| ✓ | DR da SAD: soma das rubricas operacionais = resultado operacional | épocas com todas as rubricas: 2014/15, 2015/16, 2019/20, 2020/21, 2021/22, 2022/23, 2023/24, 2024/25, 2025/26 |
 | ✓ | Resultado sem mais-valias = resultado líquido − mais-valias | todas as épocas |
 | ✓ | Dívida por instrumento: parte de curto prazo ≤ total | sem incoerências |
-| ⚠ | `rec_2025_26`: linhas do comunicado somam o resultado líquido | -11 062 106 € vs -11 063 044 € · diferença de 938 € não discriminada no comunicado |
+| ⚠ | `rec_2025_26`: linhas do comunicado somam o resultado líquido | -11 062 106 € vs -11 063 043 € · diferença de 937 € não discriminada no comunicado |
 | ⚠ | `rec_2025_26`: EBITDA publicado ≠ rendimentos − gastos | diferença de 0,79 M€: depreciações de ativos não desportivos (deduzida) |
 
 ## 3. Reconciliação: números citados nos relatórios vs. base de dados
@@ -50,9 +52,13 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 | ✓ | Euribor a 12 meses, média 2024/25 (%) | publicado 2,6 · calculado 2,620 |
 | ✓ | Funcionários da SAD 2024/25 | publicado 229 · calculado 229,000 |
 | ✓ | Vendas brutas por euro de receita 2024/25 | publicado 2,19 · calculado 2,193 |
-| ✓ | Défice antes de vendas, média 2022/23–2024/25 (M€) | publicado -20,9 · calculado -20,932 |
+| ✓ | Défice antes de vendas, média 2023/24–2025/26 (M€) | publicado -22,8 · calculado -22,813 |
+| ✓ | Resultado sem mais-valias 2025/26 (M€) | publicado -27,1 · calculado -27,118 |
+| ✓ | Taxa de juro implícita 2025/26 (%) | publicado 14,9 · calculado 14,880 |
+| ✓ | Funcionários da SAD 2025/26 | publicado 302 · calculado 302,000 |
+| ✓ | Fundo de maneio a 30/06/2026 (M€) | publicado -52,5 · calculado -52,531 |
 | ✓ | Rácio UEFA de custos do plantel 2024/25 (%) · consulta 45 | publicado 44,7 · calculado 44,700 |
-| ✓ | R² da regressão despesas vs. lugar · consulta 53 | publicado 0,09 · calculado 0,090 |
+| ✓ | R² da regressão despesas vs. lugar · consulta 53 | publicado 0,02 · calculado 0,020 |
 
 ## 4. Consultas de análise
 
@@ -69,4 +75,4 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 | ⚠ | Valor repetido em 4 épocas: Direitos TV | 6 922 619 € |
 | ⚠ | Valor repetido em 3 épocas: Direitos TV | 7 000 000 € |
 | ⚠ | Vendas brutas = mais-valias em 2020/21 | a fonte só indica as mais-valias; o rácio de mais-valias sobre vendas dá 100% |
-| ⚠ | Épocas da SAD sem receitas detalhadas | 2012/13, 2025/26 |
+| ⚠ | Épocas da SAD sem receitas detalhadas | 2012/13 |

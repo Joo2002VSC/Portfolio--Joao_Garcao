@@ -132,7 +132,7 @@ WHERE entidade_id = 'SAD' AND juros IS NOT NULL
 ORDER BY epoca_id;
 
 
--- @q 9. Crescimento dos juros da SAD nas últimas 5 épocas (taxa média anual)
+-- @q 9. Crescimento dos juros da SAD entre 2019/20 e 2024/25 (taxa média anual)
 -- Conceitos: subconsultas escalares, CTE recursiva para resolver (1 + r)^5 = rácio
 -- Usa bisseção (só somas e multiplicações) em vez de exp()/ln(), que não existem
 -- em todas as instalações de SQLite (por exemplo, no sql.js usado no browser).
@@ -419,7 +419,8 @@ ORDER BY p.epoca_id;
 
 
 -- @q 25. Ponto de equilíbrio 2025/26: quanto é preciso ganhar com jogadores
--- Valores do comunicado de contas 2025/26 (tabela evento). Para resultado
+-- Resultado com direitos de atletas: comunicado e relatório de gestão de 2025/26
+-- (tabela evento); resultado líquido: R&C 2025/26. Para resultado
 -- líquido zero, o resultado com direitos de atletas tem de cobrir o resto.
 WITH v AS (
     SELECT
@@ -462,7 +463,7 @@ FROM cenarios, atual;
 WITH f AS (
     SELECT epoca_id,
            financiamentos_nc + financiamentos_c                       AS financiamentos,
-           juros_suportados,
+           COALESCE(juros_financiamentos, juros_suportados)           AS juros_suportados,
            LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS fin_anterior
     FROM balanco_sad_rc
     WHERE financiamentos_nc IS NOT NULL
@@ -783,7 +784,8 @@ SELECT
 FROM transferencias t
 WHERE t.entidade_id = 'SAD' AND t.custo_vendas IS NOT NULL
 UNION ALL
-SELECT 'dívida 30/06/2025', NULL, total, NULL, NULL
+SELECT 'dívida ' || substr(data_ref, 9, 2) || '/' || substr(data_ref, 6, 2) || '/' || substr(data_ref, 1, 4),
+       NULL, total, NULL, NULL
 FROM divida WHERE credor = 'Intermediários desportivos'
 ORDER BY 1;
 
@@ -902,12 +904,18 @@ r2 AS (
     SELECT 1 - SUM((lugar - previsto) * (lugar - previsto)) / SUM((lugar - my) * (lugar - my)) AS r2,
            -- Erro-padrão do declive: sqrt( SQE / (n - 2) / Sxx )
            sqrt(SUM((lugar - previsto) * (lugar - previsto)) / (MAX(n) - 2)
-                / SUM((despesas_m - mx) * (despesas_m - mx)))              AS ep_b
+                / SUM((despesas_m - mx) * (despesas_m - mx)))              AS ep_b,
+           CASE MAX(n) - 2 WHEN 8 THEN 2.306 WHEN 9 THEN 2.262 WHEN 10 THEN 2.228
+                           WHEN 11 THEN 2.201 WHEN 12 THEN 2.179 WHEN 13 THEN 2.160
+                           WHEN 14 THEN 2.145 WHEN 15 THEN 2.131 WHEN 16 THEN 2.120
+                           WHEN 17 THEN 2.110 WHEN 18 THEN 2.101 WHEN 19 THEN 2.093
+                           WHEN 20 THEN 2.086 END                            AS t_critico
     FROM ajuste
 )
--- Intervalo de confiança a 95% do declive: b ± t(0,975; n-2) × EP.
--- Com n = 12, t(0,975; 10) = 2,228. Se o intervalo inclui 0, a relação não é
--- estatisticamente distinguível de zero. É uma associação, não uma causa.
+-- Intervalo de confiança a 95% do declive: b ± t(0,975; n-2) × EP, com o valor t
+-- da distribuição de Student lido de uma pequena tabela (8 a 20 graus de liberdade).
+-- Se o intervalo inclui 0, a relação não é estatisticamente distinguível de zero.
+-- É uma associação, não uma causa.
 SELECT
     a.epoca_id                                   AS epoca,
     ROUND(a.despesas_m, 1)                       AS despesas_m,
@@ -917,8 +925,8 @@ SELECT
     ROUND(a.my - a.b * a.mx, 2)                  AS a_ordenada,
     ROUND(a.b, 3)                                AS b_declive_por_m,
     ROUND(r2.ep_b, 3)                            AS erro_padrao_b,
-    ROUND(a.b - 2.228 * r2.ep_b, 3)              AS ic95_inferior,
-    ROUND(a.b + 2.228 * r2.ep_b, 3)              AS ic95_superior,
+    ROUND(a.b - r2.t_critico * r2.ep_b, 3)       AS ic95_inferior,
+    ROUND(a.b + r2.t_critico * r2.ep_b, 3)       AS ic95_superior,
     ROUND(r2.r2, 2)                              AS r_quadrado,
     a.n
 FROM ajuste a, r2
@@ -945,13 +953,14 @@ ORDER BY t.epoca_id;
 
 
 -- @q 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
--- Défice antes de vendas = média das três últimas épocas (2022/23 a 2024/25) do
--- resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
+-- Défice antes de vendas = média das três épocas mais recentes com dados (hoje
+-- 2023/24 a 2025/26) do resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
 -- lugar (4.º, 6.º, 9.º), com a mesma repartição ilustrativa da consulta 48.
 WITH base AS (
     SELECT AVG(rl_sem_mais_valias) AS defice
-    FROM v_kpis
-    WHERE entidade_id = 'SAD' AND epoca_id BETWEEN '2022/23' AND '2024/25'
+    FROM (SELECT rl_sem_mais_valias FROM v_kpis
+          WHERE entidade_id = 'SAD' AND rl_sem_mais_valias IS NOT NULL
+          ORDER BY epoca_id DESC LIMIT 3)
 ),
 tv AS (SELECT valor AS tv_atual FROM receitas_composicao
        WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'),

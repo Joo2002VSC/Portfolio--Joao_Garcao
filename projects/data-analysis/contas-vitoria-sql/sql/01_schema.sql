@@ -192,6 +192,7 @@ CREATE TABLE balanco_sad_rc (
     financiamentos_c     INTEGER,               -- financiamentos obtidos correntes
     juros_suportados     INTEGER,               -- valor bruto, positivo
     juros_obtidos        INTEGER,
+    juros_financiamentos INTEGER,               -- só juros dos financiamentos (2025/26: sem o efeito do custo amortizado)
     documento            TEXT,
     CHECK (ABS(ativo_total - ativo_nao_corrente - ativo_corrente) <= 1),
     CHECK (ABS(passivo_total - passivo_nao_corrente - passivo_corrente) <= 1),
