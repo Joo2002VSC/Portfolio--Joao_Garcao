@@ -16,12 +16,12 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Visão geral** | Quatro dimensões para a época escolhida: (A) situação financeira, (B) desempenho operacional, (C) evolução histórica, com variações, máximos e mínimos, e (D) conclusões automáticas (melhorias, riscos, pontos de atenção, alterações estruturais) |
-| **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com resposta, indicadores, gráficos e limitações |
-| **Rácios financeiros** | Resultados contabilísticos e sustentabilidade financeira (autonomia, solvabilidade, endividamento, liquidez), com o que mede, a fórmula, os dados e as limitações de cada rácio |
-| **Receitas e transferências** · **Gastos e pessoal** · **Dívida e liquidez** · **Desporto** · **Cenários** | Análise temática |
-| **Consultas SQL** | Explorador das 48 consultas do projeto relativas à SAD e de 5 consultas complementares: pesquisa, filtro por técnica SQL (detetada no código), resultado ordenável e exportação para CSV |
-| **Metodologia** | Fontes, tratamento, critérios de comparação, limitações, convenções de apresentação e glossário |
+| **Visão geral** | Síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, encargos financeiros), leitura da época (evolução favorável, riscos, alertas, alterações estruturais), quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
+| **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com contexto, resposta, indicadores, gráficos e limitações |
+| **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
+| **Desporto** · **Cenários** | Gastos e resultados desportivos; simulações da centralização dos direitos de TV |
+| **Consultas SQL** | Explorador das 48 consultas do projeto relativas à SAD e de 6 consultas complementares, agrupadas por tema: objetivo, código com realce de sintaxe e numeração de linhas, técnicas SQL detetadas, resultado ordenável e exportação para CSV |
+| **Metodologia e fontes** | Fontes, data de exportação, tratamento, critérios de comparação, limitações, convenções de apresentação e glossário |
 
 ### Como funciona
 
@@ -48,6 +48,7 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 
 - HTML semântico, navegação completa por teclado e ligação para saltar para o conteúdo.
 - Cada gráfico tem uma descrição para leitores de ecrã e uma alternativa em tabela.
+- Paleta com significado fixo: verde (positivo, favorável), vermelho (negativo, desfavorável, risco), amarelo (alerta) e cinzento (neutro). A cor nunca é a única indicação.
 - Contraste verificado em modo claro e escuro.
 - Respeita a opção do sistema para reduzir o movimento.
 - Português europeu em toda a interface, com glossário e convenções de apresentação descritas na secção Metodologia.
@@ -61,12 +62,12 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=5`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=6`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 
 - Algumas séries começam mais tarde: transferências desde 2017/18; a demonstração de resultados de 2012/13 só tem o resultado líquido.
-- A composição das receitas por fonte só está disponível para 2024/25 e 2025/26.
+- A composição das receitas e dos fornecimentos e serviços externos só está disponível para 2024/25 e 2025/26.
 - As simulações da centralização dos direitos de TV são ilustrativas.
 - A regressão entre despesas e classificação usa 13 épocas: mostra uma associação, não uma relação de causa e efeito.
 
@@ -74,9 +75,9 @@ Ao publicar alterações, aumente o número de versão (`?v=5`) no `index.html`,
 
 ## 🇬🇧 English
 
-Interactive financial dashboard of Vitória Sport Clube – Futebol, SAD (the club's professional football company), 2012/13–2025/26. Every figure comes from SQL queries run against the SQLite database of my [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) project: 48 project queries on the SAD plus 5 dashboard queries (ratios, `LAG` variations, `ROW_NUMBER` extremes). A Python script exports them to JSON and stops if a consistency check fails; the browser does not recompute the analysis.
+Interactive financial dashboard of Vitória Sport Clube – Futebol, SAD (the club's professional football company), 2012/13–2025/26. Every figure comes from SQL queries run against the SQLite database of my [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) project: 48 project queries on the SAD plus 6 dashboard queries (ratios, margins, `LAG` variations, `ROW_NUMBER` extremes). A Python script exports them to JSON and stops if a consistency check fails; the browser does not recompute the analysis.
 
-The overview is organised into four dimensions: financial position, operating performance, historical trends and automatic conclusions. There are also sections for the five research questions, financial ratios (each with what it measures, its formula, data and limitations), an SQL explorer with technique filters and CSV export, and a full methodology. Built with plain JavaScript modules and Chart.js; accessible, responsive, and written in European Portuguese.
+The overview opens with eight KPI cards for the selected season, an automatic reading of the season and four trend charts. Further sections cover the five research questions, revenue, costs, profitability and debt (each ratio with what it measures, its formula, data and limitations), an SQL explorer with syntax highlighting, technique filters and CSV export, and a full methodology. Colours carry fixed meaning: green for favourable, red for unfavourable or risk, amber for alerts, grey for neutral information. Built with plain JavaScript modules and Chart.js; accessible, responsive, and written in European Portuguese.
 
 **Run locally:** `python -m http.server`, then open `http://localhost:8000`.
 
@@ -84,9 +85,9 @@ The overview is organised into four dimensions: financial position, operating pe
 
 ## 🇫🇷 Français
 
-Tableau de bord financier interactif de la Vitória Sport Clube – Futebol, SAD (société de football professionnel du club), 2012/13–2025/26. Tous les chiffres proviennent de requêtes SQL exécutées sur la base SQLite de mon projet [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) : 48 requêtes du projet sur la SAD et 5 requêtes propres au tableau de bord. Elles sont exportées en JSON par un script Python qui s'arrête si un contrôle de cohérence échoue.
+Tableau de bord financier interactif de la Vitória Sport Clube – Futebol, SAD (société de football professionnel du club), 2012/13–2025/26. Tous les chiffres proviennent de requêtes SQL exécutées sur la base SQLite de mon projet [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) : 48 requêtes du projet sur la SAD et 6 requêtes propres au tableau de bord. Elles sont exportées en JSON par un script Python qui s'arrête si un contrôle de cohérence échoue.
 
-La vue d'ensemble s'organise en quatre dimensions : situation financière, performance opérationnelle, évolution historique et conclusions automatiques. Le tableau de bord comprend aussi les cinq questions de recherche, les ratios financiers (avec formule et limites), un explorateur SQL et une méthodologie complète. Réalisé en JavaScript (modules ES) avec Chart.js ; accessible et adapté au mobile.
+La vue d'ensemble présente huit indicateurs clés pour la saison choisie, une lecture automatique de la saison et quatre graphiques d'évolution. Le tableau de bord comprend aussi les cinq questions de recherche, les recettes, les charges, la rentabilité et l'endettement (chaque ratio avec sa formule et ses limites), un explorateur SQL avec coloration syntaxique et une méthodologie complète. Réalisé en JavaScript (modules ES) avec Chart.js ; accessible et adapté au mobile.
 
 **Lancer en local :** `python -m http.server`, puis ouvrir `http://localhost:8000`.
 

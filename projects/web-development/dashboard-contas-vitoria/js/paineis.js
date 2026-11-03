@@ -4,7 +4,7 @@
 
 import { barras, linha, areaAcima, opcoes, cor } from "./graficos.js";
 import { euros, pct, razao, vezes, racio, inteiro, decimal, lugar, milhoes, pp } from "./formato.js";
-import { media, soma, dividir, ultimo, numeros, base } from "./dados.js";
+import { media, soma, dividir, ultimo, numeros, linhas } from "./dados.js";
 
 /* ---------- Auxiliares ---------- */
 
@@ -34,25 +34,50 @@ function temporal(rows, series, { tipo = "bar", ...op } = {}) {
 
 const comReferencias = (config, linhas) => { config.options.plugins.referencias = { linhas }; return config; };
 
-/** Barras de uma só série com destaque a amarelo para os valores que cumprem uma condição */
-const coresCondicao = cond => (v => (v !== null && cond(v) ? cor("amarelo") : cor("tinta")));
+/** Composição de um grupo de rubricas (consulta 59): barras horizontais, 2024/25 a cinzento claro e 2025/26 a escuro */
+function composicao(rows) {
+  const cfg = {
+    type: "bar",
+    data: { labels: col(rows, "rubrica").map(r => r.replace("Direitos televisivos", "Direitos de TV")), datasets: [
+      barras("2025/26", col(rows, "valor_2025_26"), "tinta", { maxBarThickness: 14 }),
+      barras("2024/25", col(rows, "valor_2024_25"), "cinza", { maxBarThickness: 14 }),
+    ] },
+    options: opcoes({ horizontal: true, min: 0 }),
+  };
+  cfg.options.scales.y.ticks.autoSkip = false;
+  cfg.options.scales.y.ticks.callback = function (v) { const t = this.getLabelForValue(v); return t.length > 34 ? `${t.slice(0, 33)}…` : t; };
+  return cfg;
+}
+
+/** Barras de uma só série: a vermelho (risco) ou a amarelo (alerta) os valores que cumprem uma condição */
+const coresCondicao = (cond, alerta = "vermelho") => (v => (v !== null && cond(v) ? cor(alerta) : cor("tinta")));
+/** Barras de resultados: verde quando positivo, vermelho quando negativo (a posição face ao zero repete a informação) */
+const coresSinal = v => (v === null ? cor("cinza") : v < 0 ? cor("vermelho") : cor("verde"));
 
 /* =====================================================================
    SECÇÕES
    ===================================================================== */
 
 export const SECCOES = [
-  { id: "geral", nome: "Visão geral", intro: "A situação financeira da SAD na época em destaque: balanço, desempenho operacional, evolução histórica e principais conclusões." },
-  { id: "perguntas", nome: "Cinco perguntas", intro: "As perguntas de investigação do projeto SQL, cada uma com a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
-  { id: "racios", nome: "Rácios financeiros", intro: "Para cada rácio: o que mede, a fórmula, os dados utilizados e as limitações. Primeiro os resultados contabilísticos, depois a sustentabilidade financeira." },
-  { id: "receitas", nome: "Receitas e transferências", intro: "A origem das receitas: a atividade corrente, as competições europeias e a venda de jogadores." },
-  { id: "custos", nome: "Gastos e pessoal", intro: "O peso da estrutura e a evolução da composição dos gastos operacionais." },
-  { id: "divida", nome: "Dívida e liquidez", intro: "Dívida financeira, instrumentos de financiamento, juros, fluxos de caixa e continuidade da SAD." },
+  { id: "geral", nome: "Visão geral", intro: "A situação financeira da SAD na época em destaque e a sua evolução: indicadores principais, leitura da época, tendências e pontos de entrada para a análise." },
+  { id: "perguntas", nome: "Cinco perguntas", intro: "As perguntas de investigação do projeto, cada uma com o contexto, a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
+  { id: "receitas", nome: "Receitas", intro: "A origem das receitas: a atividade corrente, a composição das vendas (incluindo os direitos de TV), as competições europeias e a venda de jogadores." },
+  { id: "custos", nome: "Gastos", intro: "A evolução e a composição dos gastos operacionais: pessoal, fornecimentos e serviços externos, amortizações e outros gastos." },
+  { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
+  { id: "divida", nome: "Endividamento", intro: "Estrutura financeira (ativo, passivo e capitais próprios) e dívida financeira, encargos financeiros, fluxos de caixa e liquidez." },
   { id: "desporto", nome: "Desporto", intro: "A relação entre os gastos e os resultados desportivos." },
   { id: "cenarios", nome: "Cenários", intro: "Simulações do projeto SQL. São ilustrativas: dependem de pressupostos sobre contratos e classificações." },
-  { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel, com o código, o resultado e as técnicas utilizadas." },
-  { id: "metodologia", nome: "Metodologia", intro: "Origem dos dados, tratamento, critérios de comparação e limitações." },
+  { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel: objetivo, código, técnicas e resultado." },
+  { id: "metodologia", nome: "Metodologia e fontes", intro: "Fontes, tratamento dos dados, critérios de comparação, convenções e limitações." },
 ];
+
+/** Subgrupos dentro de uma secção: [chave, título, texto]. Os painéis sem grupo ficam no último. */
+export const GRUPOS = {
+  divida: [
+    ["estrutura", "Estrutura financeira", "O que a SAD detém, o que deve e a diferença entre ambos: capitais próprios, autonomia, solvabilidade e endividamento."],
+    ["financiamento", "Dívida, encargos financeiros e liquidez", "A parte remunerada do passivo, o seu custo, os instrumentos utilizados e a capacidade de cumprir os compromissos."],
+  ],
+};
 
 /* =====================================================================
    VISUALIZAÇÕES
@@ -67,7 +92,7 @@ export const PAINEIS = [
     pergunta: "A SAD consegue ter lucro sem vender jogadores?",
     descricao: "Resultado líquido com e sem as mais-valias líquidas da venda de jogadores.",
     construir: rows => temporal(rows, [
-      { col: "rl", rotulo: "Resultado líquido", papel: "tinta" },
+      { col: "rl", rotulo: "Resultado líquido", papel: "tinta", cores: coresSinal },
       { col: "rl_sem_mais_valias", rotulo: "Sem mais-valias", papel: "cinza" },
     ]),
     conclusao: rows => {
@@ -85,7 +110,7 @@ export const PAINEIS = [
     descricao: "Rendimentos operacionais da SAD por rubrica. A rubrica «Outros rendimentos» inclui os ganhos com a alienação de passes.",
     construir: rows => temporal(rows, [
       { col: "vendas_servicos", rotulo: "Vendas e serviços prestados", papel: "tinta" },
-      { col: "outros_rendimentos", rotulo: "Outros rendimentos", papel: "amarelo" },
+      { col: "outros_rendimentos", rotulo: "Outros rendimentos (inclui mais-valias)", papel: "cinza-escuro" },
       { col: "subsidios", rotulo: "Subsídios à exploração", papel: "cinza" },
     ], { empilhado: true }),
     conclusao: rows => {
@@ -133,7 +158,7 @@ export const PAINEIS = [
     construir: rows => {
       const cfg = temporal(rows, [
         { col: "vendas_brutas", rotulo: "Vendas brutas", papel: "tinta" },
-        { col: "mais_valias_liquidas", rotulo: "Mais-valias líquidas", papel: "amarelo" },
+        { col: "mais_valias_liquidas", rotulo: "Mais-valias líquidas", papel: "cinza-escuro" },
       ]);
       cfg.options.plugins.tooltip.callbacks.footer = i => `Mais-valias = ${pct(rows[i[0].dataIndex].mais_valias_sobre_vendas_pct)} das vendas`;
       return cfg;
@@ -174,7 +199,7 @@ export const PAINEIS = [
     construir: rows => temporal(rows, [
       { col: "aquisicoes", rotulo: "Aquisições", papel: "tinta" },
       { col: "amortizacoes", rotulo: "Amortizações", papel: "cinza" },
-      { col: "valor_contabilistico_plantel", rotulo: "Plantel no balanço", papel: "amarelo", tipo: "line" },
+      { col: "valor_contabilistico_plantel", rotulo: "Plantel no balanço", papel: "cinza-escuro", tipo: "line", oca: true },
     ]),
     conclusao: rows => `Investimento líquido em ${intervaloTexto(rows)}: ${euros(soma(col(rows, "investimento_liquido")))}. ` +
       `O plantel valia ${euros(ultimo(rows)?.valor_contabilistico_plantel)} no balanço em ${ultimo(rows)?.epoca}.`,
@@ -188,7 +213,7 @@ export const PAINEIS = [
       { col: "pessoal", rotulo: "Pessoal", papel: "tinta" },
       { col: "fse", rotulo: "Fornecimentos e serviços externos", papel: "cinza-escuro" },
       { col: "depreciacoes", rotulo: "Depreciações e amortizações", papel: "cinza" },
-      { calcular: r => (r.mercadorias ?? 0) + (r.outros_gastos ?? 0) + (r.imparidades_provisoes ?? 0), rotulo: "Outros gastos", papel: "amarelo-claro" },
+      { calcular: r => (r.mercadorias ?? 0) + (r.outros_gastos ?? 0) + (r.imparidades_provisoes ?? 0), rotulo: "Outros gastos", papel: "cinza-claro" },
     ], { empilhado: true }),
     conclusao: rows => {
       if (rows.length < 2) return "";
@@ -208,8 +233,8 @@ export const PAINEIS = [
     construir: rows => {
       const cfg = temporal(rows, [
         { col: "gastos_operacionais", rotulo: "Gastos operacionais", papel: "tinta", stack: "gastos" },
-        { col: "receitas_operacao", rotulo: "Receitas da atividade corrente", papel: "cinza", stack: "receitas" },
-        { col: "receitas_transferencias", rotulo: "Mais-valias com jogadores", papel: "amarelo", stack: "receitas" },
+        { col: "receitas_operacao", rotulo: "Receitas da atividade corrente", papel: "cinza-escuro", stack: "receitas" },
+        { col: "receitas_transferencias", rotulo: "Mais-valias com jogadores", papel: "cinza", stack: "receitas" },
       ], { empilhado: true });
       cfg.options.plugins.tooltip.callbacks.footer = i => `Saldo: ${euros(rows[i[0].dataIndex].saldo_com_receitas_operacao)}`;
       return cfg;
@@ -220,7 +245,7 @@ export const PAINEIS = [
   {
     id: "pessoal-receitas", seccao: "custos", consulta: 3, temporal: true,
     pergunta: "Os gastos com pessoal cabem nas receitas?",
-    descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados. A amarelo, as épocas acima de 100%.",
+    descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados. A vermelho, as épocas acima de 100%.",
     construir: rows => comReferencias(temporal(rows, [
       { col: "pct", rotulo: "Gastos com pessoal / vendas", papel: "tinta", cores: coresCondicao(v => v > 100) },
     ], { unidade: "pct", legenda: false, min: 0 }), [{ valor: 100, rotulo: "100%" }]),
@@ -255,8 +280,8 @@ export const PAINEIS = [
     descricao: "Funcionários da SAD (média anual) por categoria.",
     construir: rows => temporal(rows, [
       { col: "jogadores", rotulo: "Jogadores", papel: "tinta" },
-      { col: "treinadores", rotulo: "Treinadores", papel: "cinza" },
-      { col: "staff", rotulo: "Apoio e outro pessoal", papel: "amarelo" },
+      { col: "treinadores", rotulo: "Treinadores", papel: "cinza-escuro" },
+      { col: "staff", rotulo: "Apoio e outro pessoal", papel: "cinza" },
     ], { empilhado: true, unidade: "int", tooltipUnidade: "int" }),
     conclusao: rows => {
       if (rows.length < 2) return "";
@@ -291,28 +316,28 @@ export const PAINEIS = [
 
   /* ---------------- Balanço e dívida ---------------- */
   {
-    id: "balanco", seccao: "racios", grupo: "sustentabilidade", consulta: 7, largo: true, temporal: true,
+    id: "balanco", seccao: "divida", grupo: "estrutura", consulta: 7, largo: true, temporal: true,
     pergunta: "O passivo da SAD supera o ativo?",
-    descricao: "Ativo e passivo a 30 de junho. A área amarela é o capital próprio negativo.",
+    descricao: "Ativo e passivo a 30 de junho. A área a vermelho corresponde aos capitais próprios negativos (passivo superior ao ativo).",
     construir: rows => {
       const cfg = temporal(rows, [
         { col: "passivo_total", rotulo: "Passivo", papel: "tinta", fill: areaAcima(1) },
         { col: "ativo_total", rotulo: "Ativo", papel: "cinza-escuro", oca: true },
       ], { tipo: "line", min: 0 });
-      cfg.options.plugins.tooltip.callbacks.footer = i => `Capital próprio: ${euros(rows[i[0].dataIndex].capital_proprio)}`;
+      cfg.options.plugins.tooltip.callbacks.footer = i => `Capitais próprios: ${euros(rows[i[0].dataIndex].capital_proprio)}`;
       return cfg;
     },
     ficha: {
-      mede: "A evolução da posição financeira: o que a SAD detém (ativo), o que deve (passivo) e a diferença entre ambos (capital próprio).",
-      formula: "Capital próprio = Ativo − Passivo",
+      mede: "A evolução da posição financeira: o que a SAD detém (ativo), o que deve (passivo) e a diferença entre ambos (capitais próprios).",
+      formula: "Capitais próprios = Ativo − Passivo",
       dados: "Consulta 7, sobre a tabela balanco (valores dos Relatórios e Contas a 30 de junho).",
       limitacoes: "O plantel está registado ao custo de aquisição: os jogadores formados no clube têm valor contabilístico quase nulo, pelo que o ativo subestima o valor de mercado.",
     },
-    conclusao: rows => `Capital próprio negativo em ${contar(rows, r => r.capital_proprio < 0)} de ${rows.length} épocas` +
+    conclusao: rows => `Capitais próprios negativos em ${contar(rows, r => r.capital_proprio < 0)} de ${rows.length} épocas` +
       (rows.length ? `; ${euros(ultimo(rows).capital_proprio)} a ${fimEpoca(ultimo(rows).epoca)}.` : "."),
   },
   {
-    id: "racios", seccao: "racios", grupo: "sustentabilidade", consulta: 29, temporal: true,
+    id: "racios", seccao: "divida", grupo: "financiamento", consulta: 29, temporal: true,
     pergunta: "A SAD consegue pagar o que deve a curto prazo?",
     descricao: "Liquidez geral: ativo corrente a dividir pelo passivo corrente, a 30 de junho.",
     construir: rows => comReferencias(temporal(rows, [
@@ -346,7 +371,7 @@ export const PAINEIS = [
     construir: rows => temporal(rows, [
       { col: "vitoria_implicita", rotulo: "Vitória (taxa implícita)", papel: "tinta" },
       { col: "euribor_12m", rotulo: "Euribor a 12 meses", papel: "cinza-escuro", oca: true },
-      { col: "ot_portugal_10a", rotulo: "Obrigações do Tesouro a 10 anos", papel: "amarelo" },
+      { col: "ot_portugal_10a", rotulo: "Obrigações do Tesouro a 10 anos", papel: "cinza", tracejada: true },
     ], { tipo: "line", unidade: "pct" }),
     conclusao: rows => {
       const v = com(rows, "vitoria_implicita");
@@ -366,7 +391,7 @@ export const PAINEIS = [
     id: "curto-prazo", seccao: "perguntas", questao: 3, consulta: 28, temporal: true,
     pergunta: "Que parte da dívida vence em menos de um ano?",
     descricao: "Dívida financeira de curto prazo em percentagem do total.",
-    construir: rows => temporal(rows, [{ col: "pct_curto_prazo", rotulo: "Curto prazo", papel: "tinta", cores: coresCondicao(v => v > 50) }],
+    construir: rows => temporal(rows, [{ col: "pct_curto_prazo", rotulo: "Curto prazo", papel: "tinta", cores: coresCondicao(v => v > 50, "amarelo") }],
       { unidade: "pct", legenda: false, min: 0, max: 100 }),
     conclusao: rows => rows.length ? `A ${fimEpoca(ultimo(rows).epoca)}, ${pct(ultimo(rows).pct_curto_prazo)} da dívida vencia em menos de um ano; a caixa era de ${euros(ultimo(rows).caixa)}.` : "",
   },
@@ -378,7 +403,7 @@ export const PAINEIS = [
       const datas = [...new Set(rows.map(r => r.data_ref))];
       const grupo = i => (/^Empréstimos/.test(i) ? "Empréstimos" : /^Antecipação/.test(i) ? "Antecipação de direitos de TV" : i);
       const grupos = [...new Set(rows.map(r => grupo(r.instrumento)))];
-      const papeis = ["tinta", "cinza-escuro", "amarelo", "cinza", "amarelo-claro"];
+      const papeis = ["tinta", "cinza-escuro", "cinza", "cinza-claro"];
       const datasets = grupos.map((g, k) => barras(g, datas.map(d => soma(rows.filter(r => r.data_ref === d && grupo(r.instrumento) === g).map(r => r.total)) || null), papeis[k % papeis.length]));
       const labels = datas.map(d => d.split("-").reverse().join("/"));
       return { type: "bar", data: { labels, datasets }, options: opcoes({ empilhado: true }) };
@@ -397,8 +422,8 @@ export const PAINEIS = [
     descricao: "Fluxos de caixa da SAD: operacional, de investimento (inclui vendas de passes) e de financiamento.",
     construir: rows => temporal(rows, [
       { col: "operacional", rotulo: "Operacional", papel: "tinta" },
-      { col: "investimento", rotulo: "Investimento", papel: "cinza" },
-      { col: "financiamento", rotulo: "Financiamento", papel: "amarelo" },
+      { col: "investimento", rotulo: "Investimento", papel: "cinza-escuro" },
+      { col: "financiamento", rotulo: "Financiamento", papel: "cinza" },
     ]),
     conclusao: rows => `A operação consumiu caixa em ${contar(rows, r => r.operacional < 0)} de ${rows.length} épocas; ` +
       `a necessidade de tesouraria foi coberta com financiamento em ${contar(rows, r => /financiamento/.test(r.leitura))} e com vendas de passes ou desinvestimento em ${contar(rows, r => /vendas/.test(r.leitura))}.`,
@@ -408,7 +433,7 @@ export const PAINEIS = [
     id: "fundo-maneio", seccao: "divida", consulta: 38, temporal: true,
     pergunta: "O ativo corrente cobre o passivo corrente?",
     descricao: "Fundo de maneio: ativo corrente menos passivo corrente, a 30 de junho.",
-    construir: rows => temporal(rows, [{ col: "fundo_maneio", rotulo: "Fundo de maneio", papel: "tinta" }], { legenda: false }),
+    construir: rows => temporal(rows, [{ col: "fundo_maneio", rotulo: "Fundo de maneio", papel: "tinta", cores: coresSinal }], { legenda: false }),
     conclusao: rows => `Fundo de maneio negativo em ${contar(rows, r => r.fundo_maneio < 0)} de ${rows.length} épocas` +
       (rows.length ? `; ${euros(ultimo(rows).fundo_maneio)} em ${ultimo(rows).epoca}.` : "."),
   },
@@ -439,13 +464,13 @@ export const PAINEIS = [
     pergunta: "O que mudou com a reexpressão de 2024/25?",
     descricao: "Valores de 2024/25 no Relatório e Contas original e no de 2025/26 (aplicação do custo amortizado e correções).",
     conclusao: rows => {
-      const fo = rows.find(r => r.indicador === "Fluxo de caixa operacional"), cp = rows.find(r => r.indicador === "Capital próprio");
-      return fo && cp ? `O fluxo operacional passou de ${euros(fo.valor_original)} para ${euros(fo.valor_reexpresso)}; o capital próprio, de ${euros(cp.valor_original)} para ${euros(cp.valor_reexpresso)}.` : "";
+      const fo = rows.find(r => r.indicador === "Fluxo de caixa operacional"), cp = rows.find(r => r.indicador === "Capital próprio" || r.indicador === "Capitais próprios");
+      return fo && cp ? `O fluxo operacional passou de ${euros(fo.valor_original)} para ${euros(fo.valor_reexpresso)}; os capitais próprios, de ${euros(cp.valor_original)} para ${euros(cp.valor_reexpresso)}.` : "";
     },
   },
 
   {
-    id: "painel-indicadores", seccao: "racios", grupo: "sustentabilidade", consulta: 51, tabela: true, largo: true, temporal: true,
+    id: "painel-indicadores", seccao: "divida", grupo: "estrutura", consulta: 51, tabela: true, largo: true, temporal: true,
     pergunta: "Quadro de indicadores financeiros da SAD",
     descricao: "Margens, rendibilidade e rotação do ativo, peso dos fornecimentos e serviços externos, dívida face às vendas e fluxo de caixa operacional.",
     conclusao: rows => `A margem corrente sem vendas foi negativa em ${contar(rows, r => r.margem_corrente_sem_vendas_pct < 0)} de ${rows.length} épocas.`,
@@ -475,8 +500,8 @@ export const PAINEIS = [
         type: "scatter",
         data: {
           datasets: [
-            { label: "Épocas", data: pontos, backgroundColor: pontos.map(p => (destaque(p) ? cor("amarelo") : cor("tinta"))),
-              borderColor: pontos.map(p => (destaque(p) ? cor("tinta") : cor("cartao"))), borderWidth: 1.5,
+            { label: "Épocas", data: pontos, backgroundColor: pontos.map(p => (destaque(p) ? cor("tinta") : cor("cinza-escuro"))),
+              borderColor: pontos.map(p => (destaque(p) ? cor("fundo") : cor("cartao"))), borderWidth: pontos.map(p => (destaque(p) ? 3 : 1.5)),
               pointRadius: pontos.map(p => (destaque(p) ? 9 : 6.5)), pointHoverRadius: 9 },
             { label: "Reta de regressão", data: reta, type: "line", borderColor: cor("cinza-escuro"), borderDash: [6, 4], borderWidth: 2, pointRadius: 0, pointHoverRadius: 0 },
           ],
@@ -595,7 +620,7 @@ export const PAINEIS = [
         type: "bar",
         data: { labels, datasets: [
           barras("Parte igual", col(rows, "parte_igual"), "tinta", { stack: "tv" }),
-          barras("Mérito (ilustrativo)", col(rows, "merito_ilustrativo"), "amarelo", { stack: "tv" }),
+          barras("Mérito (ilustrativo)", col(rows, "merito_ilustrativo"), "cinza", { stack: "tv" }),
         ] },
         options: opcoes({ empilhado: true }),
       };
@@ -614,31 +639,62 @@ export const PAINEIS = [
 
   /* ---------------- Visão geral: evolução ---------------- */
   {
-    id: "evolucao-entidade", seccao: "geral", largo: true, temporal: true, fonteTexto: "vista v_kpis",
-    dados: () => base().kpis,
-    pergunta: "Como evoluíram o resultado e o capital próprio?",
-    descricao: "Resultado líquido da SAD (barras) e capital próprio a 30 de junho (linha).",
+    id: "geral-receitas-gastos", seccao: "geral", consultas: [103, 58], temporal: true,
+    dados: () => {
+      const g = new Map(linhas(58).map(r => [r.epoca, r.total_gastos]));
+      return linhas(103).map(r => ({ epoca: r.epoca, rendimentos_operacionais: r.rendimentos_operacionais, vendas_servicos: r.vendas_servicos, gastos_operacionais: g.get(r.epoca) ?? null }));
+    },
+    pergunta: "Os rendimentos operacionais cobrem os gastos operacionais?",
+    descricao: "Rendimentos operacionais (incluem as mais-valias com jogadores), vendas e serviços prestados e gastos operacionais, por época.",
     construir: rows => temporal(rows, [
-      { col: "resultado_liquido", rotulo: "Resultado líquido", papel: "cinza" },
-      { col: "capital_proprio", rotulo: "Capital próprio", papel: "tinta", tipo: "line" },
-    ]),
+      { col: "rendimentos_operacionais", rotulo: "Rendimentos operacionais", papel: "tinta" },
+      { col: "gastos_operacionais", rotulo: "Gastos operacionais", papel: "cinza-escuro", oca: true },
+      { col: "vendas_servicos", rotulo: "Vendas e serviços prestados", papel: "cinza", tracejada: true },
+    ], { tipo: "line", min: 0 }),
     conclusao: rows => {
-      const rl = com(rows, "resultado_liquido"), cp = com(rows, "capital_proprio");
-      const partes = [];
-      if (rl.length) partes.push(`Resultado líquido acumulado em ${intervaloTexto(rl)}: ${euros(soma(col(rl, "resultado_liquido")))}`);
-      if (cp.length > 1) partes.push(`capital próprio de ${euros(cp[0].capital_proprio)} (${cp[0].epoca}) para ${euros(ultimo(cp).capital_proprio)} (${ultimo(cp).epoca})`);
-      else if (cp.length) partes.push(`capital próprio só disponível em ${cp[0].epoca}`);
-      return partes.length ? partes.join("; ") + "." : "";
+      const g = com(rows, "gastos_operacionais");
+      if (!g.length) return "";
+      const acima = contar(g, r => r.gastos_operacionais > r.rendimentos_operacionais);
+      return `Os gastos superaram os rendimentos operacionais em ${acima} de ${g.length} épocas; ` +
+        `passaram de ${euros(g[0].gastos_operacionais)} em ${g[0].epoca} para ${euros(ultimo(g).gastos_operacionais)} em ${ultimo(g).epoca}.`;
     },
   },
-
-  /* ---------------- Rácios: resultados contabilísticos ---------------- */
   {
-    id: "resultado-operacional", seccao: "racios", grupo: "contabilistico", consulta: 102, temporal: true,
+    id: "geral-resultados", seccao: "geral", consulta: 102, temporal: true,
+    pergunta: "Em que épocas a SAD teve lucro?",
+    descricao: "Resultado líquido (barras: verde quando positivo, vermelho quando negativo) e resultado operacional (linha).",
+    construir: rows => temporal(rows, [
+      { col: "resultado_liquido", rotulo: "Resultado líquido", papel: "tinta", cores: coresSinal },
+      { col: "resultado_operacional", rotulo: "Resultado operacional", papel: "tinta", tipo: "line", oca: true },
+    ]),
+    conclusao: rows => rows.length ? `Lucro em ${contar(rows, r => r.resultado_liquido > 0)} de ${rows.length} épocas; resultado líquido acumulado de ${euros(soma(col(rows, "resultado_liquido")))} em ${intervaloTexto(rows)}.` : "",
+  },
+  {
+    id: "geral-estrutura", seccao: "geral", consulta: 101, temporal: true,
+    pergunta: "O passivo é superior ao ativo?",
+    descricao: "Ativo e passivo a 30 de junho (linhas) e capitais próprios (barras: vermelho quando negativos).",
+    construir: rows => temporal(rows, [
+      { col: "capital_proprio", rotulo: "Capitais próprios", papel: "tinta", cores: coresSinal },
+      { col: "passivo_total", rotulo: "Passivo", papel: "tinta", tipo: "line" },
+      { col: "ativo_total", rotulo: "Ativo", papel: "cinza-escuro", tipo: "line", oca: true },
+    ]),
+    conclusao: rows => rows.length ? `Capitais próprios negativos em ${contar(rows, r => r.capital_proprio < 0)} de ${rows.length} épocas; o passivo passou de ${euros(rows[0].passivo_total)} (${rows[0].epoca}) para ${euros(ultimo(rows).passivo_total)} (${ultimo(rows).epoca}).` : "",
+  },
+  {
+    id: "geral-divida", seccao: "geral", consulta: 27, temporal: true,
+    pergunta: "Quanto cresceu a dívida financeira?",
+    descricao: "Dívida financeira a 30 de junho (empréstimos, factoring, antecipações de receitas e locações). Série disponível desde 2016/17.",
+    construir: rows => temporal(rows, [{ col: "financiamentos", rotulo: "Dívida financeira", papel: "tinta" }], { legenda: false }),
+    conclusao: rows => rows.length > 1 ? `De ${euros(rows[0].financiamentos)} em ${rows[0].epoca} para ${euros(ultimo(rows).financiamentos)} em ${ultimo(rows).epoca}; os juros dos financiamentos atingiram ${euros(ultimo(rows).juros)} na última época.` : "",
+  },
+
+  /* ---------------- Rentabilidade ---------------- */
+  {
+    id: "resultado-operacional", seccao: "rentabilidade", consulta: 102, temporal: true,
     pergunta: "A atividade operacional gera lucro sem a venda de jogadores?",
     descricao: "Resultado operacional da SAD, com e sem as mais-valias líquidas da alienação de passes.",
     construir: rows => temporal(rows, [
-      { col: "resultado_operacional", rotulo: "Resultado operacional", papel: "tinta" },
+      { col: "resultado_operacional", rotulo: "Resultado operacional", papel: "tinta", cores: coresSinal },
       { col: "ro_sem_mais_valias", rotulo: "Sem mais-valias", papel: "cinza" },
     ]),
     conclusao: rows => {
@@ -653,7 +709,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "pessoal-rendimentos", seccao: "racios", grupo: "contabilistico", consulta: 103, temporal: true,
+    id: "pessoal-rendimentos", seccao: "custos", consulta: 103, temporal: true,
     pergunta: "Que parte dos rendimentos é absorvida pelos gastos com pessoal?",
     descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados e dos rendimentos operacionais (que incluem as mais-valias).",
     construir: rows => comReferencias(temporal(rows, [
@@ -669,11 +725,11 @@ export const PAINEIS = [
     },
   },
   {
-    id: "dependencia-extraordinarias", seccao: "racios", grupo: "contabilistico", consulta: 54, temporal: true, largo: true,
+    id: "dependencia-extraordinarias", seccao: "rentabilidade", consulta: 54, temporal: true, largo: true,
     pergunta: "Quanto dependem as contas de receitas não recorrentes?",
     descricao: "Peso das mais-valias com jogadores no total formado pelas receitas da atividade corrente e pelas mais-valias.",
     construir: rows => comReferencias(temporal(rows, [
-      { col: "peso_mais_valias_no_total_pct", rotulo: "Peso das mais-valias", papel: "tinta", cores: coresCondicao(v => v > 50) },
+      { col: "peso_mais_valias_no_total_pct", rotulo: "Peso das mais-valias", papel: "tinta", cores: coresCondicao(v => v > 50, "amarelo") },
     ], { unidade: "pct", legenda: false, min: 0, max: 100 }), [{ valor: 50, rotulo: "Metade" }]),
     conclusao: rows => `As mais-valias valeram mais de metade das receitas em ${contar(rows, r => r.peso_mais_valias_no_total_pct > 50)} de ${rows.length} épocas` +
       (rows.length ? `; ${pct(ultimo(rows).peso_mais_valias_no_total_pct)} em ${ultimo(rows).epoca}.` : "."),
@@ -685,11 +741,11 @@ export const PAINEIS = [
     },
   },
 
-  /* ---------------- Rácios: sustentabilidade financeira ---------------- */
+  /* ---------------- Endividamento: estrutura financeira ---------------- */
   {
-    id: "autonomia", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
-    pergunta: "Que parte do ativo é financiada por capital próprio?",
-    descricao: "Autonomia financeira da SAD. A amarelo, as épocas com capital próprio negativo.",
+    id: "autonomia", seccao: "divida", grupo: "estrutura", consulta: 101, temporal: true,
+    pergunta: "Que parte do ativo é financiada por capitais próprios?",
+    descricao: "Autonomia financeira da SAD. A vermelho, as épocas com capitais próprios negativos.",
     construir: rows => temporal(rows, [
       { col: "autonomia_pct", rotulo: "Autonomia financeira", papel: "tinta", cores: coresCondicao(v => v < 0) },
     ], { unidade: "pct", legenda: false }),
@@ -697,17 +753,17 @@ export const PAINEIS = [
       (rows.length ? `; ${pct(ultimo(rows).autonomia_pct)} em ${ultimo(rows).epoca}.` : "."),
     ficha: {
       mede: "A parte do ativo financiada pelos acionistas e não por terceiros. Abaixo de zero, o passivo é superior ao ativo.",
-      formula: "Capital próprio ÷ Ativo",
+      formula: "Capitais próprios ÷ Ativo",
       dados: "Tabela balanco (SAD). Consulta complementar D1, confirmada pela coluna autonomia_pct da consulta 29.",
       limitacoes: "Depende do valor contabilístico do ativo, que subestima o valor de mercado do plantel.",
     },
   },
   {
-    id: "solvabilidade", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
-    pergunta: "Que parte do passivo está coberta por capital próprio?",
-    descricao: "Solvabilidade da SAD: capital próprio em percentagem do passivo.",
+    id: "solvabilidade", seccao: "divida", grupo: "estrutura", consulta: 101, temporal: true,
+    pergunta: "Que parte do passivo está coberta por capitais próprios?",
+    descricao: "Solvabilidade da SAD: capitais próprios em percentagem do passivo. A vermelho, as épocas com valores negativos.",
     construir: rows => temporal(rows, [
-      { col: "solvabilidade_pct", rotulo: "Solvabilidade", papel: "cinza-escuro", cores: coresCondicao(v => v < 0) },
+      { col: "solvabilidade_pct", rotulo: "Solvabilidade", papel: "tinta", cores: coresCondicao(v => v < 0) },
     ], { unidade: "pct", legenda: false }),
     conclusao: rows => {
       if (!rows.length) return "";
@@ -715,14 +771,14 @@ export const PAINEIS = [
       return `Máximo de ${pct(max.solvabilidade_pct)} em ${max.epoca}; ${pct(ultimo(rows).solvabilidade_pct)} em ${ultimo(rows).epoca}.`;
     },
     ficha: {
-      mede: "Quantos euros de capital próprio existem por cada euro de passivo. Valores negativos indicam insolvência técnica (capital próprio negativo).",
-      formula: "Capital próprio ÷ Passivo",
+      mede: "Quantos euros de capitais próprios existem por cada euro de passivo. Valores negativos indicam falência técnica (capitais próprios negativos).",
+      formula: "Capitais próprios ÷ Passivo",
       dados: "Tabela balanco. Consulta complementar D1.",
       limitacoes: "Mede a solvabilidade contabilística, não a capacidade de cumprir os pagamentos a tempo (medida pela liquidez).",
     },
   },
   {
-    id: "endividamento", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
+    id: "endividamento", seccao: "divida", grupo: "estrutura", consulta: 101, temporal: true, largo: true,
     pergunta: "Que parte do ativo é financiada por terceiros?",
     descricao: "Endividamento da SAD: passivo a dividir pelo ativo. Acima de 1, o passivo é superior ao ativo.",
     construir: rows => comReferencias(temporal(rows, [
@@ -740,6 +796,70 @@ export const PAINEIS = [
       limitacoes: "Não distingue a dívida financeira (remunerada) de outras dívidas, como fornecedores ou adiantamentos.",
     },
   },
+
+  /* ---------------- Rentabilidade: margens (D6) ---------------- */
+  {
+    id: "resultados-dr", seccao: "rentabilidade", consulta: 106, temporal: true, largo: true,
+    pergunta: "Do resultado operacional ao resultado líquido: quanto pesam os juros e os impostos?",
+    descricao: "Resultado operacional, resultado antes de impostos e resultado líquido da SAD, por época.",
+    construir: rows => temporal(rows, [
+      { col: "resultado_operacional", rotulo: "Resultado operacional", papel: "tinta" },
+      { col: "resultado_antes_impostos", rotulo: "Resultado antes de impostos", papel: "cinza-escuro" },
+      { col: "resultado_liquido", rotulo: "Resultado líquido", papel: "cinza" },
+    ]),
+    conclusao: rows => {
+      const r = ultimo(rows);
+      return r ? `Em ${r.epoca}, a passagem do resultado operacional (${euros(r.resultado_operacional)}) para o resultado antes de impostos (${euros(r.resultado_antes_impostos)}) reflete ${euros(r.resultado_antes_impostos - r.resultado_operacional)} de resultados financeiros, sobretudo juros.` : "";
+    },
+    ficha: {
+      mede: "O efeito dos resultados financeiros (juros) e do imposto sobre o resultado da atividade.",
+      formula: "Resultado antes de impostos = Resultado líquido − Imposto sobre o rendimento",
+      dados: "Tabela demonstracao_resultados (SAD). Consulta complementar D6, conferida com v_kpis e D2.",
+      limitacoes: "Em algumas épocas, a rubrica de juros é apresentada líquida dos juros obtidos.",
+    },
+  },
+  {
+    id: "margens", seccao: "rentabilidade", consulta: 106, temporal: true,
+    pergunta: "Que margem fica por cada euro de rendimentos?",
+    descricao: "Margem operacional e margem líquida sobre os rendimentos operacionais (que incluem as mais-valias).",
+    construir: rows => comReferencias(temporal(rows, [
+      { col: "margem_operacional_pct", rotulo: "Margem operacional", papel: "tinta" },
+      { col: "margem_liquida_pct", rotulo: "Margem líquida", papel: "cinza-escuro", oca: true },
+    ], { tipo: "line", unidade: "pct" }), [{ valor: 0, rotulo: "" }]),
+    conclusao: rows => rows.length ? `Margem líquida negativa em ${contar(rows, r => r.margem_liquida_pct < 0)} de ${rows.length} épocas; ${pct(ultimo(rows).margem_liquida_pct)} em ${ultimo(rows).epoca}.` : "",
+    ficha: {
+      mede: "A parte dos rendimentos operacionais que se converte em resultado, antes (operacional) e depois (líquido) de juros e impostos.",
+      formula: "Resultado operacional ÷ Rendimentos operacionais · Resultado líquido ÷ Rendimentos operacionais",
+      dados: "Tabela demonstracao_resultados (SAD). Consulta complementar D6.",
+      limitacoes: "Os rendimentos operacionais incluem as mais-valias com jogadores, muito irregulares: uma margem positiva pode depender de uma única venda.",
+    },
+  },
+
+  /* ---------------- Composição (detalhe das notas do R&C 2025/26) ---------------- */
+  {
+    id: "composicao-vendas", seccao: "receitas", consulta: 59, largo: true,
+    filtrar: rows => rows.filter(r => r.grupo === "Vendas e serviços prestados"),
+    pergunta: "De onde vêm as vendas e serviços prestados?",
+    descricao: "Composição das vendas e serviços prestados em 2024/25 e 2025/26 (nota 15 do Relatório e Contas de 2025/26). Só existe detalhe para estas duas épocas.",
+    construir: rows => composicao(rows),
+    conclusao: rows => {
+      const tv = rows.find(r => /televisivos/.test(r.rubrica)), premios = rows.find(r => /^Prémios/.test(r.rubrica));
+      const total = soma(col(rows, "valor_2025_26")), total24 = soma(col(rows, "valor_2024_25"));
+      return tv ? `Os direitos de TV são a maior fonte: ${euros(tv.valor_2025_26)}, ${pct(100 * dividir(tv.valor_2025_26, total))} das vendas em 2025/26 (${pct(100 * dividir(tv.valor_2024_25, total24))} em 2024/25)` +
+        (premios ? `. Os prémios de competições passaram de ${euros(premios.valor_2024_25)} para ${euros(premios.valor_2025_26)}.` : ".") : "";
+    },
+  },
+  {
+    id: "composicao-fse", seccao: "custos", consulta: 59,
+    filtrar: rows => rows.filter(r => r.grupo === "Fornecimentos e serviços externos"),
+    pergunta: "Em que se gastam os fornecimentos e serviços externos?",
+    descricao: "Principais rubricas de fornecimentos e serviços externos em 2024/25 e 2025/26 (nota 17 do Relatório e Contas de 2025/26).",
+    construir: rows => composicao(rows),
+    conclusao: rows => {
+      const maior = rows.reduce((a, b) => (b.valor_2025_26 > a.valor_2025_26 ? b : a));
+      return `A maior rubrica em 2025/26 foi «${maior.rubrica}» (${euros(maior.valor_2025_26)}).`;
+    },
+  },
 ];
 
 /** Escreve a época junto a cada ponto da dispersão (a época em destaque sempre; as outras se couberem) */
@@ -747,15 +867,15 @@ const rotulosPontos = {
   id: "rotulosPontos",
   afterDatasetsDraw(chart) {
     const meta = chart.getDatasetMeta(0), dados = chart.data.datasets[0].data;
-    const destaque = chart.data.datasets[0].backgroundColor;
+    const raios = chart.data.datasets[0].pointRadius;
     const ctx = chart.ctx;
     const ocupados = meta.data.map(p => ({ x: p.x - 7, y: p.y - 7, w: 14, h: 14 }));
     const sobrepoe = (r, k) => ocupados.some((o, j) => j !== k && r.x < o.x + o.w && r.x + r.w > o.x && r.y < o.y + o.h && r.y + r.h > o.y);
-    const ordem = meta.data.map((_, i) => i).sort((a, b) => (destaque[b] === cor("amarelo")) - (destaque[a] === cor("amarelo")));
+    const ordem = meta.data.map((_, i) => i).sort((a, b) => (raios[b] > 8) - (raios[a] > 8));
     ctx.save();
     ctx.textBaseline = "middle";
     ordem.forEach(i => {
-      const p = meta.data[i], forte = destaque[i] === cor("amarelo");
+      const p = meta.data[i], forte = raios[i] > 8;
       ctx.font = `${forte ? 700 : 400} 11.5px "Archivo", sans-serif`;
       ctx.fillStyle = forte ? cor("texto") : cor("suave");
       const larg = ctx.measureText(dados[i].epoca).width;
@@ -773,10 +893,13 @@ const rotulosPontos = {
 
 /** Ordem de apresentação dentro de cada secção (pares lado a lado; os largos ocupam a linha toda) */
 export const ORDEM = {
-  divida: ["divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda",
+  geral: ["geral-receitas-gastos", "geral-resultados", "geral-estrutura", "geral-divida"],
+  receitas: ["rendimentos", "composicao-vendas", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
+  custos: ["gastos-rubricas", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "pessoal-receitas", "uefa", "funcionarios", "nao-jogadores", "remuneracoes"],
+  rentabilidade: ["resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
+  divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",
+    "divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",
     "cobertura-juros", "artigo-35", "reexpressao"],
-  racios: ["resultado-operacional", "pessoal-rendimentos", "dependencia-extraordinarias",
-    "balanco", "autonomia", "solvabilidade", "endividamento", "racios", "painel-indicadores"],
 };
 
 /* =====================================================================
@@ -786,7 +909,8 @@ export const ORDEM = {
 
 export const PERGUNTAS = [
   {
-    n: 1, pergunta: "A atividade corrente cobre os custos recorrentes?", consultas: [2, 42],
+    n: 1, contexto: "Os clubes portugueses vendem jogadores com regularidade, mas essas receitas variam muito. Interessa saber se a operação corrente (bilheteira, direitos de TV, patrocínios, prémios) chega para pagar a estrutura.",
+    pergunta: "A atividade corrente cobre os custos recorrentes?", consultas: [2, 42],
     resposta: ({ q }) => {
       const r = q(2), ult3 = r.slice(-3);
       return `Não. Sem as mais-valias com jogadores, o resultado da SAD foi negativo em ${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length} épocas; ` +
@@ -803,7 +927,8 @@ export const PERGUNTAS = [
     limitacoes: "Os dados de transferências só existem desde 2017/18. Cada época usa os valores do seu próprio Relatório e Contas (2024/25 sem a reexpressão).",
   },
   {
-    n: 2, pergunta: "Quanto pesam as vendas de jogadores e a Europa?", consultas: [54, 21],
+    n: 2, contexto: "As mais-valias com jogadores e as receitas das competições da UEFA são as duas fontes de receita mais irregulares. Mede-se o seu peso face às vendas e serviços prestados.",
+    pergunta: "Quanto pesam as vendas de jogadores e a Europa?", consultas: [54, 21],
     resposta: ({ q }) => {
       const v = ultimo(q(54)), g = q(21), fase = g[0], sem = ultimo(g);
       return `As vendas de jogadores superaram as receitas da atividade corrente em ${contar(q(54), x => x.vendas_por_euro_de_receita > 1)} de ${q(54).length} épocas (${racio(v.vendas_por_euro_de_receita)} € por cada euro de receita em ${v.epoca}). ` +
@@ -821,7 +946,8 @@ export const PERGUNTAS = [
     limitacoes: "A comparação europeia assenta em médias de poucas épocas (3 a 6 por grupo) e não isola outros fatores, como as vendas de jogadores na mesma época.",
   },
   {
-    n: 3, pergunta: "A dívida é sustentável e a que custo?", consultas: [52, 28, 27],
+    n: 3, contexto: "O passivo da SAD cresceu desde 2020/21. A sustentabilidade depende do montante da dívida financeira, do seu custo e do prazo de vencimento.",
+    pergunta: "A dívida é sustentável e a que custo?", consultas: [52, 28, 27],
     resposta: ({ q }) => {
       const t = ultimo(com(q(52), "vitoria_implicita")), c = ultimo(q(28));
       return `É cara e de curto prazo: taxa implícita de ${pct(t.vitoria_implicita)} em ${t.epoca} (${pp(t.spread_vs_euribor)} face à Euribor) ` +
@@ -839,7 +965,8 @@ export const PERGUNTAS = [
     limitacoes: "A taxa implícita inclui comissões de factoring e de antecipação de receitas, pelo que não é diretamente comparável a uma taxa nominal de mercado.",
   },
   {
-    n: 4, pergunta: "Gastar mais traz melhores classificações?", consultas: [53],
+    n: 4, contexto: "Os gastos com o plantel são a principal alavanca desportiva. Testa-se, com uma regressão linear, se as épocas com mais despesa tiveram melhores classificações.",
+    pergunta: "Gastar mais traz melhores classificações?", consultas: [53],
     resposta: ({ q }) => {
       const r = q(53)[0];
       return `Não se consegue demonstrar: as despesas explicam ${pct(100 * r.r_quadrado)} das diferenças de classificação (R² = ${decimal(r.r_quadrado)}, ${r.n} épocas) ` +
@@ -857,7 +984,8 @@ export const PERGUNTAS = [
     limitacoes: "Treze observações conferem pouca potência estatística. Trata-se de uma associação, não de uma relação de causa e efeito: a classificação depende de muitos fatores não medidos.",
   },
   {
-    n: 5, pergunta: "Que combinação reduz a dependência das vendas?", consultas: [55, 48],
+    n: 5, contexto: "A centralização dos direitos de TV, prevista para 2028/29, pode alterar as receitas da SAD. Simula-se quanto do défice antes de vendas ficaria coberto.",
+    pergunta: "Que combinação reduz a dependência das vendas?", consultas: [55, 48],
     resposta: ({ q }) => {
       const r = q(55), max = r.reduce((a, b) => (b.pct_do_defice_coberto > a.pct_do_defice_coberto ? b : a));
       return `A centralização dos direitos de TV, por si só, cobriria no máximo ${pct(max.pct_do_defice_coberto)} do défice antes de vendas (${max.contrato}, ${max.lugar} lugar). ` +

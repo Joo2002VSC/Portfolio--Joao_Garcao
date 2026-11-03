@@ -137,6 +137,16 @@ def verificar(base: dict, consultas: list[dict]) -> list[str]:
             if abs(r[1] - l[j["endividamento"]]) > 0.011 or abs(r[2] - l[j["autonomia_pct"]]) > 0.11:
                 erros.append(f"D1 e consulta 29 divergem em {l[j['epoca']]}")
 
+    # D6 tem de reproduzir o resultado líquido de v_kpis e o resultado operacional de D2
+    d6, d2 = por_n.get(106), por_n.get(102)
+    if d6 and d2:
+        rl = {k["epoca"]: k["resultado_liquido"] for k in base["kpis"]}
+        ro = {l[0]: l[1] for l in d2["linhas"]}
+        j = {c: d6["colunas"].index(c) for c in ("epoca", "resultado_operacional", "resultado_liquido")}
+        for l in d6["linhas"]:
+            e = l[j["epoca"]]
+            if rl.get(e) != l[j["resultado_liquido"]] or ro.get(e) != l[j["resultado_operacional"]]:
+                erros.append(f"D6 diverge de v_kpis ou de D2 em {e}")
     for c in consultas:
         if not c["linhas"]:
             erros.append(f"Consulta {c['n']} não devolveu linhas")
@@ -168,6 +178,8 @@ def main() -> None:
     erros = verificar(base, consultas)
     if erros:
         sys.exit("Verificação falhou:\n  " + "\n  ".join(erros))
+    n_total = sum(c["n"] < DESLOCAMENTO for c in consultas)
+    # Consultas sobre o Clube ou o Grupo consolidado: ficam no projeto SQL, fora do âmbito do painel
     consultas = [c for c in consultas if c["n"] not in EXCLUIDAS]
 
     gerado = date.today().isoformat()
@@ -175,7 +187,8 @@ def main() -> None:
     (SAIDA / "contas.json").write_text(
         json.dumps({"gerado": gerado, "unidade": "EUR", **base}, ensure_ascii=False, indent=1), encoding="utf-8")
     (SAIDA / "consultas.json").write_text(
-        json.dumps({"gerado": gerado, "fonte": "sql/04_analises.sql", "consultas": consultas}, ensure_ascii=False),
+        json.dumps({"gerado": gerado, "fonte": "sql/04_analises.sql", "total_projeto": n_total,
+                    "excluidas": sorted(EXCLUIDAS), "consultas": consultas}, ensure_ascii=False),
         encoding="utf-8")
     seccoes = sorted({c["seccao"] for c in consultas})
     print(f"data/contas.json: {len(base['kpis'])} linhas de indicadores, {len(base['epocas'])} épocas")

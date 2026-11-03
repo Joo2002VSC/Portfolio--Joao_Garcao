@@ -9,8 +9,8 @@
 
 -- @d D1. Rácios de estrutura da SAD: autonomia, solvabilidade e endividamento
 -- Conceitos: NULLIF contra divisões por zero, CASE, colunas calculadas
--- Autonomia financeira = capital próprio / ativo
--- Solvabilidade        = capital próprio / passivo
+-- Autonomia financeira = capitais próprios / ativo
+-- Solvabilidade        = capitais próprios / passivo
 -- Endividamento        = passivo / ativo
 SELECT
     epoca_id                                                      AS epoca,
@@ -20,9 +20,9 @@ SELECT
     ROUND(100.0 * capital_proprio / NULLIF(ativo_total, 0), 1)    AS autonomia_pct,
     ROUND(100.0 * capital_proprio / NULLIF(passivo_total, 0), 1)  AS solvabilidade_pct,
     ROUND(1.0 * passivo_total / NULLIF(ativo_total, 0), 2)        AS endividamento,
-    CASE WHEN capital_proprio < 0 THEN 'capital próprio negativo'
+    CASE WHEN capital_proprio < 0 THEN 'capitais próprios negativos'
          WHEN capital_proprio IS NULL THEN 'sem dados'
-         ELSE 'capital próprio positivo' END                      AS leitura
+         ELSE 'capitais próprios positivos' END                      AS leitura
 FROM balanco
 WHERE entidade_id = 'SAD' AND ativo_total IS NOT NULL AND passivo_total IS NOT NULL
 ORDER BY epoca_id;
@@ -76,7 +76,7 @@ ORDER BY epoca_id;
 WITH longo AS (
     SELECT epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Passivo', passivo_total FROM balanco WHERE entidade_id = 'SAD'
-    UNION ALL SELECT epoca_id, 'Capital próprio', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Capitais próprios', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr WHERE entidade_id = 'SAD'
@@ -106,7 +106,7 @@ ORDER BY indicador, epoca_id;
 WITH longo AS (
     SELECT epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Passivo', passivo_total FROM balanco WHERE entidade_id = 'SAD'
-    UNION ALL SELECT epoca_id, 'Capital próprio', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Capitais próprios', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr WHERE entidade_id = 'SAD'
     UNION ALL SELECT epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr WHERE entidade_id = 'SAD'
@@ -130,3 +130,32 @@ SELECT
 FROM ordenado
 GROUP BY indicador, n_epocas
 ORDER BY indicador;
+
+
+-- @d D6. Rentabilidade da SAD: resultado antes de impostos e margens
+-- Conceitos: CTE, agregação condicional SUM(CASE ...), NULLIF, colunas calculadas
+-- Resultado antes de impostos = resultado líquido - imposto (o imposto é registado com sinal negativo)
+-- Margem operacional = resultado operacional / rendimentos operacionais
+-- Margem líquida     = resultado líquido / rendimentos operacionais
+WITH r AS (
+    SELECT epoca_id,
+           SUM(CASE WHEN rubrica_id IN ('vendas_servicos', 'subsidios_exploracao',
+                                        'outros_rendimentos') THEN valor END)   AS rendimentos_operacionais,
+           SUM(CASE WHEN rubrica_id = 'resultado_operacional' THEN valor END)   AS resultado_operacional,
+           SUM(CASE WHEN rubrica_id = 'imposto' THEN valor END)                 AS imposto,
+           SUM(CASE WHEN rubrica_id = 'resultado_liquido' THEN valor END)       AS resultado_liquido
+    FROM demonstracao_resultados
+    WHERE entidade_id = 'SAD'
+    GROUP BY epoca_id
+)
+SELECT
+    epoca_id                                                                     AS epoca,
+    rendimentos_operacionais,
+    resultado_operacional,
+    resultado_liquido - imposto                                                  AS resultado_antes_impostos,
+    resultado_liquido,
+    ROUND(100.0 * resultado_operacional / NULLIF(rendimentos_operacionais, 0), 1) AS margem_operacional_pct,
+    ROUND(100.0 * resultado_liquido / NULLIF(rendimentos_operacionais, 0), 1)     AS margem_liquida_pct
+FROM r
+WHERE rendimentos_operacionais IS NOT NULL AND resultado_operacional IS NOT NULL
+ORDER BY epoca_id;

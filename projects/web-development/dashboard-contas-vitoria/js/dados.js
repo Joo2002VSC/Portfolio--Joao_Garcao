@@ -31,7 +31,8 @@ export async function carregar() {
   validar(base, consultas);
   BASE = base;
   consultas.consultas.forEach(c => CONSULTAS.set(c.n, c));
-  return { base, consultas: consultas.consultas, gerado: consultas.gerado };
+  return { base, consultas: consultas.consultas, gerado: consultas.gerado,
+    totalProjeto: consultas.total_projeto ?? null, excluidas: consultas.excluidas ?? [] };
 }
 
 export const base = () => BASE;

@@ -4,7 +4,7 @@
 import * as Dados from "./dados.js";
 import { formatar, variacaoEuros, inteiro, pct, euros } from "./formato.js";
 import { aplicarTema, desenhar, definirDestaque } from "./graficos.js";
-import { SECCOES, PAINEIS, PERGUNTAS, ORDEM } from "./paineis.js";
+import { SECCOES, PAINEIS, PERGUNTAS, ORDEM, GRUPOS } from "./paineis.js";
 import { tabelaOrdenavel } from "./tabelas.js";
 import { montarExplorador } from "./explorador.js";
 import { conclusoes } from "./conclusoes.js";
@@ -40,6 +40,9 @@ function lerURL() {
   estado.inicio = valida(p.get("de")) ?? PADRAO.inicio;
   estado.fim = valida(p.get("ate")) ?? PADRAO.fim;
   estado.epoca = valida(p.get("epoca")) ?? PADRAO.epoca;
+  // Endereços com combinações inválidas são corrigidos: período invertido e destaque fora do período
+  if (e.indexOf(estado.inicio) > e.indexOf(estado.fim)) [estado.inicio, estado.fim] = [estado.fim, estado.inicio];
+  ajustarDestaque();
 }
 
 function escreverURL() {
@@ -74,7 +77,7 @@ function criarFigura(p) {
     <p class="descricao"></p>
     <p class="conclusao"></p>
     <div class="vista" id="v-${p.id}"></div>
-    <figcaption class="fonte">Fonte: ${p.consulta ? ligacaoConsulta(p.consulta) : p.fonteTexto}${p.nota ? " · <span></span>" : ""}</figcaption>`;
+    <figcaption class="fonte">${p.consultas ? `Fontes: ${p.consultas.map(ligacaoConsulta).join(" e ")}` : `Fonte: ${p.consulta ? ligacaoConsulta(p.consulta) : p.fonteTexto}`}${p.nota ? " · <span></span>" : ""}</figcaption>`;
   $("h4", fig).textContent = p.pergunta;
   $(".descricao", fig).textContent = p.descricao;
   if (p.nota) $(".fonte span", fig).textContent = p.nota;
@@ -192,11 +195,6 @@ function criarMatriz(m) {
 
 /* ====================== Construção das secções ====================== */
 
-const GRUPOS_RACIOS = {
-  contabilistico: ["Resultados contabilísticos", "O que as contas registam em cada exercício: lucro ou prejuízo, e a respetiva origem."],
-  sustentabilidade: ["Sustentabilidade financeira", "A solidez da estrutura financeira: capital próprio, endividamento e capacidade de cumprir os compromissos."],
-};
-
 function construirSeccoes() {
   const main = $("#conteudo .dentro");
   const nav = $("#abas");
@@ -219,11 +217,12 @@ function construirSeccoes() {
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
     if (s.id === "perguntas") { construirPerguntas(sec); return; }
-    if (s.id === "racios") {
-      Object.entries(GRUPOS_RACIOS).forEach(([g, [titulo, texto]]) => {
+    if (GRUPOS[s.id]) {
+      const padrao = GRUPOS[s.id].at(-1)[0];
+      GRUPOS[s.id].forEach(([g, titulo, texto]) => {
         const h = criar("div", "grupo-cabeca");
         h.append(criar("h3", "", titulo), criar("p", "", texto));
-        sec.append(h, grelhaDe(paineis.filter(p => p.grupo === g)));
+        sec.append(h, grelhaDe(paineis.filter(p => (p.grupo ?? padrao) === g)));
       });
       return;
     }
@@ -246,10 +245,13 @@ function construirPerguntas(sec) {
     art.tabIndex = -1;
     art.setAttribute("aria-labelledby", `pq-${per.n}`);
     art.innerHTML = `<header><span class="num" aria-hidden="true">${per.n}</span><h3 id="pq-${per.n}"></h3></header>
+      <p class="contexto"></p>
+      <p class="resposta-rotulo">Resposta</p>
       <p class="resposta"></p><div class="indicadores"></div><div class="graficos"></div>
       <p class="limitacoes"><strong>Limitações.</strong> <span></span></p>
       <p class="fonte">Consultas: ${per.consultas.map(ligacaoConsulta).join(", ")}</p>`;
     $("h3", art).textContent = per.pergunta;
+    $(".contexto", art).textContent = per.contexto ?? "";
     try {
       $(".resposta", art).textContent = per.resposta({ q });
       $(".indicadores", art).appendChild(criarFactos(per.indicadores({ q })));
@@ -271,26 +273,33 @@ function construirMetodologia() {
 
 /* ====================== Visão geral ====================== */
 
+const naConsulta = (n, campo) => ep => Dados.linhas(n).find(r => r.epoca === ep)?.[campo] ?? null;
 const serieKPI = campo => ep => Dados.kpi(ep)?.[campo] ?? null;
 const serieDR = campo => ep => Dados.dr(ep)?.[campo] ?? null;
+const fecho = ep => `30/06/20${ep.slice(-2)}`;
 
-const DIMENSAO_A = [
-  { id: "ativo", nome: "Ativo total", valor: serieKPI("ativo_total"), bom: 1 },
-  { id: "passivo", nome: "Passivo total", valor: serieKPI("passivo_total"), bom: -1 },
-  { id: "capital", nome: "Capital próprio", valor: serieKPI("capital_proprio"), bom: 1 },
-  { id: "rl", nome: "Resultado líquido", valor: serieKPI("resultado_liquido"), bom: 1 },
-];
-const DIMENSAO_B = [
-  { id: "vendas", nome: "Vendas e serviços prestados", valor: serieKPI("vendas_servicos"), bom: 1 },
-  {
-    id: "rendimentos", nome: "Rendimentos operacionais", bom: 1,
-    // Soma das rubricas (consulta complementar D3): a rubrica agregada só existe numa época
-    valor: ep => Dados.linhas(103).find(r => r.epoca === ep)?.rendimentos_operacionais ?? null,
-  },
-  { id: "pessoal", nome: "Gastos com pessoal", valor: serieKPI("gastos_pessoal"), bom: -1 },
-  { id: "ro", nome: "Resultado operacional", valor: serieDR("resultado_operacional"), bom: 1 },
-  { id: "maisvalias", nome: "Mais-valias com jogadores", valor: serieKPI("mais_valias_liquidas"), bom: 1 },
-  { id: "pessoalpct", nome: "Gastos com pessoal / vendas", valor: serieKPI("pct_pessoal_receitas"), bom: -1, unidade: "pct" },
+/**
+ * Indicadores da síntese financeira. `bom`: +1 se subir é favorável, −1 se é desfavorável.
+ * `sinal`: o valor é verde quando positivo e vermelho quando negativo. `balanco`: valor a 30 de junho.
+ * `extra`: linha de contexto, também a partir das consultas.
+ */
+const KPIS = [
+  { id: "rendimentos", nome: "Rendimentos operacionais", valor: naConsulta(103, "rendimentos_operacionais"), bom: 1, fonte: 103,
+    extra: ep => { const v = naConsulta(103, "vendas_servicos")(ep); return v === null ? "" : `dos quais ${euros(v)} de vendas e serviços prestados`; } },
+  { id: "gastos", nome: "Gastos operacionais", valor: naConsulta(58, "total_gastos"), bom: -1, fonte: 58,
+    extra: ep => { const v = naConsulta(58, "pessoal_pct")(ep); return v === null ? "" : `${pct(v)} são gastos com pessoal`; } },
+  { id: "ro", nome: "Resultado operacional", valor: serieDR("resultado_operacional"), bom: 1, sinal: true, fonte: 102,
+    extra: ep => { const v = naConsulta(106, "margem_operacional_pct")(ep); return v === null ? "" : `margem operacional de ${pct(v)}`; } },
+  { id: "rl", nome: "Resultado líquido", valor: serieKPI("resultado_liquido"), bom: 1, sinal: true, fonte: 2,
+    extra: ep => { const v = serieKPI("rl_sem_mais_valias")(ep); return v === null ? "" : `sem mais-valias: ${euros(v)}`; } },
+  { id: "passivo", nome: "Passivo total", valor: serieKPI("passivo_total"), bom: -1, balanco: true, fonte: 101,
+    extra: ep => { const v = naConsulta(27, "financiamentos")(ep); return v === null ? "" : `dos quais ${euros(v)} de dívida financeira`; } },
+  { id: "capital", nome: "Capitais próprios", valor: serieKPI("capital_proprio"), bom: 1, sinal: true, balanco: true, fonte: 101,
+    extra: ep => { const v = naConsulta(101, "autonomia_pct")(ep); return v === null ? "" : `autonomia financeira de ${pct(v)}`; } },
+  { id: "pessoal", nome: "Gastos com pessoal", valor: serieKPI("gastos_pessoal"), bom: -1, fonte: 103,
+    extra: ep => { const v = naConsulta(103, "pessoal_sobre_vendas_pct")(ep); return v === null ? "" : `${pct(v)} das vendas e serviços prestados`; } },
+  { id: "encargos", nome: "Encargos financeiros", valor: naConsulta(27, "juros"), bom: -1, fonte: 27,
+    extra: ep => { const v = naConsulta(27, "taxa_implicita_pct")(ep); return v === null ? "juros dos financiamentos" : `juros dos financiamentos · taxa implícita de ${pct(v)}`; } },
 ];
 
 /** Tendência em SVG, sem eixos: épocas em falta ficam em branco; a época em destaque tem um ponto */
@@ -307,7 +316,7 @@ function sparkline(valores, destaque) {
   });
   const zero = min < 0 ? `<line x1="0" x2="100" y1="${y(0).toFixed(1)}" y2="${y(0).toFixed(1)}" class="zero"/>` : "";
   const p = valores[destaque];
-  const ponto = p !== null && p !== undefined ? `<circle cx="${x(destaque).toFixed(1)}" cy="${y(p).toFixed(1)}" r="2.6"/>` : "";
+  const ponto = p !== null && p !== undefined ? `<circle cx="${x(destaque).toFixed(1)}" cy="${y(p).toFixed(1)}" r="2.8"/>` : "";
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", "-3 -2 106 31");
   svg.setAttribute("preserveAspectRatio", "none");
@@ -317,38 +326,52 @@ function sparkline(valores, destaque) {
   return svg;
 }
 
-function construirKPIs(caixa, defs) {
-  defs.forEach((ind, i) => {
-    const d = criar("div", "kpi");
+function construirKPIs() {
+  const caixa = $("#kpis");
+  KPIS.forEach((ind, i) => {
+    const d = criar("article", "kpi");
     d.style.setProperty("--i", i); d.dataset.id = ind.id;
-    d.innerHTML = `<p class="nome"></p><p class="valor"></p><p class="delta"></p><div class="tendencia"></div>`;
+    d.setAttribute("aria-labelledby", `kpi-${ind.id}`);
+    d.innerHTML = `<header class="kpi-cabeca"><h4 class="nome" id="kpi-${ind.id}"></h4><span class="periodo"></span></header>
+      <p class="valor"></p><p class="delta"></p><p class="extra"></p>
+      <div class="tendencia"></div>
+      <p class="kpi-fonte"><a href="#sql/${ind.fonte}">${ind.fonte > 100 ? codigoConsulta(ind.fonte) : `C${ind.fonte}`}</a></p>`;
     $(".nome", d).textContent = ind.nome;
+    $(".kpi-fonte a", d).setAttribute("aria-label", `Fonte de ${ind.nome}: ${ind.fonte > 100 ? "consulta complementar" : "consulta"} ${codigoConsulta(ind.fonte)}`);
     caixa.appendChild(d);
   });
 }
 
-function desenharKPIs(defs) {
-  const e = Dados.epocas(), i = e.indexOf(estado.epoca), anterior = e[i - 1];
-  defs.forEach(ind => {
+function desenharKPIs() {
+  const e = Dados.epocas(), i = e.indexOf(estado.epoca);
+  KPIS.forEach(ind => {
     const d = $(`.kpi[data-id="${ind.id}"]`);
-    const unidade = ind.unidade ?? "eur", fmt = x => formatar(unidade, x);
+    const fmt = x => formatar("eur", x);
     const serie = e.map(ep => ind.valor(ep));
-    const v = serie[i], a = i > 0 ? serie[i - 1] : null;
+    const v = serie[i];
+    // Época anterior com valor (há séries com épocas em falta)
+    let k = i - 1; while (k >= 0 && serie[k] === null) k--;
+    const a = k >= 0 ? serie[k] : null, anterior = k >= 0 ? e[k] : null;
     const elV = $(".valor", d), delta = $(".delta", d);
+    $(".periodo", d).textContent = ind.balanco ? `a ${fecho(estado.epoca)}` : estado.epoca;
     d.classList.toggle("vazio", v === null);
-    if (v === null) elV.textContent = "sem dados";
-    else contar(elV, valoresKPI[ind.id], v, fmt);
+    d.classList.toggle("positivo", !!ind.sinal && v !== null && v > 0);
+    d.classList.toggle("negativo", !!ind.sinal && v !== null && v < 0);
+    if (v === null) { elV.textContent = "sem dados"; elV.removeAttribute("title"); }
+    else { contar(elV, valoresKPI[ind.id], v, fmt); elV.title = `${inteiro(v)} €`; }
     valoresKPI[ind.id] = v;
 
-    delta.textContent = "";
+    delta.replaceChildren();
     if (v !== null && a !== null && v !== a) {
-      const dif = v - a, melhor = Math.sign(dif) === ind.bom;
-      const txt = unidade === "pct" ? `${dif > 0 ? "+" : "−"}${pct(Math.abs(dif)).replace("%", " p.p.")}` : variacaoEuros(dif);
-      delta.append(criar("span", melhor ? "melhor" : "pior", `${dif > 0 ? "▲" : "▼"} ${txt}`), ` face a ${anterior}`,
-        criar("span", "sr-only", melhor ? " (melhoria)" : " (agravamento)"));
+      const dif = v - a, favoravel = Math.sign(dif) === ind.bom;
+      // A variação percentual só tem leitura direta quando os dois valores são positivos
+      const p = v > 0 && a > 0 ? ` (${dif > 0 ? "+" : "−"}${pct(Math.abs(100 * dif / a))})` : "";
+      delta.append(criar("span", favoravel ? "melhor" : "pior", `${dif > 0 ? "▲" : "▼"} ${variacaoEuros(dif)}${p}`),
+        ` face a ${anterior}`, criar("span", "sr-only", favoravel ? " (evolução favorável)" : " (evolução desfavorável)"));
     } else if (v !== null) {
-      delta.textContent = a === null ? (anterior ? `sem valor em ${anterior}` : "primeira época da série") : `igual a ${anterior}`;
+      delta.textContent = a === null ? "primeira época com dados" : `igual a ${anterior}`;
     }
+    $(".extra", d).textContent = v === null ? `Valor não publicado para ${estado.epoca}.` : ind.extra(estado.epoca);
 
     const t = $(".tendencia", d);
     t.replaceChildren();
@@ -367,13 +390,14 @@ function desenharVariacoes() {
   const rows = Dados.linhas(104).filter(r => r.epoca === estado.epoca && r.variacao !== null);
   // Ordena pela variação em euros: a percentual engana quando a base é pequena ou muda de sinal
   rows.sort((a, b) => Math.abs(b.variacao) - Math.abs(a.variacao));
+  const SENTIDO = { "Passivo": -1, "Gastos com pessoal": -1 };
   lista.replaceChildren(...(rows.length ? rows.slice(0, 5).map(r => {
     const li = criar("li");
-    // A variação percentual só tem leitura direta quando os dois valores são positivos
     const mudouSinal = Math.sign(r.valor) !== Math.sign(r.anterior) && r.valor !== 0 && r.anterior !== 0;
     const ambosPositivos = r.valor > 0 && r.anterior > 0;
     const sinal = mudouSinal ? " (mudou de sinal)" : ambosPositivos && r.variacao_pct !== null ? ` (${r.variacao_pct > 0 ? "+" : "−"}${pct(Math.abs(r.variacao_pct))})` : "";
-    li.append(criar("span", "ind", r.indicador), criar("span", "var", `${variacaoEuros(r.variacao)}${sinal}`),
+    const favoravel = Math.sign(r.variacao) === (SENTIDO[r.indicador] ?? 1);
+    li.append(criar("span", "ind", r.indicador), criar("span", `var ${favoravel ? "melhor" : "pior"}`, `${variacaoEuros(r.variacao)}${sinal}`),
       criar("span", "ref", `${euros(r.anterior)} em ${r.epoca_anterior} → ${euros(r.valor)}`));
     return li;
   }) : [criar("li", "vazio", "Sem época anterior comparável.")]));
@@ -397,11 +421,14 @@ function desenharVariacoes() {
 
 function desenharConclusoes() {
   const c = conclusoes(estado.epoca);
-  const grupos = [["melhorias", "Melhorias", "Face à época anterior"], ["riscos", "Riscos", "Valores fora dos limiares de referência"],
-    ["atencao", "Pontos de atenção", "Dependência das vendas e peso dos gastos"], ["estruturais", "Alterações estruturais", "Pessoal, dívida e contas"]];
+  const grupos = [["melhorias", "Evolução favorável", "Face à época anterior"], ["riscos", "Riscos", "Valores fora dos limiares de referência"],
+    ["atencao", "Alertas", "Dependência das vendas e peso dos gastos"], ["estruturais", "Alterações estruturais", "Pessoal, dívida e contas"]];
   $("#conclusoes").replaceChildren(...grupos.map(([k, titulo, sub]) => {
     const div = criar("div", `concl concl-${k}`);
-    div.append(criar("h4", "", titulo), criar("p", "sub", sub));
+    const cab = criar("div", "concl-cabeca");
+    cab.append(criar("h4", "", titulo), criar("span", "concl-n", String(c[k].length)));
+    cab.lastChild.setAttribute("aria-label", `${c[k].length} ${c[k].length === 1 ? "ponto" : "pontos"}`);
+    div.append(cab, criar("p", "sub", sub));
     const ul = criar("ul");
     if (!c[k].length) ul.appendChild(criar("li", "vazio", "Nada a assinalar nesta época."));
     c[k].forEach(item => {
@@ -418,12 +445,47 @@ function desenharConclusoes() {
   }));
 }
 
+/** Estado das contas da época em destaque (parciais ou por aprovar), a partir da tabela de fontes */
+function estadoContas(ep) {
+  const f = Dados.base().fontes.find(x => x.epoca === ep);
+  if (!f) return "";
+  if (/sujeito a aprovação da AG/.test(f.documentos)) return "Contas aprovadas pelo Conselho de Administração, sujeitas a aprovação da Assembleia Geral";
+  if (/^Apenas/.test(f.estado)) return `Dados parciais: ${f.estado.charAt(0).toLowerCase()}${f.estado.slice(1)}`;
+  return "";
+}
+
+function construirCartoesGeral() {
+  const q = n => Dados.linhas(n);
+  $("#cartoes-perguntas").replaceChildren(...PERGUNTAS.map(per => {
+    const li = criar("li", "cartao-pergunta");
+    li.innerHTML = `<span class="num" aria-hidden="true">${per.n}</span><h4><a href="#perguntas/pergunta-${per.n}"></a></h4><p></p><span class="seta" aria-hidden="true">Ver análise →</span>`;
+    $("a", li).textContent = per.pergunta;
+    let resposta = "";
+    try { resposta = per.resposta({ q }); } catch (e) { console.warn(e); }
+    // Primeira frase da resposta, calculada a partir das consultas
+    const frases = resposta.split(/(?<=\.)\s/);
+    $("p", li).textContent = frases[0].length < 25 && frases[1] ? `${frases[0]} ${frases[1]}` : frases[0];
+    return li;
+  }));
+  const contagem = id => PAINEIS.filter(p => p.seccao === id).length;
+  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios"].includes(s.id)).map(s => {
+    const li = criar("li", "cartao-area");
+    li.innerHTML = `<h4><a href="#${s.id}"></a></h4><p></p><span class="contagem"></span>`;
+    $("a", li).textContent = s.nome;
+    $("p", li).textContent = s.intro;
+    $(".contagem", li).textContent = `${contagem(s.id)} visualizações e tabelas`;
+    return li;
+  }));
+}
+
 function desenharGeral() {
   document.querySelectorAll("[data-ref-epoca]").forEach(el => (el.textContent = estado.epoca));
-  // Data de fecho do exercício: a época 2025/26 termina a 30 de junho de 2026
-  document.querySelectorAll("[data-ref-fecho]").forEach(el => (el.textContent = `30 de junho de 20${estado.epoca.slice(-2)}`));
-  desenharKPIs(DIMENSAO_A);
-  desenharKPIs(DIMENSAO_B);
+  document.querySelectorAll("[data-ref-fecho]").forEach(el => (el.textContent = fecho(estado.epoca)));
+  const sel = epocasVisiveis();
+  document.querySelectorAll("[data-ref-intervalo]").forEach(el => (el.textContent = sel.length > 1 ? `${sel[0]} a ${sel[sel.length - 1]}` : sel[0]));
+  const selo = $("#estado-contas"), txt = estadoContas(estado.epoca);
+  selo.textContent = txt; selo.hidden = !txt;
+  desenharKPIs();
   desenharVariacoes();
   desenharConclusoes();
 
@@ -440,24 +502,74 @@ function desenharGeral() {
 
 function construirFiltros() {
   const e = Dados.epocas();
-  [["f-inicio", "inicio"], ["f-fim", "fim"], ["f-epoca", "epoca"]].forEach(([id, chave]) => {
-    const s = $(`#${id}`);
-    e.forEach(x => s.add(new Option(x, x)));
-    s.addEventListener("change", () => {
-      estado[chave] = s.value;
-      if (e.indexOf(estado.inicio) > e.indexOf(estado.fim)) [estado.inicio, estado.fim] = [estado.fim, estado.inicio];
-      atualizar({ recriar: chave !== "epoca" });
-    });
+  const ini = $("#f-inicio"), fim = $("#f-fim");
+  e.forEach(x => { ini.add(new Option(x, x)); fim.add(new Option(x, x)); });
+  ini.addEventListener("change", () => { estado.inicio = ini.value; ajustarDestaque(); atualizar({ recriar: true }); });
+  fim.addEventListener("change", () => { estado.fim = fim.value; ajustarDestaque(); atualizar({ recriar: true }); });
+
+  // Época em destaque: grupo de botões de opção, com navegação por setas
+  const grupo = $("#f-epocas");
+  e.forEach(x => {
+    const b = criar("button", "epoca-btn", `${x.slice(2, 4)}/${x.slice(-2)}`);
+    b.type = "button"; b.dataset.epoca = x;
+    b.setAttribute("role", "radio");
+    b.setAttribute("aria-label", x);
+    b.title = x;
+    b.addEventListener("click", () => escolherDestaque(x));
+    grupo.appendChild(b);
+  });
+  grupo.addEventListener("keydown", ev => {
+    const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
+    const vis = epocasVisiveis();
+    let alvo = null;
+    if (passo) alvo = vis[Math.min(vis.length - 1, Math.max(0, vis.indexOf(estado.epoca) + passo))];
+    if (ev.key === "Home") alvo = vis[0];
+    if (ev.key === "End") alvo = vis[vis.length - 1];
+    if (!alvo) return;
+    ev.preventDefault();
+    escolherDestaque(alvo);
+    $(`.epoca-btn[data-epoca="${alvo}"]`, grupo).focus();
   });
   $("#f-repor").addEventListener("click", () => { Object.assign(estado, { ...PADRAO, seccao: estado.seccao }); atualizar({ recriar: true }); });
 }
 
+function escolherDestaque(ep) {
+  if (ep === estado.epoca || !epocasVisiveis().includes(ep)) return;
+  estado.epoca = ep;
+  atualizar();
+}
+
+/** A época em destaque tem de estar dentro do período; se ficar de fora, passa para o extremo mais próximo */
+function ajustarDestaque() {
+  const e = Dados.epocas(), vis = epocasVisiveis();
+  if (vis.includes(estado.epoca)) return;
+  estado.epoca = e.indexOf(estado.epoca) < e.indexOf(vis[0]) ? vis[0] : vis[vis.length - 1];
+}
+
 function sincronizarFiltros() {
-  $("#f-inicio").value = estado.inicio;
-  $("#f-fim").value = estado.fim;
-  $("#f-epoca").value = estado.epoca;
-  const n = epocasVisiveis().length;
-  $("#f-resumo").textContent = `${n} ${n === 1 ? "época" : "épocas"} no intervalo`;
+  const e = Dados.epocas(), i = e.indexOf(estado.inicio), f = e.indexOf(estado.fim);
+  const ini = $("#f-inicio"), fim = $("#f-fim");
+  ini.value = estado.inicio; fim.value = estado.fim;
+  // Impede combinações inválidas: a época inicial não pode ser posterior à final
+  [...ini.options].forEach((o, k) => (o.disabled = k > f));
+  [...fim.options].forEach((o, k) => (o.disabled = k < i));
+  const vis = epocasVisiveis();
+  document.querySelectorAll(".epoca-btn").forEach(b => {
+    const ativa = b.dataset.epoca === estado.epoca, dentro = vis.includes(b.dataset.epoca);
+    b.setAttribute("aria-checked", String(ativa));
+    b.tabIndex = ativa ? 0 : -1;
+    b.disabled = !dentro;
+  });
+  // Em ecrãs estreitos, mantém visível a época em destaque na faixa de épocas (sem mexer na página)
+  const faixa = $("#f-epocas"), btn = $(".epoca-btn[aria-checked='true']", faixa);
+  if (btn && faixa.scrollWidth > faixa.clientWidth) faixa.scrollLeft = btn.offsetLeft - faixa.offsetLeft - faixa.clientWidth / 2 + btn.offsetWidth / 2;
+  const n = vis.length;
+  const resumo = $("#f-resumo");
+  resumo.replaceChildren(
+    "Período ", criar("strong", "", n > 1 ? `${vis[0]} a ${vis[n - 1]}` : vis[0]), ` (${n} ${n === 1 ? "época" : "épocas"}) · Em destaque `,
+    criar("strong", "", estado.epoca));
+  const ec = estadoContas(estado.epoca);
+  if (ec) resumo.append(` · ${/Assembleia/.test(ec) ? "contas sujeitas a aprovação da AG" : "dados parciais"}`);
 }
 
 function atualizar({ recriar = false } = {}) {
@@ -558,14 +670,21 @@ async function iniciar() {
     epoca: [...e].reverse().find(x => Dados.kpi(x)?.resultado_liquido != null),
   };
   lerURL();
-  const nProjeto = info.consultas.filter(c => c.n < 100).length;
-  document.querySelectorAll("[data-n-consultas]").forEach(el => (el.textContent = nProjeto));
-  document.querySelectorAll("[data-intervalo]").forEach(el => (el.textContent = `${e[0]} – ${e[e.length - 1]}`));
-  $("#gerado").textContent = new Date(info.gerado).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" });
+  const nProjeto = info.consultas.filter(c => c.n < 100).length, nComp = info.consultas.length - nProjeto;
+  const preencher = (sel, txt) => document.querySelectorAll(sel).forEach(el => (el.textContent = txt));
+  preencher("[data-n-consultas]", nProjeto);
+  preencher("[data-n-complementares]", nComp);
+  preencher("[data-n-epocas]", e.length);
+  if (info.totalProjeto) { preencher("[data-n-total]", info.totalProjeto); preencher("[data-n-excluidas]", info.totalProjeto - nProjeto); }
+  preencher("[data-intervalo]", `${e[0]} – ${e[e.length - 1]}`);
+  preencher("[data-gerado]", new Date(info.gerado).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" }));
+  const nota = $("#nota-ambito-sql");
+  nota.textContent = `O projeto SQL tem ${info.totalProjeto ?? nProjeto} consultas. Aqui apresentam-se as ${nProjeto} que tratam das contas da SAD e ${nComp} consultas complementares do painel (D1 a D${nComp}).` +
+    (info.excluidas.length ? ` As consultas ${info.excluidas.slice(0, -1).join(", ")} e ${info.excluidas.at(-1)} dizem respeito ao Clube ou ao Grupo consolidado e podem ser consultadas no ficheiro 04_analises.sql do projeto.` : "");
 
   construirSeccoes();
-  construirKPIs($("#kpis-a"), DIMENSAO_A);
-  construirKPIs($("#kpis-b"), DIMENSAO_B);
+  construirKPIs();
+  construirCartoesGeral();
   construirMetodologia();
   construirFiltros();
   explorador = montarExplorador($("[data-explorador]"), { aoSelecionar: n => { location.hash = `sql/${n}`; } });

@@ -25,18 +25,29 @@ export const TECNICAS = [
 const semComentarios = sql => sql.split("\n").map(l => (l.includes("--") ? l.slice(0, l.indexOf("--")) : l)).join("\n");
 export const tecnicasDe = c => (c._tecnicas ??= TECNICAS.filter(t => t.re.test(semComentarios(c.sql))).map(t => t.id));
 
-/* ---------- Realce do código ---------- */
+/* ---------- Realce do código (sem dependências) ---------- */
 
-const PALAVRAS = /\b(SELECT|FROM|WHERE|JOIN|LEFT|INNER|ON|AND|OR|NOT|AS|CASE|WHEN|THEN|ELSE|END|GROUP BY|ORDER BY|HAVING|WITH|RECURSIVE|UNION ALL|UNION|OVER|PARTITION BY|WINDOW|ROWS BETWEEN|PRECEDING|CURRENT ROW|LIMIT|DISTINCT|IN|IS|NULL|LIKE|BETWEEN|CAST|INTEGER|ROUND|SUM|AVG|MAX|MIN|COUNT|LAG|LEAD|RANK|ROW_NUMBER|COALESCE|NULLIF|ABS|SQRT|SUBSTR|VALUES)\b/g;
+const PALAVRAS = new Set(("SELECT FROM WHERE JOIN LEFT RIGHT INNER OUTER CROSS ON AND OR NOT AS CASE WHEN THEN ELSE END GROUP BY ORDER " +
+  "HAVING WITH RECURSIVE UNION ALL OVER PARTITION WINDOW ROWS RANGE BETWEEN PRECEDING FOLLOWING CURRENT ROW UNBOUNDED LIMIT OFFSET " +
+  "DISTINCT IN IS NULL LIKE ASC DESC VALUES EXISTS FILTER").split(" "));
+const FUNCOES = new Set(("ROUND SUM AVG MAX MIN COUNT LAG LEAD RANK DENSE_RANK ROW_NUMBER NTILE FIRST_VALUE LAST_VALUE COALESCE NULLIF " +
+  "ABS SQRT POWER EXP LN SUBSTR REPLACE LENGTH UPPER LOWER CAST PRINTF IIF TOTAL GROUP_CONCAT STRFTIME DATE INTEGER REAL TEXT").split(" "));
 const escapar = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const TOKEN = /(--.*$)|('(?:[^']|'')*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z_0-9]*)/g;
 
+/** Devolve HTML com uma linha por <span class="ln">, para a numeração das linhas */
 function realcar(sql) {
-  return sql.split("\n").map(l => {
-    const i = l.indexOf("--");
-    const codigo = i >= 0 ? l.slice(0, i) : l, comentario = i >= 0 ? l.slice(i) : "";
-    const partes = codigo.split(/('(?:[^']|'')*')/g).map((p, k) =>
-      k % 2 ? `<span class="s">${escapar(p)}</span>` : escapar(p).replace(PALAVRAS, '<span class="k">$1</span>'));
-    return partes.join("") + (comentario ? `<span class="c">${escapar(comentario)}</span>` : "");
+  return sql.replace(/\s+$/, "").split("\n").map(l => {
+    let html = "", ultimo = 0;
+    l.replace(TOKEN, (m, com, str, num, pal, pos) => {
+      html += escapar(l.slice(ultimo, pos));
+      const maiusc = pal?.toUpperCase();
+      const cls = com ? "c" : str ? "s" : num ? "n" : PALAVRAS.has(maiusc) ? "k" : FUNCOES.has(maiusc) ? "f" : null;
+      html += cls ? `<span class="${cls}">${escapar(m)}</span>` : escapar(m);
+      ultimo = pos + m.length;
+      return m;
+    });
+    return `<span class="ln">${html}${escapar(l.slice(ultimo))}</span>`;
   }).join("\n");
 }
 
@@ -46,6 +57,20 @@ const AVISOS = {
   14: "Apesar do título (30/06/2025), o resultado mistura linhas de 30/06/2025 e de 30/06/2026, e a linha TOTAL soma as duas datas. O painel utiliza a consulta 39, que separa as datas.",
   45: "Nas duas primeiras épocas, a média móvel das mais-valias usa menos de três épocas (janela ROWS BETWEEN 2 PRECEDING).",
 };
+
+/** Objetivo da consulta: o título e as notas do bloco de comentários inicial (sem a linha «Conceitos», mostrada à parte) */
+function objetivo(c) {
+  const bloco = [];
+  for (const l of c.sql.split("\n")) {
+    const t = l.trim();
+    if (!t.startsWith("--")) break;
+    let txt = t.replace(/^--\s?/, "");
+    if (/^Conceitos:/.test(txt)) { const k = txt.indexOf(". "); txt = k >= 0 ? txt.slice(k + 2) : ""; }
+    if (txt && !/^@[qd]\b|^[=-]+$/.test(txt)) bloco.push(txt);
+  }
+  const extra = bloco.join(" ").replace(/\s+/g, " ").trim();
+  return extra ? `${c.titulo}. ${extra}` : `${c.titulo}.`;
+}
 
 const normal = s => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
@@ -94,10 +119,16 @@ export function montarExplorador(raiz, { aoSelecionar }) {
     }
     const grupos = new Map();
     visiveis.forEach(c => { if (!grupos.has(c.seccao)) grupos.set(c.seccao, []); grupos.get(c.seccao).push(c); });
+    const ativa = Number(raiz.dataset.ativa);
     lista.replaceChildren(...[...grupos].map(([seccao, cs]) => {
       const g = document.createElement("li");
-      const titulo = document.createElement("p");
-      titulo.className = "grupo"; titulo.textContent = seccao;
+      const det = document.createElement("details");
+      // Abertos: quando há pesquisa ou filtro, o grupo da consulta ativa e o primeiro
+      det.open = Boolean(termo || tecnica) || cs.some(c => c.n === ativa) || seccao === visiveis[0].seccao;
+      const titulo = document.createElement("summary");
+      titulo.className = "grupo";
+      titulo.innerHTML = `<span></span> <span class="contagem">${cs.length}</span>`;
+      titulo.firstChild.textContent = seccao;
       const ul = document.createElement("ul");
       cs.forEach(c => {
         const li = document.createElement("li");
@@ -109,7 +140,8 @@ export function montarExplorador(raiz, { aoSelecionar }) {
         li.appendChild(b);
         ul.appendChild(li);
       });
-      g.append(titulo, ul);
+      det.append(titulo, ul);
+      g.appendChild(det);
       return g;
     }));
     marcarAtiva(raiz.dataset.ativa);
@@ -119,7 +151,8 @@ export function montarExplorador(raiz, { aoSelecionar }) {
     lista.querySelectorAll("button[data-n]").forEach(b => {
       const ativa = b.dataset.n === String(n);
       b.classList.toggle("ativa", ativa);
-      if (ativa) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+      if (ativa) { b.setAttribute("aria-current", "true"); const d = b.closest("details"); if (d) d.open = true; }
+      else b.removeAttribute("aria-current");
     });
   }
 
@@ -134,6 +167,7 @@ export function montarExplorador(raiz, { aoSelecionar }) {
     const perguntas = PERGUNTAS.filter(p => p.consultas.includes(n));
     const tecs = tecnicasDe(c).map(id => TECNICAS.find(t => t.id === id));
 
+    const nLinhas = c.sql.replace(/\s+$/, "").split("\n").length;
     detalhe.innerHTML = `
       <nav class="det-nav" aria-label="Navegar entre consultas">
         ${anterior ? `<a href="#sql/${anterior.n}">← ${escapar(anterior.codigo)}</a>` : "<span></span>"}
@@ -142,23 +176,33 @@ export function montarExplorador(raiz, { aoSelecionar }) {
       </nav>
       <p class="det-seccao"></p>
       <h3><span class="n">${n > 100 ? "Consulta complementar" : "Consulta"} ${escapar(c.codigo)}</span> <span data-t></span></h3>
-      ${AVISOS[n] ? `<p class="aviso" role="note"><strong>Atenção.</strong> <span></span></p>` : ""}
-      ${c.conceitos ? `<p class="conceitos"><span class="rot">Conceitos (comentário do autor):</span> <span data-c></span></p>` : ""}
-      ${tecs.length ? `<ul class="tecnicas-usadas" aria-label="Técnicas SQL detetadas no código">${tecs.map(t => `<li title="${escapar(t.texto)}">${escapar(t.nome)}</li>`).join("")}</ul>` : ""}
+      <div class="det-objetivo">
+        <p class="rotulo-claro">Objetivo</p>
+        <p data-objetivo></p>
+        ${c.conceitos ? `<p class="conceitos"><span class="rot">Conceitos (comentário do autor):</span> <span data-c></span></p>` : ""}
+        ${tecs.length ? `<ul class="tecnicas-usadas" aria-label="Técnicas SQL detetadas no código">${tecs.map(t => `<li title="${escapar(t.texto)}">${escapar(t.nome)}</li>`).join("")}</ul>` : ""}
+        ${AVISOS[n] ? `<p class="aviso" role="note"><strong>Atenção.</strong> <span></span></p>` : ""}
+      </div>
       <div class="det-acoes">
         <button type="button" class="botao" data-copiar>Copiar SQL</button>
-        <button type="button" class="botao" data-csv>Exportar resultado (CSV)</button>
+        <button type="button" class="botao secundario" data-csv>Exportar resultado (CSV)</button>
         ${usos.map(p => `<a class="botao secundario" href="#${p.seccao}/${p.seccao === "perguntas" ? `pergunta-${p.questao}` : p.id}">Ver gráfico em ${escapar(SECCOES.find(s => s.id === p.seccao).nome)}</a>`).join("")}
         ${perguntas.map(p => `<a class="botao secundario" href="#perguntas/pergunta-${p.n}">Pergunta ${p.n}</a>`).join("")}
       </div>
-      <details class="det-sql" open><summary>Código SQL</summary><pre tabindex="0"><code></code></pre></details>
+      <details class="det-sql" open>
+        <summary>Código SQL <span class="contagem">${nLinhas} linhas</span></summary>
+        <pre tabindex="0" aria-label="Código SQL da consulta ${escapar(c.codigo)}"><code></code></pre>
+      </details>
       <h4 class="det-res">Resultado <span class="contagem"></span></h4>`;
     detalhe.querySelector(".det-seccao").textContent = c.seccao;
     detalhe.querySelector("[data-t]").textContent = c.titulo;
     if (AVISOS[n]) detalhe.querySelector(".aviso span").textContent = AVISOS[n];
     if (c.conceitos) detalhe.querySelector("[data-c]").textContent = c.conceitos;
     detalhe.querySelector("code").innerHTML = realcar(c.sql);
-    detalhe.querySelector(".contagem").textContent = `${c.linhas.length} ${c.linhas.length === 1 ? "linha" : "linhas"} · clique num cabeçalho para ordenar`;
+    // Sem notas no código, o objetivo é a pergunta e a descrição do gráfico que a consulta alimenta
+    const obj = objetivo(c), painel = usos.find(p => p.descricao);
+    detalhe.querySelector("[data-objetivo]").textContent = obj === `${c.titulo}.` && painel ? `${painel.pergunta} ${painel.descricao}` : obj;
+    detalhe.querySelector(".det-res .contagem").textContent = `${c.linhas.length} ${c.linhas.length === 1 ? "linha" : "linhas"} · clique num cabeçalho para ordenar`;
     detalhe.appendChild(tabelaOrdenavel(c.colunas, c.linhas, n, { legenda: `Resultado da consulta ${c.codigo}` }));
 
     const copiar = detalhe.querySelector("[data-copiar]");

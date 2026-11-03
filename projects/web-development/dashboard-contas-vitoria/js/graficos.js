@@ -9,8 +9,9 @@ import { entrada, transicao } from "./animacoes.js";
 const raiz = document.documentElement;
 export const cor = nome => getComputedStyle(raiz).getPropertyValue(`--${nome}`).trim();
 
-/** Papéis das séries, na paleta do projeto SQL: preto, cinzentos e amarelos */
-export const PAPEIS = ["tinta", "cinza-escuro", "amarelo", "cinza", "amarelo-claro"];
+/** Papéis das séries categóricas: só cinzentos. O verde, o vermelho e o amarelo têm significado
+    (positivo, negativo/risco, alerta) e só se usam através de coresSinal e coresCondicao (paineis.js). */
+export const PAPEIS = ["tinta", "cinza-escuro", "cinza", "cinza-claro"];
 
 export function aplicarTema() {
   Chart.defaults.font.family = '"Archivo", system-ui, sans-serif';
@@ -21,13 +22,13 @@ export function aplicarTema() {
 
 /* ---------- Séries ---------- */
 
-/** Barras: o amarelo e o amarelo-claro levam contorno para não se perderem no fundo */
+/** Barras: as cores claras levam contorno para não se perderem no fundo */
 export function barras(label, data, papel = "tinta", extra = {}) {
-  const claro = papel.startsWith("amarelo");
+  const claro = papel === "cinza-claro" || papel === "amarelo";
   return {
     label, data, backgroundColor: cor(papel),
-    borderColor: claro ? cor("tinta") : cor(papel), borderWidth: claro ? 1 : 0,
-    borderRadius: 0, borderSkipped: false, maxBarThickness: 30, categoryPercentage: 0.8, barPercentage: 0.9,
+    borderColor: claro ? cor("cinza-escuro") : cor(papel), borderWidth: claro ? 1 : 0,
+    borderRadius: 2, borderSkipped: false, maxBarThickness: 30, categoryPercentage: 0.8, barPercentage: 0.9,
     ...extra,
   };
 }
@@ -42,7 +43,7 @@ export function linha(label, data, papel = "tinta", { oca = false, tracejada = f
   };
 }
 
-/** Área amarela entre duas linhas, só onde a série de cima ultrapassa a de baixo */
+/** Área a vermelho claro entre duas linhas, só onde a série de cima ultrapassa a de baixo */
 export const areaAcima = alvo => ({ target: alvo, above: cor("area"), below: "rgba(0,0,0,0)" });
 
 /* ---------- Opções comuns ---------- */
@@ -54,7 +55,7 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
   const valor = {
     stacked: empilhado, min, max, reverse: inverter,
     ticks: { callback: v => fmtEixo(v), color: cor("suave"), maxTicksLimit: 7 },
-    grid: { color: c => (c.tick.value === 0 ? cor("tinta") : cor("grelha")), lineWidth: c => (c.tick.value === 0 ? 1.3 : 1) },
+    grid: { color: c => (c.tick.value === 0 ? cor("cinza-escuro") : cor("grelha")), lineWidth: c => (c.tick.value === 0 ? 1.2 : 1) },
     border: { display: false },
   };
   const categoria = {
@@ -69,12 +70,20 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
     plugins: {
       legend: {
         display: legenda, position: "top", align: "start",
-        labels: { boxWidth: 20, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 12.5 } },
+        labels: {
+          boxWidth: 20, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 12.5 },
+          // Séries com cor por valor (verde/vermelho): a legenda usa um cinzento neutro, não a cor do primeiro valor
+          generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart).map(l => {
+            const ds = chart.data.datasets[l.datasetIndex];
+            if (Array.isArray(ds.backgroundColor)) { l.fillStyle = cor("cinza-escuro"); l.strokeStyle = cor("cinza-escuro"); }
+            return l;
+          }),
+        },
       },
       tooltip: {
-        backgroundColor: "#111111", titleColor: "#F5D510", bodyColor: "#FFFFFF", footerColor: "#C9C7C8",
-        borderColor: "#F5D510", borderWidth: 1, padding: 10, cornerRadius: 2, boxPadding: 5,
-        titleFont: { family: '"Archivo Expanded", sans-serif', weight: "800", size: 12 }, footerFont: { weight: "400" },
+        backgroundColor: cor("dica-fundo"), titleColor: cor("dica-texto"), bodyColor: cor("dica-texto"), footerColor: cor("dica-suave"),
+        borderColor: cor("dica-borda"), borderWidth: 1, padding: 10, cornerRadius: 6, boxPadding: 5,
+        titleFont: { weight: "700", size: 12.5 }, footerFont: { weight: "400" }, usePointStyle: false,
         callbacks: { label: c => ` ${c.dataset.label}: ${fmtTooltip(c.raw)}` },
         filter: c => c.raw !== null && c.raw !== undefined,
       },
@@ -88,7 +97,7 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
 let epocaDestaque = null;
 export const definirDestaque = e => { epocaDestaque = e; };
 
-/** Faixa amarela clara por trás da época em destaque (gráficos com épocas no eixo x) */
+/** Faixa cinzenta por trás da época em destaque (gráficos com épocas no eixo x) */
 export const destaqueEpoca = {
   id: "destaqueEpoca",
   beforeDatasetsDraw(chart) {
@@ -118,7 +127,7 @@ export const referencias = {
     lista.forEach(({ valor, rotulo }) => {
       const p = escala.getPixelForValue(valor);
       if (!Number.isFinite(p)) return;
-      ctx.strokeStyle = cor("tinta"); ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = cor("cinza-escuro"); ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]);
       ctx.beginPath();
       if (chart.options.indexAxis === "y") { ctx.moveTo(p, a.top); ctx.lineTo(p, a.bottom); }
       else { ctx.moveTo(a.left, p); ctx.lineTo(a.right, p); }

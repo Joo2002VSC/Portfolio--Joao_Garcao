@@ -6,27 +6,27 @@
   <title>As contas do Vitória SC · Análise financeira</title>
   <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=5" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=5" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=5">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=5">
-  <meta name="theme-color" content="#111111">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=6" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=6" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=6">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=6">
+  <meta name="theme-color" content="#343A40">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=5",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=5",
-      "./js/dados.js": "./js/dados.js?v=5",
-      "./js/explorador.js": "./js/explorador.js?v=5",
-      "./js/formato.js": "./js/formato.js?v=5",
-      "./js/graficos.js": "./js/graficos.js?v=5",
-      "./js/paineis.js": "./js/paineis.js?v=5",
-      "./js/tabelas.js": "./js/tabelas.js?v=5"
+      "./js/animacoes.js": "./js/animacoes.js?v=6",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=6",
+      "./js/dados.js": "./js/dados.js?v=6",
+      "./js/explorador.js": "./js/explorador.js?v=6",
+      "./js/formato.js": "./js/formato.js?v=6",
+      "./js/graficos.js": "./js/graficos.js?v=6",
+      "./js/paineis.js": "./js/paineis.js?v=6",
+      "./js/tabelas.js": "./js/tabelas.js?v=6"
     }
   }
   </script>
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -34,13 +34,16 @@
   <header class="topo gutter">
     <div class="dentro">
       <div class="marca">
-        <img class="icone" src="img/icone-claro.png?v=5" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=6" alt="" width="47" height="60">
         <div>
           <p class="sobretitulo">Análise financeira · <span data-intervalo>2012/13 – 2025/26</span></p>
           <h1>As contas do Vitória SC</h1>
         </div>
       </div>
-      <p class="sub">Contas da Vitória Sport Clube – Futebol, SAD, analisadas com <span data-n-consultas>48</span> consultas SQL a uma base de dados SQLite construída com os Relatórios e Contas.</p>
+      <div class="topo-texto">
+        <p class="sub">Evolução financeira da Vitória Sport Clube – Futebol, SAD, com base nos Relatórios e Contas e em <span data-n-consultas>48</span> consultas SQL a uma base de dados SQLite.</p>
+        <p class="aviso-pessoal">Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</p>
+      </div>
     </div>
   </header>
 
@@ -49,17 +52,27 @@
     <div class="dentro">
       <nav aria-label="Secções"><div class="abas" id="abas"></div></nav>
       <div class="filtros" role="group" aria-label="Filtros de época">
-        <label class="campo"><span class="rotulo">De</span><select id="f-inicio"></select></label>
-        <label class="campo"><span class="rotulo">Até</span><select id="f-fim"></select></label>
-        <label class="campo"><span class="rotulo">Em destaque</span><select id="f-epoca" aria-describedby="ajuda-destaque"></select></label>
-        <p class="resumo"><span id="f-resumo" aria-live="polite"></span><span id="ajuda-destaque" class="sr-only">A época em destaque é a utilizada nos indicadores e assinalada nos gráficos.</span></p>
+        <fieldset class="periodo">
+          <legend class="rotulo">Período</legend>
+          <div class="periodo-linha">
+            <label class="sr-only" for="f-inicio">Época inicial</label><select id="f-inicio"></select>
+            <span class="ate" aria-hidden="true">a</span>
+            <label class="sr-only" for="f-fim">Época final</label><select id="f-fim"></select>
+          </div>
+        </fieldset>
+        <div class="destaque-campo">
+          <p class="rotulo" id="rot-destaque">Época em destaque</p>
+          <div class="epocas" id="f-epocas" role="radiogroup" aria-labelledby="rot-destaque" aria-describedby="ajuda-destaque"></div>
+          <span id="ajuda-destaque" class="sr-only">A época em destaque é a utilizada nos indicadores e assinalada nos gráficos. Use as setas para mudar de época.</span>
+        </div>
         <div class="filtros-acoes">
           <button type="button" class="botao-barra" id="f-repor" disabled>Repor filtros</button>
-          <button type="button" class="botao-barra icone" id="f-tema">
+          <button type="button" class="botao-barra icone-tema" id="f-tema">
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
           </button>
         </div>
       </div>
+      <p class="resumo" id="f-resumo" aria-live="polite"></p>
     </div>
   </div>
 
@@ -68,57 +81,62 @@
 
       <!-- =============== Visão geral =============== -->
       <section id="sec-geral">
-        <div class="entidade-barra">
-          <div class="entidade-info">
-            <p class="entidade-nome">Vitória Sport Clube – Futebol, SAD</p>
-            <p class="entidade-desc">Sociedade anónima desportiva que gere o futebol profissional do Vitória: plantel, transferências, competições da UEFA e direitos de TV. Exercício de 1 de julho a 30 de junho.</p>
+        <section class="bloco" aria-labelledby="h-sintese">
+          <div class="bloco-cabeca">
+            <h3 id="h-sintese">Síntese financeira <span class="ref">· <span data-ref-epoca></span></span></h3>
+            <p id="estado-contas" class="selo" hidden></p>
           </div>
-        </div>
-
-        <section class="dimensao" aria-labelledby="dim-a">
-          <h3 id="dim-a"><span class="letra">A</span> Situação financeira <span class="ref">a <span data-ref-fecho></span></span></h3>
-          <div class="kpis kpis-principais" id="kpis-a"></div>
+          <p class="bloco-nota">Valores da época em destaque e variação face à época anterior: <span class="leg leg-melhor">verde</span> evolução favorável, <span class="leg leg-pior">vermelho</span> evolução desfavorável. Rubricas de balanço a <span data-ref-fecho></span>.</p>
+          <div class="kpis" id="kpis"></div>
           <p class="em-campo" id="em-campo"></p>
         </section>
 
-        <section class="dimensao" aria-labelledby="dim-b">
-          <h3 id="dim-b"><span class="letra">B</span> Desempenho operacional <span class="ref">em <span data-ref-epoca></span></span></h3>
-          <div class="kpis kpis-secundarios" id="kpis-b"></div>
-          <p class="nota-dim">Rendimentos operacionais = vendas e serviços prestados + subsídios à exploração + outros rendimentos (inclui os ganhos com a alienação de passes). Os indicadores sem valor publicado numa época são assinalados como «sem dados».</p>
-        </section>
-
-        <section class="dimensao" aria-labelledby="dim-c">
-          <h3 id="dim-c"><span class="letra">C</span> Evolução histórica</h3>
-          <div class="evolucao">
-            <div>
-              <h4 class="mini">Maiores variações face à época anterior</h4>
-              <ul class="variacoes" id="variacoes"></ul>
-              <p class="fonte">Fonte: <a href="#sql/104">consulta complementar D4</a> (LAG por indicador)</p>
-            </div>
-            <div>
-              <h4 class="mini">Máximos e mínimos da série</h4>
-              <div class="tabela" tabindex="0" role="region" aria-label="Máximos e mínimos históricos">
-                <table id="extremos">
-                  <thead><tr><th scope="col">Indicador</th><th scope="col" class="num">Máximo</th><th scope="col" class="num">Mínimo</th><th scope="col" class="num">Épocas</th></tr></thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-              <p id="extremos-vazio" class="sem-dados" hidden>Séries demasiado curtas para calcular extremos.</p>
-              <p class="fonte">Fonte: <a href="#sql/105">consulta complementar D5</a> (ROW_NUMBER). A época em destaque está assinalada a amarelo.</p>
-            </div>
-          </div>
-          <div data-paineis></div>
-        </section>
-
-        <section class="dimensao" aria-labelledby="dim-d">
-          <h3 id="dim-d"><span class="letra">D</span> Principais conclusões <span class="ref">em <span data-ref-epoca></span></span></h3>
+        <section class="bloco" aria-labelledby="h-leitura">
+          <div class="bloco-cabeca"><h3 id="h-leitura">Leitura da época <span class="ref">· <span data-ref-epoca></span></span></h3></div>
+          <p class="bloco-nota">Frases calculadas a partir das consultas indicadas em cada linha (C = consulta do projeto; D = consulta complementar), com limiares de referência explícitos.</p>
           <div class="conclusoes" id="conclusoes"></div>
-          <p class="nota-dim">Calculadas a partir das consultas indicadas em cada linha (C = consulta do projeto; D = consulta complementar), com limiares de referência explícitos. Atualizam-se com a época em destaque.</p>
+        </section>
+
+        <section class="bloco" aria-labelledby="h-evolucao">
+          <div class="bloco-cabeca"><h3 id="h-evolucao">Evolução financeira <span class="ref">· <span data-ref-intervalo></span></span></h3></div>
+          <div data-paineis></div>
+          <details class="desdobrar">
+            <summary>Maiores variações face à época anterior e máximos históricos</summary>
+            <div class="evolucao">
+              <div>
+                <h4 class="mini">Maiores variações em <span data-ref-epoca></span></h4>
+                <ul class="variacoes" id="variacoes"></ul>
+                <p class="fonte">Fonte: <a href="#sql/104">consulta complementar D4</a> (LAG por indicador)</p>
+              </div>
+              <div>
+                <h4 class="mini">Máximos e mínimos da série</h4>
+                <div class="tabela" tabindex="0" role="region" aria-label="Máximos e mínimos históricos">
+                  <table id="extremos">
+                    <thead><tr><th scope="col">Indicador</th><th scope="col" class="num">Máximo</th><th scope="col" class="num">Mínimo</th><th scope="col" class="num">Épocas</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <p id="extremos-vazio" class="sem-dados" hidden>Séries demasiado curtas para calcular extremos.</p>
+                <p class="fonte">Fonte: <a href="#sql/105">consulta complementar D5</a> (ROW_NUMBER). A época em destaque está sombreada.</p>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="bloco" aria-labelledby="h-perguntas">
+          <div class="bloco-cabeca"><h3 id="h-perguntas">Cinco perguntas centrais</h3><a class="ver-mais" href="#perguntas">Ver a análise completa →</a></div>
+          <ol class="cartoes-perguntas" id="cartoes-perguntas"></ol>
+        </section>
+
+        <section class="bloco" aria-labelledby="h-areas">
+          <div class="bloco-cabeca"><h3 id="h-areas">Análise por área financeira</h3></div>
+          <ul class="cartoes-areas" id="cartoes-areas"></ul>
         </section>
       </section>
 
       <!-- =============== Consultas SQL =============== -->
       <section id="sec-sql">
+        <p class="caixa-nota" id="nota-ambito-sql"></p>
         <div class="tecnicas">
           <p class="rotulo-claro" id="rot-tecnicas">Filtrar por técnica SQL (detetada automaticamente no código)</p>
           <div class="chips" data-tecnicas role="group" aria-labelledby="rot-tecnicas"></div>
@@ -142,6 +160,14 @@
 
       <!-- =============== Metodologia =============== -->
       <section id="sec-metodologia">
+        <ul class="fontes-cartoes">
+          <li><span class="rotulo-claro">Fonte principal</span><strong>Relatórios e Contas da Vitória SC SAD</strong><span>2012/13 a 2025/26, publicados em vitoriasc.pt</span></li>
+          <li><span class="rotulo-claro">Fonte complementar</span><strong>VSC Contas</strong><span><a href="https://vitoriasempre.net/contas-vsc/">vitoriasempre.net</a>: demonstração de resultados detalhada e transferências</span></li>
+          <li><span class="rotulo-claro">Organização dos dados</span><strong>Base de dados SQLite</strong><span>Projeto <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a></span></li>
+          <li><span class="rotulo-claro">Período</span><strong data-intervalo>2012/13 – 2025/26</strong><span><span data-n-epocas>14</span> épocas; exercícios de 1 de julho a 30 de junho</span></li>
+          <li><span class="rotulo-claro">Exportação dos dados</span><strong data-gerado></strong><span>Data em que as consultas foram executadas</span></li>
+          <li><span class="rotulo-claro">Âmbito</span><strong>Apenas a SAD</strong><span>Sem as contas do Clube nem as consolidadas. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</span></li>
+        </ul>
         <div class="texto-longo">
           <h3>Origem dos dados</h3>
           <p>O painel trata exclusivamente das contas da <strong>Vitória Sport Clube – Futebol, SAD</strong>. Os dados provêm de duas fontes. Os <strong>Relatórios e Contas da SAD</strong>, de 2012/13 a 2025/26, publicados em vitoriasc.pt, são a referência para o balanço, a dívida financeira, os juros, o número de funcionários e os gastos com pessoal. Seis destes relatórios são documentos digitalizados, lidos por reconhecimento ótico de caracteres (OCR) e confirmados visualmente. O sítio <strong>VSC Contas</strong> (vitoriasempre.net), um painel não oficial, fornece a demonstração de resultados detalhada e os dados das transferências.</p>
@@ -150,7 +176,7 @@
           <p>Os valores foram recolhidos em ficheiros CSV e carregados por um <em>script</em> Python numa base de dados SQLite: dimensões (épocas, rubricas), demonstração de resultados em formato longo, balanço, fluxos de caixa, transferências, pessoal, dívida, auditoria e fontes. Os gastos são registados com sinal negativo, como nas demonstrações financeiras; os valores não disponíveis ficam vazios (NULL) e nunca a zero. Testes automáticos verificam a integridade das chaves e a coerência contabilística (ativo = passivo + capital próprio) e reconciliam os números citados nos relatórios.</p>
 
           <h3>Do SQL ao painel</h3>
-          <p>Um <em>script</em> Python executa as consultas do projeto relativas às contas da SAD (<span data-n-consultas>48</span>) e 5 consultas complementares do painel sobre a mesma base de dados, verifica a coerência dos resultados e grava-os em JSON. O painel lê esses resultados e não refaz os cálculos: em JavaScript, apenas se filtram as épocas, se calculam somas e médias do intervalo selecionado e se escolhem as frases das conclusões.</p>
+          <p>Um <em>script</em> Python executa as consultas do projeto relativas às contas da SAD (<span data-n-consultas>48</span> das <span data-n-total>59</span>) e <span data-n-complementares>6</span> consultas complementares do painel sobre a mesma base de dados, verifica a coerência dos resultados e grava-os em JSON. As <span data-n-excluidas>11</span> consultas restantes tratam do Clube ou do Grupo consolidado e ficam no projeto SQL, fora do âmbito do painel. O painel lê os resultados e não refaz os cálculos: em JavaScript, apenas se filtram as épocas, se calculam somas, médias e pesos do intervalo selecionado e se escolhem as frases das conclusões.</p>
 
           <h3>Verificação e divergências</h3>
           <p>Cada valor do balanço, dos juros e do pessoal da SAD foi conferido com os Relatórios e Contas. Foram encontradas <strong id="n-divergencias">42</strong> divergências em três fontes secundárias, documentadas na tabela <code>divergencia</code> e corrigidas na base de dados (por exemplo, os balanços de 2014/15 a 2016/17 publicados no VSC Contas estavam errados).</p>
@@ -168,16 +194,18 @@
           <h3>Limitações</h3>
           <ul>
             <li><strong>Séries incompletas.</strong> A demonstração de resultados de 2012/13 só tem o resultado líquido; os dados das transferências começam em 2017/18 e o detalhe da dívida por instrumento a 30/06/2024.</li>
-            <li><strong>Composição das receitas.</strong> A repartição das vendas e serviços prestados por fonte (direitos de TV, bilheteira, patrocínios, prémios) só está disponível para a SAD em 2024/25 e 2025/26 (consulta 59), pelo que não se apresenta uma série histórica.</li>
+            <li><strong>Composição das receitas e dos gastos.</strong> A repartição das vendas e serviços prestados por fonte (direitos de TV, bilheteira, patrocínios, prémios) e dos fornecimentos e serviços externos só está disponível em 2024/25 e 2025/26 (consulta 59). O painel apresenta essas duas épocas, sem série histórica, e não estima o peso dos direitos de TV nas épocas anteriores.</li>
+            <li><strong>Resultado antes de impostos.</strong> Calcula-se como resultado líquido menos o imposto sobre o rendimento (consulta complementar D6).</li>
             <li><strong>Juros.</strong> Em algumas épocas, a rubrica de juros da demonstração de resultados é líquida dos juros obtidos; a taxa implícita usa os juros dos financiamentos e inclui as comissões de factoring.</li>
             <li><strong>Simulações.</strong> A simulação da centralização dos direitos de TV usa uma componente de mérito linear e ignora as audiências: os valores são ordens de grandeza, não previsões.</li>
             <li><strong>Dados desportivos.</strong> Classificações e campanhas europeias recolhidas de fontes públicas (Wikipédia, Maisfutebol); médias de espectadores compiladas pelo autor.</li>
-            <li><strong>2025/26.</strong> O Relatório e Contas foi aprovado pelo Conselho de Administração a 26/10/2026 e está sujeito a aprovação da Assembleia Geral.</li>
+            <li><strong>2025/26.</strong> O exercício está completo (termina a 30/06/2026), mas o Relatório e Contas, aprovado pelo Conselho de Administração a 26/10/2026, está sujeito a aprovação da Assembleia Geral. Os valores podem ainda ser corrigidos.</li>
           </ul>
 
           <h3>Convenções de apresentação</h3>
           <ul>
             <li>Valores monetários em euros: M€ (milhões de euros) e mil € (milhares de euros), com uma casa decimal nos milhões.</li>
+            <li>Cores com significado fixo: verde para resultados positivos e evolução favorável; vermelho para prejuízos, evolução desfavorável e riscos; amarelo para alertas; cinzento para a informação neutra. A cor nunca é a única indicação: setas, sinais, parênteses e texto repetem a informação. Um aumento só é favorável quando o indicador o justifica: um aumento dos gastos é desfavorável.</li>
             <li>Valores monetários negativos entre parênteses, como nas demonstrações financeiras: (11,1 M€). Percentagens e rácios negativos com sinal de menos: −76,0%.</li>
             <li>Vírgula como separador decimal e espaço como separador de milhares: 18 756 espectadores.</li>
             <li>Rácios sem unidade (liquidez, endividamento) com duas casas decimais; múltiplos com o sinal × (2,07×); variações de percentagens em pontos percentuais (p.p.).</li>
@@ -195,7 +223,9 @@
             <dt>Resultado operacional</dt><dd>Resultado antes de juros e impostos.</dd>
             <dt>Resultado líquido</dt><dd>Resultado do exercício depois de juros e impostos.</dd>
             <dt>EBITDA</dt><dd>Resultado antes de juros, impostos, depreciações e amortizações.</dd>
-            <dt>Capital próprio</dt><dd>Diferença entre o ativo e o passivo. Quando é negativo, o passivo é superior ao ativo.</dd>
+            <dt>Capitais próprios</dt><dd>Diferença entre o ativo e o passivo. Quando são negativos, o passivo é superior ao ativo.</dd>
+            <dt>Encargos financeiros</dt><dd>Juros e gastos similares dos financiamentos, incluindo as comissões de factoring e de antecipação de receitas.</dd>
+            <dt>Margem operacional e margem líquida</dt><dd>Resultado operacional e resultado líquido em percentagem dos rendimentos operacionais.</dd>
             <dt>Dívida financeira</dt><dd>Empréstimos, factoring, antecipações de receitas e locações financeiras: a parte remunerada do passivo.</dd>
             <dt>Taxa de juro implícita</dt><dd>Juros dos financiamentos a dividir pela dívida financeira média do exercício.</dd>
             <dt>Factoring</dt><dd>Cessão de créditos (por exemplo, valores a receber de vendas de jogadores) a uma entidade financeira, em troca de liquidez imediata.</dd>
@@ -216,12 +246,12 @@
     <div class="dentro">
       <p>Fontes: Relatórios e Contas da Vitória Sport Clube – Futebol, SAD e VSC Contas (vitoriasempre.net), organizados em SQLite no projeto
         <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a>.
-        Valores em euros; valores monetários negativos entre parênteses. Dados exportados a <span id="gerado"></span>.</p>
+        Valores em euros; valores monetários negativos entre parênteses. Dados exportados a <span data-gerado></span>.</p>
       <p>Análise e desenvolvimento: João Garção. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube. <a href="#metodologia">Metodologia</a></p>
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=5"></script>
-  <script type="module" src="js/app.js?v=5"></script>
+  <script src="js/vendor/chart.umd.min.js?v=6"></script>
+  <script type="module" src="js/app.js?v=6"></script>
 </body>
 </html>

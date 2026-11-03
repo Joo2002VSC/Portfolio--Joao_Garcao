@@ -9,13 +9,13 @@ const naEpoca = (n, epoca) => linhas(n).find(r => r.epoca === epoca) ?? null;
 
 /** Indicadores em que "subir" é bom (+1) ou mau (−1), para classificar as variações de D4 */
 const SENTIDO = {
-  "Resultado líquido": 1, "Capital próprio": 1, "Vendas e serviços prestados": 1, "Mais-valias com jogadores": 1,
+  "Resultado líquido": 1, "Capitais próprios": 1, "Vendas e serviços prestados": 1, "Mais-valias com jogadores": 1,
   "Ativo": 1, "Passivo": -1, "Gastos com pessoal": -1,
 };
 
 /** Riscos: limiares de referência habituais na análise financeira, explicitados em cada frase */
 const RISCOS = [
-  { n: 7, teste: r => r.capital_proprio < 0, frase: r => `Capital próprio negativo: ${euros(r.capital_proprio)}.` },
+  { n: 7, teste: r => r.capital_proprio < 0, frase: r => `Capitais próprios negativos: ${euros(r.capital_proprio)} (o passivo supera o ativo).` },
   { n: 29, teste: r => r.liquidez_geral < 1, frase: r => `Liquidez geral de ${racio(r.liquidez_geral)}: o ativo corrente não cobre o passivo corrente (limiar: 1).` },
   { n: 28, teste: r => r.pct_curto_prazo > 50, frase: r => `${pct(r.pct_curto_prazo)} da dívida financeira vence em menos de um ano.` },
   { n: 27, teste: r => r.juros_em_pct_receitas > 20, frase: r => `Os juros absorvem ${pct(r.juros_em_pct_receitas)} das vendas e serviços prestados.` },
