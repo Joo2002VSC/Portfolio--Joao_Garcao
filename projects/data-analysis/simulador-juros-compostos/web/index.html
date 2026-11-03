@@ -3,238 +3,380 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Simulador Monte Carlo de juros compostos com ações, cripto, aportes periódicos, inflação e fatores exógenos.">
-<title>Simulador de Juros Compostos</title>
+<meta name="description" content="CJR — Calculador de Juros Compostos. Simulação Monte Carlo de uma carteira de ações e cripto com aportes periódicos, inflação e fatores exógenos.">
+<title>CJR · Calculador de Juros Compostos</title>
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: painel de parâmetros fixo à esquerda (régua de controlo), resultados à direita; empilha em telemóvel */
+/* Layout: barra de marca fixa no topo; coluna de parâmetros à esquerda, painel de análise à direita
+   (estado → KPIs → evolução → risco → detalhe). Em ecrãs estreitos empilha. */
 :root{
-  --bg:#f3f5f4; --surface:#ffffff; --ink:#18221f; --muted:#5d6b66; --line:#d6dedb;
-  --accent:#1f6f5c; --stocks:#2a5fa8; --crypto:#c47d14; --danger:#b23a3a; --band1:rgba(31,111,92,.13); --band2:rgba(31,111,92,.26);
-  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --f-body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
-  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  /* estrutura */
+  --bg:#F5F6F7; --card:#FFFFFF; --ink:#343A40; --strong:#0E2A5C; --muted:#69717A; --faint:#9AA1A8;
+  --line:#E9ECEF; --line-2:#DDE1E5; --field:#F8F9FA;
+  /* semântica */
+  --good:#23865B; --good-soft:rgba(35,134,91,.10); --good-band:rgba(35,134,91,.14); --good-band-2:rgba(35,134,91,.28);
+  --bad:#C94C4C;  --bad-soft:rgba(201,76,76,.10);
+  --warn:#E5B94B; --warn-ink:#8A6512; --warn-soft:rgba(229,185,75,.16);
+  /* marca e classes de ativos (não semânticas) */
+  --brand:#0E2A5C; --brand-ink:#FFFFFF; --stocks:#0E2A5C; --crypto:#8E9BB3;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111816; --surface:#18211e; --ink:#e4ece9; --muted:#93a39d; --line:#2b3733;
-  --accent:#4cbf9f; --stocks:#6c9be0; --crypto:#e3a33f; --danger:#e07272; --band1:rgba(76,191,159,.12); --band2:rgba(76,191,159,.25); color-scheme:dark}}
+  --bg:#111418; --card:#191D22; --ink:#E3E7EB; --strong:#F1F4F7; --muted:#9CA5AE; --faint:#6D7680;
+  --line:#262B31; --line-2:#323840; --field:#14181C;
+  --good:#3DBB83; --good-soft:rgba(61,187,131,.12); --good-band:rgba(61,187,131,.12); --good-band-2:rgba(61,187,131,.26);
+  --bad:#E57373; --bad-soft:rgba(229,115,115,.12);
+  --warn:#E5B94B; --warn-ink:#E5B94B; --warn-soft:rgba(229,185,75,.14);
+  --brand:#A9C1EA; --brand-ink:#0E1A2E; --stocks:#7FA2DC; --crypto:#5C6676;
+  --shadow:none; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#111816; --surface:#18211e; --ink:#e4ece9; --muted:#93a39d; --line:#2b3733;
-  --accent:#4cbf9f; --stocks:#6c9be0; --crypto:#e3a33f; --danger:#e07272; --band1:rgba(76,191,159,.12); --band2:rgba(76,191,159,.25); color-scheme:dark}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
-.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
-h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,3.4vw,38px);line-height:1.05;margin:0;text-wrap:balance;letter-spacing:-.01em}
-h1 span{color:var(--accent)}
-.lede{color:var(--muted);max-width:62ch;margin:6px 0 0}
-.presets{display:flex;flex-wrap:wrap;gap:6px}
-.presets button,.seg button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
-.presets button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:24px;align-items:start}
-@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
-aside{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:4px 18px 18px;display:flex;flex-direction:column}
-@media (min-width:901px){aside{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));max-height:calc(100vh - 32px);overflow:auto}}
-fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:14px 0 4px;display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
-fieldset:first-of-type{border-top:0}
-legend{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);padding:0;margin-bottom:2px;float:left;width:100%;grid-column:1/-1}
-.f{display:flex;flex-direction:column;gap:3px;min-width:0}
-.f.full{grid-column:1/-1}
-label{font-size:12.5px;color:var(--muted)}
-.inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;background:var(--bg);overflow:hidden}
-.inp input,.inp select{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:500 14px var(--f-mono);padding:7px 8px;font-variant-numeric:tabular-nums}
-.inp .u{font:12px var(--f-mono);color:var(--muted);padding-right:8px}
-.alloc{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
-.alloc input[type=range]{width:100%;accent-color:var(--crypto)}
-.allocbar{display:flex;height:8px;border-radius:4px;overflow:hidden}
-.allocbar i:first-child{background:var(--stocks)}.allocbar i:last-child{background:var(--crypto)}
-.alloclbl{display:flex;justify-content:space-between;font:12px var(--f-mono)}
-.alloclbl b:first-child{color:var(--stocks)}.alloclbl b:last-child{color:var(--crypto)}
-.chk{grid-column:1/-1;display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink)}
-.chk input{accent-color:var(--accent)}
-.hint{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
-main{display:flex;flex-direction:column;gap:20px;min-width:0}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.kpi{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.kpi .k{font:11px var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-.kpi .v{font:600 clamp(19px,2.2vw,25px) var(--f-display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.kpi .s{font-size:12px;color:var(--muted)}
-.kpi.hero .v{color:var(--accent)}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.ph{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
-h2{font-family:var(--f-display);font-weight:500;font-size:19px;margin:0}
-.seg{display:flex;gap:4px}
-.chartbox{position:relative;width:100%;height:340px}
-.chartbox canvas{width:100%;height:100%;display:block}
-.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font:12px/1.45 var(--f-mono);padding:8px 10px;border-radius:6px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.sw{width:18px;height:10px;border-radius:2px;display:inline-block}
-.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
-@media (max-width:760px){.cols{grid-template-columns:minmax(0,1fr)}}
-.probs{display:flex;flex-direction:column;gap:10px}
-.prob{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center}
-.prob .bar{grid-column:1/-1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden}
-.prob .bar i{display:block;height:100%;background:var(--accent)}
-.prob .bar.bad i{background:var(--danger)}
-.prob b{font:600 15px var(--f-mono);font-variant-numeric:tabular-nums}
-.tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
-th,td{padding:7px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
-th{font:11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:400}
-th:first-child,td:first-child{text-align:left}
-td{font-family:var(--f-mono)}
-td.med{color:var(--accent);font-weight:500}
-tr.tgt td{background:var(--band1)}
-.notes{font-size:12.5px;color:var(--muted);max-width:80ch;display:flex;flex-direction:column;gap:6px}
-.notes p{margin:0}
+  --bg:#111418; --card:#191D22; --ink:#E3E7EB; --strong:#F1F4F7; --muted:#9CA5AE; --faint:#6D7680;
+  --line:#262B31; --line-2:#323840; --field:#14181C;
+  --good:#3DBB83; --good-soft:rgba(61,187,131,.12); --good-band:rgba(61,187,131,.12); --good-band-2:rgba(61,187,131,.26);
+  --bad:#E57373; --bad-soft:rgba(229,115,115,.12);
+  --warn:#E5B94B; --warn-ink:#E5B94B; --warn-soft:rgba(229,185,75,.14);
+  --brand:#A9C1EA; --brand-ink:#0E1A2E; --stocks:#7FA2DC; --crypto:#5C6676;
+  --shadow:none; color-scheme:dark}
 
-body{margin:0}
-a{color:var(--accent)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--font);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+.gutter{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.shell{max-width:1320px;margin:0 auto}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- barra superior ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--card)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.topbar .shell{display:flex;align-items:center;gap:16px 24px;min-height:64px;flex-wrap:wrap;padding-block:8px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;min-width:0}
+.brand img{height:34px;width:auto;display:block}
+.logo-dark{display:none!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-light{display:none!important}:root:not([data-theme="light"]) .logo-dark{display:block!important}}
+:root[data-theme="dark"] .logo-light{display:none!important}:root[data-theme="dark"] .logo-dark{display:block!important}
+.brand .sep{width:1px;height:28px;background:var(--line-2)}
+.brand .tt{display:flex;flex-direction:column;line-height:1.2}
+.brand .tt b{font-weight:600;color:var(--strong);font-size:15px}
+.brand .tt span{font-size:12px;color:var(--muted)}
+nav.sections{display:flex;gap:2px;margin-left:auto;overflow-x:auto}
+nav.sections a{color:var(--muted);text-decoration:none;font-weight:500;padding:8px 12px;border-radius:6px;white-space:nowrap}
+nav.sections a:hover{color:var(--strong);background:var(--field)}
+@media (max-width:760px){.brand .sep,.brand .tt{display:none}nav.sections{margin-left:0;width:100%}}
+
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;align-items:start;padding-block:24px 56px}
+@media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);min-width:0}
+
+/* ---------- parâmetros ---------- */
+aside.params{padding:6px 0}
+@media (min-width:981px){aside.params{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));max-height:calc(100vh - 96px);overflow:auto}}
+.params-head{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 8px}
+.params-head h2{margin:0;font-size:13px;font-weight:600;color:var(--strong)}
+.linkbtn{background:none;border:0;color:var(--muted);font-size:12.5px;cursor:pointer;padding:4px 6px;border-radius:4px}
+.linkbtn:hover{color:var(--strong);text-decoration:underline}
+.presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0 18px 8px;padding:3px;background:var(--field);border:1px solid var(--line);border-radius:8px}
+.presets button{border:0;background:transparent;padding:6px 2px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--muted);cursor:pointer}
+.presets button:hover{color:var(--strong)}
+.presets button[aria-pressed="true"]{background:var(--card);color:var(--strong);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+details.group{border-top:1px solid var(--line)}
+details.group summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+details.group summary::-webkit-details-marker{display:none}
+details.group summary::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .15s}
+details.group[open] summary::after{transform:rotate(-135deg) translateY(-2px)}
+details.group summary:hover{color:var(--strong)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 12px;padding:0 18px 16px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f.full{grid-column:1/-1}
+.f label{font-size:12.5px;color:var(--muted);font-weight:500}
+.inp{display:flex;align-items:center;height:36px;border:1px solid var(--line-2);border-radius:7px;background:var(--field);transition:border-color .15s}
+.inp:focus-within{border-color:var(--brand)}
+.inp input,.inp select{flex:1;min-width:0;height:100%;border:0;background:transparent;padding:0 10px;font-weight:600;font-size:14px;color:var(--strong);outline:none}
+.inp .u{font-size:12px;color:var(--faint);padding-right:10px;white-space:nowrap}
+.f.err .inp{border-color:var(--bad)}
+.f .msg{font-size:11.5px;color:var(--bad)}
+.alloc{grid-column:1/-1;display:flex;flex-direction:column;gap:8px}
+.alloc input[type=range]{width:100%;accent-color:var(--brand);margin:0}
+.allocbar{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--line)}
+.allocbar i{display:block;height:100%}
+.allocbar i:first-child{background:var(--stocks)}.allocbar i:last-child{background:var(--crypto)}
+.alloclbl{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600}
+.alloclbl span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:2px;display:inline-block}
+.chk{grid-column:1/-1;display:flex;gap:9px;align-items:center;font-size:13px;cursor:pointer}
+.chk input{accent-color:var(--brand);width:16px;height:16px;margin:0}
+.hint{grid-column:1/-1;font-size:12px;color:var(--muted);margin:0}
+
+/* ---------- análise ---------- */
+main{display:flex;flex-direction:column;gap:20px;min-width:0}
+.status{display:flex;align-items:center;gap:14px;padding:14px 18px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:4px 10px 4px 8px;border-radius:999px;white-space:nowrap}
+.pill svg{width:14px;height:14px;flex:none}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn-ink)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.status p{margin:0;flex:1;min-width:240px;color:var(--ink)}
+.status p b{color:var(--strong)}
+.status .scen{font-size:12.5px;color:var(--muted);white-space:nowrap}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1180px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:359px){.kpis{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:460px){.kpi{padding:14px}.kpi .v{font-size:20px}}
+#kRange{font-size:clamp(19px,1.7vw,23px);white-space:nowrap}
+.kpi{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.kpi .k{font-size:12.5px;font-weight:500;color:var(--muted)}
+.kpi .v{font-size:clamp(22px,2.1vw,28px);font-weight:700;color:var(--strong);letter-spacing:-.01em;line-height:1.15;overflow-wrap:anywhere}
+.kpi .d{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-weight:600;padding:1px 6px;border-radius:4px}
+.delta.good{color:var(--good);background:var(--good-soft)}
+.delta.bad{color:var(--bad);background:var(--bad-soft)}
+.delta.warn{color:var(--warn-ink);background:var(--warn-soft)}
+.delta.neutral{color:var(--muted);background:var(--field)}
+
+.panel{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.ph{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:10px 16px}
+.ph h2{margin:0;font-size:16px;font-weight:600;color:var(--strong);text-wrap:balance}
+.ph .sub{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.seg{display:inline-flex;padding:3px;background:var(--field);border:1px solid var(--line);border-radius:8px;gap:2px}
+.seg button{border:0;background:transparent;padding:5px 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--strong);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.chartbox{position:relative;width:100%;height:360px}
+@media (max-width:600px){.chartbox{height:280px}}
+.chartbox canvas{width:100%;height:100%;display:block;touch-action:pan-y}
+.tip{position:absolute;pointer-events:none;background:var(--card);color:var(--ink);border:1px solid var(--line-2);box-shadow:0 4px 14px rgba(0,0,0,.12);font-size:12.5px;line-height:1.55;padding:9px 11px;border-radius:8px;white-space:nowrap;z-index:2}
+.tip b{color:var(--strong)}
+.tip .row{display:flex;justify-content:space-between;gap:16px}
+.tip .row span:first-child{color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:16px;height:10px;border-radius:2px;display:inline-block}
+.sw.line{height:0;border-top-width:2px;border-top-style:solid;border-radius:0}
+
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}}
+.probs{display:flex;flex-direction:column;gap:14px}
+.prob{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center}
+.prob .t{font-size:13.5px}
+.prob .t small{display:block;font-size:12px;color:var(--muted)}
+.prob .val{display:flex;align-items:center;gap:8px}
+.prob .val b{font-size:16px;font-weight:700;color:var(--strong);min-width:42px;text-align:right}
+.prob .bar{grid-column:1/-1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.prob .bar i{display:block;height:100%;border-radius:3px}
+.prob.good .bar i{background:var(--good)}.prob.warn .bar i{background:var(--warn)}.prob.bad .bar i{background:var(--bad)}
+
+.tablewrap{overflow-x:auto;margin:0 -20px;padding:0 20px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap}
+thead th{font-size:12px;font-weight:600;color:var(--muted);border-bottom:1px solid var(--line-2);position:sticky;top:0;background:var(--card)}
+tbody td{border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--field)}
+th:first-child,td:first-child{text-align:left;padding-left:0}
+td:first-child{font-weight:600;color:var(--strong)}
+td.med{font-weight:700;color:var(--strong)}
+td.neg{color:var(--bad)}
+td .ar{font-size:10px;margin-right:4px}
+tr.tgt td{background:var(--good-soft)}
+tr.tgt td:first-child::after{content:"alvo";margin-left:8px;font-size:10.5px;font-weight:600;color:var(--good);border:1px solid currentColor;border-radius:4px;padding:0 4px}
+
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 24px;font-size:12.5px;color:var(--muted)}
+.notes p{margin:0}
+.notes b{color:var(--ink);font-weight:600}
+.notes a{color:var(--brand)}
+footer{font-size:12px;color:var(--faint);padding-top:4px}
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <header>
-    <div>
-      <h1>Simulador de <span>juros compostos</span></h1>
-      <p class="lede">Ações e cripto com aportes periódicos, inflação e choques externos. 2000 cenários simulados mês a mês para mostrar o intervalo provável, não só um número.</p>
-    </div>
-    <div class="presets" role="group" aria-label="Cenários">
-      <button data-p="base" aria-pressed="true">Base</button>
-      <button data-p="pess" aria-pressed="false">Pessimista</button>
-      <button data-p="otim" aria-pressed="false">Otimista</button>
-      <button data-p="estag" aria-pressed="false">Estagflação</button>
-    </div>
-  </header>
+<header class="topbar gutter">
+  <div class="shell">
+    <a class="brand" href="#resumo" aria-label="CJR, Calculador de Juros Compostos">
+      <img class="logo-light" src="img/cjr-marca.png" alt="CJR" width="94" height="34">
+      <img class="logo-dark" src="img/cjr-marca-escuro.png" alt="CJR" width="94" height="34">
+      <span class="sep" aria-hidden="true"></span>
+      <span class="tt"><b>Calculador de Juros Compostos</b><span>Simulação Monte Carlo · 2000 cenários</span></span>
+    </a>
+    <nav class="sections" aria-label="Secções">
+      <a href="#resumo">Resumo</a><a href="#evolucao">Evolução</a><a href="#risco">Risco</a><a href="#detalhe">Ano a ano</a>
+    </nav>
+  </div>
+</header>
 
-  <div class="grid">
-    <aside>
-      <fieldset>
-        <legend>Plano</legend>
-        <div class="f"><label for="initial">Capital inicial</label><div class="inp"><input id="initial" type="number" min="0" step="100" value="2000"><span class="u">€</span></div></div>
-        <div class="f"><label for="target">Ano alvo</label><div class="inp"><input id="target" type="number" min="2027" max="2086" step="1" value="2046"></div></div>
-        <div class="f"><label for="amount">Aporte</label><div class="inp"><input id="amount" type="number" min="0" step="10" value="200"><span class="u">€</span></div></div>
+<div class="gutter"><div class="shell layout">
+
+  <aside class="card params" aria-label="Parâmetros">
+    <div class="params-head"><h2>Parâmetros</h2><button class="linkbtn" id="reset" type="button">Repor valores</button></div>
+    <div class="presets" role="group" aria-label="Cenário de mercado">
+      <button type="button" data-p="base" aria-pressed="true">Base</button>
+      <button type="button" data-p="pess" aria-pressed="false">Pessim.</button>
+      <button type="button" data-p="otim" aria-pressed="false">Otim.</button>
+      <button type="button" data-p="estag" aria-pressed="false" title="Estagflação">Estagf.</button>
+    </div>
+
+    <details class="group" open>
+      <summary>Plano de investimento</summary>
+      <div class="fields">
+        <div class="f"><label for="initial">Capital inicial</label><div class="inp"><input id="initial" type="number" min="0" step="100" value="2000" inputmode="decimal"><span class="u">€</span></div></div>
+        <div class="f" id="f-target"><label for="target">Ano alvo</label><div class="inp"><input id="target" type="number" min="2027" max="2086" step="1" value="2046" inputmode="numeric"></div><span class="msg" id="targetMsg" hidden></span></div>
+        <div class="f"><label for="amount">Aporte</label><div class="inp"><input id="amount" type="number" min="0" step="10" value="200" inputmode="decimal"><span class="u">€</span></div></div>
         <div class="f"><label for="freq">Frequência</label><div class="inp"><select id="freq"><option value="w">Semanal</option><option value="m" selected>Mensal</option><option value="y">Anual</option></select></div></div>
-        <div class="f"><label for="growth">Aumento anual do aporte</label><div class="inp"><input id="growth" type="number" step="0.5" value="2"><span class="u">%</span></div></div>
-        <div class="f"><label for="goal">Objetivo (€ de hoje)</label><div class="inp"><input id="goal" type="number" min="0" step="1000" value="100000"><span class="u">€</span></div></div>
+        <div class="f"><label for="growth">Aumento do aporte</label><div class="inp"><input id="growth" type="number" step="0.5" value="2" inputmode="decimal"><span class="u">%/ano</span></div></div>
+        <div class="f"><label for="goal">Objetivo</label><div class="inp"><input id="goal" type="number" min="0" step="1000" value="100000" inputmode="decimal"><span class="u">€ hoje</span></div></div>
         <div class="alloc">
-          <label for="wc">Alocação</label>
+          <label for="wc" style="font-size:12.5px;color:var(--muted);font-weight:500">Alocação da carteira</label>
           <input id="wc" type="range" min="0" max="100" step="5" value="20" aria-label="Percentagem em cripto">
-          <div class="allocbar"><i id="barS"></i><i id="barC"></i></div>
-          <div class="alloclbl"><b id="lblS">Ações 80%</b><b id="lblC">Cripto 20%</b></div>
+          <div class="allocbar" aria-hidden="true"><i id="barS"></i><i id="barC"></i></div>
+          <div class="alloclbl"><span><i class="dot" style="background:var(--stocks)"></i><span id="lblS">Ações 80%</span></span><span><span id="lblC">Cripto 20%</span><i class="dot" style="background:var(--crypto)"></i></span></div>
         </div>
         <label class="chk"><input id="rebal" type="checkbox" checked> Rebalancear uma vez por ano</label>
-      </fieldset>
+      </div>
+    </details>
 
-      <fieldset>
-        <legend>Mercados (anual)</legend>
-        <div class="f"><label for="rs">Retorno ações</label><div class="inp"><input id="rs" type="number" step="0.5" value="7"><span class="u">%</span></div></div>
+    <details class="group" open>
+      <summary>Mercados</summary>
+      <div class="fields">
+        <div class="f"><label for="rs">Retorno ações</label><div class="inp"><input id="rs" type="number" step="0.5" value="7"><span class="u">%/ano</span></div></div>
         <div class="f"><label for="vs">Volatilidade ações</label><div class="inp"><input id="vs" type="number" step="1" min="0" value="16"><span class="u">%</span></div></div>
-        <div class="f"><label for="rc">Retorno cripto</label><div class="inp"><input id="rc" type="number" step="1" value="15"><span class="u">%</span></div></div>
+        <div class="f"><label for="rc">Retorno cripto</label><div class="inp"><input id="rc" type="number" step="1" value="15"><span class="u">%/ano</span></div></div>
         <div class="f"><label for="vc">Volatilidade cripto</label><div class="inp"><input id="vc" type="number" step="1" min="0" value="65"><span class="u">%</span></div></div>
-        <div class="f"><label for="rho">Correlação</label><div class="inp"><input id="rho" type="number" step="0.05" min="-1" max="1" value="0.35"></div></div>
-        <div class="f"><label for="fee">Custos (TER)</label><div class="inp"><input id="fee" type="number" step="0.05" min="0" value="0.25"><span class="u">%</span></div></div>
-      </fieldset>
+        <div class="f"><label for="rho">Correlação</label><div class="inp"><input id="rho" type="number" step="0.05" min="-1" max="1" value="0.35"><span class="u">−1 a 1</span></div></div>
+        <div class="f"><label for="fee">Custos (TER)</label><div class="inp"><input id="fee" type="number" step="0.05" min="0" value="0.25"><span class="u">%/ano</span></div></div>
+      </div>
+    </details>
 
-      <fieldset>
-        <legend>Inflação</legend>
+    <details class="group">
+      <summary>Inflação</summary>
+      <div class="fields">
         <div class="f"><label for="inf">Média anual</label><div class="inp"><input id="inf" type="number" step="0.1" value="2.2"><span class="u">%</span></div></div>
-        <div class="f"><label for="infv">Variação</label><div class="inp"><input id="infv" type="number" step="0.1" min="0" value="1"><span class="u">±%</span></div></div>
+        <div class="f"><label for="infv">Variação</label><div class="inp"><input id="infv" type="number" step="0.1" min="0" value="1"><span class="u">± p.p.</span></div></div>
         <label class="chk"><input id="index" type="checkbox"> Indexar aportes à inflação</label>
-      </fieldset>
+      </div>
+    </details>
 
-      <fieldset>
-        <legend>Fatores exógenos</legend>
+    <details class="group">
+      <summary>Fatores exógenos</summary>
+      <div class="fields">
         <div class="f"><label for="cp">Crise de mercado</label><div class="inp"><input id="cp" type="number" step="1" min="0" max="100" value="6"><span class="u">%/ano</span></div></div>
         <div class="f"><label for="cds">Queda ações</label><div class="inp"><input id="cds" type="number" step="1" min="0" max="95" value="25"><span class="u">%</span></div></div>
-        <div class="f"><label for="cdc">Queda cripto</label><div class="inp"><input id="cdc" type="number" step="1" min="0" max="95" value="50"><span class="u">%</span></div></div>
+        <div class="f full"><label for="cdc">Queda cripto numa crise</label><div class="inp"><input id="cdc" type="number" step="1" min="0" max="95" value="50"><span class="u">%</span></div></div>
         <div class="f"><label for="rp">Regulação cripto</label><div class="inp"><input id="rp" type="number" step="1" min="0" max="100" value="3"><span class="u">%/ano</span></div></div>
         <div class="f"><label for="rd">Queda por regulação</label><div class="inp"><input id="rd" type="number" step="1" min="0" max="95" value="40"><span class="u">%</span></div></div>
         <div class="f"><label for="ip">Choque de inflação</label><div class="inp"><input id="ip" type="number" step="1" min="0" max="100" value="5"><span class="u">%/ano</span></div></div>
         <div class="f"><label for="is">Inflação extra</label><div class="inp"><input id="is" type="number" step="0.5" min="0" value="5"><span class="u">p.p.</span></div></div>
-        <div class="f"><label for="pp">Pausa nos aportes</label><div class="inp"><input id="pp" type="number" step="1" min="0" max="100" value="5"><span class="u">%/ano</span></div></div>
-        <p class="hint">Probabilidades anuais de eventos que se somam à volatilidade normal. A pausa simula 6 meses sem aportes (desemprego, emergência).</p>
-      </fieldset>
-    </aside>
+        <div class="f full"><label for="pp">Pausa de 6 meses nos aportes</label><div class="inp"><input id="pp" type="number" step="1" min="0" max="100" value="5"><span class="u">%/ano</span></div></div>
+        <p class="hint">Probabilidades anuais de eventos que se somam à volatilidade normal dos mercados. A pausa simula desemprego ou uma emergência.</p>
+      </div>
+    </details>
+  </aside>
 
-    <main>
-      <section class="kpis" aria-live="polite">
-        <div class="kpi hero"><span class="k" id="kYear">Mediana em 2046</span><span class="v" id="kMed">–</span><span class="s" id="kMedR">–</span></div>
-        <div class="kpi"><span class="k">Total investido</span><span class="v" id="kCon">–</span><span class="s" id="kMult">–</span></div>
-        <div class="kpi"><span class="k">Intervalo 80%</span><span class="v" id="kRange">–</span><span class="s">10.º a 90.º percentil</span></div>
-        <div class="kpi"><span class="k">Juros simples (calculadora clássica)</span><span class="v" id="kDet">–</span><span class="s">sem volatilidade nem choques</span></div>
-      </section>
+  <main>
+    <section class="card status" id="resumo" aria-live="polite">
+      <span class="pill" id="statusPill"></span>
+      <p id="statusText"></p>
+      <span class="scen" id="scenLbl"></span>
+    </section>
 
-      <section class="panel">
-        <div class="ph">
-          <h2>Evolução do património</h2>
-          <div class="seg" role="group" aria-label="Unidade">
-            <button data-u="nom" aria-pressed="true">Nominal</button>
-            <button data-u="real" aria-pressed="false">€ de hoje</button>
-          </div>
+    <section class="kpis" aria-label="Indicadores principais">
+      <div class="card kpi"><span class="k" id="kMedLbl">Valor mediano</span><span class="v" id="kMed">–</span><span class="d" id="kMedD"></span></div>
+      <div class="card kpi"><span class="k">Em poder de compra de hoje</span><span class="v" id="kReal">–</span><span class="d" id="kRealD"></span></div>
+      <div class="card kpi"><span class="k">Total investido</span><span class="v" id="kCon">–</span><span class="d" id="kConD"></span></div>
+      <div class="card kpi"><span class="k">Intervalo provável (80%)</span><span class="v" id="kRange">–</span><span class="d" id="kRangeD"></span></div>
+    </section>
+
+    <section class="card panel" id="evolucao">
+      <div class="ph">
+        <div><h2>Evolução do património</h2><p class="sub" id="evoSub"></p></div>
+        <div class="seg" role="group" aria-label="Unidade dos valores">
+          <button type="button" data-u="nom" aria-pressed="true">Nominal</button>
+          <button type="button" data-u="real" aria-pressed="false">€ de hoje</button>
         </div>
-        <div class="chartbox" id="cbox"><canvas id="chart" aria-label="Gráfico em leque do património projetado"></canvas><div class="tip" id="tip" hidden></div></div>
+      </div>
+      <div class="chartbox" id="cbox"><canvas id="chart" role="img" aria-label="Gráfico em leque do património projetado por ano"></canvas><div class="tip" id="tip" hidden></div></div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--good-band)"></i>10–90% dos cenários</span>
+        <span><i class="sw" style="background:var(--good-band-2)"></i>25–75%</span>
+        <span><i class="sw line" style="border-color:var(--good)"></i>Mediana</span>
+        <span><i class="sw line" style="border-color:var(--faint);border-top-style:dashed"></i>Total investido</span>
+        <span><i class="sw line" style="border-color:var(--brand);border-top-style:dotted"></i>Calculadora clássica</span>
+        <span id="goalLeg" hidden><i class="sw line" style="border-color:var(--warn);border-top-style:dashed"></i>Objetivo</span>
+      </div>
+    </section>
+
+    <div class="cols" id="risco">
+      <section class="card panel">
+        <div class="ph"><div><h2>Probabilidades</h2><p class="sub" id="probSub"></p></div></div>
+        <div class="probs" id="probs"></div>
+      </section>
+      <section class="card panel">
+        <div class="ph"><div><h2>Distribuição do valor final</h2><p class="sub" id="histSub"></p></div></div>
+        <div class="chartbox" id="hbox" style="height:220px"><canvas id="hist" role="img" aria-label="Histograma do valor final em euros de hoje"></canvas><div class="tip" id="htip" hidden></div></div>
         <div class="legend">
-          <span><i class="sw" style="background:var(--band1)"></i>10–90%</span>
-          <span><i class="sw" style="background:var(--band2)"></i>25–75%</span>
-          <span><i class="sw" style="background:var(--accent);height:3px"></i>Mediana</span>
-          <span><i class="sw" style="border-top:2px dashed var(--muted);height:0"></i>Total investido</span>
-          <span><i class="sw" style="border-top:2px dotted var(--crypto);height:0"></i>Juros compostos simples</span>
+          <span><i class="sw" style="background:var(--bad)"></i>Abaixo do investido</span>
+          <span><i class="sw" style="background:var(--warn)"></i>Acima do investido, abaixo do objetivo</span>
+          <span><i class="sw" style="background:var(--good)"></i>Objetivo atingido</span>
         </div>
       </section>
+    </div>
 
-      <div class="cols">
-        <section class="panel">
-          <h2>Probabilidades no ano alvo</h2>
-          <div class="probs" id="probs"></div>
-        </section>
-        <section class="panel">
-          <h2>Distribuição final</h2>
-          <div class="chartbox" style="height:200px"><canvas id="hist" aria-label="Histograma do valor final"></canvas></div>
-          <p class="hint" id="histNote" style="margin:0"></p>
-        </section>
+    <section class="card panel" id="detalhe">
+      <div class="ph">
+        <div><h2>Ano a ano</h2><p class="sub" id="tblUnit"></p></div>
+        <div class="seg" role="group" aria-label="Linhas da tabela">
+          <button type="button" data-r="marcos" aria-pressed="true">Marcos</button>
+          <button type="button" data-r="todos" aria-pressed="false">Todos os anos</button>
+        </div>
       </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th scope="col">Ano</th><th scope="col">Investido</th><th scope="col">Pessimista (p10)</th><th scope="col">Mediana</th><th scope="col">Otimista (p90)</th><th scope="col">Mediana / investido</th><th scope="col" id="thAlt">Mediana em € de hoje</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+    </section>
 
-      <section class="panel">
-        <div class="ph"><h2>Ano a ano</h2><span class="hint" style="margin:0" id="tblUnit">valores nominais</span></div>
-        <div class="tablewrap"><table><thead><tr><th>Ano</th><th>Investido</th><th>Pessimista (p10)</th><th>Mediana</th><th>Otimista (p90)</th><th>Mediana € hoje</th></tr></thead><tbody id="tbody"></tbody></table></div>
-      </section>
-
-      <div class="notes">
-        <p>Modelo: retornos log-normais mensais com correlação entre ações e cripto; o "retorno" introduzido é o crescimento anual mediano antes de crises. Aportes semanais entram como 52/12 por mês. A inflação é sorteada ano a ano e os valores em "€ de hoje" descontam-na. Os resultados são de um gerador com semente fixa, por isso o mesmo plano dá sempre os mesmos números.</p>
-        <p>Código, modelo em Python e testes: <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/simulador-juros-compostos">repositório no GitHub</a>. © 2026 João Garção.</p>
-        <p>Impostos não estão incluídos. Em Portugal, as mais-valias de ações pagam 28% (ou englobamento), e as de cripto detidas mais de 365 dias estão isentas. Isto é uma ferramenta de simulação, não aconselhamento financeiro.</p>
-      </div>
-    </main>
-  </div>
-</div>
+    <section class="notes">
+      <p><b>Modelo.</b> Retornos log-normais mensais e correlacionados para ações e cripto; o retorno indicado é o crescimento anual mediano antes de crises. Aportes semanais entram como 52/12 por mês. A inflação é sorteada ano a ano. A semente é fixa: o mesmo plano dá sempre os mesmos números.</p>
+      <p><b>Impostos não incluídos.</b> Em Portugal, as mais-valias de ações pagam 28% (ou englobamento) e as de cripto detidas mais de 365 dias estão isentas. Ferramenta de simulação, não é aconselhamento financeiro.</p>
+      <p><b>Código.</b> Modelo em Python, testes e documentação no <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/simulador-juros-compostos">repositório do GitHub</a>.</p>
+    </section>
+    <footer>© 2026 João Garção · CJR — Calculador de Juros Compostos</footer>
+  </main>
+</div></div>
 
 <script>
+/* =====================================================================
+   1. MODELO (inalterado — ver simulador/modelo.py para a versão Python)
+   ===================================================================== */
 const START=2026, N=2000;
 const $=id=>document.getElementById(id);
+const DEFAULTS={initial:2000,target:2046,amount:200,freq:'m',growth:2,goal:100000,wc:20,rebal:true,index:false};
 const PRESETS={
   base:{rs:7,vs:16,rc:15,vc:65,rho:.35,inf:2.2,infv:1,cp:6,cds:25,cdc:50,rp:3,rd:40,ip:5,is:5,pp:5},
   pess:{rs:4.5,vs:18,rc:5,vc:75,rho:.5,inf:3,infv:1.5,cp:10,cds:35,cdc:65,rp:6,rd:50,ip:8,is:6,pp:8},
   otim:{rs:9,vs:15,rc:25,vc:60,rho:.3,inf:2,infv:.7,cp:4,cds:20,cdc:40,rp:1,rd:30,ip:3,is:4,pp:3},
   estag:{rs:3,vs:19,rc:4,vc:70,rho:.45,inf:5,infv:2,cp:9,cds:30,cdc:55,rp:4,rd:40,ip:15,is:7,pp:10}
 };
-let unit='nom', R=null;
+const PRESET_NAMES={base:'Base',pess:'Pessimista',otim:'Otimista',estag:'Estagflação'};
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function params(){
   const n=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:0};
-  const target=Math.min(2086,Math.max(START+1,Math.round(n('target'))));
-  return {initial:Math.max(0,n('initial')),target,amount:Math.max(0,n('amount')),freq:$('freq').value,growth:n('growth')/100,goal:n('goal'),
+  const raw=Math.round(n('target'));
+  const target=Math.min(2086,Math.max(START+1,raw));
+  return {initial:Math.max(0,n('initial')),target,targetRaw:raw,amount:Math.max(0,n('amount')),freq:$('freq').value,growth:n('growth')/100,goal:Math.max(0,n('goal')),
     wc:n('wc')/100,rebal:$('rebal').checked,rs:n('rs')/100,vs:Math.max(0,n('vs'))/100,rc:n('rc')/100,vc:Math.max(0,n('vc'))/100,
-    rho:Math.max(-1,Math.min(1,n('rho'))),fee:n('fee')/100,inf:n('inf')/100,infv:n('infv')/100,index:$('index').checked,
-    cp:n('cp')/100,cds:n('cds')/100,cdc:n('cdc')/100,rp:n('rp')/100,rd:n('rd')/100,ip:n('ip')/100,is:n('is')/100,pp:n('pp')/100};
+    rho:Math.max(-1,Math.min(1,n('rho'))),fee:n('fee')/100,inf:n('inf')/100,infv:Math.max(0,n('infv'))/100,index:$('index').checked,
+    cp:clamp01(n('cp')/100),cds:clamp01(n('cds')/100),cdc:clamp01(n('cdc')/100),rp:clamp01(n('rp')/100),rd:clamp01(n('rd')/100),ip:clamp01(n('ip')/100),is:n('is')/100,pp:clamp01(n('pp')/100)};
 }
+function clamp01(v){return Math.max(0,Math.min(1,v))}
 function monthlyContrib(p,base,m){
   if(p.freq==='w')return base*52/12;
   if(p.freq==='m')return base;
@@ -282,94 +424,181 @@ function simulate(p){
   return {p,Y,nom:stats(nom),real:stats(real),contrib,det,defl,finalNom:Float64Array.from(nom[Y]).sort(),finalReal:Float64Array.from(real[Y]).sort(),crisisHits};
 }
 
+/* =====================================================================
+   2. FORMATAÇÃO E UTILITÁRIOS
+   ===================================================================== */
 const eur=new Intl.NumberFormat('pt-PT',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+const pctFmt=new Intl.NumberFormat('pt-PT',{style:'percent',maximumFractionDigits:0});
+const signedPct=v=>(v>0?'+':v<0?'−':'')+pctFmt.format(Math.abs(v));
 function short(v){const a=Math.abs(v);if(a>=1e6)return(v/1e6).toLocaleString('pt-PT',{maximumFractionDigits:a>=1e7?0:1})+' M€';if(a>=1e3)return(v/1e3).toLocaleString('pt-PT',{maximumFractionDigits:0})+' k€';return Math.round(v)+' €'}
+const ratio=(a,b)=>b>0?a/b:null;
 function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+const ICON={
+  up:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3l5 6H9.5v4h-3V9H3z" fill="currentColor"/></svg>',
+  down:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13L3 7h3.5V3h3v4H13z" fill="currentColor"/></svg>',
+  ok:'<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".18"/><path d="M4.8 8.3l2.1 2.1 4.3-4.6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  warn:'<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l6.6 11.7H1.4z" fill="currentColor" opacity=".2"/><path d="M8 6v3.6M8 11.6v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  bad:'<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="currentColor" opacity=".18"/><path d="M5.6 5.6l4.8 4.8M10.4 5.6l-4.8 4.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+};
+function delta(kind,text,arrow){const ic=arrow==='up'?ICON.up:arrow==='down'?ICON.down:'';return `<span class="delta ${kind}">${ic?`<span style="width:10px;height:10px;display:inline-flex">${ic}</span>`:''}${text}</span>`}
+/* Classificação semântica de uma probabilidade "boa" (quanto maior, melhor) */
+const level=p=>p>=.7?'good':p>=.4?'warn':'bad';
+const LEVEL_TXT={good:'Provável',warn:'Incerto',bad:'Improvável'};
 
-function render(){
-  const {p,Y}=R, S=unit==='nom'?R.nom:R.real, fin=S[Y];
-  const conU=y=>unit==='nom'?R.contrib[y]:R.contrib[y]/R.defl[y];
-  $('kYear').textContent='Mediana em '+p.target;
-  $('kMed').textContent=eur.format(R.nom[Y].p50);
-  $('kMedR').textContent='≈ '+eur.format(R.real[Y].p50)+' em poder de compra de hoje';
-  $('kCon').textContent=eur.format(R.contrib[Y]);
-  $('kMult').textContent='mediana = '+(R.nom[Y].p50/Math.max(1,R.contrib[Y])).toLocaleString('pt-PT',{maximumFractionDigits:1})+'× o investido';
-  $('kRange').textContent=short(fin.p10)+' – '+short(fin.p90);
-  $('kDet').textContent=eur.format(unit==='nom'?R.det[Y]:R.det[Y]/R.defl[Y]);
-  $('tblUnit').textContent=unit==='nom'?'valores nominais':'valores em € de hoje (exceto última coluna)';
-  // probabilidades
-  const fr=R.finalReal, fn=R.finalNom, cnt=(arr,f)=>{let k=0;for(const x of arr)if(f(x))k++;return k/arr.length};
-  const con=R.contrib[Y], conReal=con/R.defl[Y];
-  const hits=Array.from(R.crisisHits).filter(x=>x>0).length/N;
-  const probs=[
-    ['Atingir o objetivo de '+short(p.goal)+' (€ de hoje)',cnt(fr,x=>x>=p.goal),false],
-    ['Acabar com mais do que investiu (nominal)',cnt(fn,x=>x>=con),false],
-    ['Bater a inflação face ao investido',cnt(fr,x=>x>=conReal),false],
-    ['Passar por pelo menos uma crise de mercado',hits,true]
+/* =====================================================================
+   3. ESTADO E RENDERIZAÇÃO
+   ===================================================================== */
+let unit='nom', rowsMode='marcos', R=null, preset='base';
+
+function renderStatus(){
+  const {p,Y}=R, pGoal=frac(R.finalReal,x=>x>=p.goal), lv=level(pGoal);
+  const pill=$('statusPill');pill.className='pill '+lv;pill.innerHTML=ICON[lv==='good'?'ok':lv==='warn'?'warn':'bad']+LEVEL_TXT[lv];
+  $('statusText').innerHTML=`Em <b>${pctFmt.format(pGoal)}</b> dos cenários chega a <b>${eur.format(p.goal)}</b> em poder de compra de hoje até <b>${p.target}</b>. Valor mediano: <b>${eur.format(R.real[Y].p50)}</b> (€ de hoje).`;
+  $('scenLbl').textContent=preset?'Cenário '+PRESET_NAMES[preset]:'Cenário personalizado';
+}
+function renderKpis(){
+  const {p,Y}=R, n=R.nom[Y], con=R.contrib[Y], realMed=R.real[Y].p50;
+  $('kMedLbl').textContent='Valor mediano em '+p.target;
+  $('kMed').textContent=eur.format(n.p50);
+  const g=ratio(n.p50-con,con);
+  $('kMedD').innerHTML=g===null?'<span>sem valores investidos</span>':delta(g>=0?'good':'bad',signedPct(g),g>=0?'up':'down')+'<span>face ao investido</span>';
+  $('kReal').textContent=eur.format(realMed);
+  const ero=ratio(realMed-n.p50,n.p50);
+  $('kRealD').innerHTML=ero===null?'<span>—</span>':delta(ero<0?'warn':'neutral',signedPct(ero),ero<0?'down':'')+'<span>efeito da inflação</span>';
+  $('kCon').textContent=eur.format(con);
+  const juros=n.p50-con;
+  $('kConD').innerHTML=con>0?`<span>Juros na mediana: <b style="color:${juros>=0?'var(--good)':'var(--bad)'}">${juros>=0?'+':'−'}${eur.format(Math.abs(juros))}</b></span>`:'<span>—</span>';
+  $('kRange').textContent=short(n.p10)+' – '+short(n.p90);
+  const below=n.p10<con;
+  $('kRangeD').innerHTML=delta(below?'bad':'good',below?'p10 abaixo do investido':'p10 acima do investido',below?'down':'up');
+}
+function frac(arr,f){if(!arr.length)return 0;let k=0;for(const x of arr)if(f(x))k++;return k/arr.length}
+function renderProbs(){
+  const {p,Y}=R, con=R.contrib[Y], conReal=con/R.defl[Y];
+  const pGoal=frac(R.finalReal,x=>x>=p.goal), pGain=frac(R.finalNom,x=>x>=con), pInfl=frac(R.finalReal,x=>x>=conReal);
+  const pCrisis=Array.from(R.crisisHits).filter(x=>x>0).length/N;
+  const rows=[
+    {t:'Atingir o objetivo',s:`${eur.format(p.goal)} em € de hoje`,v:pGoal,lv:level(pGoal)},
+    {t:'Terminar com mais do que investiu',s:'valor nominal ≥ total investido',v:pGain,lv:level(pGain)},
+    {t:'Bater a inflação',s:'poder de compra ≥ ao investido',v:pInfl,lv:level(pInfl)},
+    {t:'Passar por pelo menos uma crise',s:'risco a acompanhar, não um resultado',v:pCrisis,lv:'warn',risk:true}
   ];
-  $('probs').innerHTML=probs.map(([t,v,bad])=>`<div class="prob"><span>${t}</span><b>${Math.round(v*100)}%</b><div class="bar${bad?' bad':''}"><i style="width:${(v*100).toFixed(1)}%"></i></div></div>`).join('');
-  // tabela
-  const step=Y>30?5:Y>12?2:1, rows=[];
-  for(let y=0;y<=Y;y++){if(y%step&&y!==Y)continue;const s=S[y];
-    rows.push(`<tr class="${y===Y?'tgt':''}"><td>${START+y}</td><td>${eur.format(conU(y))}</td><td>${eur.format(s.p10)}</td><td class="med">${eur.format(s.p50)}</td><td>${eur.format(s.p90)}</td><td>${eur.format(R.real[y].p50)}</td></tr>`)}
-  $('tbody').innerHTML=rows.join('');
-  drawChart(); drawHist();
+  $('probs').innerHTML=rows.map(r=>`<div class="prob ${r.lv}"><span class="t">${r.t}<small>${r.s}</small></span><span class="val"><span class="pill ${r.lv}" style="padding:2px 8px 2px 6px">${ICON[r.risk?'warn':r.lv==='good'?'ok':r.lv==='warn'?'warn':'bad']}${r.risk?'Risco':LEVEL_TXT[r.lv]}</span><b>${pctFmt.format(r.v)}</b></span><span class="bar"><i style="width:${(r.v*100).toFixed(1)}%"></i></span></div>`).join('');
+  $('probSub').textContent=`Ano ${p.target}, sobre ${N.toLocaleString('pt-PT')} cenários`;
+}
+function renderTable(){
+  const {Y}=R, S=unit==='nom'?R.nom:R.real;
+  const conU=y=>unit==='nom'?R.contrib[y]:R.contrib[y]/R.defl[y];
+  const step=rowsMode==='todos'?1:(Y>30?5:Y>12?2:1), out=[];
+  for(let y=0;y<=Y;y++){
+    if(y%step&&y!==Y)continue;
+    const s=S[y], c=conU(y), m=ratio(s.p50,c), neg=s.p10<c;
+    out.push(`<tr class="${y===Y?'tgt':''}"><td>${START+y}</td><td>${eur.format(c)}</td><td class="${neg?'neg':''}">${neg?'<span class="ar" aria-label="abaixo do investido">▼</span>':''}${eur.format(s.p10)}</td><td class="med">${eur.format(s.p50)}</td><td>${eur.format(s.p90)}</td><td>${m===null?'—':m.toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})+'×'}</td><td>${eur.format((unit==='nom'?R.real:R.nom)[y].p50)}</td></tr>`);
+  }
+  $('tbody').innerHTML=out.join('');
+  $('thAlt').textContent=unit==='nom'?'Mediana em € de hoje':'Mediana nominal';
+  $('tblUnit').textContent=(unit==='nom'?'Valores nominais':'Valores em € de hoje')+'. ▼ marca anos em que o cenário pessimista fica abaixo do investido.';
+}
+function render(){
+  renderStatus();renderKpis();renderProbs();renderTable();
+  const {p}=R;
+  const diff=ratio(R.nom[R.Y].p50-R.det[R.Y],R.det[R.Y]);
+  $('evoSub').textContent=(unit==='nom'?'Valores nominais':'Valores em € de hoje')+(diff===null?'':` · mediana ${signedPct(diff)} face à calculadora clássica`);
+  $('goalLeg').hidden=unit!=='real';
+  $('histSub').textContent=`Valor em ${p.target}, em € de hoje`;
+  drawChart();drawHist();
 }
 
-function setupCanvas(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.max(1,r.width*d);cv.height=Math.max(1,r.height*d);const x=cv.getContext('2d');x.setTransform(d,0,0,d,0,0);return{x,w:r.width,h:r.height}}
-function niceMax(v){if(v<=0)return 1;const e=Math.pow(10,Math.floor(Math.log10(v))),f=v/e;return(f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e}
-let geo=null;
-function drawChart(){
-  const cv=$('chart'),{x,w,h}=setupCanvas(cv),{Y}=R,S=unit==='nom'?R.nom:R.real;
+/* =====================================================================
+   4. GRÁFICOS (canvas, sem dependências)
+   ===================================================================== */
+function setupCanvas(cv){const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.max(1,Math.round(r.width*d));cv.height=Math.max(1,Math.round(r.height*d));const x=cv.getContext('2d');x.setTransform(d,0,0,d,0,0);return{x,w:r.width,h:r.height}}
+function niceMax(v){if(!(v>0))return 1;const e=Math.pow(10,Math.floor(Math.log10(v))),f=v/e;for(const s of [1,1.5,2,2.5,3,4,5,6,8,10])if(f<=s)return s*e;return 10*e}
+let geo=null,hgeo=null;
+function drawChart(hoverY){
+  const cv=$('chart'),{x,w,h}=setupCanvas(cv),{Y,p}=R,S=unit==='nom'?R.nom:R.real;
   const det=R.det.map((v,y)=>unit==='nom'?v:v/R.defl[y]), con=Array.from(R.contrib,(v,y)=>unit==='nom'?v:v/R.defl[y]);
-  const L=62,Rr=14,T=12,B=28,pw=w-L-Rr,ph=h-T-B;
-  const ymax=niceMax(Math.max(S[Y].p90,...det,...con)*1.02);
-  const X=y=>L+pw*y/Y, Yp=v=>T+ph*(1-Math.min(v,ymax*1.05)/ymax);
-  const ink=css('--ink'),mut=css('--muted'),line=css('--line');
-  x.font='11px "IBM Plex Mono", monospace';x.textBaseline='middle';
-  for(let i=0;i<=5;i++){const v=ymax*i/5,yy=Yp(v);x.strokeStyle=line;x.lineWidth=1;x.beginPath();x.moveTo(L,yy);x.lineTo(w-Rr,yy);x.stroke();x.fillStyle=mut;x.textAlign='right';x.fillText(short(v),L-8,yy)}
-  x.textAlign='center';x.textBaseline='top';const xs=Y>20?5:Y>8?2:1;
-  for(let y=0;y<=Y;y+=xs){x.fillStyle=mut;x.fillText(START+y,X(y),h-B+8)}
+  const showGoal=unit==='real'&&p.goal>0;
+  const L=58,Rr=12,T=14,B=28,pw=Math.max(10,w-L-Rr),ph=Math.max(10,h-T-B);
+  let top=Math.max(S[Y].p90,...det,...con);if(showGoal)top=Math.max(top,p.goal);
+  const ymax=niceMax(top*1.04);
+  const X=y=>L+pw*(Y?y/Y:0), Yp=v=>T+ph*(1-Math.min(v,ymax*1.05)/ymax);
+  const muted=css('--muted'),line=css('--line'),font='12px Figtree, system-ui, sans-serif';
+  x.font=font;x.textBaseline='middle';
+  const isNice=v=>{const e=Math.pow(10,Math.floor(Math.log10(v))),f=+(v/e).toFixed(6);return [1,2,2.5,5,10].includes(f)};
+  const nDiv=[5,4,6,3].find(k=>isNice(ymax/k))||5;
+  for(let i=0;i<=nDiv;i++){const v=ymax*i/nDiv,yy=Math.round(Yp(v))+.5;x.strokeStyle=line;x.lineWidth=1;x.beginPath();x.moveTo(L,yy);x.lineTo(w-Rr,yy);x.stroke();x.fillStyle=muted;x.textAlign='right';x.fillText(short(v),L-8,yy)}
+  x.textBaseline='top';const maxLbl=Math.max(1,Math.floor(pw/48));let xs=1;for(const s of [1,2,5,10,20])if(Y/s<=maxLbl){xs=s;break}else xs=s;
+  for(let y=0;y<=Y;y+=xs){x.fillStyle=muted;const px=X(y);x.textAlign=px+20>w?'right':px-20<0?'left':'center';x.fillText(START+y,Math.min(px,w-2),h-B+9)}
   const band=(lo,hi,col)=>{x.beginPath();for(let y=0;y<=Y;y++)x.lineTo(X(y),Yp(S[y][hi]));for(let y=Y;y>=0;y--)x.lineTo(X(y),Yp(S[y][lo]));x.closePath();x.fillStyle=col;x.fill()};
-  band('p10','p90',css('--band1'));band('p25','p75',css('--band2'));
-  const path=(arr,col,wid,dash)=>{x.beginPath();arr.forEach((v,y)=>x.lineTo(X(y),Yp(v)));x.strokeStyle=col;x.lineWidth=wid;x.setLineDash(dash);x.stroke();x.setLineDash([])};
-  path(con,mut,1.5,[5,4]);path(det,css('--crypto'),1.5,[2,3]);path(S.map(s=>s.p50),css('--accent'),2.5,[]);
-  const ey=Yp(S[Y].p50);x.fillStyle=css('--accent');x.beginPath();x.arc(X(Y),ey,4,0,7);x.fill();
+  band('p10','p90',css('--good-band'));band('p25','p75',css('--good-band-2'));
+  const path=(arr,col,wid,dash)=>{x.beginPath();arr.forEach((v,y)=>x.lineTo(X(y),Yp(v)));x.strokeStyle=col;x.lineWidth=wid;x.setLineDash(dash);x.lineJoin='round';x.stroke();x.setLineDash([])};
+  if(showGoal){const gy=Math.round(Yp(p.goal))+.5;x.strokeStyle=css('--warn');x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,gy);x.lineTo(w-Rr,gy);x.stroke();x.setLineDash([]);
+    x.fillStyle=css('--warn-ink');x.textAlign='left';x.textBaseline='bottom';x.font='600 12px Figtree, system-ui, sans-serif';x.fillText('Objetivo '+short(p.goal),L+6,gy-4);x.font=font}
+  path(con,css('--faint'),1.5,[5,4]);path(det,css('--brand'),1.6,[2,3]);path(S.map(s=>s.p50),css('--good'),2.6,[]);
+  // valor final
+  const ey=Yp(S[Y].p50);x.fillStyle=css('--good');x.beginPath();x.arc(X(Y),ey,4.5,0,7);x.fill();
+  if(hoverY!=null){const hx=Math.round(X(hoverY))+.5;x.strokeStyle=css('--line-2');x.lineWidth=1;x.beginPath();x.moveTo(hx,T);x.lineTo(hx,T+ph);x.stroke();
+    x.fillStyle=css('--card');x.strokeStyle=css('--good');x.lineWidth=2;x.beginPath();x.arc(X(hoverY),Yp(S[hoverY].p50),4.5,0,7);x.fill();x.stroke()}
   geo={X,Yp,L,pw,Y,S,det,con};
 }
-function drawHist(){
-  const cv=$('hist'),{x,w,h}=setupCanvas(cv),arr=R.finalReal,p=R.p;
-  const lo=arr[Math.floor(arr.length*.01)],hi=arr[Math.floor(arr.length*.97)],bins=30,cnt=new Array(bins).fill(0);
-  for(const v of arr){if(v<lo||v>hi)continue;cnt[Math.min(bins-1,Math.floor((v-lo)/(hi-lo||1)*bins))]++}
-  const mx=Math.max(...cnt),B=22,bw=w/bins;
-  x.font='11px "IBM Plex Mono", monospace';
-  const gx=(p.goal-lo)/(hi-lo||1)*w;
-  for(let i=0;i<bins;i++){const v0=lo+(hi-lo)*i/bins,bh=(h-B-6)*cnt[i]/mx;x.fillStyle=v0+(hi-lo)/bins<=p.goal?css('--line'):css('--accent');x.fillRect(i*bw+1,h-B-bh,bw-2,bh)}
-  if(gx>0&&gx<w){x.strokeStyle=css('--danger');x.lineWidth=1.5;x.setLineDash([4,3]);x.beginPath();x.moveTo(gx,4);x.lineTo(gx,h-B);x.stroke();x.setLineDash([])}
-  x.fillStyle=css('--muted');x.textBaseline='top';x.textAlign='left';x.fillText(short(lo),0,h-B+6);x.textAlign='right';x.fillText(short(hi),w,h-B+6);
-  $('histNote').textContent=`Valor final em € de hoje, ${p.target}. A verde, cenários acima do objetivo; a linha tracejada marca ${short(p.goal)}.`;
+function drawHist(hoverBin){
+  const cv=$('hist'),{x,w,h}=setupCanvas(cv),arr=R.finalReal,p=R.p,conReal=R.contrib[R.Y]/R.defl[R.Y];
+  const lo=arr[Math.floor((arr.length-1)*.01)],hi=arr[Math.floor((arr.length-1)*.97)],span=hi-lo,bins=32,cnt=new Array(bins).fill(0);
+  if(!(span>0)){x.fillStyle=css('--muted');x.font='13px Figtree, system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('Todos os cenários terminam em '+eur.format(lo),w/2,h/2);hgeo=null;return}
+  for(const v of arr){if(v<lo||v>hi)continue;cnt[Math.min(bins-1,Math.floor((v-lo)/span*bins))]++}
+  const mx=Math.max(...cnt,1),B=24,T=8,bw=w/bins;
+  const good=css('--good'),warn=css('--warn'),bad=css('--bad');
+  for(let i=0;i<bins;i++){const mid=lo+span*(i+.5)/bins,bh=(h-B-T)*cnt[i]/mx;
+    x.globalAlpha=hoverBin==null||hoverBin===i?1:.55;
+    x.fillStyle=mid>=p.goal?good:mid>=conReal?warn:bad;x.fillRect(i*bw+1,h-B-bh,Math.max(1,bw-2),bh)}
+  x.globalAlpha=1;
+  const mark=(v,col,label,align)=>{if(v<lo||v>hi)return;const gx=Math.round((v-lo)/span*w)+.5;x.strokeStyle=col;x.lineWidth=1.5;x.setLineDash([4,3]);x.beginPath();x.moveTo(gx,T);x.lineTo(gx,h-B);x.stroke();x.setLineDash([])};
+  mark(p.goal,css('--warn-ink'));
+  x.fillStyle=css('--muted');x.font='12px Figtree, system-ui, sans-serif';x.textBaseline='top';x.textAlign='left';x.fillText(short(lo),0,h-B+7);x.textAlign='right';x.fillText(short(hi),w,h-B+7);
+  x.textAlign='center';x.fillText(short((lo+hi)/2),w/2,h-B+7);
+  hgeo={lo,span,bins,bw,cnt,total:arr.length};
 }
 
+/* tooltips */
 const tip=$('tip'),cbox=$('cbox');
-cbox.addEventListener('pointermove',e=>{if(!geo)return;const r=cbox.getBoundingClientRect(),mx=e.clientX-r.left;
-  const y=Math.round((mx-geo.L)/geo.pw*geo.Y);if(y<0||y>geo.Y){tip.hidden=true;return}
-  const s=geo.S[y];tip.hidden=false;
-  tip.innerHTML=`<b>${START+y}</b><br>p90  ${eur.format(s.p90)}<br>Mediana ${eur.format(s.p50)}<br>p10  ${eur.format(s.p10)}<br>Investido ${eur.format(geo.con[y])}`;
-  const tx=geo.X(y),tw=tip.offsetWidth;tip.style.left=Math.min(r.width-tw-4,Math.max(4,tx+12))+'px';tip.style.top=Math.max(4,geo.Yp(s.p50)-70)+'px'});
-cbox.addEventListener('pointerleave',()=>tip.hidden=true);
+function onChartMove(e){if(!geo)return;const r=cbox.getBoundingClientRect(),mx=e.clientX-r.left;
+  const y=Math.round((mx-geo.L)/geo.pw*geo.Y);if(y<0||y>geo.Y){hideTip();return}
+  const s=geo.S[y],c=geo.con[y];tip.hidden=false;
+  tip.innerHTML=`<b>${START+y}</b><div class="row"><span>Otimista (p90)</span><span>${eur.format(s.p90)}</span></div><div class="row"><span>Mediana</span><b>${eur.format(s.p50)}</b></div><div class="row"><span>Pessimista (p10)</span><span style="color:${s.p10<c?'var(--bad)':'inherit'}">${eur.format(s.p10)}</span></div><div class="row"><span>Investido</span><span>${eur.format(c)}</span></div><div class="row"><span>Calc. clássica</span><span>${eur.format(geo.det[y])}</span></div>`;
+  const tx=geo.X(y),tw=tip.offsetWidth,th=tip.offsetHeight;
+  tip.style.left=(tx+14+tw>r.width?tx-tw-14:tx+14)+'px';tip.style.top=Math.max(4,Math.min(r.height-th-4,geo.Yp(s.p50)-th/2))+'px';
+  drawChart(y)}
+function hideTip(){tip.hidden=true;if(R)drawChart()}
+cbox.addEventListener('pointermove',onChartMove);cbox.addEventListener('pointerleave',hideTip);cbox.addEventListener('pointerdown',onChartMove);
+const htip=$('htip'),hbox=$('hbox');
+hbox.addEventListener('pointermove',e=>{if(!hgeo)return;const r=hbox.getBoundingClientRect(),i=Math.floor((e.clientX-r.left)/hgeo.bw);if(i<0||i>=hgeo.bins){htip.hidden=true;return}
+  const a=hgeo.lo+hgeo.span*i/hgeo.bins,b=a+hgeo.span/hgeo.bins;htip.hidden=false;
+  htip.innerHTML=`<b>${short(a)} – ${short(b)}</b><div class="row"><span>Cenários</span><span>${pctFmt.format(hgeo.cnt[i]/hgeo.total)}</span></div>`;
+  const tw=htip.offsetWidth;htip.style.left=Math.min(r.width-tw-4,Math.max(4,e.clientX-r.left-tw/2))+'px';htip.style.top='4px';drawHist(i)});
+hbox.addEventListener('pointerleave',()=>{htip.hidden=true;if(R)drawHist()});
 
+/* =====================================================================
+   5. INTERAÇÃO
+   ===================================================================== */
 function updAlloc(){const c=+$('wc').value;$('barS').style.width=(100-c)+'%';$('barC').style.width=c+'%';$('lblS').textContent='Ações '+(100-c)+'%';$('lblC').textContent='Cripto '+c+'%'}
-let tm;function run(){clearTimeout(tm);tm=setTimeout(()=>{R=simulate(params());render()},120)}
-document.querySelectorAll('aside input,aside select').forEach(el=>el.addEventListener('input',()=>{if(el.id==='wc')updAlloc();
-  if(el.id in PRESETS.base)document.querySelectorAll('.presets button').forEach(b=>b.setAttribute('aria-pressed','false'));run()}));
-document.querySelectorAll('.presets button').forEach(b=>b.addEventListener('click',()=>{const P=PRESETS[b.dataset.p];for(const k in P)$(k).value=P[k];
-  document.querySelectorAll('.presets button').forEach(o=>o.setAttribute('aria-pressed',String(o===b)));run()}));
-document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{unit=b.dataset.u;document.querySelectorAll('.seg button').forEach(o=>o.setAttribute('aria-pressed',String(o===b)));render()}));
-window.addEventListener('resize',()=>{if(R){drawChart();drawHist()}});
+function validate(p){const bad=p.targetRaw!==p.target;$('f-target').classList.toggle('err',bad);const m=$('targetMsg');m.hidden=!bad;if(bad)m.textContent=`Entre ${START+1} e 2086. A usar ${p.target}.`}
+let tm;function run(){clearTimeout(tm);tm=setTimeout(()=>{const p=params();validate(p);R=simulate(p);render()},120)}
+function setPressed(sel,attr,val){document.querySelectorAll(sel).forEach(b=>b.setAttribute('aria-pressed',String(b.dataset[attr]===val)))}
+document.querySelectorAll('aside input,aside select').forEach(el=>el.addEventListener('input',()=>{
+  if(el.id==='wc')updAlloc();
+  if(el.id in PRESETS.base){preset=null;setPressed('.presets button','p','')}
+  run()}));
+document.querySelectorAll('.presets button').forEach(b=>b.addEventListener('click',()=>{const P=PRESETS[b.dataset.p];for(const k in P)$(k).value=P[k];preset=b.dataset.p;setPressed('.presets button','p',preset);run()}));
+$('reset').addEventListener('click',()=>{for(const k in DEFAULTS){const el=$(k);if(el.type==='checkbox')el.checked=DEFAULTS[k];else el.value=DEFAULTS[k]}
+  for(const k in PRESETS.base)$(k).value=PRESETS.base[k];preset='base';setPressed('.presets button','p','base');updAlloc();run()});
+document.querySelectorAll('[data-u]').forEach(b=>b.addEventListener('click',()=>{unit=b.dataset.u;setPressed('[data-u]','u',unit);render()}));
+document.querySelectorAll('[data-r]').forEach(b=>b.addEventListener('click',()=>{rowsMode=b.dataset.r;setPressed('[data-r]','r',rowsMode);renderTable()}));
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(R){drawChart();drawHist()}},80)});
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>R&&render());
 new MutationObserver(()=>R&&render()).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-updAlloc();R=simulate(params());render();
+if(window.matchMedia('(max-width:980px)').matches)document.querySelectorAll('details.group').forEach((d,i)=>{if(i>0)d.open=false});
+updAlloc();{const p=params();validate(p);R=simulate(p);render()}
 </script>
-
 </body>
 </html>

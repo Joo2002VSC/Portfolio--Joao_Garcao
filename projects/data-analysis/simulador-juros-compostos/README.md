@@ -1,4 +1,6 @@
-# 📈 Simulador de Juros Compostos
+<p align="center"><img src="web/img/cjr-logo.png" alt="CJR — Calculador de Juros Compostos" width="420"></p>
+
+# 📈 Simulador de Juros Compostos (CJR)
 
 > 🇬🇧 *A Monte Carlo compound interest simulator for a stock + crypto portfolio with weekly, monthly or yearly contributions, random inflation and exogenous shocks (market crashes, crypto regulation, inflation spikes, contribution pauses). Python/NumPy model with tests, plus an interactive web version.*
 
@@ -80,7 +82,9 @@ simulador-juros-compostos/
 │   ├── correr_cenarios.py  ← gera graficos/ e resultados.md
 │   └── testes.py
 ├── graficos/
-├── web/index.html          ← versão interativa (HTML/CSS/JS, sem dependências)
+├── web/
+│   ├── index.html          ← versão interativa (HTML/CSS/JS, sem dependências)
+│   └── img/                ← logo CJR (claro/escuro) e favicon
 ├── resultados.md
 └── requirements.txt
 ```
