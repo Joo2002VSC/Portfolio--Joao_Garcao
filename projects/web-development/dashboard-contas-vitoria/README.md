@@ -16,7 +16,7 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Visão geral** | Síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, encargos financeiros), leitura da época (evolução favorável, riscos, alertas, alterações estruturais), quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
+| **Visão geral** | Síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
 | **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com contexto, resposta, indicadores, gráficos e limitações |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
 | **Desporto** · **Cenários** | Gastos e resultados desportivos; simulações da centralização dos direitos de TV |
@@ -32,7 +32,7 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 ```
 
 - O painel **não refaz os cálculos**: lê os resultados das consultas. Os indicadores que o projeto SQL não tinha (autonomia e solvabilidade, resultado operacional sem mais-valias, variações com `LAG`, máximos e mínimos com `ROW_NUMBER`) estão em [`sql/indicadores_dashboard.sql`](sql/indicadores_dashboard.sql), com divisões protegidas por `NULLIF`.
-- O script de exportação seleciona apenas as consultas sobre as contas da SAD (a lista de exclusões está em `scripts/exportar_json.py`) e **interrompe a geração** se alguma verificação falhar: por exemplo, se ativo − passivo ≠ capital próprio, ou se os rácios da consulta complementar D1 divergirem da consulta 29.
+- O script de exportação seleciona apenas as consultas sobre as contas da SAD (a lista de exclusões está em `scripts/exportar_json.py`) e **interrompe a geração** se alguma verificação falhar: por exemplo, se ativo − passivo ≠ capitais próprios, ou se os rácios da consulta complementar D1 divergirem da consulta 29.
 - JavaScript em módulos ES, sem *frameworks*. O Chart.js 4 está incluído no repositório.
 
 | Ficheiro | Função |
@@ -62,7 +62,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=6`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=7`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 

@@ -74,7 +74,8 @@ export const porUnidade = {
   eur: euros, pct, pp, x: razao, rat: racio, int: inteiro, dias, milhoes, lugar, num: decimal,
   txt: v => (vazio(v) ? "—" : String(v)),
 };
-export const formatar = (unidade, v) => (porUnidade[unidade] ?? decimal)(v);
+/** Um texto numa coluna numérica é mostrado tal como está (evita «NaN») */
+export const formatar = (unidade, v) => (typeof v === "string" ? v : (porUnidade[unidade] ?? decimal)(v));
 
 /* ---------- Metadados das colunas das consultas SQL ----------
    Rótulo legível e unidade de cada coluna. As exceções por consulta resolvem nomes
@@ -125,20 +126,20 @@ const COLUNAS = {
   aquisicoes: ["Aquisições", "eur"], amortizacoes: ["Amortizações", "eur"], investimento_liquido: ["Investimento líquido", "eur"], perda_em_rescisoes: ["Perda em rescisões", "eur"],
   valor_contabilistico_plantel: ["Plantel no balanço", "eur"], taxa_amortizacao_pct: ["Taxa de amortização", "pct"],
   valor_contabilistico_vendido: ["Valor contabilístico vendido", "eur"], reserva_oculta_realizada: ["Reserva oculta realizada", "eur"], multiplo_de_venda: ["Múltiplo de venda", "x"], plantel_no_balanco: ["Plantel no balanço", "eur"],
-  custos_fixos: ["Custos fixos", "eur"], cobertura_pct: ["Receitas / custos fixos", "pct"], defice_antes_de_vendas: ["Défice antes de vendas", "eur"],
+  custos_fixos: ["Gastos de estrutura", "eur"], cobertura_pct: ["Vendas / gastos de estrutura", "pct"], defice_antes_de_vendas: ["Défice antes de vendas", "eur"],
   metade_capital_social: ["Metade do capital social", "eur"], metade_do_capital_perdida: ["Metade do capital perdida?", "txt"], parecer_auditor: ["Parecer do auditor", "txt"],
   sad_cobra_quotas_e_lugares: ["Cobrado pela SAD (quotas e lugares)", "eur"], rendas_pagas_ao_clube: ["Rendas pagas ao Clube", "eur"], cedencia_pessoal: ["Cedência de pessoal", "eur"], clube_deve_a_sad: ["Saldo devido pelo Clube à SAD", "eur"],
   custo_vendas_pct: ["Custo das vendas / vendas", "pct"],
   solidariedade: ["Solidariedade e formação", "eur"], pct_do_total_do_periodo: ["Peso no período", "pct"], acumulado: ["Acumulado", "eur"],
   parte_igual: ["Parte igual", "eur"], merito_ilustrativo: ["Mérito (ilustrativo)", "eur"], total_sem_audiencias: ["Total (sem audiências)", "eur"], vs_tv_atual: ["Diferença face aos direitos de TV atuais", "eur"],
-  custo_por_ponto: ["Custo por ponto", "eur"], ranking_eficiencia: ["Posição em eficiência", "int"],
+  custo_por_ponto: ["Gastos com pessoal por ponto", "eur"], ranking_eficiencia: ["Posição em eficiência", "int"],
   mudancas_desde_2015: ["Mudanças desde 2015", "int"], interinos: ["Interinos", "int"], treinadores_diferentes: ["Treinadores diferentes", "int"], media_por_epoca_2015_16_a_2025_26: ["Média por época", "num"],
   margem_corrente_sem_vendas_pct: ["Margem corrente sem vendas", "pct"], margem_operacional_com_vendas_pct: ["Margem operacional com vendas", "pct"],
   rendibilidade_ativo_pct: ["Rendibilidade do ativo", "pct"], rotacao_ativo: ["Rotação do ativo", "rat"], fse_receitas_pct: ["FSE / vendas", "pct"],
   divida_fin_receitas: ["Dívida financeira / vendas", "rat"], cash_flow_operacional_pct: ["Fluxo de caixa operacional / vendas", "pct"],
   bce_deposito: ["BCE (facilidade de depósito)", "pct"], euribor_12m: ["Euribor a 12 meses", "pct"], ot_portugal_10a: ["Obrigações do Tesouro a 10 anos", "pct"], credito_empresas_pt: ["Crédito a empresas em Portugal", "pct"],
   vitoria_implicita: ["Vitória (taxa implícita)", "pct"], spread_vs_euribor: ["Diferencial face à Euribor", "pp"], spread_vs_estado_portugues: ["Diferencial face às OT", "pp"], vezes_estado_portugues: ["Múltiplo da taxa das OT", "x"],
-  despesas_m: ["Despesas", "milhoes"], lugar_previsto: ["Lugar previsto", "num"], residuo: ["Resíduo", "num"], a_ordenada: ["Ordenada na origem", "num"],
+  despesas_m: ["Gastos de estrutura", "milhoes"], lugar_previsto: ["Lugar previsto", "num"], residuo: ["Resíduo", "num"], a_ordenada: ["Ordenada na origem", "num"],
   b_declive_por_m: ["Declive (lugares por M€)", "num"], erro_padrao_b: ["Erro-padrão do declive", "num"], ic95_inferior: ["IC 95% inferior", "num"], ic95_superior: ["IC 95% superior", "num"],
   r_quadrado: ["R²", "num"], n: ["N.º de épocas", "int"],
   receitas_operacao: ["Receitas da operação", "eur"], vendas_por_euro_de_receita: ["Vendas por euro de receita", "x"], peso_mais_valias_no_total_pct: ["Peso das mais-valias", "pct"],
@@ -163,7 +164,10 @@ const EXCECOES = {
   6: { epocas: ["N.º de épocas", "int"] },
   21: { epocas: ["N.º de épocas", "int"] },
   22: { epocas: ["N.º de épocas", "int"] },
+  27: { juros: ["Juros dos financiamentos", "eur"] },
+  30: { juros: ["Juros e gastos similares", "eur"] },
   31: { variacao: ["Variação", "int"] },
+  35: { epocas: ["Épocas afetadas (lista)", "txt"], epocas_afetadas: ["N.º de épocas afetadas", "int"] },
   54: { media_movel_3_epocas: ["Média móvel (3 épocas)", "x"] },
 };
 

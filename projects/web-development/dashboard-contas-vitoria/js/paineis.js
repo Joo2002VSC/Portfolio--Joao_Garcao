@@ -27,6 +27,7 @@ function temporal(rows, series, { tipo = "bar", ...op } = {}) {
     if (s.stack) ds.stack = s.stack;
     if (s.fill) ds.fill = s.fill;
     if (s.cores) ds.backgroundColor = dados.map(s.cores);
+    if (s.pontosCor) { ds.pointBackgroundColor = dados.map(s.pontosCor); ds.pointBorderColor = ds.pointBackgroundColor; }
     return ds;
   });
   return { type: tipo, data: { labels: epocasDe(rows), datasets }, options: opcoes(op) };
@@ -52,7 +53,7 @@ function composicao(rows) {
 /** Barras de uma só série: a vermelho (risco) ou a amarelo (alerta) os valores que cumprem uma condição */
 const coresCondicao = (cond, alerta = "vermelho") => (v => (v !== null && cond(v) ? cor(alerta) : cor("tinta")));
 /** Barras de resultados: verde quando positivo, vermelho quando negativo (a posição face ao zero repete a informação) */
-const coresSinal = v => (v === null ? cor("cinza") : v < 0 ? cor("vermelho") : cor("verde"));
+const coresSinal = v => (v === null || v === 0 ? cor("cinza") : v < 0 ? cor("vermelho") : cor("verde"));
 
 /* =====================================================================
    SECÇÕES
@@ -99,7 +100,7 @@ export const PAINEIS = [
       const neg = contar(rows, r => r.rl_sem_mais_valias < 0);
       const soVendas = contar(rows, r => r.leitura);
       return `Sem mais-valias, o resultado seria negativo em ${neg} de ${rows.length} épocas. ` +
-        `Em ${plural(soVendas, "época", "épocas")}, o lucro só existiu graças às vendas.`;
+        `Em ${plural(soVendas, "época", "épocas")}, houve lucro apenas porque as mais-valias superaram esse défice.`;
     },
   },
 
@@ -122,12 +123,12 @@ export const PAINEIS = [
   {
     id: "valor-europa", seccao: "perguntas", questao: 2, consulta: 21,
     pergunta: "Quanto vale uma época europeia?",
-    descricao: "Receitas e resultado médios da SAD por tipo de época (2013/14 a 2025/26).",
+    descricao: "Vendas e serviços prestados e resultado líquido médios da SAD por tipo de época (2013/14 a 2025/26).",
     construir: rows => {
       const labels = rows.map(r => r.tipo.replace(/^\d+\.\s*/, ""));
       const cfg = {
         type: "bar",
-        data: { labels, datasets: [barras("Receita média", col(rows, "receita_media"), "tinta"), barras("Resultado médio", col(rows, "rl_medio"), "cinza")] },
+        data: { labels, datasets: [barras("Vendas e serviços prestados (média)", col(rows, "receita_media"), "tinta"), barras("Resultado líquido (média)", col(rows, "rl_medio"), "cinza")] },
         options: opcoes(),
       };
       cfg.options.plugins.tooltip.callbacks.footer = i => `${plural(rows[i[0].dataIndex].epocas, "época", "épocas")}: ${rows[i[0].dataIndex].lista}`;
@@ -135,14 +136,14 @@ export const PAINEIS = [
     },
     conclusao: rows => {
       const g = rows[0], s = ultimo(rows);
-      return `Com fase de grupos, a receita média foi ${euros(g.receita_media)}, contra ${euros(s.receita_media)} sem Europa; ` +
-        `o resultado médio passou de ${euros(s.rl_medio)} para ${euros(g.rl_medio)}.`;
+      return `Nas épocas com fase de grupos, as vendas e serviços prestados foram em média de ${euros(g.receita_media)}, contra ${euros(s.receita_media)} nas épocas sem Europa; ` +
+        `o resultado líquido médio foi de ${euros(g.rl_medio)}, contra ${euros(s.rl_medio)}.`;
     },
-    nota: "Não depende do intervalo de épocas: cada grupo agrega todas as épocas desse tipo.",
+    nota: "Não depende do intervalo de épocas: cada grupo agrega todas as épocas desse tipo. Médias de poucas épocas, que não isolam outros fatores (por exemplo, as vendas de jogadores).",
   },
   {
     id: "vendas-por-euro", seccao: "perguntas", questao: 2, consulta: 54, temporal: true,
-    pergunta: "A SAD vende mais em jogadores do que fatura na operação?",
+    pergunta: "As vendas de jogadores superam as vendas e serviços prestados?",
     descricao: "Vendas brutas de jogadores por cada euro de receita da atividade corrente (direitos de TV, bilheteira, patrocínios, quotização).",
     construir: rows => comReferencias(temporal(rows, [
       { col: "vendas_por_euro_de_receita", rotulo: "Vendas por euro de receita", papel: "cinza" },
@@ -188,7 +189,8 @@ export const PAINEIS = [
     conclusao: (rows, todas) => {
       const d = todas.filter(r => r.epoca.startsWith("dívida"));
       const ud = ultimo(d);
-      return `O peso subiu de ${pct(rows[0]?.custo_vendas_pct)} para ${pct(ultimo(rows)?.custo_vendas_pct)}` +
+      if (!rows.length) return "";
+      return `O peso passou de ${pct(rows[0].custo_vendas_pct)} (${rows[0].epoca}) para ${pct(ultimo(rows).custo_vendas_pct)} (${ultimo(rows).epoca})` +
         (ud ? `. A dívida a intermediários desportivos era de ${euros(ud.custo_vendas)} a ${ud.epoca.replace("dívida ", "")}.` : ".");
     },
   },
@@ -243,24 +245,15 @@ export const PAINEIS = [
       `As mais-valias cobriram entre ${pct(Math.min(...numeros(col(rows, "transferencias_cobrem_pct"))))} e ${pct(Math.max(...numeros(col(rows, "transferencias_cobrem_pct"))))} dos gastos.`,
   },
   {
-    id: "pessoal-receitas", seccao: "custos", consulta: 3, temporal: true,
-    pergunta: "Os gastos com pessoal cabem nas receitas?",
-    descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados. A vermelho, as épocas acima de 100%.",
-    construir: rows => comReferencias(temporal(rows, [
-      { col: "pct", rotulo: "Gastos com pessoal / vendas", papel: "tinta", cores: coresCondicao(v => v > 100) },
-    ], { unidade: "pct", legenda: false, min: 0 }), [{ valor: 100, rotulo: "100%" }]),
-    conclusao: rows => `Os gastos com pessoal superaram as vendas e serviços prestados em ${contar(rows, r => r.pct > 100)} de ${rows.length} épocas; o máximo foi ${pct(Math.max(...numeros(col(rows, "pct"))))}.`,
-  },
-  {
     id: "custos-fixos", seccao: "perguntas", questao: 1, largo: true, consulta: 42, temporal: true,
-    pergunta: "As receitas cobrem os custos fixos?",
-    descricao: "Vendas e serviços prestados em percentagem dos custos fixos (gastos com pessoal, fornecimentos e serviços externos, depreciações e amortizações).",
+    pergunta: "As vendas e serviços prestados cobrem os gastos de estrutura?",
+    descricao: "Vendas e serviços prestados em percentagem dos gastos de estrutura (gastos com pessoal, fornecimentos e serviços externos, depreciações e amortizações).",
     construir: rows => comReferencias(temporal(rows, [
-      { col: "cobertura_pct", rotulo: "Vendas / custos fixos", papel: "cinza-escuro" },
+      { col: "cobertura_pct", rotulo: "Vendas / gastos de estrutura", papel: "cinza-escuro" },
     ], { unidade: "pct", legenda: false, min: 0, max: 120 }), [{ valor: 100, rotulo: "Cobertura total" }]),
     conclusao: rows => (contar(rows, r => r.cobertura_pct >= 100) === 0
-      ? `Em nenhuma das ${plural(rows.length, "época", "épocas")} as receitas cobriram os custos fixos. `
-      : `As receitas cobriram os custos fixos em ${contar(rows, r => r.cobertura_pct >= 100)} de ${rows.length} épocas. `) +
+      ? `Em nenhuma das ${plural(rows.length, "época", "épocas")} as vendas e serviços prestados cobriram os gastos de estrutura. `
+      : `As vendas e serviços prestados cobriram os gastos de estrutura em ${contar(rows, r => r.cobertura_pct >= 100)} de ${rows.length} épocas. `) +
       `Défice médio antes de vendas: ${euros(media(col(rows, "defice_antes_de_vendas")))} por época.`,
   },
   {
@@ -272,7 +265,7 @@ export const PAINEIS = [
     ], { unidade: "pct", legenda: false, min: 0 }), [{ valor: 70, rotulo: "Limite de 70%" }]),
     conclusao: rows => `Acima de 70% em ${contar(rows, r => r.racio_pct > 70)} de ${rows.length} épocas` +
       (rows.length ? `; em ${ultimo(rows).epoca}, ${pct(ultimo(rows).racio_pct)}.` : "."),
-    nota: "Aproximação ao regulamento, sem as comissões de intermediários. Nas duas primeiras épocas, a média das mais-valias usa menos de três épocas.",
+    nota: "Aproximação ao regulamento da UEFA (rácio de custos do plantel), sem as comissões de intermediários. Nas duas primeiras épocas, a média das mais-valias usa menos de três épocas.",
   },
   {
     id: "funcionarios", seccao: "custos", consulta: 31, largo: true, temporal: true,
@@ -299,9 +292,9 @@ export const PAINEIS = [
     conclusao: rows => rows.length > 1 ? `Passou de ${decimal(rows[0].nao_jogadores_por_jogador)} para ${decimal(ultimo(rows).nao_jogadores_por_jogador)} não-jogadores por jogador.` : "",
   },
   {
-    id: "remuneracoes", seccao: "custos", consulta: 32, temporal: true,
-    pergunta: "Qual é o custo médio de cada jogador e de cada funcionário?",
-    descricao: "Remuneração média anual por jogador e custo médio por funcionário.",
+    id: "remuneracoes", seccao: "custos", consulta: 32, temporal: true, largo: true,
+    pergunta: "Qual é o gasto médio com cada jogador e com cada funcionário?",
+    descricao: "Remuneração média anual por jogador e gasto médio com pessoal por funcionário.",
     construir: rows => temporal(rows, [
       { col: "remuneracao_media_jogador", rotulo: "Por jogador", papel: "tinta" },
       { col: "custo_por_funcionario", rotulo: "Por funcionário", papel: "cinza-escuro", oca: true },
@@ -361,7 +354,10 @@ export const PAINEIS = [
       const v = com(rows, "financiamentos");
       if (v.length < 2) return "";
       const min = v.reduce((a, b) => (b.financiamentos < a.financiamentos ? b : a));
-      return `De ${euros(min.financiamentos)} (${min.epoca}) para ${euros(ultimo(v).financiamentos)} (${ultimo(v).epoca}): multiplicou-se por ${decimal(Math.round(dividir(ultimo(v).financiamentos, min.financiamentos)))}.`;
+      if (min === ultimo(v)) return `Mínimo do intervalo em ${min.epoca}: ${euros(min.financiamentos)}.`;
+      const f = dividir(ultimo(v).financiamentos, min.financiamentos);
+      return `Do mínimo de ${euros(min.financiamentos)} (${min.epoca}) para ${euros(ultimo(v).financiamentos)} (${ultimo(v).epoca})` +
+        (f >= 1.5 ? `: multiplicou-se por ${decimal(Math.round(10 * f) / 10)}.` : ".");
     },
   },
   {
@@ -375,17 +371,19 @@ export const PAINEIS = [
     ], { tipo: "line", unidade: "pct" }),
     conclusao: rows => {
       const v = com(rows, "vitoria_implicita");
-      return v.length ? `Em ${ultimo(v).epoca}, a taxa implícita foi de ${pct(ultimo(v).vitoria_implicita)}: ${pp(ultimo(v).spread_vs_euribor)} acima da Euribor e ${vezes(ultimo(v).vezes_estado_portugues)} a taxa das Obrigações do Tesouro.` : "";
+      if (!v.length) return "";
+      const u = ultimo(v), s = u.spread_vs_euribor;
+      return `Em ${u.epoca}, a taxa implícita foi de ${pct(u.vitoria_implicita)}: ${pct(Math.abs(s)).replace("%", " p.p.")} ${s >= 0 ? "acima" : "abaixo"} da Euribor a 12 meses e ${vezes(u.vezes_estado_portugues)} a taxa das Obrigações do Tesouro a 10 anos.`;
     },
     nota: "Taxa implícita = juros dos financiamentos ÷ dívida financeira média.",
   },
   {
     id: "juros-receitas", seccao: "divida", consulta: 27, temporal: true,
-    pergunta: "Que parte das receitas é absorvida pelos juros?",
+    pergunta: "Que parte das vendas e serviços prestados é absorvida pelos juros?",
     descricao: "Juros dos financiamentos em percentagem das vendas e serviços prestados.",
     construir: rows => temporal(rows, [{ col: "juros_em_pct_receitas", rotulo: "Juros / vendas", papel: "tinta" }], { unidade: "pct", legenda: false, min: 0 }),
-    conclusao: rows => rows.length ? `Em ${ultimo(rows).epoca}, os juros consumiram ${pct(ultimo(rows).juros_em_pct_receitas)} das receitas (${euros(ultimo(rows).juros)}).` : "",
-    nota: "Juros dos financiamentos. A consulta 8 utiliza os juros suportados líquidos, que são um valor diferente.",
+    conclusao: rows => rows.length ? `Em ${ultimo(rows).epoca}, os juros dos financiamentos (${euros(ultimo(rows).juros)}) corresponderam a ${pct(ultimo(rows).juros_em_pct_receitas)} das vendas e serviços prestados.` : "",
+    nota: "Juros dos financiamentos (notas do Relatório e Contas). A rubrica «juros e gastos similares» da demonstração de resultados, usada nas consultas 8 e 30, é um valor diferente.",
   },
   {
     id: "curto-prazo", seccao: "perguntas", questao: 3, consulta: 28, temporal: true,
@@ -414,7 +412,7 @@ export const PAINEIS = [
       const total = soma(ult.map(r => r.total));
       return `A ${d.split("-").reverse().join("/")}, a dívida financeira por instrumento somava ${euros(total)}; os empréstimos pesavam ${pct(soma(ult.filter(r => /^Empréstimos/.test(r.instrumento)).map(r => r.pct_da_divida)))}.`;
     },
-    nota: "Utiliza a consulta 39 e não a 14, porque a consulta 14 mistura as datas de 30/06/2025 e 30/06/2026 sob o mesmo título.",
+    nota: "Usa a consulta 39 e não a 14, porque a consulta 14 mistura as datas de 30/06/2025 e 30/06/2026 sob o mesmo título.",
   },
   {
     id: "fluxos-caixa", seccao: "divida", consulta: 15, largo: true, temporal: true,
@@ -427,7 +425,7 @@ export const PAINEIS = [
     ]),
     conclusao: rows => `A operação consumiu caixa em ${contar(rows, r => r.operacional < 0)} de ${rows.length} épocas; ` +
       `a necessidade de tesouraria foi coberta com financiamento em ${contar(rows, r => /financiamento/.test(r.leitura))} e com vendas de passes ou desinvestimento em ${contar(rows, r => /vendas/.test(r.leitura))}.`,
-    nota: "2024/25 com os valores originais. O Relatório e Contas de 2025/26 reexpressou esses fluxos (consulta 36).",
+    nota: "2024/25 com os valores originalmente publicados. O Relatório e Contas de 2025/26 reexpressou esses fluxos, com alterações de sinal (consulta 36).",
   },
   {
     id: "fundo-maneio", seccao: "divida", consulta: 38, temporal: true,
@@ -444,13 +442,20 @@ export const PAINEIS = [
     construir: rows => comReferencias(temporal(rows, [{ col: "divida_liq_ebitda", rotulo: "Dívida líquida / EBITDA", papel: "tinta", cores: coresCondicao(v => v > 3) }],
       { unidade: "x", legenda: false }), [{ valor: 3, rotulo: "Referência: 3" }]),
     conclusao: rows => `EBITDA negativo em ${contar(rows, r => r.ebitda < 0)} de ${rows.length} épocas` +
-      (rows.length ? `; em ${ultimo(rows).epoca}, a dívida líquida equivalia a ${vezes(ultimo(rows).divida_liq_ebitda)} o EBITDA.` : "."),
+      (!rows.length ? "." : ultimo(rows).divida_liq_ebitda === null
+        ? `; em ${ultimo(rows).epoca}, o EBITDA foi negativo e o rácio não tem leitura.`
+        : `; em ${ultimo(rows).epoca}, a dívida líquida equivalia a ${vezes(ultimo(rows).divida_liq_ebitda)} o EBITDA.`),
   },
   {
     id: "cobertura-juros", seccao: "divida", consulta: 30, tabela: true, temporal: true,
     pergunta: "O EBITDA chega para pagar os juros?",
-    descricao: "Quantas vezes o EBITDA cobre os juros. Abaixo de 3 vezes, a cobertura é considerada fraca.",
-    conclusao: rows => `EBITDA negativo em ${contar(rows, r => r.ebitda < 0)} de ${rows.length} épocas; em ${ultimo(rows)?.epoca}, o EBITDA cobriu ${vezes(ultimo(rows)?.cobertura)} os juros.`,
+    descricao: "Quantas vezes o EBITDA cobre os juros e gastos similares da demonstração de resultados. Abaixo de 3 vezes, a cobertura é considerada fraca (referência habitual em análise de crédito).",
+    conclusao: rows => {
+      const u = ultimo(rows);
+      if (!u) return "";
+      return `EBITDA negativo em ${contar(rows, r => r.ebitda < 0)} de ${rows.length} épocas; em ${u.epoca}, ` +
+        (u.ebitda < 0 ? "o EBITDA foi negativo e não cobriu os juros." : `o EBITDA cobriu ${vezes(u.cobertura)} os juros e gastos similares.`);
+    },
   },
   {
     id: "artigo-35", seccao: "divida", consulta: 43, tabela: true, temporal: true,
@@ -478,8 +483,8 @@ export const PAINEIS = [
   /* ---------------- Desporto ---------------- */
   {
     id: "regressao", seccao: "perguntas", questao: 4, consulta: 53, largo: true, temporal: true,
-    pergunta: "Despesas da SAD e classificação na Liga",
-    descricao: "Despesas (gastos com pessoal, fornecimentos e serviços externos, amortizações) e classificação na Liga, com a reta de regressão linear. O 1.º lugar fica no topo.",
+    pergunta: "Gastos de estrutura da SAD e classificação na Liga",
+    descricao: "Gastos de estrutura (gastos com pessoal, fornecimentos e serviços externos, depreciações e amortizações) e classificação na Liga, com a reta de regressão linear. O 1.º lugar fica no topo.",
     construir: (rows, todas, ctx) => {
       const r0 = todas[0];
       const xs = numeros(col(todas, "despesas_m"));
@@ -490,11 +495,11 @@ export const PAINEIS = [
       const op = opcoes({ unidade: "milhoes", legenda: true, indice: false });
       op.scales.y = { reverse: true, min: 1, max: 12, ticks: { stepSize: 1, callback: v => `${v}.º`, color: cor("suave") },
         title: { display: true, text: "Classificação na Liga", color: cor("suave") }, grid: { color: cor("grelha") }, border: { display: false } };
-      op.scales.x.title = { display: true, text: "Despesas da SAD (M€)", color: cor("suave") };
+      op.scales.x.title = { display: true, text: "Gastos de estrutura (M€)", color: cor("suave") };
       op.scales.x.grid = { color: cor("grelha") };
       op.plugins.tooltip.callbacks = {
         title: i => i[0].raw.epoca ?? "Reta de regressão",
-        label: c => (c.raw.epoca ? [` ${lugar(c.raw.y)} lugar`, ` Despesas: ${milhoes(c.raw.x)}`, ` Previsto pela reta: ${decimal(c.raw.prev)}.º`] : ` ${decimal(c.raw.y)}.º previsto com ${milhoes(c.raw.x)}`),
+        label: c => (c.raw.epoca ? [` ${lugar(c.raw.y)} lugar`, ` Gastos de estrutura: ${milhoes(c.raw.x)}`, ` Previsto pela reta: ${decimal(c.raw.prev)}.º`] : ` ${decimal(c.raw.y)}.º previsto com ${milhoes(c.raw.x)}`),
       };
       return {
         type: "scatter",
@@ -513,8 +518,10 @@ export const PAINEIS = [
     conclusao: (rows, todas) => {
       const r = todas[0];
       const incluiZero = r.ic95_inferior <= 0 && r.ic95_superior >= 0;
-      return `R² = ${decimal(r.r_quadrado)} em ${r.n} épocas: as despesas explicam ${pct(100 * r.r_quadrado)} das diferenças de classificação. ` +
-        `Cada 10 M€ adicionais correspondem, em média, a ${decimal(Math.abs(r.b_declive_por_m * 10))} lugares (intervalo de confiança a 95% do declive: ${decimal(r.ic95_inferior)} a ${decimal(r.ic95_superior)}${incluiZero ? ", que inclui o zero" : ""}).`;
+      const lugares = Math.abs(r.b_declive_por_m * 10);
+      return `R² = ${decimal(r.r_quadrado)} em ${r.n} épocas: a reta só acompanha ${pct(100 * r.r_quadrado)} da variação da classificação. ` +
+        `Na reta, mais 10 M€ de gastos estão associados a ${decimal(lugares)} lugares ${r.b_declive_por_m < 0 ? "acima" : "abaixo"} na tabela, mas o intervalo de confiança a 95% do declive (${decimal(r.ic95_inferior)} a ${decimal(r.ic95_superior)})` +
+        `${incluiZero ? " inclui o zero: não há evidência de associação" : " não inclui o zero"}.`;
     },
     nota: "A regressão usa as 13 épocas, independentemente do filtro, que apenas oculta pontos. Trata-se de uma associação, não de uma relação de causa e efeito.",
   },
@@ -523,7 +530,7 @@ export const PAINEIS = [
     pergunta: "Quanto custou cada ponto na Liga?",
     descricao: "Gastos com pessoal da SAD a dividir pelos pontos conquistados na Liga.",
     construir: rows => {
-      const cfg = temporal(rows, [{ col: "custo_por_ponto", rotulo: "Custo por ponto", papel: "tinta" }], { legenda: false });
+      const cfg = temporal(rows, [{ col: "custo_por_ponto", rotulo: "Gastos com pessoal por ponto", papel: "tinta" }], { legenda: false });
       cfg.options.plugins.tooltip.callbacks.footer = i => `${rows[i[0].dataIndex].pontos} pontos · ${lugar(rows[i[0].dataIndex].lugar)} lugar`;
       return cfg;
     },
@@ -550,7 +557,8 @@ export const PAINEIS = [
       const v = rows.filter(r => r.espectadores > 0);
       if (!v.length) return "";
       const max = v.reduce((a, b) => (b.espectadores > a.espectadores ? b : a));
-      return `Máximo de ${inteiro(max.espectadores)} espectadores em ${max.epoca}. Em 2020/21 os jogos foram à porta fechada.`;
+      const fechados = rows.filter(r => r.espectadores === 0).map(r => r.epoca);
+      return `Máximo de ${inteiro(max.espectadores)} espectadores em ${max.epoca}.` + (fechados.length ? ` Em ${fechados.join(", ")}, os jogos foram à porta fechada.` : "");
     },
   },
   {
@@ -711,16 +719,16 @@ export const PAINEIS = [
   {
     id: "pessoal-rendimentos", seccao: "custos", consulta: 103, temporal: true,
     pergunta: "Que parte dos rendimentos é absorvida pelos gastos com pessoal?",
-    descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados e dos rendimentos operacionais (que incluem as mais-valias).",
+    descricao: "Gastos com pessoal em percentagem das vendas e serviços prestados e dos rendimentos operacionais (que incluem as mais-valias). A vermelho, as épocas acima de 100% das vendas.",
     construir: rows => comReferencias(temporal(rows, [
-      { col: "pessoal_sobre_vendas_pct", rotulo: "Sobre as vendas e serviços prestados", papel: "tinta" },
+      { col: "pessoal_sobre_vendas_pct", rotulo: "Sobre as vendas e serviços prestados", papel: "tinta", pontosCor: v => (v > 100 ? cor("vermelho") : cor("tinta")) },
       { col: "pessoal_sobre_rendimentos_pct", rotulo: "Sobre os rendimentos operacionais", papel: "cinza-escuro", oca: true },
     ], { tipo: "line", unidade: "pct", min: 0 }), [{ valor: 100, rotulo: "100%" }]),
-    conclusao: rows => rows.length ? `Em ${ultimo(rows).epoca}, os gastos com pessoal corresponderam a ${pct(ultimo(rows).pessoal_sobre_vendas_pct)} das vendas e serviços prestados, mas a ${pct(ultimo(rows).pessoal_sobre_rendimentos_pct)} dos rendimentos operacionais; a diferença resulta das mais-valias e de outros rendimentos.` : "",
+    conclusao: rows => rows.length ? `Os gastos com pessoal superaram as vendas e serviços prestados em ${contar(rows, r => r.pessoal_sobre_vendas_pct > 100)} de ${rows.length} épocas. Em ${ultimo(rows).epoca}, corresponderam a ${pct(ultimo(rows).pessoal_sobre_vendas_pct)} das vendas e serviços prestados, mas a ${pct(ultimo(rows).pessoal_sobre_rendimentos_pct)} dos rendimentos operacionais; a diferença resulta das mais-valias e de outros rendimentos.` : "",
     ficha: {
-      mede: "O peso dos gastos com pessoal face à faturação da atividade corrente e face à totalidade dos rendimentos operacionais.",
+      mede: "O peso dos gastos com pessoal face às vendas e serviços prestados e face à totalidade dos rendimentos operacionais.",
       formula: "Gastos com pessoal ÷ Vendas e serviços prestados · Gastos com pessoal ÷ (Vendas e serviços prestados + Subsídios à exploração + Outros rendimentos)",
-      dados: "Tabela demonstracao_resultados (SAD). Consulta complementar D3.",
+      dados: "Tabela demonstracao_resultados (SAD). Consulta complementar D3; o primeiro rácio é também calculado pela consulta 3.",
       limitacoes: "A rubrica agregada de rendimentos operacionais só existe numa época; por isso, somam-se as componentes, como na consulta 57. «Outros rendimentos» inclui ganhos irregulares.",
     },
   },
@@ -771,7 +779,7 @@ export const PAINEIS = [
       return `Máximo de ${pct(max.solvabilidade_pct)} em ${max.epoca}; ${pct(ultimo(rows).solvabilidade_pct)} em ${ultimo(rows).epoca}.`;
     },
     ficha: {
-      mede: "Quantos euros de capitais próprios existem por cada euro de passivo. Valores negativos indicam falência técnica (capitais próprios negativos).",
+      mede: "Quantos euros de capitais próprios existem por cada euro de passivo. Valores negativos indicam capitais próprios negativos: o passivo é superior ao ativo.",
       formula: "Capitais próprios ÷ Passivo",
       dados: "Tabela balanco. Consulta complementar D1.",
       limitacoes: "Mede a solvabilidade contabilística, não a capacidade de cumprir os pagamentos a tempo (medida pela liquidez).",
@@ -895,7 +903,7 @@ const rotulosPontos = {
 export const ORDEM = {
   geral: ["geral-receitas-gastos", "geral-resultados", "geral-estrutura", "geral-divida"],
   receitas: ["rendimentos", "composicao-vendas", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
-  custos: ["gastos-rubricas", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "pessoal-receitas", "uefa", "funcionarios", "nao-jogadores", "remuneracoes"],
+  custos: ["gastos-rubricas", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
   rentabilidade: ["resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
   divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",
     "divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",
@@ -910,7 +918,7 @@ export const ORDEM = {
 export const PERGUNTAS = [
   {
     n: 1, contexto: "Os clubes portugueses vendem jogadores com regularidade, mas essas receitas variam muito. Interessa saber se a operação corrente (bilheteira, direitos de TV, patrocínios, prémios) chega para pagar a estrutura.",
-    pergunta: "A atividade corrente cobre os custos recorrentes?", consultas: [2, 42],
+    pergunta: "A atividade corrente cobre os gastos de estrutura?", consultas: [2, 42],
     resposta: ({ q }) => {
       const r = q(2), ult3 = r.slice(-3);
       return `Não. Sem as mais-valias com jogadores, o resultado da SAD foi negativo em ${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length} épocas; ` +
@@ -921,10 +929,10 @@ export const PERGUNTAS = [
       return [
         { rotulo: "Épocas com resultado sem mais-valias negativo", valor: `${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length}` },
         { rotulo: `Resultado sem mais-valias (${ultimo(r).epoca})`, valor: euros(ultimo(r).rl_sem_mais_valias) },
-        { rotulo: `Vendas / custos fixos (${f.epoca})`, valor: pct(f.cobertura_pct) },
+        { rotulo: `Vendas / gastos de estrutura (${f.epoca})`, valor: pct(f.cobertura_pct) },
       ];
     },
-    limitacoes: "Os dados de transferências só existem desde 2017/18. Cada época usa os valores do seu próprio Relatório e Contas (2024/25 sem a reexpressão).",
+    limitacoes: "Os dados de transferências só existem desde 2017/18. O resultado sem mais-valias é uma aproximação: subtrai as mais-valias ao resultado líquido, sem ajustar o imposto nem outros efeitos. Cada época usa os valores do seu próprio Relatório e Contas (2024/25 sem a reexpressão).",
   },
   {
     n: 2, contexto: "As mais-valias com jogadores e as receitas das competições da UEFA são as duas fontes de receita mais irregulares. Mede-se o seu peso face às vendas e serviços prestados.",
@@ -932,7 +940,7 @@ export const PERGUNTAS = [
     resposta: ({ q }) => {
       const v = ultimo(q(54)), g = q(21), fase = g[0], sem = ultimo(g);
       return `As vendas de jogadores superaram as receitas da atividade corrente em ${contar(q(54), x => x.vendas_por_euro_de_receita > 1)} de ${q(54).length} épocas (${racio(v.vendas_por_euro_de_receita)} € por cada euro de receita em ${v.epoca}). ` +
-        `Nas épocas com fase de grupos europeia, a receita média da SAD foi de ${euros(fase.receita_media)}, contra ${euros(sem.receita_media)} nas épocas sem competições europeias.`;
+        `Nas épocas com fase de grupos europeia, as vendas e serviços prestados foram em média de ${euros(fase.receita_media)}, contra ${euros(sem.receita_media)} nas épocas sem competições europeias.`;
     },
     indicadores: ({ q }) => {
       const v = ultimo(q(54)), g = q(21);
@@ -969,14 +977,15 @@ export const PERGUNTAS = [
     pergunta: "Gastar mais traz melhores classificações?", consultas: [53],
     resposta: ({ q }) => {
       const r = q(53)[0];
-      return `Não se consegue demonstrar: as despesas explicam ${pct(100 * r.r_quadrado)} das diferenças de classificação (R² = ${decimal(r.r_quadrado)}, ${r.n} épocas) ` +
-        `e o intervalo de confiança do efeito ${r.ic95_inferior <= 0 && r.ic95_superior >= 0 ? "inclui o zero" : "não inclui o zero"}.`;
+      const zero = r.ic95_inferior <= 0 && r.ic95_superior >= 0;
+      return `${zero ? "Os dados não o demonstram" : "Há uma associação estatística, mas não uma prova de causa"}: a reta só acompanha ${pct(100 * r.r_quadrado)} da variação da classificação (R² = ${decimal(r.r_quadrado)}, ${r.n} épocas) ` +
+        `e o intervalo de confiança do declive ${zero ? "inclui o zero" : "não inclui o zero"}.`;
     },
     indicadores: ({ q }) => {
       const r = q(53)[0];
       return [
         { rotulo: "R²", valor: decimal(r.r_quadrado) },
-        { rotulo: "Declive (lugares por M€)", valor: decimal(r.b_declive_por_m) },
+        { rotulo: "Declive (lugares por M€ de gastos)", valor: decimal(r.b_declive_por_m) },
         { rotulo: "IC 95% do declive", valor: `${decimal(r.ic95_inferior)} a ${decimal(r.ic95_superior)}` },
         { rotulo: "Épocas", valor: inteiro(r.n) },
       ];
@@ -989,7 +998,7 @@ export const PERGUNTAS = [
     resposta: ({ q }) => {
       const r = q(55), max = r.reduce((a, b) => (b.pct_do_defice_coberto > a.pct_do_defice_coberto ? b : a));
       return `A centralização dos direitos de TV, por si só, cobriria no máximo ${pct(max.pct_do_defice_coberto)} do défice antes de vendas (${max.contrato}, ${max.lugar} lugar). ` +
-        `O restante exige reduzir gastos, baixar o custo da dívida ou manter a venda de jogadores.`;
+        `O restante teria de ser coberto por outras vias: menos gastos, dívida mais barata ou venda de jogadores.`;
     },
     indicadores: ({ q }) => {
       const r = q(55), central = r.find(x => x.contrato === "250 M€" && x.lugar === "6.º");

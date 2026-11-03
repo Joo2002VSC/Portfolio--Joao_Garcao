@@ -6,27 +6,27 @@
   <title>As contas do Vitória SC · Análise financeira</title>
   <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=6" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=6" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=6">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=6">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=7" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=7" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=7">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=7">
   <meta name="theme-color" content="#343A40">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=6",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=6",
-      "./js/dados.js": "./js/dados.js?v=6",
-      "./js/explorador.js": "./js/explorador.js?v=6",
-      "./js/formato.js": "./js/formato.js?v=6",
-      "./js/graficos.js": "./js/graficos.js?v=6",
-      "./js/paineis.js": "./js/paineis.js?v=6",
-      "./js/tabelas.js": "./js/tabelas.js?v=6"
+      "./js/animacoes.js": "./js/animacoes.js?v=7",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=7",
+      "./js/dados.js": "./js/dados.js?v=7",
+      "./js/explorador.js": "./js/explorador.js?v=7",
+      "./js/formato.js": "./js/formato.js?v=7",
+      "./js/graficos.js": "./js/graficos.js?v=7",
+      "./js/paineis.js": "./js/paineis.js?v=7",
+      "./js/tabelas.js": "./js/tabelas.js?v=7"
     }
   }
   </script>
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -34,14 +34,14 @@
   <header class="topo gutter">
     <div class="dentro">
       <div class="marca">
-        <img class="icone" src="img/icone-claro.png?v=6" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=7" alt="" width="47" height="60">
         <div>
           <p class="sobretitulo">Análise financeira · <span data-intervalo>2012/13 – 2025/26</span></p>
           <h1>As contas do Vitória SC</h1>
         </div>
       </div>
       <div class="topo-texto">
-        <p class="sub">Evolução financeira da Vitória Sport Clube – Futebol, SAD, com base nos Relatórios e Contas e em <span data-n-consultas>48</span> consultas SQL a uma base de dados SQLite.</p>
+        <p class="sub">Evolução financeira da Vitória Sport Clube – Futebol, SAD, com base nos Relatórios e Contas e em <span data-n-total-painel>54</span> consultas SQL (<span data-n-consultas>48</span> do projeto e <span data-n-complementares>6</span> complementares) a uma base de dados SQLite.</p>
         <p class="aviso-pessoal">Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</p>
       </div>
     </div>
@@ -84,7 +84,7 @@
         <section class="bloco" aria-labelledby="h-sintese">
           <div class="bloco-cabeca">
             <h3 id="h-sintese">Síntese financeira <span class="ref">· <span data-ref-epoca></span></span></h3>
-            <p id="estado-contas" class="selo" hidden></p>
+            <ul id="estado-contas" class="selos" hidden></ul>
           </div>
           <p class="bloco-nota">Valores da época em destaque e variação face à época anterior: <span class="leg leg-melhor">verde</span> evolução favorável, <span class="leg leg-pior">vermelho</span> evolução desfavorável. Rubricas de balanço a <span data-ref-fecho></span>.</p>
           <div class="kpis" id="kpis"></div>
@@ -165,7 +165,7 @@
           <li><span class="rotulo-claro">Fonte complementar</span><strong>VSC Contas</strong><span><a href="https://vitoriasempre.net/contas-vsc/">vitoriasempre.net</a>: demonstração de resultados detalhada e transferências</span></li>
           <li><span class="rotulo-claro">Organização dos dados</span><strong>Base de dados SQLite</strong><span>Projeto <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a></span></li>
           <li><span class="rotulo-claro">Período</span><strong data-intervalo>2012/13 – 2025/26</strong><span><span data-n-epocas>14</span> épocas; exercícios de 1 de julho a 30 de junho</span></li>
-          <li><span class="rotulo-claro">Exportação dos dados</span><strong data-gerado></strong><span>Data em que as consultas foram executadas</span></li>
+          <li><span class="rotulo-claro">Exportação dos dados</span><strong data-gerado>—</strong><span>Data em que as consultas SQL foram executadas e os resultados gravados em JSON</span></li>
           <li><span class="rotulo-claro">Âmbito</span><strong>Apenas a SAD</strong><span>Sem as contas do Clube nem as consolidadas. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</span></li>
         </ul>
         <div class="texto-longo">
@@ -173,7 +173,7 @@
           <p>O painel trata exclusivamente das contas da <strong>Vitória Sport Clube – Futebol, SAD</strong>. Os dados provêm de duas fontes. Os <strong>Relatórios e Contas da SAD</strong>, de 2012/13 a 2025/26, publicados em vitoriasc.pt, são a referência para o balanço, a dívida financeira, os juros, o número de funcionários e os gastos com pessoal. Seis destes relatórios são documentos digitalizados, lidos por reconhecimento ótico de caracteres (OCR) e confirmados visualmente. O sítio <strong>VSC Contas</strong> (vitoriasempre.net), um painel não oficial, fornece a demonstração de resultados detalhada e os dados das transferências.</p>
 
           <h3>Extração e organização em SQLite</h3>
-          <p>Os valores foram recolhidos em ficheiros CSV e carregados por um <em>script</em> Python numa base de dados SQLite: dimensões (épocas, rubricas), demonstração de resultados em formato longo, balanço, fluxos de caixa, transferências, pessoal, dívida, auditoria e fontes. Os gastos são registados com sinal negativo, como nas demonstrações financeiras; os valores não disponíveis ficam vazios (NULL) e nunca a zero. Testes automáticos verificam a integridade das chaves e a coerência contabilística (ativo = passivo + capital próprio) e reconciliam os números citados nos relatórios.</p>
+          <p>Os valores foram recolhidos em ficheiros CSV e carregados por um <em>script</em> Python numa base de dados SQLite: dimensões (épocas, rubricas), demonstração de resultados em formato longo, balanço, fluxos de caixa, transferências, pessoal, dívida, auditoria e fontes. Os gastos são registados com sinal negativo, como nas demonstrações financeiras; os valores não disponíveis ficam vazios (NULL) e nunca a zero. Testes automáticos verificam a integridade das chaves e a coerência contabilística (ativo = passivo + capitais próprios) e reconciliam os números citados nos relatórios.</p>
 
           <h3>Do SQL ao painel</h3>
           <p>Um <em>script</em> Python executa as consultas do projeto relativas às contas da SAD (<span data-n-consultas>48</span> das <span data-n-total>59</span>) e <span data-n-complementares>6</span> consultas complementares do painel sobre a mesma base de dados, verifica a coerência dos resultados e grava-os em JSON. As <span data-n-excluidas>11</span> consultas restantes tratam do Clube ou do Grupo consolidado e ficam no projeto SQL, fora do âmbito do painel. O painel lê os resultados e não refaz os cálculos: em JavaScript, apenas se filtram as épocas, se calculam somas, médias e pesos do intervalo selecionado e se escolhem as frases das conclusões.</p>
@@ -185,7 +185,8 @@
           <h3>Critérios de comparação entre épocas</h3>
           <ul>
             <li>Cada época corresponde ao exercício de 1 de julho a 30 de junho. Os valores de balanço reportam-se a 30 de junho.</li>
-            <li>Cada época usa os valores do <strong>respetivo Relatório e Contas</strong>, tal como publicados na altura. O Relatório e Contas de 2025/26 reexpressou 2024/25 (resultado líquido de 7,36 M€ em vez de 7,61 M€); os valores reexpressos constam da consulta 36.</li>
+            <li>Cada época usa os valores do <strong>respetivo Relatório e Contas</strong>, tal como publicados na altura. O Relatório e Contas de 2025/26 reexpressou 2024/25 (resultado líquido de 7,36 M€ em vez de 7,61 M€; capitais próprios de (25,8 M€) em vez de (24,0 M€)); os valores reexpressos constam da consulta 36. Por isso, as variações de 2025/26 face a 2024/25 apresentadas no painel podem diferir das do Relatório e Contas de 2025/26, que compara com os valores reexpressos.</li>
+            <li>Três situações são assinaladas junto à época em destaque: valores <strong>publicados</strong> (aprovados), valores <strong>reexpressos</strong> num relatório posterior (2024/25) e contas <strong>sujeitas a aprovação</strong> da Assembleia Geral (2025/26).</li>
             <li>Valores em euros correntes, sem correção da inflação.</li>
             <li>Quando uma série tem épocas em falta, os gráficos deixam o espaço em branco, em vez de interpolar valores.</li>
           </ul>
@@ -196,7 +197,8 @@
             <li><strong>Séries incompletas.</strong> A demonstração de resultados de 2012/13 só tem o resultado líquido; os dados das transferências começam em 2017/18 e o detalhe da dívida por instrumento a 30/06/2024.</li>
             <li><strong>Composição das receitas e dos gastos.</strong> A repartição das vendas e serviços prestados por fonte (direitos de TV, bilheteira, patrocínios, prémios) e dos fornecimentos e serviços externos só está disponível em 2024/25 e 2025/26 (consulta 59). O painel apresenta essas duas épocas, sem série histórica, e não estima o peso dos direitos de TV nas épocas anteriores.</li>
             <li><strong>Resultado antes de impostos.</strong> Calcula-se como resultado líquido menos o imposto sobre o rendimento (consulta complementar D6).</li>
-            <li><strong>Juros.</strong> Em algumas épocas, a rubrica de juros da demonstração de resultados é líquida dos juros obtidos; a taxa implícita usa os juros dos financiamentos e inclui as comissões de factoring.</li>
+            <li><strong>Juros.</strong> O painel usa duas medidas: os juros dos financiamentos (notas do Relatório e Contas, consulta 27), base da taxa implícita e do cartão da síntese; e a rubrica «juros e gastos similares» da demonstração de resultados (consultas 8 e 30), que pode incluir outros encargos e, em algumas épocas, é apresentada líquida dos juros obtidos. Em 2025/26, por exemplo, os valores são de 5,6 M€ e 7,1 M€.</li>
+            <li><strong>Resultado sem mais-valias.</strong> Subtrai as mais-valias ao resultado, sem ajustar o imposto: é uma aproximação da dependência das vendas de jogadores.</li>
             <li><strong>Simulações.</strong> A simulação da centralização dos direitos de TV usa uma componente de mérito linear e ignora as audiências: os valores são ordens de grandeza, não previsões.</li>
             <li><strong>Dados desportivos.</strong> Classificações e campanhas europeias recolhidas de fontes públicas (Wikipédia, Maisfutebol); médias de espectadores compiladas pelo autor.</li>
             <li><strong>2025/26.</strong> O exercício está completo (termina a 30/06/2026), mas o Relatório e Contas, aprovado pelo Conselho de Administração a 26/10/2026, está sujeito a aprovação da Assembleia Geral. Os valores podem ainda ser corrigidos.</li>
@@ -215,23 +217,25 @@
 
           <h3>Glossário</h3>
           <dl class="glossario">
-            <dt>Vendas e serviços prestados</dt><dd>Rubrica da demonstração de resultados com as receitas da atividade corrente: direitos de TV, bilheteira, quotização, patrocínios, prémios de competições e venda de artigos oficiais. No painel, «receitas da atividade corrente» designa esta rubrica.</dd>
+            <dt>Vendas e serviços prestados</dt><dd>Rubrica da demonstração de resultados com as receitas da atividade corrente: direitos de TV, bilheteira e quotização, publicidade e patrocínios, prémios de competições, venda de mercadorias e mecanismo de solidariedade. No painel, «receitas da atividade corrente» designa esta rubrica; não inclui a venda de jogadores.</dd>
             <dt>Rendimentos operacionais</dt><dd>Vendas e serviços prestados, subsídios à exploração e outros rendimentos, incluindo os ganhos com a alienação de passes.</dd>
             <dt>Mais-valias com jogadores</dt><dd>Diferença entre o valor de venda de um passe e o seu valor contabilístico, deduzida dos custos da venda (comissões e direitos de terceiros).</dd>
             <dt>Gastos operacionais</dt><dd>Custo das mercadorias vendidas, fornecimentos e serviços externos, gastos com pessoal, depreciações e amortizações, imparidades, provisões e outros gastos.</dd>
-            <dt>Custos fixos</dt><dd>Gastos com pessoal, fornecimentos e serviços externos e depreciações e amortizações: gastos de estrutura, que se mantêm independentemente das vendas de jogadores.</dd>
-            <dt>Resultado operacional</dt><dd>Resultado antes de juros e impostos.</dd>
-            <dt>Resultado líquido</dt><dd>Resultado do exercício depois de juros e impostos.</dd>
-            <dt>EBITDA</dt><dd>Resultado antes de juros, impostos, depreciações e amortizações.</dd>
+            <dt>Gastos de estrutura</dt><dd>Gastos com pessoal, fornecimentos e serviços externos e depreciações e amortizações. Designação de gestão, não contabilística: são gastos recorrentes, que não dependem das vendas de jogadores, embora não sejam todos fixos (os prémios ao plantel, por exemplo, variam). A consulta 42 do projeto chama-lhes «custos fixos».</dd>
+            <dt>Resultado operacional</dt><dd>Resultado antes dos resultados financeiros (juros suportados e obtidos) e do imposto sobre o rendimento.</dd>
+            <dt>Resultado antes de impostos</dt><dd>Resultado operacional mais os resultados financeiros; no painel, calcula-se como resultado líquido menos o imposto sobre o rendimento.</dd>
+            <dt>Resultado líquido</dt><dd>Resultado do exercício, depois dos resultados financeiros e do imposto sobre o rendimento.</dd>
+            <dt>EBITDA</dt><dd>Resultado operacional antes das depreciações e amortizações (resultado antes de juros, impostos, depreciações e amortizações). Inclui as mais-valias com jogadores.</dd>
             <dt>Capitais próprios</dt><dd>Diferença entre o ativo e o passivo. Quando são negativos, o passivo é superior ao ativo.</dd>
-            <dt>Encargos financeiros</dt><dd>Juros e gastos similares dos financiamentos, incluindo as comissões de factoring e de antecipação de receitas.</dd>
+            <dt>Encargos financeiros</dt><dd>Juros e gastos similares suportados. O painel distingue os juros dos financiamentos (incluem as comissões de factoring e de antecipação de receitas) da rubrica «juros e gastos similares» da demonstração de resultados (ver Limitações).</dd>
             <dt>Margem operacional e margem líquida</dt><dd>Resultado operacional e resultado líquido em percentagem dos rendimentos operacionais.</dd>
             <dt>Dívida financeira</dt><dd>Empréstimos, factoring, antecipações de receitas e locações financeiras: a parte remunerada do passivo.</dd>
             <dt>Taxa de juro implícita</dt><dd>Juros dos financiamentos a dividir pela dívida financeira média do exercício.</dd>
             <dt>Factoring</dt><dd>Cessão de créditos (por exemplo, valores a receber de vendas de jogadores) a uma entidade financeira, em troca de liquidez imediata.</dd>
             <dt>FSE</dt><dd>Fornecimentos e serviços externos: serviços especializados, deslocações, rendas, despesas com provas, energia e materiais.</dd>
             <dt>OT</dt><dd>Obrigações do Tesouro, títulos de dívida pública portuguesa; usam-se as de prazo a 10 anos como referência de mercado.</dd>
-            <dt>Reexpressão</dt><dd>Correção, nas contas de um exercício, dos valores comparativos do exercício anterior.</dd>
+            <dt>Reexpressão</dt><dd>Correção, nas contas de um exercício, dos valores comparativos do exercício anterior (em 2025/26, pela aplicação do método do custo amortizado e por outras correções).</dd>
+            <dt>Sujeito a aprovação</dt><dd>Contas aprovadas pelo Conselho de Administração mas ainda não pela Assembleia Geral, que as pode alterar.</dd>
           </dl>
 
 
@@ -246,12 +250,12 @@
     <div class="dentro">
       <p>Fontes: Relatórios e Contas da Vitória Sport Clube – Futebol, SAD e VSC Contas (vitoriasempre.net), organizados em SQLite no projeto
         <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a>.
-        Valores em euros; valores monetários negativos entre parênteses. Dados exportados a <span data-gerado></span>.</p>
+        Valores em euros; valores monetários negativos entre parênteses.<span data-frase-gerado hidden> Dados exportados a <span data-gerado></span>.</span></p>
       <p>Análise e desenvolvimento: João Garção. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube. <a href="#metodologia">Metodologia</a></p>
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=6"></script>
-  <script type="module" src="js/app.js?v=6"></script>
+  <script src="js/vendor/chart.umd.min.js?v=7"></script>
+  <script type="module" src="js/app.js?v=7"></script>
 </body>
 </html>

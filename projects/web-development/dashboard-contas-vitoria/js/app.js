@@ -7,7 +7,7 @@ import { aplicarTema, desenhar, definirDestaque } from "./graficos.js";
 import { SECCOES, PAINEIS, PERGUNTAS, ORDEM, GRUPOS } from "./paineis.js";
 import { tabelaOrdenavel } from "./tabelas.js";
 import { montarExplorador } from "./explorador.js";
-import { conclusoes } from "./conclusoes.js";
+import { conclusoes, SENTIDO, EPOCA_REEXPRESSA } from "./conclusoes.js";
 import { contar, observar, reduzido } from "./animacoes.js";
 
 /* ====================== Estado ====================== */
@@ -298,8 +298,11 @@ const KPIS = [
     extra: ep => { const v = naConsulta(101, "autonomia_pct")(ep); return v === null ? "" : `autonomia financeira de ${pct(v)}`; } },
   { id: "pessoal", nome: "Gastos com pessoal", valor: serieKPI("gastos_pessoal"), bom: -1, fonte: 103,
     extra: ep => { const v = naConsulta(103, "pessoal_sobre_vendas_pct")(ep); return v === null ? "" : `${pct(v)} das vendas e serviços prestados`; } },
-  { id: "encargos", nome: "Encargos financeiros", valor: naConsulta(27, "juros"), bom: -1, fonte: 27,
-    extra: ep => { const v = naConsulta(27, "taxa_implicita_pct")(ep); return v === null ? "juros dos financiamentos" : `juros dos financiamentos · taxa implícita de ${pct(v)}`; } },
+  { id: "encargos", nome: "Juros dos financiamentos", valor: naConsulta(27, "juros"), bom: -1, fonte: 27,
+    extra: ep => {
+      const t = naConsulta(27, "taxa_implicita_pct")(ep), dr = serieKPI("juros")(ep);
+      return [t !== null && `taxa implícita de ${pct(t)}`, dr !== null && `juros e gastos similares na DR: ${euros(dr)}`].filter(Boolean).join(" · ");
+    } },
 ];
 
 /** Tendência em SVG, sem eixos: épocas em falta ficam em branco; a época em destaque tem um ponto */
@@ -390,14 +393,16 @@ function desenharVariacoes() {
   const rows = Dados.linhas(104).filter(r => r.epoca === estado.epoca && r.variacao !== null);
   // Ordena pela variação em euros: a percentual engana quando a base é pequena ou muda de sinal
   rows.sort((a, b) => Math.abs(b.variacao) - Math.abs(a.variacao));
-  const SENTIDO = { "Passivo": -1, "Gastos com pessoal": -1 };
   lista.replaceChildren(...(rows.length ? rows.slice(0, 5).map(r => {
     const li = criar("li");
     const mudouSinal = Math.sign(r.valor) !== Math.sign(r.anterior) && r.valor !== 0 && r.anterior !== 0;
     const ambosPositivos = r.valor > 0 && r.anterior > 0;
     const sinal = mudouSinal ? " (mudou de sinal)" : ambosPositivos && r.variacao_pct !== null ? ` (${r.variacao_pct > 0 ? "+" : "−"}${pct(Math.abs(r.variacao_pct))})` : "";
-    const favoravel = Math.sign(r.variacao) === (SENTIDO[r.indicador] ?? 1);
-    li.append(criar("span", "ind", r.indicador), criar("span", `var ${favoravel ? "melhor" : "pior"}`, `${variacaoEuros(r.variacao)}${sinal}`),
+    // O ativo não tem sentido favorável definido: fica a cinzento
+    const sentido = SENTIDO[r.indicador], favoravel = Math.sign(r.variacao) === sentido;
+    const v = criar("span", `var ${sentido ? (favoravel ? "melhor" : "pior") : ""}`, `${variacaoEuros(r.variacao)}${sinal}`);
+    if (sentido) v.appendChild(criar("span", "sr-only", favoravel ? " (favorável)" : " (desfavorável)"));
+    li.append(criar("span", "ind", r.indicador), v,
       criar("span", "ref", `${euros(r.anterior)} em ${r.epoca_anterior} → ${euros(r.valor)}`));
     return li;
   }) : [criar("li", "vazio", "Sem época anterior comparável.")]));
@@ -421,7 +426,7 @@ function desenharVariacoes() {
 
 function desenharConclusoes() {
   const c = conclusoes(estado.epoca);
-  const grupos = [["melhorias", "Evolução favorável", "Face à época anterior"], ["riscos", "Riscos", "Valores fora dos limiares de referência"],
+  const grupos = [["melhorias", "Evolução", "Face à época anterior: favorável e desfavorável"], ["riscos", "Riscos", "Valores fora dos limiares de referência"],
     ["atencao", "Alertas", "Dependência das vendas e peso dos gastos"], ["estruturais", "Alterações estruturais", "Pessoal, dívida e contas"]];
   $("#conclusoes").replaceChildren(...grupos.map(([k, titulo, sub]) => {
     const div = criar("div", `concl concl-${k}`);
@@ -433,6 +438,10 @@ function desenharConclusoes() {
     if (!c[k].length) ul.appendChild(criar("li", "vazio", "Nada a assinalar nesta época."));
     c[k].forEach(item => {
       const li = criar("li");
+      if (item.sentido) {
+        li.className = item.sentido;
+        li.appendChild(criar("span", "etiqueta", item.sentido === "favoravel" ? "▲ Favorável" : "▼ Desfavorável"));
+      }
       li.append(criar("span", "", item.texto), " ");
       const a = criar("a", "src", item.n > 100 ? codigoConsulta(item.n) : `C${item.n}`);
       a.href = `#sql/${item.n}`;
@@ -445,13 +454,18 @@ function desenharConclusoes() {
   }));
 }
 
-/** Estado das contas da época em destaque (parciais ou por aprovar), a partir da tabela de fontes */
+/**
+ * Estado das contas da época em destaque: parciais, reexpressas ou sujeitas a aprovação.
+ * Vem da tabela de fontes e da consulta 36; devolve [texto longo, texto curto] por situação.
+ */
 function estadoContas(ep) {
-  const f = Dados.base().fontes.find(x => x.epoca === ep);
-  if (!f) return "";
-  if (/sujeito a aprovação da AG/.test(f.documentos)) return "Contas aprovadas pelo Conselho de Administração, sujeitas a aprovação da Assembleia Geral";
-  if (/^Apenas/.test(f.estado)) return `Dados parciais: ${f.estado.charAt(0).toLowerCase()}${f.estado.slice(1)}`;
-  return "";
+  const f = Dados.base().fontes.find(x => x.epoca === ep), avisos = [];
+  if (f && /^Apenas/.test(f.estado)) avisos.push([`Dados parciais: ${f.estado.charAt(0).toLowerCase()}${f.estado.slice(1)}`, "dados parciais", "alerta"]);
+  if (ep === EPOCA_REEXPRESSA) avisos.push(["Valores originalmente publicados; reexpressos no Relatório e Contas seguinte (consulta 36)", "valores originais, depois reexpressos", "info"]);
+  if (f && /sujeito a aprovação da AG/.test(f.documentos)) avisos.push(["Contas aprovadas pelo Conselho de Administração, sujeitas a aprovação da Assembleia Geral", "contas sujeitas a aprovação da AG", "alerta"]);
+  const i = Dados.epocas().indexOf(ep);
+  if (Dados.epocas()[i - 1] === EPOCA_REEXPRESSA) avisos.push([`Variações calculadas face aos valores originais de ${EPOCA_REEXPRESSA}`, null, "info"]);
+  return avisos;
 }
 
 function construirCartoesGeral() {
@@ -483,8 +497,9 @@ function desenharGeral() {
   document.querySelectorAll("[data-ref-fecho]").forEach(el => (el.textContent = fecho(estado.epoca)));
   const sel = epocasVisiveis();
   document.querySelectorAll("[data-ref-intervalo]").forEach(el => (el.textContent = sel.length > 1 ? `${sel[0]} a ${sel[sel.length - 1]}` : sel[0]));
-  const selo = $("#estado-contas"), txt = estadoContas(estado.epoca);
-  selo.textContent = txt; selo.hidden = !txt;
+  const selos = $("#estado-contas");
+  selos.replaceChildren(...estadoContas(estado.epoca).map(([longo, , tipo]) => criar("li", `selo selo-${tipo}`, longo)));
+  selos.hidden = !selos.children.length;
   desenharKPIs();
   desenharVariacoes();
   desenharConclusoes();
@@ -568,8 +583,7 @@ function sincronizarFiltros() {
   resumo.replaceChildren(
     "Período ", criar("strong", "", n > 1 ? `${vis[0]} a ${vis[n - 1]}` : vis[0]), ` (${n} ${n === 1 ? "época" : "épocas"}) · Em destaque `,
     criar("strong", "", estado.epoca));
-  const ec = estadoContas(estado.epoca);
-  if (ec) resumo.append(` · ${/Assembleia/.test(ec) ? "contas sujeitas a aprovação da AG" : "dados parciais"}`);
+  estadoContas(estado.epoca).forEach(([, curto]) => { if (curto) resumo.append(` · ${curto}`); });
 }
 
 function atualizar({ recriar = false } = {}) {
@@ -674,13 +688,18 @@ async function iniciar() {
   const preencher = (sel, txt) => document.querySelectorAll(sel).forEach(el => (el.textContent = txt));
   preencher("[data-n-consultas]", nProjeto);
   preencher("[data-n-complementares]", nComp);
+  preencher("[data-n-total-painel]", nProjeto + nComp);
   preencher("[data-n-epocas]", e.length);
   if (info.totalProjeto) { preencher("[data-n-total]", info.totalProjeto); preencher("[data-n-excluidas]", info.totalProjeto - nProjeto); }
   preencher("[data-intervalo]", `${e[0]} – ${e[e.length - 1]}`);
-  preencher("[data-gerado]", new Date(info.gerado).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" }));
+  const gerado = new Date(`${info.gerado}T12:00:00`);
+  if (!Number.isNaN(gerado.getTime())) {
+    preencher("[data-gerado]", gerado.toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" }));
+    document.querySelectorAll("[data-frase-gerado]").forEach(el => (el.hidden = false));
+  }
   const nota = $("#nota-ambito-sql");
-  nota.textContent = `O projeto SQL tem ${info.totalProjeto ?? nProjeto} consultas. Aqui apresentam-se as ${nProjeto} que tratam das contas da SAD e ${nComp} consultas complementares do painel (D1 a D${nComp}).` +
-    (info.excluidas.length ? ` As consultas ${info.excluidas.slice(0, -1).join(", ")} e ${info.excluidas.at(-1)} dizem respeito ao Clube ou ao Grupo consolidado e podem ser consultadas no ficheiro 04_analises.sql do projeto.` : "");
+  nota.textContent = `O projeto SQL tem ${info.totalProjeto ?? nProjeto} consultas, numeradas de 1 a ${info.totalProjeto ?? nProjeto}. Aqui apresentam-se as ${nProjeto} que tratam das contas da SAD, com a numeração original, e ${nComp} consultas complementares do painel (D1 a D${nComp}), escritas para este painel sobre a mesma base de dados.` +
+    (info.excluidas.length ? ` Os números em falta (${info.excluidas.slice(0, -1).join(", ")} e ${info.excluidas.at(-1)}) correspondem a consultas sobre o Clube ou o Grupo consolidado, que podem ser consultadas no ficheiro 04_analises.sql do projeto.` : "");
 
   construirSeccoes();
   construirKPIs();
