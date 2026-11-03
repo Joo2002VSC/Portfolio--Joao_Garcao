@@ -19,6 +19,7 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 | **Visão geral** | Síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
 | **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com contexto, resposta, indicadores, gráficos e limitações |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
+| **Soluções** | Sete propostas para a sustentabilidade financeira da SAD, cada uma com diagnóstico calculado a partir das consultas, medidas, indicadores a acompanhar e prioridade |
 | **Desporto** · **Cenários** | Gastos e resultados desportivos; simulações da centralização dos direitos de TV |
 | **Consultas SQL** | Explorador das 48 consultas do projeto relativas à SAD e de 6 consultas complementares, agrupadas por tema: objetivo, código com realce de sintaxe e numeração de linhas, técnicas SQL detetadas, resultado ordenável e exportação para CSV |
 | **Metodologia e fontes** | Fontes, data de exportação, tratamento, critérios de comparação, limitações, convenções de apresentação e glossário |
@@ -62,7 +63,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=7`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=8`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 

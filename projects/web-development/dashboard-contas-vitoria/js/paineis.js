@@ -60,23 +60,24 @@ const coresSinal = v => (v === null || v === 0 ? cor("cinza") : v < 0 ? cor("ver
    ===================================================================== */
 
 export const SECCOES = [
-  { id: "geral", nome: "Visão geral", intro: "A situação financeira da SAD na época em destaque e a sua evolução: indicadores principais, leitura da época, tendências e pontos de entrada para a análise." },
-  { id: "perguntas", nome: "Cinco perguntas", intro: "As perguntas de investigação do projeto, cada uma com o contexto, a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
+  { id: "geral", nome: "Visão Geral", intro: "A situação financeira da SAD na época em destaque e a sua evolução: indicadores principais, leitura da época, tendências e pontos de entrada para a análise." },
+  { id: "perguntas", nome: "Cinco Perguntas", intro: "As perguntas de investigação do projeto, cada uma com o contexto, a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
   { id: "receitas", nome: "Receitas", intro: "A origem das receitas: a atividade corrente, a composição das vendas (incluindo os direitos de TV), as competições europeias e a venda de jogadores." },
   { id: "custos", nome: "Gastos", intro: "A evolução e a composição dos gastos operacionais: pessoal, fornecimentos e serviços externos, amortizações e outros gastos." },
   { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
   { id: "divida", nome: "Endividamento", intro: "Estrutura financeira (ativo, passivo e capitais próprios) e dívida financeira, encargos financeiros, fluxos de caixa e liquidez." },
   { id: "desporto", nome: "Desporto", intro: "A relação entre os gastos e os resultados desportivos." },
   { id: "cenarios", nome: "Cenários", intro: "Simulações do projeto SQL. São ilustrativas: dependem de pressupostos sobre contratos e classificações." },
+  { id: "solucoes", nome: "Soluções", intro: "Propostas para a sustentabilidade financeira da SAD, a partir dos indicadores da última época disponível. Cada proposta junta o diagnóstico, as medidas e os indicadores a acompanhar." },
   { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel: objetivo, código, técnicas e resultado." },
-  { id: "metodologia", nome: "Metodologia e fontes", intro: "Fontes, tratamento dos dados, critérios de comparação, convenções e limitações." },
+  { id: "metodologia", nome: "Metodologia e Fontes", intro: "Fontes, tratamento dos dados, critérios de comparação, convenções e limitações." },
 ];
 
 /** Subgrupos dentro de uma secção: [chave, título, texto]. Os painéis sem grupo ficam no último. */
 export const GRUPOS = {
   divida: [
-    ["estrutura", "Estrutura financeira", "O que a SAD detém, o que deve e a diferença entre ambos: capitais próprios, autonomia, solvabilidade e endividamento."],
-    ["financiamento", "Dívida, encargos financeiros e liquidez", "A parte remunerada do passivo, o seu custo, os instrumentos utilizados e a capacidade de cumprir os compromissos."],
+    ["estrutura", "Estrutura Financeira", "O que a SAD detém, o que deve e a diferença entre ambos: capitais próprios, autonomia, solvabilidade e endividamento."],
+    ["financiamento", "Dívida, Encargos Financeiros e Liquidez", "A parte remunerada do passivo, o seu custo, os instrumentos utilizados e a capacidade de cumprir os compromissos."],
   ],
 };
 
@@ -1010,5 +1011,158 @@ export const PERGUNTAS = [
       ];
     },
     limitacoes: "Simulação ilustrativa: o modelo de repartição dos direitos centralizados ainda não está definido; a componente de mérito é linear e ignora as audiências.",
+  },
+];
+
+/* =====================================================================
+   SOLUÇÕES (propostas do autor)
+   O diagnóstico, os indicadores e a prioridade são calculados a partir das consultas;
+   as medidas são propostas, não dados. Usa-se sempre a última época disponível.
+   ===================================================================== */
+
+const rubrica59 = (q, grupo) => q(59).filter(r => r.grupo === grupo);
+
+export const SOLUCOES = [
+  {
+    n: 1, area: "custos", titulo: "Ajustar os gastos de estrutura às receitas recorrentes", consultas: [42, 59],
+    alta: ({ q }) => ultimo(q(42)).cobertura_pct < 100,
+    diagnostico: ({ q }) => {
+      const f = ultimo(q(42));
+      return `Em ${f.epoca}, as vendas e serviços prestados (${euros(f.receitas)}) cobriram apenas ${pct(f.cobertura_pct)} dos gastos de estrutura (${euros(f.custos_fixos)}). ` +
+        `O défice antes de vendas de jogadores foi de ${euros(f.defice_antes_de_vendas)}.`;
+    },
+    medidas: ({ q }) => {
+      const fse = rubrica59(q, "Fornecimentos e serviços externos");
+      const maior = fse.length ? fse.reduce((a, b) => (b.valor_2025_26 > a.valor_2025_26 ? b : a)) : null;
+      return [
+        "Definir um orçamento plurianual de gastos de estrutura indexado às vendas e serviços prestados, e não às mais-valias esperadas.",
+        maior ? `Rever as rubricas de fornecimentos e serviços externos com maior peso, a começar por «${maior.rubrica}» (${euros(maior.valor_2025_26)} em 2025/26).` : "Rever as rubricas de fornecimentos e serviços externos com maior peso.",
+      ];
+    },
+    indicadores: ({ q }) => {
+      const f = ultimo(q(42));
+      return [{ rotulo: "Vendas / gastos de estrutura", valor: pct(f.cobertura_pct), referencia: "100%" }];
+    },
+  },
+  {
+    n: 2, area: "custos", titulo: "Conter a massa salarial", consultas: [103, 45, 31],
+    alta: ({ q }) => ultimo(q(103)).pessoal_sobre_vendas_pct > 100,
+    diagnostico: ({ q }) => {
+      const d = ultimo(q(103)), u = ultimo(q(45));
+      return `Em ${d.epoca}, os gastos com pessoal (${euros(d.pessoal)}) corresponderam a ${pct(d.pessoal_sobre_vendas_pct)} das vendas e serviços prestados. ` +
+        `O rácio de custos do plantel da UEFA foi de ${pct(u.racio_pct)}, ${u.racio_pct > 70 ? "acima" : "abaixo"} do limite de 70% (este rácio soma às receitas a média das mais-valias).`;
+    },
+    medidas: ({ q }) => {
+      const f = q(31), a = f[f.length - 2], b = ultimo(f);
+      return [
+        "Fixar um teto para os gastos com pessoal em função das receitas recorrentes, com margem face ao limite de 70% da UEFA.",
+        "Reforçar a componente variável dos contratos, ligada a objetivos desportivos e financeiros.",
+        a && b ? `Rever o crescimento do quadro de pessoal: ${inteiro(a.funcionarios)} funcionários em ${a.epoca} e ${inteiro(b.funcionarios)} em ${b.epoca}.` : null,
+      ].filter(Boolean);
+    },
+    indicadores: ({ q }) => [
+      { rotulo: "Gastos com pessoal / vendas", valor: pct(ultimo(q(103)).pessoal_sobre_vendas_pct), referencia: "abaixo de 100%" },
+      { rotulo: "Rácio de custos do plantel (UEFA)", valor: pct(ultimo(q(45)).racio_pct), referencia: "até 70%" },
+    ],
+  },
+  {
+    n: 3, area: "divida", titulo: "Reestruturar a dívida financeira", consultas: [52, 28, 27],
+    alta: ({ q }) => ultimo(q(28)).pct_curto_prazo > 50 || ultimo(q(27)).juros_em_pct_receitas > 20,
+    diagnostico: ({ q }) => {
+      const t = ultimo(com(q(52), "vitoria_implicita")), c = ultimo(q(28)), j = ultimo(q(27));
+      return `A dívida financeira era de ${euros(c.divida_financeira)} a ${fimEpoca(c.epoca)}, com ${pct(c.pct_curto_prazo)} a vencer em menos de um ano. ` +
+        `A taxa de juro implícita foi de ${pct(t.vitoria_implicita)} (Euribor a 12 meses: ${pct(t.euribor_12m)}) e os juros absorveram ${pct(j.juros_em_pct_receitas)} das vendas e serviços prestados.`;
+    },
+    medidas: () => [
+      "Negociar o alongamento dos prazos, para reduzir a parte da dívida que vence no próprio ano.",
+      "Substituir, sempre que possível, o factoring e as antecipações de receitas por instrumentos de menor custo.",
+      "Fixar um teto para os juros em percentagem das vendas e serviços prestados.",
+    ],
+    indicadores: ({ q }) => [
+      { rotulo: "Taxa de juro implícita", valor: pct(ultimo(com(q(52), "vitoria_implicita")).vitoria_implicita), referencia: "aproximar das taxas de mercado" },
+      { rotulo: "Dívida a menos de um ano", valor: pct(ultimo(q(28)).pct_curto_prazo), referencia: "até 50%" },
+      { rotulo: "Juros / vendas", valor: pct(ultimo(q(27)).juros_em_pct_receitas), referencia: "até 20%" },
+    ],
+  },
+  {
+    n: 4, area: "divida", titulo: "Recapitalizar a SAD", consultas: [101, 43],
+    alta: ({ q }) => ultimo(q(101)).capital_proprio < 0,
+    diagnostico: ({ q }) => {
+      const d = ultimo(q(101)), a = ultimo(q(43));
+      return `A ${fimEpoca(d.epoca)}, os capitais próprios eram de ${euros(d.capital_proprio)} (autonomia financeira de ${pct(d.autonomia_pct)}). ` +
+        (a.metade_do_capital_perdida === "sim" ? "Mais de metade do capital social está perdida (artigo 35.º do Código das Sociedades Comerciais)" : "Metade do capital social não está perdida") +
+        (/Incerteza material/.test(a.parecer_auditor) ? " e o auditor assinala incerteza material sobre a continuidade." : ".");
+    },
+    medidas: () => [
+      "Aumento de capital ou conversão de dívida em capital, para repor os capitais próprios acima de metade do capital social.",
+      "Reservar parte dos resultados das épocas com mais-valias elevadas para reforçar os capitais próprios.",
+    ],
+    indicadores: ({ q }) => [
+      { rotulo: "Capitais próprios", valor: euros(ultimo(q(101)).capital_proprio), referencia: `acima de ${euros(ultimo(q(43)).metade_capital_social)}` },
+      { rotulo: "Autonomia financeira", valor: pct(ultimo(q(101)).autonomia_pct), referencia: "positiva" },
+    ],
+  },
+  {
+    n: 5, area: "divida", titulo: "Reforçar a tesouraria", consultas: [15, 29, 38],
+    alta: ({ q }) => ultimo(q(29)).liquidez_geral < 1,
+    diagnostico: ({ q }) => {
+      const f = ultimo(q(15)), l = ultimo(q(29)), m = ultimo(q(38));
+      return `Em ${f.epoca}, a atividade operacional ${f.operacional < 0 ? `consumiu ${euros(-f.operacional)}` : `gerou ${euros(f.operacional)}`} de caixa. ` +
+        `A liquidez geral foi de ${racio(l.liquidez_geral)} e o prazo médio de recebimentos de ${inteiro(m.pmr_dias)} dias.`;
+    },
+    medidas: () => [
+      "Manter um plano de tesouraria a 12 meses que antecipe os pagamentos de curto prazo.",
+      "Reduzir o prazo de recebimento dos valores a receber, sobretudo das vendas de jogadores, sem recorrer a factoring caro.",
+    ],
+    indicadores: ({ q }) => [
+      { rotulo: "Liquidez geral", valor: racio(ultimo(q(29)).liquidez_geral), referencia: "1 ou mais" },
+      { rotulo: "Fluxo de caixa operacional", valor: euros(ultimo(q(15)).operacional), referencia: "positivo" },
+      { rotulo: "Prazo médio de recebimentos", valor: `${inteiro(ultimo(q(38)).pmr_dias)} dias`, referencia: "a reduzir" },
+    ],
+  },
+  {
+    n: 6, area: "receitas", titulo: "Diversificar as receitas recorrentes", consultas: [59, 55],
+    alta: () => false,
+    diagnostico: ({ q }) => {
+      const v = rubrica59(q, "Vendas e serviços prestados"), total = soma(col(v, "valor_2025_26"));
+      const tv = v.find(r => /televisivos/.test(r.rubrica)), pr = v.find(r => /^Prémios/.test(r.rubrica)), bi = v.find(r => /^Bilheteira/.test(r.rubrica));
+      return `Em 2025/26, os direitos de TV valeram ${pct(100 * dividir(tv.valor_2025_26, total))} das vendas e serviços prestados. ` +
+        `Face a 2024/25, os prémios de competições ${pr.variacao_pct < 0 ? "caíram" : "subiram"} ${pct(Math.abs(pr.variacao_pct))} e a bilheteira, quotização e pack-sócio ${bi.variacao_pct < 0 ? "caíram" : "subiram"} ${pct(Math.abs(bi.variacao_pct))}.`;
+    },
+    medidas: ({ q }) => {
+      const max = q(55).reduce((a, b) => (b.pct_do_defice_coberto > a.pct_do_defice_coberto ? b : a));
+      return [
+        "Reforçar as receitas comerciais menos dependentes dos resultados desportivos: patrocínios, bilheteira e venda de mercadorias.",
+        `Preparar a centralização dos direitos de TV sem contar com ela para equilibrar as contas: no melhor cenário simulado cobre ${pct(max.pct_do_defice_coberto)} do défice antes de vendas.`,
+      ];
+    },
+    indicadores: ({ q }) => {
+      const v = rubrica59(q, "Vendas e serviços prestados"), tv = v.find(r => /televisivos/.test(r.rubrica));
+      return [
+        { rotulo: "Peso dos direitos de TV nas vendas", valor: pct(100 * dividir(tv.valor_2025_26, soma(col(v, "valor_2025_26")))), referencia: "a reduzir" },
+        { rotulo: "Vendas e serviços prestados", valor: euros(soma(col(v, "valor_2025_26"))), referencia: "a aumentar" },
+      ];
+    },
+  },
+  {
+    n: 7, area: "receitas", titulo: "Tornar a venda de jogadores mais eficiente", consultas: [46, 2, 41],
+    alta: () => false,
+    diagnostico: ({ q }) => {
+      const c = ultimo(q(46).filter(r => /^\d{4}\/\d{2}$/.test(r.epoca))), r = q(2);
+      return `Em ${c.epoca}, ${pct(c.custo_vendas_pct)} das vendas de jogadores foram para intermediários e terceiros. ` +
+        `Sem mais-valias, o resultado foi negativo em ${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length} épocas: a venda de jogadores fecha as contas todos os anos.`;
+    },
+    medidas: () => [
+      "Reduzir o peso das comissões e dos direitos de terceiros nas vendas.",
+      "Valorizar a formação: os jogadores formados no clube têm valor contabilístico quase nulo, pelo que a sua venda gera mais-valias quase integrais.",
+      "Planear as vendas para que não sejam necessárias para pagar a estrutura de cada época.",
+    ],
+    indicadores: ({ q }) => {
+      const c = ultimo(q(46).filter(r => /^\d{4}\/\d{2}$/.test(r.epoca))), m = ultimo(q(41));
+      return [
+        { rotulo: "Custo das vendas / vendas", valor: pct(c.custo_vendas_pct), referencia: "a reduzir" },
+        { rotulo: "Múltiplo de venda", valor: `${decimal(m.multiplo_de_venda)}×`, referencia: "acima de 1" },
+      ];
+    },
   },
 ];

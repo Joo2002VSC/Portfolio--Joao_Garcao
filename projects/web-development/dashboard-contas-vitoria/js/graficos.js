@@ -13,6 +13,11 @@ export const cor = nome => getComputedStyle(raiz).getPropertyValue(`--${nome}`).
     (positivo, negativo/risco, alerta) e só se usam através de coresSinal e coresCondicao (paineis.js). */
 export const PAPEIS = ["tinta", "cinza-escuro", "cinza", "cinza-claro"];
 
+/** Cor de cada papel nas séries: tons bem distintos (cinzento-escuro, azul, azul-claro, cinzento-claro),
+    para que séries vizinhas não se confundam. Fora das séries, os papéis mantêm os cinzentos. */
+const SERIE = { "tinta": "serie-1", "cinza-escuro": "serie-2", "cinza": "serie-3", "cinza-claro": "serie-4" };
+export const corSerie = papel => cor(SERIE[papel] ?? papel);
+
 export function aplicarTema() {
   Chart.defaults.font.family = '"Archivo", system-ui, sans-serif';
   Chart.defaults.font.size = 12;
@@ -26,8 +31,8 @@ export function aplicarTema() {
 export function barras(label, data, papel = "tinta", extra = {}) {
   const claro = papel === "cinza-claro" || papel === "amarelo";
   return {
-    label, data, backgroundColor: cor(papel),
-    borderColor: claro ? cor("cinza-escuro") : cor(papel), borderWidth: claro ? 1 : 0,
+    label, data, backgroundColor: corSerie(papel),
+    borderColor: claro ? cor("cinza-escuro") : corSerie(papel), borderWidth: claro ? 1 : 0,
     borderRadius: 2, borderSkipped: false, maxBarThickness: 30, categoryPercentage: 0.8, barPercentage: 0.9,
     ...extra,
   };
@@ -36,9 +41,9 @@ export function barras(label, data, papel = "tinta", extra = {}) {
 /** Linha principal (marcadores cheios) ou secundária (marcadores ocos) */
 export function linha(label, data, papel = "tinta", { oca = false, tracejada = false, ...extra } = {}) {
   return {
-    label, data, borderColor: cor(papel), backgroundColor: oca ? cor("cartao") : cor(papel),
+    label, data, borderColor: corSerie(papel), backgroundColor: oca ? cor("cartao") : corSerie(papel),
     borderWidth: 2.4, borderDash: tracejada ? [6, 4] : [], pointRadius: tracejada ? 0 : 4, pointHoverRadius: 6,
-    pointBorderWidth: oca ? 2.2 : 0, pointBorderColor: cor(papel), tension: 0, spanGaps: false,
+    pointBorderWidth: oca ? 2.2 : 0, pointBorderColor: corSerie(papel), tension: 0, spanGaps: false,
     ...extra,
   };
 }

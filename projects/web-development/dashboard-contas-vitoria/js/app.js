@@ -4,7 +4,7 @@
 import * as Dados from "./dados.js";
 import { formatar, variacaoEuros, inteiro, pct, euros } from "./formato.js";
 import { aplicarTema, desenhar, definirDestaque } from "./graficos.js";
-import { SECCOES, PAINEIS, PERGUNTAS, ORDEM, GRUPOS } from "./paineis.js";
+import { SECCOES, PAINEIS, PERGUNTAS, ORDEM, GRUPOS, SOLUCOES } from "./paineis.js";
 import { tabelaOrdenavel } from "./tabelas.js";
 import { montarExplorador } from "./explorador.js";
 import { conclusoes, SENTIDO, EPOCA_REEXPRESSA } from "./conclusoes.js";
@@ -64,6 +64,9 @@ function criarFicha(f) {
   return d;
 }
 
+/** Consulta a abrir no explorador a partir de um gráfico (a primeira, quando são várias) */
+const sqlDe = p => p.consulta ?? p.consultas?.[0] ?? null;
+
 function criarFigura(p) {
   const fig = criar("figure", "painel" + (p.largo ? " largo" : ""));
   fig.id = `p-${p.id}`;
@@ -72,16 +75,20 @@ function criarFigura(p) {
   fig.innerHTML = `
     <div class="painel-cabeca">
       <h4 id="t-${p.id}"></h4>
-      ${p.tabela || p.factos || p.matriz ? "" : `<button type="button" class="ver-tabela" aria-pressed="false" aria-controls="v-${p.id}">Ver tabela</button>`}
+      <div class="painel-acoes">
+        ${p.tabela || p.factos || p.matriz ? "" : `<button type="button" class="ver-tabela" aria-pressed="false" aria-controls="v-${p.id}">Ver tabela</button>`}
+        ${sqlDe(p) ? `<a class="ver-sql" href="#sql/${sqlDe(p)}" title="Ver a consulta SQL que alimenta este gráfico">SQL</a>` : ""}
+      </div>
     </div>
     <p class="descricao"></p>
     <p class="conclusao"></p>
     <div class="vista" id="v-${p.id}"></div>
-    <figcaption class="fonte">${p.consultas ? `Fontes: ${p.consultas.map(ligacaoConsulta).join(" e ")}` : `Fonte: ${p.consulta ? ligacaoConsulta(p.consulta) : p.fonteTexto}`}${p.nota ? " · <span></span>" : ""}</figcaption>`;
+    ${p.nota ? `<p class="nota-painel"></p>` : ""}`;
   $("h4", fig).textContent = p.pergunta;
   $(".descricao", fig).textContent = p.descricao;
-  if (p.nota) $(".fonte span", fig).textContent = p.nota;
-  if (p.ficha) fig.insertBefore(criarFicha(p.ficha), $(".fonte", fig));
+  if (p.nota) $(".nota-painel", fig).textContent = p.nota;
+  if (p.ficha) fig.appendChild(criarFicha(p.ficha));
+  $(".ver-sql", fig)?.setAttribute("aria-label", `Ver a consulta SQL de «${p.pergunta}»`);
   const reg = { el: fig, p, grafico: null, visto: false, vista: "grafico", tema: -1 };
   $(".ver-tabela", fig)?.addEventListener("click", e => {
     reg.vista = reg.vista === "grafico" ? "tabela" : "grafico";
@@ -195,11 +202,28 @@ function criarMatriz(m) {
 
 /* ====================== Construção das secções ====================== */
 
+/** Ícones das secções (traço simples, herdam a cor do texto) */
+const ICONES = {
+  geral: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  perguntas: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.4"/><circle cx="12" cy="16.8" r=".4"/>',
+  receitas: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  custos: '<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>',
+  rentabilidade: '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+  divida: '<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 20.5h18"/>',
+  desporto: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.6h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.5-1.5M14.5 15l2.8 3.8M9.5 15l-2.8 3.8M8 10.4L3.5 8.9"/>',
+  cenarios: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1.5 14h5M9.5 8h5M17.5 16h5"/>',
+  solucoes: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
+  sql: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+};
+
 function construirSeccoes() {
   const main = $("#conteudo .dentro");
   const nav = $("#abas");
   SECCOES.forEach(s => {
-    const a = criar("a", "", s.nome);
+    const a = criar("a");
+    a.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[s.id] ?? ""}</svg><span></span>`;
+    a.lastChild.textContent = s.nome;
     a.href = `#${s.id}`; a.dataset.seccao = s.id;
     nav.appendChild(a);
 
@@ -217,6 +241,7 @@ function construirSeccoes() {
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
     if (s.id === "perguntas") { construirPerguntas(sec); return; }
+    if (s.id === "solucoes") { construirSolucoes(sec); return; }
     if (GRUPOS[s.id]) {
       const padrao = GRUPOS[s.id].at(-1)[0];
       GRUPOS[s.id].forEach(([g, titulo, texto]) => {
@@ -249,7 +274,7 @@ function construirPerguntas(sec) {
       <p class="resposta-rotulo">Resposta</p>
       <p class="resposta"></p><div class="indicadores"></div><div class="graficos"></div>
       <p class="limitacoes"><strong>Limitações.</strong> <span></span></p>
-      <p class="fonte">Consultas: ${per.consultas.map(ligacaoConsulta).join(", ")}</p>`;
+      <p class="consultas-ref">Consultas: ${per.consultas.map(ligacaoConsulta).join(", ")}</p>`;
     $("h3", art).textContent = per.pergunta;
     $(".contexto", art).textContent = per.contexto ?? "";
     try {
@@ -260,6 +285,40 @@ function construirPerguntas(sec) {
     $(".graficos", art).appendChild(grelhaDe(PAINEIS.filter(p => p.seccao === "perguntas" && p.questao === per.n)));
     sec.appendChild(art);
   });
+}
+
+function construirSolucoes(sec) {
+  const q = n => Dados.linhas(n);
+  const aviso = criar("p", "caixa-nota", "Propostas do autor, com base nos indicadores do painel. Não representam a posição da SAD nem constituem aconselhamento financeiro. A prioridade é alta quando o indicador principal está fora da referência.");
+  const lista = criar("ol", "solucoes");
+  SOLUCOES.forEach(sol => {
+    const li = criar("li", "solucao");
+    li.id = `solucao-${sol.n}`;
+    let alta = false, diag = "", medidas = [], inds = [];
+    try { alta = sol.alta({ q }); diag = sol.diagnostico({ q }); medidas = sol.medidas({ q }); inds = sol.indicadores({ q }); }
+    catch (e) { console.warn(`Solução ${sol.n}:`, e); }
+    const area = SECCOES.find(s => s.id === sol.area);
+    li.innerHTML = `<header class="solucao-cabeca"><span class="num" aria-hidden="true">${sol.n}</span><h3></h3>
+        <span class="prioridade ${alta ? "alta" : "media"}">Prioridade ${alta ? "alta" : "média"}</span></header>
+      <div class="solucao-corpo">
+        <div><p class="rotulo-claro">Diagnóstico</p><p class="diagnostico"></p>
+          <p class="rotulo-claro">Medidas propostas</p><ul class="medidas"></ul></div>
+        <div><p class="rotulo-claro">Indicadores a acompanhar</p>
+          <table class="metas"><thead><tr><th scope="col">Indicador</th><th scope="col" class="num">Última época</th><th scope="col">Referência</th></tr></thead><tbody></tbody></table>
+          <a class="ver-mais" href="#${sol.area}">Ver a análise em ${area?.nome ?? ""} →</a></div>
+      </div>`;
+    $("h3", li).textContent = sol.titulo;
+    $(".diagnostico", li).textContent = diag;
+    $(".medidas", li).replaceChildren(...medidas.map(m => criar("li", "", m)));
+    $(".metas tbody", li).replaceChildren(...inds.map(i => {
+      const tr = document.createElement("tr");
+      const th = criar("th", "", i.rotulo); th.scope = "row";
+      tr.append(th, criar("td", "num", i.valor), criar("td", "", i.referencia));
+      return tr;
+    }));
+    lista.appendChild(li);
+  });
+  sec.append(aviso, lista);
 }
 
 function construirMetodologia() {
@@ -482,12 +541,12 @@ function construirCartoesGeral() {
     return li;
   }));
   const contagem = id => PAINEIS.filter(p => p.seccao === id).length;
-  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios"].includes(s.id)).map(s => {
+  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios", "solucoes"].includes(s.id)).map(s => {
     const li = criar("li", "cartao-area");
     li.innerHTML = `<h4><a href="#${s.id}"></a></h4><p></p><span class="contagem"></span>`;
     $("a", li).textContent = s.nome;
     $("p", li).textContent = s.intro;
-    $(".contagem", li).textContent = `${contagem(s.id)} visualizações e tabelas`;
+    $(".contagem", li).textContent = s.id === "solucoes" ? `${SOLUCOES.length} propostas` : `${contagem(s.id)} visualizações e tabelas`;
     return li;
   }));
 }
@@ -696,6 +755,7 @@ async function iniciar() {
   if (!Number.isNaN(gerado.getTime())) {
     preencher("[data-gerado]", gerado.toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" }));
     document.querySelectorAll("[data-frase-gerado]").forEach(el => (el.hidden = false));
+    preencher("[data-ano]", gerado.getFullYear());
   }
   const nota = $("#nota-ambito-sql");
   nota.textContent = `O projeto SQL tem ${info.totalProjeto ?? nProjeto} consultas, numeradas de 1 a ${info.totalProjeto ?? nProjeto}. Aqui apresentam-se as ${nProjeto} que tratam das contas da SAD, com a numeração original, e ${nComp} consultas complementares do painel (D1 a D${nComp}), escritas para este painel sobre a mesma base de dados.` +
