@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: barra de marca fixa no topo; coluna de parâmetros à esquerda, painel de análise à direita
    (estado → KPIs → evolução → risco → detalhe). Em ecrãs estreitos empilha. */
@@ -24,7 +24,7 @@
   /* marca e classes de ativos (não semânticas) */
   --brand:#0E2A5C; --brand-ink:#FFFFFF; --stocks:#0E2A5C; --crypto:#8E9BB3;
   --shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
-  --font:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font:"Outfit",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
@@ -523,7 +523,7 @@ function drawChart(hoverY){
   let top=Math.max(S[Y].p90,...det,...con);if(showGoal)top=Math.max(top,p.goal);
   const ymax=niceMax(top*1.04);
   const X=y=>L+pw*(Y?y/Y:0), Yp=v=>T+ph*(1-Math.min(v,ymax*1.05)/ymax);
-  const muted=css('--muted'),line=css('--line'),font='12px Figtree, system-ui, sans-serif';
+  const muted=css('--muted'),line=css('--line'),font='12px Outfit, system-ui, sans-serif';
   x.font=font;x.textBaseline='middle';
   const isNice=v=>{const e=Math.pow(10,Math.floor(Math.log10(v))),f=+(v/e).toFixed(6);return [1,2,2.5,5,10].includes(f)};
   const nDiv=[5,4,6,3].find(k=>isNice(ymax/k))||5;
@@ -534,7 +534,7 @@ function drawChart(hoverY){
   band('p10','p90',css('--good-band'));band('p25','p75',css('--good-band-2'));
   const path=(arr,col,wid,dash)=>{x.beginPath();arr.forEach((v,y)=>x.lineTo(X(y),Yp(v)));x.strokeStyle=col;x.lineWidth=wid;x.setLineDash(dash);x.lineJoin='round';x.stroke();x.setLineDash([])};
   if(showGoal){const gy=Math.round(Yp(p.goal))+.5;x.strokeStyle=css('--warn');x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,gy);x.lineTo(w-Rr,gy);x.stroke();x.setLineDash([]);
-    x.fillStyle=css('--warn-ink');x.textAlign='left';x.textBaseline='bottom';x.font='600 12px Figtree, system-ui, sans-serif';x.fillText('Objetivo '+short(p.goal),L+6,gy-4);x.font=font}
+    x.fillStyle=css('--warn-ink');x.textAlign='left';x.textBaseline='bottom';x.font='600 12px Outfit, system-ui, sans-serif';x.fillText('Objetivo '+short(p.goal),L+6,gy-4);x.font=font}
   path(con,css('--faint'),1.5,[5,4]);path(det,css('--brand'),1.6,[2,3]);path(S.map(s=>s.p50),css('--good'),2.6,[]);
   // valor final
   const ey=Yp(S[Y].p50);x.fillStyle=css('--good');x.beginPath();x.arc(X(Y),ey,4.5,0,7);x.fill();
@@ -545,7 +545,7 @@ function drawChart(hoverY){
 function drawHist(hoverBin){
   const cv=$('hist'),{x,w,h}=setupCanvas(cv),arr=R.finalReal,p=R.p,conReal=R.contrib[R.Y]/R.defl[R.Y];
   const lo=arr[Math.floor((arr.length-1)*.01)],hi=arr[Math.floor((arr.length-1)*.97)],span=hi-lo,bins=32,cnt=new Array(bins).fill(0);
-  if(!(span>0)){x.fillStyle=css('--muted');x.font='13px Figtree, system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('Todos os cenários terminam em '+eur.format(lo),w/2,h/2);hgeo=null;return}
+  if(!(span>0)){x.fillStyle=css('--muted');x.font='13px Outfit, system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('Todos os cenários terminam em '+eur.format(lo),w/2,h/2);hgeo=null;return}
   for(const v of arr){if(v<lo||v>hi)continue;cnt[Math.min(bins-1,Math.floor((v-lo)/span*bins))]++}
   const mx=Math.max(...cnt,1),B=24,T=8,bw=w/bins;
   const good=css('--good'),warn=css('--warn'),bad=css('--bad');
@@ -555,7 +555,7 @@ function drawHist(hoverBin){
   x.globalAlpha=1;
   const mark=(v,col,label,align)=>{if(v<lo||v>hi)return;const gx=Math.round((v-lo)/span*w)+.5;x.strokeStyle=col;x.lineWidth=1.5;x.setLineDash([4,3]);x.beginPath();x.moveTo(gx,T);x.lineTo(gx,h-B);x.stroke();x.setLineDash([])};
   mark(p.goal,css('--warn-ink'));
-  x.fillStyle=css('--muted');x.font='12px Figtree, system-ui, sans-serif';x.textBaseline='top';x.textAlign='left';x.fillText(short(lo),0,h-B+7);x.textAlign='right';x.fillText(short(hi),w,h-B+7);
+  x.fillStyle=css('--muted');x.font='12px Outfit, system-ui, sans-serif';x.textBaseline='top';x.textAlign='left';x.fillText(short(lo),0,h-B+7);x.textAlign='right';x.fillText(short(hi),w,h-B+7);
   x.textAlign='center';x.fillText(short((lo+hi)/2),w/2,h-B+7);
   hgeo={lo,span,bins,bw,cnt,total:arr.length};
 }
