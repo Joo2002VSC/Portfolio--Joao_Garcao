@@ -1,9 +1,9 @@
 """Exporta os dados do projeto contas-vitoria-sql para o dashboard.
 
-Gera dois ficheiros em data/:
-  - contas.json     indicadores base por entidade e época (vistas v_kpis e v_dr), dados desportivos e fontes
-  - consultas.json  as 59 consultas de sql/04_analises.sql e as consultas complementares do dashboard
-                    (sql/indicadores_dashboard.sql): título, secção, conceitos SQL, código e resultado
+O painel apresenta apenas as contas da Vitória SC – Futebol, SAD. Gera dois ficheiros em data/:
+  - contas.json     indicadores da SAD por época (vistas v_kpis e v_dr), dados desportivos e fontes
+  - consultas.json  as consultas de sql/04_analises.sql relativas à SAD e as consultas complementares
+                    do painel (sql/indicadores_dashboard.sql): título, secção, conceitos SQL, código e resultado
 
 O dashboard não refaz cálculos que já existem no projeto SQL: lê os resultados das próprias consultas.
 Antes de gravar, o script faz verificações de coerência e pára se alguma falhar.
@@ -26,14 +26,13 @@ PROJETO_PADRAO = RAIZ.parent.parent / "data-analysis" / "contas-vitoria-sql"
 SAIDA = RAIZ / "data"
 
 BASE = {
-    "entidades": "SELECT entidade_id AS id, nome, descricao FROM entidade",
     "epocas": "SELECT epoca_id AS id FROM epoca ORDER BY ano_inicio",
     "kpis": """
         SELECT entidade_id AS entidade, epoca_id AS epoca,
                vendas_servicos, gastos_pessoal, resultado_liquido,
                mais_valias_liquidas, rl_sem_mais_valias, pct_pessoal_receitas,
                juros, ativo_total, passivo_total, capital_proprio, caixa
-        FROM v_kpis ORDER BY entidade_id, epoca_id""",
+        FROM v_kpis WHERE entidade_id = 'SAD' ORDER BY epoca_id""",
     "desporto": """
         SELECT epoca_id AS epoca, posicao_liga, pontos, media_espectadores,
                competicao_europeia, fase_europeia, trofeu
@@ -41,12 +40,14 @@ BASE = {
     "dr": """
         SELECT entidade_id AS entidade, epoca_id AS epoca, vendas_servicos, rendimentos_operacionais,
                -gastos_pessoal AS gastos_pessoal, -fse AS fse, resultado_operacional, resultado_liquido
-        FROM v_dr ORDER BY entidade_id, epoca_id""",
-    "fontes": "SELECT entidade_id AS entidade, epoca_id AS epoca, estado, documentos FROM fonte ORDER BY entidade_id, epoca_id",
-    "receitas": """
-        SELECT entidade_id AS entidade, epoca_id AS epoca, categoria, valor
-        FROM receitas_composicao ORDER BY epoca_id, valor DESC""",
+        FROM v_dr WHERE entidade_id = 'SAD' ORDER BY epoca_id""",
+    "fontes": "SELECT epoca_id AS epoca, estado, documentos FROM fonte WHERE entidade_id = 'SAD' ORDER BY epoca_id",
 }
+
+# Consultas do projeto que não entram no painel, por não tratarem só das contas da SAD:
+# comparam entidades (10, 11, 16, 17, 19) ou usam tabelas com dados consolidados
+# (receitas_composicao: 5, 6, 18, 47; gastos_pessoal_composicao: 13, 24).
+EXCLUIDAS = {5, 6, 10, 11, 13, 16, 17, 18, 19, 24, 47}
 
 SEPARADOR = re.compile(r"^-- =+\s*$")
 SQL_DASHBOARD = RAIZ / "sql" / "indicadores_dashboard.sql"
@@ -113,7 +114,7 @@ def verificar(base: dict, consultas: list[dict]) -> list[str]:
     if numeros != list(range(1, len(numeros) + 1)):
         erros.append(f"Numeração das consultas com falhas: {numeros}")
 
-    sad = {k["epoca"]: k for k in base["kpis"] if k["entidade"] == "SAD"}
+    sad = {k["epoca"]: k for k in base["kpis"]}
     q1 = por_n[1]
     for epoca, rl, *_ in q1["linhas"]:
         if sad.get(epoca, {}).get("resultado_liquido") != rl:
@@ -129,9 +130,9 @@ def verificar(base: dict, consultas: list[dict]) -> list[str]:
     # Os rácios de D1 têm de bater com a consulta 29 do projeto (SAD)
     q29 = {l[0]: l for l in por_n[29]["linhas"]}
     d1 = por_n[DESLOCAMENTO + 1]
-    j = {c: d1["colunas"].index(c) for c in ("entidade", "epoca", "endividamento", "autonomia_pct")}
+    j = {c: d1["colunas"].index(c) for c in ("epoca", "endividamento", "autonomia_pct")}
     for l in d1["linhas"]:
-        if l[j["entidade"]] == "SAD" and l[j["epoca"]] in q29:
+        if l[j["epoca"]] in q29:
             r = q29[l[j["epoca"]]]
             if abs(r[1] - l[j["endividamento"]]) > 0.011 or abs(r[2] - l[j["autonomia_pct"]]) > 0.11:
                 erros.append(f"D1 e consulta 29 divergem em {l[j['epoca']]}")
@@ -167,6 +168,7 @@ def main() -> None:
     erros = verificar(base, consultas)
     if erros:
         sys.exit("Verificação falhou:\n  " + "\n  ".join(erros))
+    consultas = [c for c in consultas if c["n"] not in EXCLUIDAS]
 
     gerado = date.today().isoformat()
     SAIDA.mkdir(exist_ok=True)
@@ -178,7 +180,7 @@ def main() -> None:
     seccoes = sorted({c["seccao"] for c in consultas})
     print(f"data/contas.json: {len(base['kpis'])} linhas de indicadores, {len(base['epocas'])} épocas")
     n_proj = sum(c["n"] < DESLOCAMENTO for c in consultas)
-    print(f"data/consultas.json: {n_proj} consultas do projeto + {len(consultas) - n_proj} complementares, "
+    print(f"data/consultas.json: {n_proj} consultas do projeto relativas à SAD + {len(consultas) - n_proj} complementares, "
           f"{len(seccoes)} secções; verificações OK")
 
 

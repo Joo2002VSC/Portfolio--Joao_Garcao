@@ -94,17 +94,12 @@ const COLUNAS = {
   situacao: ["Situação", "txt"], epocas_negativas_acumuladas: ["Épocas negativas (acumuladas)", "int"], passivo_sobre_ativo: ["Passivo / ativo", "rat"],
   juros_pagos: ["Juros suportados", "eur"], pct_juros_sobre_receitas: ["Juros / vendas", "pct"],
   juros_2019_20: ["Juros 2019/20", "eur"], juros_2024_25: ["Juros 2024/25", "eur"], multiplicador: ["Multiplicador", "x"], crescimento_anual_pct: ["Crescimento anual", "pct"],
-  rl_sad: ["SAD", "eur"], rl_clube: ["Clube", "eur"], rl_consolidado: ["Grupo consolidado", "eur"], diferenca_consolidacao: ["Ajustes de consolidação", "eur"],
-  passivo_clube: ["Passivo do Clube", "eur"], passivo_sad: ["Passivo da SAD", "eur"], passivo_sad_por_euro_do_clube: ["Passivo da SAD por euro do Clube", "x"],
   vendas_brutas: ["Vendas brutas", "eur"], custo_vendas: ["Custo das vendas", "eur"], mais_valias_liquidas: ["Mais-valias líquidas", "eur"],
   mais_valias_sobre_vendas_pct: ["Mais-valias / vendas", "pct"], media_movel_3_epocas: ["Média móvel (3 épocas)", "eur"],
   atletas: ["Atletas", "eur"], total: ["Total", "eur"], pct_atletas: ["Peso dos atletas", "pct"], indice_vs_2017_18: ["Índice (2017/18 = 1)", "x"],
   credor: ["Credor", "txt"], menos_1_ano: ["Menos de 1 ano", "eur"], pct_curto_prazo: ["Curto prazo", "pct"],
   operacional: ["Operacional", "eur"], investimento: ["Investimento", "eur"], financiamento: ["Financiamento", "eur"], caixa_final: ["Caixa no fim", "eur"],
-  entidade: ["Entidade", "txt"], melhor_epoca: ["Melhor época", "txt"], pior_epoca: ["Pior época", "txt"],
-  epocas_com_dados: ["Épocas com dados", "int"], valores_dr: ["Valores na demonstração de resultados", "int"], rubricas_por_epoca: ["Rubricas por época", "num"],
-  categoria: ["Categoria", "txt"], valor: ["Valor", "eur"], n_epocas: ["N.º de épocas", "int"],
-  pagina_transferencias_sad: ["Página de transferências da SAD", "eur"], pagina_consolidado: ["Página das contas consolidadas", "eur"], diferenca: ["Diferença", "eur"],
+  categoria: ["Categoria", "txt"], valor: ["Valor", "eur"], n_epocas: ["N.º de épocas", "int"], diferenca: ["Diferença", "eur"],
   europa: ["Europa", "txt"], trofeu: ["Troféu", "txt"],
   correlacao: ["Correlação", "num"], pessoal_medio: ["Pessoal médio", "eur"], lugar_medio: ["Classificação média", "num"],
   ranking_gasto: ["Posição nos gastos", "int"], ranking_lugar: ["Posição na classificação", "int"],
@@ -160,8 +155,7 @@ const COLUNAS = {
   rendimentos_operacionais: ["Rendimentos operacionais", "eur"], pessoal_sobre_vendas_pct: ["Gastos com pessoal / vendas", "pct"],
   pessoal_sobre_rendimentos_pct: ["Gastos com pessoal / rendimentos operacionais", "pct"], anterior: ["Época anterior (valor)", "eur"],
   epoca_anterior: ["Época anterior", "txt"], epoca_maximo: ["Época do máximo", "txt"], maximo: ["Máximo", "eur"],
-  epoca_minimo: ["Época do mínimo", "txt"], minimo: ["Mínimo", "eur"], soma_individual: ["Soma SAD + Clube", "eur"],
-  ajustes_consolidacao: ["Ajustes de consolidação", "eur"], estado: ["Estado dos dados", "txt"], documentos: ["Documentos", "txt"], valor_2024_25: ["2024/25", "eur"], valor_2025_26: ["2025/26", "eur"],
+  epoca_minimo: ["Época do mínimo", "txt"], minimo: ["Mínimo", "eur"], estado: ["Estado dos dados", "txt"], documentos: ["Documentos", "txt"], valor_2024_25: ["2024/25", "eur"], valor_2025_26: ["2025/26", "eur"],
 };
 
 const EXCECOES = {

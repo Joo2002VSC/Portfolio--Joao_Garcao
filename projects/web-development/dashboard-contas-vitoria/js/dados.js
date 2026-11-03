@@ -15,7 +15,7 @@ async function lerJSON(caminho) {
 }
 
 function validar(base, consultas) {
-  const faltam = ["epocas", "entidades", "kpis", "desporto", "receitas"].filter(k => !Array.isArray(base[k]));
+  const faltam = ["epocas", "kpis", "dr", "desporto", "fontes"].filter(k => !Array.isArray(base[k]));
   if (faltam.length) throw new ErroDados(`O ficheiro contas.json está incompleto: falta ${faltam.join(", ")}.`);
   if (!Array.isArray(consultas.consultas) || !consultas.consultas.length) throw new ErroDados("O ficheiro consultas.json não contém consultas.");
   for (const c of consultas.consultas) {
@@ -49,8 +49,9 @@ export function linhas(n) {
   return c.linhas.map(l => Object.fromEntries(c.colunas.map((col, i) => [col, l[i]])));
 }
 
-/** Indicadores base (vista v_kpis) de uma entidade numa época */
-export const kpi = (entidade, epoca) => BASE.kpis.find(k => k.entidade === entidade && k.epoca === epoca) ?? null;
+/** Indicadores base (vista v_kpis) da SAD numa época */
+export const kpi = epoca => BASE.kpis.find(k => k.epoca === epoca) ?? null;
+export const dr = epoca => BASE.dr.find(k => k.epoca === epoca) ?? null;
 export const desporto = epoca => BASE.desporto.find(d => d.epoca === epoca) ?? null;
 
 /** Filtra linhas pelo intervalo de épocas; linhas sem coluna "epoca" passam sempre */

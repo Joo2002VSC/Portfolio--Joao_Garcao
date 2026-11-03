@@ -42,16 +42,15 @@ const coresCondicao = cond => (v => (v !== null && cond(v) ? cor("amarelo") : co
    ===================================================================== */
 
 export const SECCOES = [
-  { id: "geral", nome: "Visão geral", intro: "A situação financeira da entidade selecionada na época em destaque: balanço, desempenho operacional, evolução histórica e principais conclusões." },
+  { id: "geral", nome: "Visão geral", intro: "A situação financeira da SAD na época em destaque: balanço, desempenho operacional, evolução histórica e principais conclusões." },
   { id: "perguntas", nome: "Cinco perguntas", intro: "As perguntas de investigação do projeto SQL, cada uma com a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
-  { id: "entidades", nome: "SAD, Clube e Grupo", intro: "O Vitória divide-se em duas entidades jurídicas e num perímetro de consolidação. Esta secção só as compara quando a comparação é metodologicamente válida." },
   { id: "racios", nome: "Rácios financeiros", intro: "Para cada rácio: o que mede, a fórmula, os dados utilizados e as limitações. Primeiro os resultados contabilísticos, depois a sustentabilidade financeira." },
   { id: "receitas", nome: "Receitas e transferências", intro: "A origem das receitas: a atividade corrente, as competições europeias e a venda de jogadores." },
   { id: "custos", nome: "Gastos e pessoal", intro: "O peso da estrutura e a evolução da composição dos gastos operacionais." },
   { id: "divida", nome: "Dívida e liquidez", intro: "Dívida financeira, instrumentos de financiamento, juros, fluxos de caixa e continuidade da SAD." },
   { id: "desporto", nome: "Desporto", intro: "A relação entre os gastos e os resultados desportivos." },
   { id: "cenarios", nome: "Cenários", intro: "Simulações do projeto SQL. São ilustrativas: dependem de pressupostos sobre contratos e classificações." },
-  { id: "sql", nome: "Consultas SQL", intro: "As 59 consultas do projeto e as 6 consultas complementares do painel, com o código, o resultado e as técnicas utilizadas." },
+  { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel, com o código, o resultado e as técnicas utilizadas." },
   { id: "metodologia", nome: "Metodologia", intro: "Origem dos dados, tratamento, critérios de comparação e limitações." },
 ];
 
@@ -63,23 +62,6 @@ export const SECCOES = [
 
 export const PAINEIS = [
   /* ---------------- Visão geral ---------------- */
-  {
-    id: "resultado-entidades", seccao: "entidades", consulta: 10, largo: true, temporal: true,
-    pergunta: "Que entidade gera lucro e qual gera prejuízo?",
-    descricao: "Resultado líquido por época (exercício terminado a 30 de junho). Para ocultar uma entidade, clique no nome na legenda.",
-    construir: rows => temporal(rows, [
-      { col: "rl_sad", rotulo: "SAD", papel: "tinta" },
-      { col: "rl_consolidado", rotulo: "Grupo consolidado", papel: "cinza" },
-      { col: "rl_clube", rotulo: "Clube", papel: "amarelo" },
-    ]),
-    conclusao: rows => {
-      const sad = com(rows, "rl_sad"), clube = com(rows, "rl_clube");
-      const partes = [`A SAD teve prejuízo em ${contar(sad, r => r.rl_sad < 0)} de ${sad.length} épocas`];
-      if (clube.length) partes.push(`o Clube em ${contar(clube, r => r.rl_clube < 0)} de ${clube.length}`);
-      return partes.join("; ") + ".";
-    },
-    nota: "Clube e Grupo consolidado ainda sem contas de 2025/26.",
-  },
   {
     id: "dependencia-vendas", seccao: "perguntas", questao: 1, consulta: 2, largo: true, temporal: true,
     pergunta: "A SAD consegue ter lucro sem vender jogadores?",
@@ -111,25 +93,6 @@ export const PAINEIS = [
       return `Em média, ${pct(media(col(rows, "outros_rendimentos_pct")))} dos rendimentos operacionais vieram de outros rendimentos` +
         (u ? `; em ${u.epoca}, ${pct(u.outros_rendimentos_pct)}.` : ".");
     },
-  },
-  {
-    id: "composicao-receitas", seccao: "receitas", consulta: 5, temporal: true,
-    pergunta: "Que fontes de receita pesam mais no Grupo consolidado?",
-    descricao: "Peso de cada fonte nas receitas operacionais do Grupo consolidado (%).",
-    construir: rows => temporal(rows, [
-      { col: "tv", rotulo: "Direitos de TV", papel: "tinta" },
-      { col: "competicoes", rotulo: "Prémios de competições", papel: "amarelo" },
-      { col: "socios", rotulo: "Sócios e camarotes", papel: "cinza-escuro" },
-      { col: "patrocinios", rotulo: "Patrocínios", papel: "cinza" },
-      { calcular: r => (r.bilhetica ?? 0) + (r.outras ?? 0), rotulo: "Bilheteira e outras", papel: "amarelo-claro" },
-    ], { empilhado: true, unidade: "pct", max: 100 }),
-    conclusao: rows => {
-      if (!rows.length) return "";
-      const maxComp = rows.reduce((a, b) => (b.competicoes > a.competicoes ? b : a));
-      return `Os direitos de TV foram a principal fonte em ${contar(rows, r => r.tv >= Math.max(r.competicoes, r.socios, r.patrocinios))} de ${rows.length} épocas. ` +
-        `Os prémios de competições chegaram a ${pct(maxComp.competicoes)} em ${maxComp.epoca}.`;
-    },
-    nota: "«Outras» agrega venda de artigos oficiais (merchandising), mecanismo de solidariedade, subsídios e outros rendimentos.",
   },
   {
     id: "valor-europa", seccao: "perguntas", questao: 2, consulta: 21,
@@ -216,14 +179,6 @@ export const PAINEIS = [
     conclusao: rows => `Investimento líquido em ${intervaloTexto(rows)}: ${euros(soma(col(rows, "investimento_liquido")))}. ` +
       `O plantel valia ${euros(ultimo(rows)?.valor_contabilistico_plantel)} no balanço em ${ultimo(rows)?.epoca}.`,
   },
-  {
-    id: "solidariedade", seccao: "receitas", consulta: 47, temporal: true,
-    pergunta: "Quanto rende a formação de jogadores vendidos por outros clubes?",
-    descricao: "Mecanismo de solidariedade e compensação por formação (FIFA).",
-    construir: rows => temporal(rows, [{ col: "solidariedade", rotulo: "Solidariedade e formação", papel: "cinza-escuro" }], { legenda: false }),
-    conclusao: rows => `Total em ${intervaloTexto(rows)}: ${euros(soma(col(rows, "solidariedade")))}, um valor irregular de época para época.`,
-  },
-
   /* ---------------- Custos e pessoal ---------------- */
   {
     id: "gastos-rubricas", seccao: "custos", consulta: 58, largo: true, temporal: true,
@@ -292,10 +247,10 @@ export const PAINEIS = [
     ], { unidade: "pct", legenda: false, min: 0 }), [{ valor: 70, rotulo: "Limite de 70%" }]),
     conclusao: rows => `Acima de 70% em ${contar(rows, r => r.racio_pct > 70)} de ${rows.length} épocas` +
       (rows.length ? `; em ${ultimo(rows).epoca}, ${pct(ultimo(rows).racio_pct)}.` : "."),
-    nota: "Aproximação ao regulamento, sem as comissões de intermediários. Nas duas primeiras épocas, a média das mais-valias usa menos de três épocas. A consulta 24 apresenta uma versão simplificada.",
+    nota: "Aproximação ao regulamento, sem as comissões de intermediários. Nas duas primeiras épocas, a média das mais-valias usa menos de três épocas.",
   },
   {
-    id: "funcionarios", seccao: "custos", consulta: 31, temporal: true,
+    id: "funcionarios", seccao: "custos", consulta: 31, largo: true, temporal: true,
     pergunta: "A estrutura cresceu mais depressa do que a equipa?",
     descricao: "Funcionários da SAD (média anual) por categoria.",
     construir: rows => temporal(rows, [
@@ -467,16 +422,6 @@ export const PAINEIS = [
       (rows.length ? `; em ${ultimo(rows).epoca}, a dívida líquida equivalia a ${vezes(ultimo(rows).divida_liq_ebitda)} o EBITDA.` : "."),
   },
   {
-    id: "passivo-entidades", seccao: "entidades", consulta: 11, temporal: true,
-    pergunta: "O passivo concentra-se na SAD ou no Clube?",
-    descricao: "Passivo do Clube e da SAD a 30 de junho.",
-    construir: rows => temporal(rows, [
-      { col: "passivo_sad", rotulo: "SAD", papel: "tinta" },
-      { col: "passivo_clube", rotulo: "Clube", papel: "amarelo" },
-    ], { tipo: "line", min: 0 }),
-    conclusao: rows => rows.length ? `Em ${ultimo(rows).epoca}, o passivo da SAD era ${vezes(ultimo(rows).passivo_sad_por_euro_do_clube)} o do Clube.` : "",
-  },
-  {
     id: "cobertura-juros", seccao: "divida", consulta: 30, tabela: true, temporal: true,
     pergunta: "O EBITDA chega para pagar os juros?",
     descricao: "Quantas vezes o EBITDA cobre os juros. Abaixo de 3 vezes, a cobertura é considerada fraca.",
@@ -490,7 +435,7 @@ export const PAINEIS = [
       `incerteza material sobre a continuidade em ${contar(rows, r => /Incerteza material/.test(r.parecer_auditor))}.`,
   },
   {
-    id: "reexpressao", seccao: "divida", consulta: 36, tabela: true,
+    id: "reexpressao", seccao: "divida", consulta: 36, tabela: true, largo: true,
     pergunta: "O que mudou com a reexpressão de 2024/25?",
     descricao: "Valores de 2024/25 no Relatório e Contas original e no de 2025/26 (aplicação do custo amortizado e correções).",
     conclusao: rows => {
@@ -667,12 +612,12 @@ export const PAINEIS = [
     conclusao: rows => `Só a parte igual valeria entre ${pct(rows[0].parte_igual_em_pct_do_atual)} e ${pct(ultimo(rows).parte_igual_em_pct_do_atual)} dos direitos de TV atuais.`,
   },
 
-  /* ---------------- Visão geral: evolução da entidade escolhida ---------------- */
+  /* ---------------- Visão geral: evolução ---------------- */
   {
     id: "evolucao-entidade", seccao: "geral", largo: true, temporal: true, fonteTexto: "vista v_kpis",
-    dados: ctx => base().kpis.filter(k => k.entidade === ctx.entidade),
+    dados: () => base().kpis,
     pergunta: "Como evoluíram o resultado e o capital próprio?",
-    descricao: "Resultado líquido (barras) e capital próprio a 30 de junho (linha) da entidade selecionada.",
+    descricao: "Resultado líquido da SAD (barras) e capital próprio a 30 de junho (linha).",
     construir: rows => temporal(rows, [
       { col: "resultado_liquido", rotulo: "Resultado líquido", papel: "cinza" },
       { col: "capital_proprio", rotulo: "Capital próprio", papel: "tinta", tipo: "line" },
@@ -685,66 +630,6 @@ export const PAINEIS = [
       else if (cp.length) partes.push(`capital próprio só disponível em ${cp[0].epoca}`);
       return partes.length ? partes.join("; ") + "." : "";
     },
-  },
-
-  /* ---------------- SAD, Clube e Grupo ---------------- */
-  {
-    id: "consolidacao", seccao: "entidades", consulta: 106, temporal: true, largo: true,
-    pergunta: "O resultado do Grupo é a soma da SAD e do Clube?",
-    descricao: "Resultado líquido consolidado contra a soma simples dos resultados individuais. A diferença são os ajustes de consolidação.",
-    construir: rows => {
-      const cfg = temporal(rows, [
-        { col: "soma_individual", rotulo: "Soma SAD + Clube", papel: "cinza" },
-        { col: "rl_consolidado", rotulo: "Grupo consolidado", papel: "tinta" },
-      ]);
-      cfg.options.plugins.tooltip.callbacks.footer = i => `Ajustes de consolidação: ${euros(rows[i[0].dataIndex].ajustes_consolidacao)}`;
-      return cfg;
-    },
-    conclusao: rows => {
-      const zero = rows.filter(r => r.ajustes_consolidacao === 0);
-      const maior = rows.reduce((a, b) => (Math.abs(b.ajustes_consolidacao) > Math.abs(a.ajustes_consolidacao) ? b : a), rows[0]);
-      return `Ajuste máximo de ${euros(maior.ajustes_consolidacao)} em ${maior.epoca}.` +
-        (zero.length ? ` Em ${zero.map(r => r.epoca).join(", ")}, o consolidado é exatamente igual à soma: os ajustes não são visíveis nos dados disponíveis.` : "");
-    },
-    nota: "As eliminações intragrupo (rendas, cedência de pessoal, participação do Clube na SAD) constam das contas consolidadas publicadas; o painel não as recalcula.",
-  },
-  {
-    id: "autonomia-entidades", seccao: "entidades", consulta: 101, temporal: true,
-    pergunta: "Que entidade tem a estrutura financeira mais sólida?",
-    descricao: "Autonomia financeira (capital próprio ÷ ativo) da SAD e do Grupo consolidado. O rácio permite comparar entidades de dimensões diferentes.",
-    construir: rows => {
-      const epocas = [...new Set(rows.map(r => r.epoca))].sort();
-      const serieDe = e => epocas.map(ep => rows.find(r => r.entidade === e && r.epoca === ep)?.autonomia_pct ?? null);
-      const cfg = {
-        type: "line",
-        data: { labels: epocas, datasets: [
-          linha("SAD", serieDe("SAD"), "tinta"),
-          linha("Grupo consolidado", serieDe("CONSOLIDADO"), "cinza-escuro", { oca: true }),
-          { ...linha("Clube", serieDe("CLUBE"), "amarelo"), pointRadius: 6 },
-        ] },
-        options: opcoes({ unidade: "pct" }),
-      };
-      return cfg;
-    },
-    conclusao: rows => {
-      const ult = e => ultimo(rows.filter(r => r.entidade === e));
-      const s = ult("SAD"), g = ult("CONSOLIDADO"), c = ult("CLUBE");
-      return [s && `SAD: ${pct(s.autonomia_pct)} (${s.epoca})`, g && `Grupo consolidado: ${pct(g.autonomia_pct)} (${g.epoca})`, c && `Clube: ${pct(c.autonomia_pct)} (${c.epoca}, única época com ativo publicado)`]
-        .filter(Boolean).join(" · ") + ".";
-    },
-    nota: "O Clube só tem ativo total publicado para 2024/25, pelo que surge como um único ponto.",
-  },
-  {
-    id: "cobertura-dados", seccao: "entidades", consulta: 17, tabela: true,
-    pergunta: "Quantos dados existem para cada entidade?",
-    descricao: "Épocas com demonstração de resultados e número médio de rubricas por época.",
-    conclusao: rows => `A SAD tem ${rows.find(r => r.entidade === "SAD")?.epocas_com_dados} épocas; o Clube tem ${rows.find(r => r.entidade === "CLUBE")?.epocas_com_dados} e o Grupo consolidado ${rows.find(r => r.entidade === "CONSOLIDADO")?.epocas_com_dados}, com menos rubricas.`,
-  },
-  {
-    id: "mais-valias-entidades", seccao: "entidades", consulta: 19, tabela: true,
-    pergunta: "Porque diferem as mais-valias da SAD e do Grupo consolidado?",
-    descricao: "Mais-valias com jogadores na página de transferências da SAD e nas contas consolidadas.",
-    conclusao: rows => `Diferem em ${plural(rows.length, "época", "épocas")}, até ${euros(Math.max(...numeros(col(rows, "diferenca"))))}. As duas versões estão guardadas, cada uma com a entidade de origem.`,
   },
 
   /* ---------------- Rácios: resultados contabilísticos ---------------- */
@@ -803,7 +688,6 @@ export const PAINEIS = [
   /* ---------------- Rácios: sustentabilidade financeira ---------------- */
   {
     id: "autonomia", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
-    filtrar: rows => rows.filter(r => r.entidade === "SAD"),
     pergunta: "Que parte do ativo é financiada por capital próprio?",
     descricao: "Autonomia financeira da SAD. A amarelo, as épocas com capital próprio negativo.",
     construir: rows => temporal(rows, [
@@ -814,13 +698,12 @@ export const PAINEIS = [
     ficha: {
       mede: "A parte do ativo financiada pelos acionistas e não por terceiros. Abaixo de zero, o passivo é superior ao ativo.",
       formula: "Capital próprio ÷ Ativo",
-      dados: "Tabela balanco. Consulta complementar D1 (confirmada pela coluna autonomia_pct da consulta 29).",
+      dados: "Tabela balanco (SAD). Consulta complementar D1, confirmada pela coluna autonomia_pct da consulta 29.",
       limitacoes: "Depende do valor contabilístico do ativo, que subestima o valor de mercado do plantel.",
     },
   },
   {
     id: "solvabilidade", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
-    filtrar: rows => rows.filter(r => r.entidade === "SAD"),
     pergunta: "Que parte do passivo está coberta por capital próprio?",
     descricao: "Solvabilidade da SAD: capital próprio em percentagem do passivo.",
     construir: rows => temporal(rows, [
@@ -840,7 +723,6 @@ export const PAINEIS = [
   },
   {
     id: "endividamento", seccao: "racios", grupo: "sustentabilidade", consulta: 101, temporal: true,
-    filtrar: rows => rows.filter(r => r.entidade === "SAD"),
     pergunta: "Que parte do ativo é financiada por terceiros?",
     descricao: "Endividamento da SAD: passivo a dividir pelo ativo. Acima de 1, o passivo é superior ao ativo.",
     construir: rows => comReferencias(temporal(rows, [
@@ -891,7 +773,8 @@ const rotulosPontos = {
 
 /** Ordem de apresentação dentro de cada secção (pares lado a lado; os largos ocupam a linha toda) */
 export const ORDEM = {
-  entidades: ["resultado-entidades", "consolidacao", "passivo-entidades", "autonomia-entidades", "cobertura-dados", "mais-valias-entidades"],
+  divida: ["divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda",
+    "cobertura-juros", "artigo-35", "reexpressao"],
   racios: ["resultado-operacional", "pessoal-rendimentos", "dependencia-extraordinarias",
     "balanco", "autonomia", "solvabilidade", "endividamento", "racios", "painel-indicadores"],
 };
@@ -920,13 +803,11 @@ export const PERGUNTAS = [
     limitacoes: "Os dados de transferências só existem desde 2017/18. Cada época usa os valores do seu próprio Relatório e Contas (2024/25 sem a reexpressão).",
   },
   {
-    n: 2, pergunta: "Quanto pesam as vendas de jogadores e a Europa?", consultas: [54, 6, 21],
+    n: 2, pergunta: "Quanto pesam as vendas de jogadores e a Europa?", consultas: [54, 21],
     resposta: ({ q }) => {
-      const v = ultimo(q(54)), e = q(6);
-      const grupos = e[0], resto = e.slice(1);
-      const mediaResto = dividir(soma(resto.map(x => x.receita_media * x.epocas)), soma(resto.map(x => x.epocas)));
+      const v = ultimo(q(54)), g = q(21), fase = g[0], sem = ultimo(g);
       return `As vendas de jogadores superaram as receitas da atividade corrente em ${contar(q(54), x => x.vendas_por_euro_de_receita > 1)} de ${q(54).length} épocas (${racio(v.vendas_por_euro_de_receita)} € por cada euro de receita em ${v.epoca}). ` +
-        `Nas épocas com fase de grupos europeia, as receitas operacionais médias do Grupo consolidado sobem de ${euros(mediaResto)} para ${euros(grupos.receita_media)}.`;
+        `Nas épocas com fase de grupos europeia, a receita média da SAD foi de ${euros(fase.receita_media)}, contra ${euros(sem.receita_media)} nas épocas sem competições europeias.`;
     },
     indicadores: ({ q }) => {
       const v = ultimo(q(54)), g = q(21);
@@ -937,7 +818,7 @@ export const PERGUNTAS = [
         { rotulo: "Resultado médio sem competições europeias", valor: euros(ultimo(g).rl_medio) },
       ];
     },
-    limitacoes: "A comparação europeia assenta em médias de poucas épocas (2 a 6 por grupo). A consulta 6 utiliza as receitas consolidadas, disponíveis apenas de 2018/19 a 2024/25.",
+    limitacoes: "A comparação europeia assenta em médias de poucas épocas (3 a 6 por grupo) e não isola outros fatores, como as vendas de jogadores na mesma época.",
   },
   {
     n: 3, pergunta: "A dívida é sustentável e a que custo?", consultas: [52, 28, 27],

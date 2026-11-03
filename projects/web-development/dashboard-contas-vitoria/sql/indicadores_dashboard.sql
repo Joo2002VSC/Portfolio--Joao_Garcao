@@ -1,19 +1,18 @@
 -- =====================================================================
 -- indicadores_dashboard.sql : consultas complementares do painel
--- Correm sobre a mesma base (vsc_contas.db) que as 59 consultas do projeto
+-- Correm sobre a mesma base (vsc_contas.db) que as consultas do projeto
 -- contas-vitoria-sql. Não alteram dados: calculam rácios e comparações
 -- que o painel apresenta. Cada consulta começa com "-- @d D<n>. Título".
 -- Divisões protegidas com NULLIF; valores em falta ficam NULL.
 -- =====================================================================
 
 
--- @d D1. Rácios de estrutura por entidade: autonomia, solvabilidade e endividamento
+-- @d D1. Rácios de estrutura da SAD: autonomia, solvabilidade e endividamento
 -- Conceitos: NULLIF contra divisões por zero, CASE, colunas calculadas
 -- Autonomia financeira = capital próprio / ativo
 -- Solvabilidade        = capital próprio / passivo
 -- Endividamento        = passivo / ativo
 SELECT
-    entidade_id                                                   AS entidade,
     epoca_id                                                      AS epoca,
     ativo_total,
     passivo_total,
@@ -25,8 +24,8 @@ SELECT
          WHEN capital_proprio IS NULL THEN 'sem dados'
          ELSE 'capital próprio positivo' END                      AS leitura
 FROM balanco
-WHERE ativo_total IS NOT NULL AND passivo_total IS NOT NULL
-ORDER BY entidade_id, epoca_id;
+WHERE entidade_id = 'SAD' AND ativo_total IS NOT NULL AND passivo_total IS NOT NULL
+ORDER BY epoca_id;
 
 
 -- @d D2. Resultado operacional e resultado líquido da SAD, com e sem mais-valias
@@ -72,26 +71,25 @@ WHERE pessoal IS NOT NULL AND vendas_servicos IS NOT NULL
 ORDER BY epoca_id;
 
 
--- @d D4. Variação face à época anterior, por entidade e indicador
+-- @d D4. Variação face à época anterior, por indicador (SAD)
 -- Conceitos: UNION ALL para formato longo, LAG com PARTITION BY, NULLIF
 WITH longo AS (
-    SELECT entidade_id, epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Passivo', passivo_total FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Capital próprio', capital_proprio FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Mais-valias com jogadores', mais_valias_liquidas FROM transferencias
+    SELECT epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Passivo', passivo_total FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Capital próprio', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Mais-valias com jogadores', mais_valias_liquidas FROM transferencias WHERE entidade_id = 'SAD'
 ),
 com_anterior AS (
-    SELECT entidade_id, epoca_id, indicador, valor,
-           LAG(valor)    OVER (PARTITION BY entidade_id, indicador ORDER BY epoca_id) AS anterior,
-           LAG(epoca_id) OVER (PARTITION BY entidade_id, indicador ORDER BY epoca_id) AS epoca_anterior
+    SELECT epoca_id, indicador, valor,
+           LAG(valor)    OVER (PARTITION BY indicador ORDER BY epoca_id) AS anterior,
+           LAG(epoca_id) OVER (PARTITION BY indicador ORDER BY epoca_id) AS epoca_anterior
     FROM longo
     WHERE valor IS NOT NULL
 )
 SELECT
-    entidade_id                                                   AS entidade,
     epoca_id                                                      AS epoca,
     indicador,
     valor,
@@ -100,30 +98,29 @@ SELECT
     valor - anterior                                              AS variacao,
     ROUND(100.0 * (valor - anterior) / NULLIF(ABS(anterior), 0), 1) AS variacao_pct
 FROM com_anterior
-ORDER BY entidade_id, indicador, epoca_id;
+ORDER BY indicador, epoca_id;
 
 
--- @d D5. Máximos e mínimos históricos por entidade e indicador
+-- @d D5. Máximos e mínimos históricos por indicador (SAD)
 -- Conceitos: CTE, ROW_NUMBER com PARTITION BY, COUNT() OVER
 WITH longo AS (
-    SELECT entidade_id, epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Passivo', passivo_total FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Capital próprio', capital_proprio FROM balanco
-    UNION ALL SELECT entidade_id, epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr
-    UNION ALL SELECT entidade_id, epoca_id, 'Mais-valias com jogadores', mais_valias_liquidas FROM transferencias
+    SELECT epoca_id, 'Ativo' AS indicador, ativo_total AS valor FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Passivo', passivo_total FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Capital próprio', capital_proprio FROM balanco WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Resultado líquido', resultado_liquido FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Vendas e serviços prestados', vendas_servicos FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Gastos com pessoal', -gastos_pessoal FROM v_dr WHERE entidade_id = 'SAD'
+    UNION ALL SELECT epoca_id, 'Mais-valias com jogadores', mais_valias_liquidas FROM transferencias WHERE entidade_id = 'SAD'
 ),
 ordenado AS (
-    SELECT entidade_id, indicador, epoca_id, valor,
-           ROW_NUMBER() OVER (PARTITION BY entidade_id, indicador ORDER BY valor DESC) AS pos_max,
-           ROW_NUMBER() OVER (PARTITION BY entidade_id, indicador ORDER BY valor ASC)  AS pos_min,
-           COUNT(*)     OVER (PARTITION BY entidade_id, indicador)                     AS n_epocas
+    SELECT indicador, epoca_id, valor,
+           ROW_NUMBER() OVER (PARTITION BY indicador ORDER BY valor DESC) AS pos_max,
+           ROW_NUMBER() OVER (PARTITION BY indicador ORDER BY valor ASC)  AS pos_min,
+           COUNT(*)     OVER (PARTITION BY indicador)                     AS n_epocas
     FROM longo
     WHERE valor IS NOT NULL
 )
 SELECT
-    entidade_id                                         AS entidade,
     indicador,
     n_epocas,
     MAX(CASE WHEN pos_max = 1 THEN epoca_id END)        AS epoca_maximo,
@@ -131,24 +128,5 @@ SELECT
     MAX(CASE WHEN pos_min = 1 THEN epoca_id END)        AS epoca_minimo,
     MAX(CASE WHEN pos_min = 1 THEN valor END)           AS minimo
 FROM ordenado
-GROUP BY entidade_id, indicador, n_epocas
-ORDER BY entidade_id, indicador;
-
-
--- @d D6. Diferença de consolidação: resultado do Grupo face à soma da SAD e do Clube
--- Conceitos: vista de comparação, CASE, ABS
--- Numa consolidação, o resultado do Grupo não é a soma simples: eliminam-se as
--- operações entre o Clube e a SAD (rendas, cedência de pessoal, participação na SAD).
-SELECT
-    epoca_id                                        AS epoca,
-    rl_sad,
-    rl_clube,
-    rl_sad + rl_clube                               AS soma_individual,
-    rl_consolidado,
-    rl_consolidado - (rl_sad + rl_clube)            AS ajustes_consolidacao,
-    CASE WHEN rl_consolidado - (rl_sad + rl_clube) = 0
-         THEN 'igual à soma: ajustes não visíveis nos dados'
-         ELSE 'difere da soma' END                  AS leitura
-FROM v_resultado_por_entidade
-WHERE rl_sad IS NOT NULL AND rl_clube IS NOT NULL AND rl_consolidado IS NOT NULL
-ORDER BY epoca_id;
+GROUP BY indicador, n_epocas
+ORDER BY indicador;

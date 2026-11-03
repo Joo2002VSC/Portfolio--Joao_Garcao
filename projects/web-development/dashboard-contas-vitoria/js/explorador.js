@@ -43,7 +43,6 @@ function realcar(sql) {
 /** Avisos de coerência encontrados na auditoria (o projeto SQL não foi alterado) */
 const AVISOS = {
   8: "Utiliza os juros suportados líquidos (vista v_dr); a consulta 27 utiliza os juros dos financiamentos. Os valores são diferentes.",
-  10: "Em 2021/22, 2023/24 e 2024/25 o resultado consolidado é igual à soma da SAD e do Clube: os ajustes de consolidação não são visíveis nos dados (ver consulta complementar D6).",
   14: "Apesar do título (30/06/2025), o resultado mistura linhas de 30/06/2025 e de 30/06/2026, e a linha TOTAL soma as duas datas. O painel utiliza a consulta 39, que separa as datas.",
   45: "Nas duas primeiras épocas, a média móvel das mais-valias usa menos de três épocas (janela ROWS BETWEEN 2 PRECEDING).",
 };

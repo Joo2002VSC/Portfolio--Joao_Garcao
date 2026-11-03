@@ -108,7 +108,7 @@ main { padding-top: 32px; padding-bottom: 56px; }
 .caixa-nota p { margin: 0; max-width: 900px; }
 
 /* ---------- 5. Visão geral ---------- */
-.entidade-barra { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding: 16px 18px; background: var(--superficie); margin-bottom: 28px; }
+.entidade-barra { padding: 14px 18px; background: var(--superficie); border-left: 4px solid var(--amarelo); margin-bottom: 28px; }
 .segmentos { display: inline-flex; border: 2px solid var(--tinta); border-radius: var(--raio); flex: none; }
 .segmentos button { background: none; border: 0; padding: 8px 14px; font-weight: 700; font-size: 14px; cursor: pointer; color: var(--texto); }
 .segmentos button + button { border-left: 2px solid var(--tinta); }
@@ -224,7 +224,7 @@ main { padding-top: 32px; padding-bottom: 56px; }
 .tabela { overflow: auto; max-height: 420px; border-top: 2px solid var(--tinta); }
 .tabela table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
 .tabela th, .tabela td { padding: 7px 10px; text-align: left; vertical-align: top; }
-.tabela .num { text-align: right; }
+.tabela .num { text-align: right; white-space: nowrap; }
 .tabela thead th { position: sticky; top: 0; z-index: 1; background: var(--fundo); color: var(--suave); font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--linha); white-space: nowrap; }
 .tabela thead th button { width: 100%; background: none; border: 0; color: inherit; font-weight: 700; padding: 0; text-align: inherit; cursor: pointer; white-space: nowrap; }
 .tabela thead th button:hover { color: var(--texto); }

@@ -4,29 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>As contas do Vitória SC · Análise financeira</title>
-  <meta name="description" content="Painel de análise financeira do Vitória Sport Clube (SAD, Clube e Grupo consolidado), de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
+  <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=4" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=4" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=4">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=5" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=5" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=5">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=5">
   <meta name="theme-color" content="#111111">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=4",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=4",
-      "./js/dados.js": "./js/dados.js?v=4",
-      "./js/explorador.js": "./js/explorador.js?v=4",
-      "./js/formato.js": "./js/formato.js?v=4",
-      "./js/graficos.js": "./js/graficos.js?v=4",
-      "./js/paineis.js": "./js/paineis.js?v=4",
-      "./js/tabelas.js": "./js/tabelas.js?v=4"
+      "./js/animacoes.js": "./js/animacoes.js?v=5",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=5",
+      "./js/dados.js": "./js/dados.js?v=5",
+      "./js/explorador.js": "./js/explorador.js?v=5",
+      "./js/formato.js": "./js/formato.js?v=5",
+      "./js/graficos.js": "./js/graficos.js?v=5",
+      "./js/paineis.js": "./js/paineis.js?v=5",
+      "./js/tabelas.js": "./js/tabelas.js?v=5"
     }
   }
   </script>
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -34,13 +34,13 @@
   <header class="topo gutter">
     <div class="dentro">
       <div class="marca">
-        <img class="icone" src="img/icone-claro.png?v=4" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=5" alt="" width="47" height="60">
         <div>
           <p class="sobretitulo">Análise financeira · <span data-intervalo>2012/13 – 2025/26</span></p>
           <h1>As contas do Vitória SC</h1>
         </div>
       </div>
-      <p class="sub">SAD, Clube e Grupo consolidado, a partir de <span data-n-consultas>59</span> consultas SQL a uma base de dados SQLite construída com os Relatórios e Contas.</p>
+      <p class="sub">Contas da Vitória Sport Clube – Futebol, SAD, analisadas com <span data-n-consultas>48</span> consultas SQL a uma base de dados SQLite construída com os Relatórios e Contas.</p>
     </div>
   </header>
 
@@ -69,10 +69,9 @@
       <!-- =============== Visão geral =============== -->
       <section id="sec-geral">
         <div class="entidade-barra">
-          <div class="segmentos" id="f-entidade" role="radiogroup" aria-label="Entidade"></div>
           <div class="entidade-info">
-            <p class="entidade-nome" id="entidade-nome"></p>
-            <p class="entidade-desc" id="entidade-desc"></p>
+            <p class="entidade-nome">Vitória Sport Clube – Futebol, SAD</p>
+            <p class="entidade-desc">Sociedade anónima desportiva que gere o futebol profissional do Vitória: plantel, transferências, competições da UEFA e direitos de TV. Exercício de 1 de julho a 30 de junho.</p>
           </div>
         </div>
 
@@ -85,7 +84,7 @@
         <section class="dimensao" aria-labelledby="dim-b">
           <h3 id="dim-b"><span class="letra">B</span> Desempenho operacional <span class="ref">em <span data-ref-epoca></span></span></h3>
           <div class="kpis kpis-secundarios" id="kpis-b"></div>
-          <p class="nota-dim">Rendimentos operacionais da SAD = vendas e serviços prestados + subsídios à exploração + outros rendimentos (inclui os ganhos com a alienação de passes). O Clube e o Grupo consolidado têm menos rubricas publicadas; os indicadores em falta são assinalados como «sem dados».</p>
+          <p class="nota-dim">Rendimentos operacionais = vendas e serviços prestados + subsídios à exploração + outros rendimentos (inclui os ganhos com a alienação de passes). Os indicadores sem valor publicado numa época são assinalados como «sem dados».</p>
         </section>
 
         <section class="dimensao" aria-labelledby="dim-c">
@@ -94,7 +93,7 @@
             <div>
               <h4 class="mini">Maiores variações face à época anterior</h4>
               <ul class="variacoes" id="variacoes"></ul>
-              <p class="fonte">Fonte: <a href="#sql/104">consulta complementar D4</a> (LAG por entidade e indicador)</p>
+              <p class="fonte">Fonte: <a href="#sql/104">consulta complementar D4</a> (LAG por indicador)</p>
             </div>
             <div>
               <h4 class="mini">Máximos e mínimos da série</h4>
@@ -104,7 +103,7 @@
                   <tbody></tbody>
                 </table>
               </div>
-              <p id="extremos-vazio" class="sem-dados" hidden>Séries demasiado curtas para esta entidade.</p>
+              <p id="extremos-vazio" class="sem-dados" hidden>Séries demasiado curtas para calcular extremos.</p>
               <p class="fonte">Fonte: <a href="#sql/105">consulta complementar D5</a> (ROW_NUMBER). A época em destaque está assinalada a amarelo.</p>
             </div>
           </div>
@@ -112,21 +111,10 @@
         </section>
 
         <section class="dimensao" aria-labelledby="dim-d">
-          <h3 id="dim-d"><span class="letra">D</span> Principais conclusões <span class="ref">da SAD em <span data-ref-epoca></span></span></h3>
-          <p class="nota-dim" id="conclusoes-nota" hidden>As conclusões referem-se sempre à SAD, a única entidade com dados completos em todas as épocas.</p>
+          <h3 id="dim-d"><span class="letra">D</span> Principais conclusões <span class="ref">em <span data-ref-epoca></span></span></h3>
           <div class="conclusoes" id="conclusoes"></div>
           <p class="nota-dim">Calculadas a partir das consultas indicadas em cada linha (C = consulta do projeto; D = consulta complementar), com limiares de referência explícitos. Atualizam-se com a época em destaque.</p>
         </section>
-      </section>
-
-      <!-- =============== SAD, Clube e Grupo =============== -->
-      <section id="sec-entidades">
-        <div class="entidades-descricao" id="entidades-descricao"></div>
-        <div class="caixa-nota">
-          <h3>O que é a consolidação</h3>
-          <p>O Clube detém a maioria do capital da SAD. As contas consolidadas tratam as duas entidades como uma só: agregam-se o ativo, o passivo, os rendimentos e os gastos, e eliminam-se as operações entre elas, como as rendas que a SAD paga ao Clube, a cedência de pessoal ou a participação do Clube no capital da SAD. Por isso, o resultado do Grupo consolidado não é a soma simples dos dois resultados. Este painel utiliza os valores consolidados publicados e não os recalcula.</p>
-        </div>
-        <div data-paineis></div>
       </section>
 
       <!-- =============== Consultas SQL =============== -->
@@ -156,13 +144,13 @@
       <section id="sec-metodologia">
         <div class="texto-longo">
           <h3>Origem dos dados</h3>
-          <p>Os dados provêm de duas fontes. Os <strong>Relatórios e Contas do Vitória Sport Clube – Futebol, SAD</strong>, de 2012/13 a 2025/26, publicados em vitoriasc.pt, são a referência para o balanço, a dívida financeira, os juros, o número de funcionários e os gastos com pessoal da SAD. Seis destes relatórios são documentos digitalizados, lidos por reconhecimento ótico de caracteres (OCR) e confirmados visualmente. O sítio <strong>VSC Contas</strong> (vitoriasempre.net), um painel não oficial, fornece a demonstração de resultados detalhada, a composição das receitas, as transferências e os dados do Clube e do Grupo consolidado.</p>
+          <p>O painel trata exclusivamente das contas da <strong>Vitória Sport Clube – Futebol, SAD</strong>. Os dados provêm de duas fontes. Os <strong>Relatórios e Contas da SAD</strong>, de 2012/13 a 2025/26, publicados em vitoriasc.pt, são a referência para o balanço, a dívida financeira, os juros, o número de funcionários e os gastos com pessoal. Seis destes relatórios são documentos digitalizados, lidos por reconhecimento ótico de caracteres (OCR) e confirmados visualmente. O sítio <strong>VSC Contas</strong> (vitoriasempre.net), um painel não oficial, fornece a demonstração de resultados detalhada e os dados das transferências.</p>
 
           <h3>Extração e organização em SQLite</h3>
-          <p>Os valores foram recolhidos em ficheiros CSV e carregados por um <em>script</em> Python numa base de dados SQLite com 31 tabelas e vistas: dimensões (épocas, entidades, rubricas), demonstração de resultados em formato longo, balanço, fluxos de caixa, transferências, pessoal, dívida, auditoria e fontes. Os gastos são registados com sinal negativo, como nas demonstrações financeiras; os valores não disponíveis ficam vazios (NULL) e nunca a zero. Testes automáticos verificam a integridade das chaves e a coerência contabilística (ativo = passivo + capital próprio) e reconciliam os números citados nos relatórios.</p>
+          <p>Os valores foram recolhidos em ficheiros CSV e carregados por um <em>script</em> Python numa base de dados SQLite: dimensões (épocas, rubricas), demonstração de resultados em formato longo, balanço, fluxos de caixa, transferências, pessoal, dívida, auditoria e fontes. Os gastos são registados com sinal negativo, como nas demonstrações financeiras; os valores não disponíveis ficam vazios (NULL) e nunca a zero. Testes automáticos verificam a integridade das chaves e a coerência contabilística (ativo = passivo + capital próprio) e reconciliam os números citados nos relatórios.</p>
 
           <h3>Do SQL ao painel</h3>
-          <p>Um <em>script</em> Python executa as <span data-n-consultas>59</span> consultas do projeto e 6 consultas complementares do painel sobre a mesma base de dados, verifica a coerência dos resultados e grava-os em JSON. O painel lê esses resultados e não refaz os cálculos: em JavaScript, apenas se filtram as épocas, se calculam somas e médias do intervalo selecionado e se escolhem as frases das conclusões.</p>
+          <p>Um <em>script</em> Python executa as consultas do projeto relativas às contas da SAD (<span data-n-consultas>48</span>) e 5 consultas complementares do painel sobre a mesma base de dados, verifica a coerência dos resultados e grava-os em JSON. O painel lê esses resultados e não refaz os cálculos: em JavaScript, apenas se filtram as épocas, se calculam somas e médias do intervalo selecionado e se escolhem as frases das conclusões.</p>
 
           <h3>Verificação e divergências</h3>
           <p>Cada valor do balanço, dos juros e do pessoal da SAD foi conferido com os Relatórios e Contas. Foram encontradas <strong id="n-divergencias">42</strong> divergências em três fontes secundárias, documentadas na tabela <code>divergencia</code> e corrigidas na base de dados (por exemplo, os balanços de 2014/15 a 2016/17 publicados no VSC Contas estavam errados).</p>
@@ -176,13 +164,11 @@
             <li>Quando uma série tem épocas em falta, os gráficos deixam o espaço em branco, em vez de interpolar valores.</li>
           </ul>
 
-          <h3>Critérios de consolidação</h3>
-          <p>Os valores do Grupo consolidado são os das contas consolidadas publicadas: o painel não soma a SAD e o Clube. As comparações entre entidades usam apenas grandezas comparáveis (resultado líquido, passivo, rácios) e nunca misturam valores individuais e consolidados no mesmo indicador.</p>
 
           <h3>Limitações</h3>
           <ul>
-            <li><strong>Cobertura desigual.</strong> A SAD tem a demonstração de resultados quase completa; o Clube só tem informação detalhada desde 2021/22 e ativo total apenas em 2024/25; o Grupo consolidado começa em 2017/18. Ainda não existem contas do Clube nem do Grupo consolidado para 2025/26.</li>
-            <li><strong>Consolidação.</strong> Em três épocas, o resultado consolidado é igual à soma das duas entidades; os ajustes de consolidação não são visíveis nos dados disponíveis.</li>
+            <li><strong>Séries incompletas.</strong> A demonstração de resultados de 2012/13 só tem o resultado líquido; os dados das transferências começam em 2017/18 e o detalhe da dívida por instrumento a 30/06/2024.</li>
+            <li><strong>Composição das receitas.</strong> A repartição das vendas e serviços prestados por fonte (direitos de TV, bilheteira, patrocínios, prémios) só está disponível para a SAD em 2024/25 e 2025/26 (consulta 59), pelo que não se apresenta uma série histórica.</li>
             <li><strong>Juros.</strong> Em algumas épocas, a rubrica de juros da demonstração de resultados é líquida dos juros obtidos; a taxa implícita usa os juros dos financiamentos e inclui as comissões de factoring.</li>
             <li><strong>Simulações.</strong> A simulação da centralização dos direitos de TV usa uma componente de mérito linear e ignora as audiências: os valores são ordens de grandeza, não previsões.</li>
             <li><strong>Dados desportivos.</strong> Classificações e campanhas europeias recolhidas de fontes públicas (Wikipédia, Maisfutebol); médias de espectadores compiladas pelo autor.</li>
@@ -219,7 +205,7 @@
           </dl>
 
 
-          <h3>Fontes por entidade e época</h3>
+          <h3>Fontes por época</h3>
           <div id="tabela-fontes"></div>
         </div>
       </section>
@@ -228,14 +214,14 @@
 
   <footer class="gutter">
     <div class="dentro">
-      <p>Fontes: Relatórios e Contas do Vitória Sport Clube – Futebol, SAD e VSC Contas (vitoriasempre.net), organizados em SQLite no projeto
+      <p>Fontes: Relatórios e Contas da Vitória Sport Clube – Futebol, SAD e VSC Contas (vitoriasempre.net), organizados em SQLite no projeto
         <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a>.
         Valores em euros; valores monetários negativos entre parênteses. Dados exportados a <span id="gerado"></span>.</p>
       <p>Análise e desenvolvimento: João Garção. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube. <a href="#metodologia">Metodologia</a></p>
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=4"></script>
-  <script type="module" src="js/app.js?v=4"></script>
+  <script src="js/vendor/chart.umd.min.js?v=5"></script>
+  <script type="module" src="js/app.js?v=5"></script>
 </body>
 </html>

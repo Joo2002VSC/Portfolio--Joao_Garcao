@@ -1,6 +1,5 @@
 // Conclusões automáticas da visão geral (dimensão D).
 // Cada regra lê uma consulta SQL, aplica um limiar explícito e devolve uma frase com a fonte.
-// As regras referem-se à SAD, a única entidade com dados completos em todas as épocas.
 // Os nomes dos indicadores em SENTIDO têm de coincidir com os da consulta complementar D4.
 
 import { linhas } from "./dados.js";
@@ -35,7 +34,7 @@ export function conclusoes(epoca) {
   const melhorias = [], riscos = [], atencao = [], estruturais = [];
 
   // Melhorias: variações favoráveis face à época anterior (consulta complementar D4)
-  linhas(104).filter(r => r.entidade === "SAD" && r.epoca === epoca && r.variacao !== null && r.variacao !== 0)
+  linhas(104).filter(r => r.epoca === epoca && r.variacao !== null && r.variacao !== 0)
     .forEach(r => {
       const bom = Math.sign(r.variacao) === SENTIDO[r.indicador];
       if (bom && SENTIDO[r.indicador]) melhorias.push({ texto: `${r.indicador}: ${variacaoEuros(r.variacao)} face a ${r.epoca_anterior}.`, n: 104 });

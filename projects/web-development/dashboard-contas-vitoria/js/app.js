@@ -12,17 +12,8 @@ import { contar, observar, reduzido } from "./animacoes.js";
 
 /* ====================== Estado ====================== */
 
-// Descrições editoriais das entidades (a tabela "entidade" da base tem descrições abreviadas para uso interno)
-const ENTIDADES = [
-  { id: "SAD", nome: "SAD", longo: "Vitória Sport Clube – Futebol, SAD",
-    desc: "Sociedade anónima desportiva que gere o futebol profissional: plantel, transferências, competições da UEFA e direitos de TV." },
-  { id: "CLUBE", nome: "Clube", longo: "Vitória Sport Clube (associação desportiva)",
-    desc: "Associação que detém a maioria do capital da SAD e é proprietária do Estádio D. Afonso Henriques e da Academia; gere as modalidades." },
-  { id: "CONSOLIDADO", nome: "Grupo consolidado", longo: "Grupo Vitória Sport Clube (Clube e SAD)",
-    desc: "Contas consolidadas do Clube e da SAD, com eliminação das operações intragrupo. Não correspondem à soma simples das duas entidades." },
-];
-
-const estado = { seccao: null, entidade: "SAD", inicio: null, fim: null, epoca: null };
+// O painel apresenta apenas as contas da Vitória Sport Clube – Futebol, SAD.
+const estado = { seccao: null, inicio: null, fim: null, epoca: null };
 let PADRAO = null;
 const figuras = new Map();
 let versaoTema = 0;
@@ -31,7 +22,6 @@ let explorador = null;
 
 const $ = (s, el = document) => el.querySelector(s);
 const criar = (tag, cls, texto) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texto !== undefined) e.textContent = texto; return e; };
-const nomeEntidade = id => ENTIDADES.find(e => e.id === id)?.nome ?? id;
 const codigoConsulta = n => { try { return Dados.consulta(n).codigo ?? String(n); } catch { return String(n); } };
 const ligacaoConsulta = n => `<a href="#sql/${n}">${n > 100 ? "consulta complementar" : "consulta"} ${codigoConsulta(n)}</a>`;
 
@@ -42,7 +32,7 @@ function epocasVisiveis() {
 
 /* ---------- Estado no endereço (permite partilhar uma vista filtrada) ---------- */
 
-const PARAMS = { inicio: "de", fim: "ate", epoca: "epoca", entidade: "entidade" };
+const PARAMS = { inicio: "de", fim: "ate", epoca: "epoca" };
 
 function lerURL() {
   const p = new URLSearchParams(location.search), e = Dados.epocas();
@@ -50,7 +40,6 @@ function lerURL() {
   estado.inicio = valida(p.get("de")) ?? PADRAO.inicio;
   estado.fim = valida(p.get("ate")) ?? PADRAO.fim;
   estado.epoca = valida(p.get("epoca")) ?? PADRAO.epoca;
-  estado.entidade = ENTIDADES.some(x => x.id === p.get("entidade")) ? p.get("entidade") : PADRAO.entidade;
 }
 
 function escreverURL() {
@@ -108,7 +97,7 @@ function grelhaDe(paineis) {
 }
 
 function dadosDoPainel(p) {
-  const ctx = { epoca: estado.epoca, entidade: estado.entidade };
+  const ctx = { epoca: estado.epoca };
   const brutas = p.dados ? p.dados(ctx) : Dados.linhas(p.consulta);
   const filtradas = p.filtrar ? p.filtrar(brutas) : brutas;
   const rows = p.temporal ? Dados.noIntervalo(filtradas, epocasVisiveis()) : filtradas;
@@ -122,7 +111,7 @@ function desenharFigura(reg, { recriar = false } = {}) {
 
   if (!rows.length) {
     reg.grafico?.destroy(); reg.grafico = null;
-    vista.replaceChildren(criar("p", "sem-dados", "Sem dados para esta entidade ou neste intervalo de épocas."));
+    vista.replaceChildren(criar("p", "sem-dados", "Sem dados neste intervalo de épocas."));
     conclusao.textContent = "";
     botao?.setAttribute("hidden", "");
     return;
@@ -271,22 +260,10 @@ function construirPerguntas(sec) {
   });
 }
 
-function construirEntidades() {
-  const caixa = $("#entidades-descricao");
-  const cob = Dados.linhas(17);
-  ENTIDADES.forEach(e => {
-    const c = cob.find(x => x.entidade === e.id);
-    const div = criar("div", "entidade-ficha");
-    div.append(criar("h3", "", e.nome), criar("p", "nome-longo", e.longo), criar("p", "", e.desc));
-    if (c) div.appendChild(criar("p", "cobertura", `${c.epocas_com_dados} épocas com demonstração de resultados · em média, ${String(c.rubricas_por_epoca).replace(".", ",")} rubricas por época`));
-    caixa.appendChild(div);
-  });
-}
-
 function construirMetodologia() {
   const fontes = Dados.base().fontes;
-  $("#tabela-fontes").appendChild(tabelaOrdenavel(["entidade", "epoca", "estado", "documentos"],
-    fontes.map(f => [nomeEntidade(f.entidade), f.epoca, f.estado, f.documentos]), null, { legenda: "Fontes por entidade e época" }));
+  $("#tabela-fontes").appendChild(tabelaOrdenavel(["epoca", "estado", "documentos"],
+    fontes.map(f => [f.epoca, f.estado, f.documentos]), null, { legenda: "Fontes por época" }));
   const div = Dados.consulta(35);
   $("#tabela-divergencias").appendChild(tabelaOrdenavel(div.colunas, div.linhas, 35, { legenda: "Divergências face aos Relatórios e Contas" }));
   $("#n-divergencias").textContent = inteiro(Dados.linhas(35).reduce((s, r) => s + r.divergencias, 0));
@@ -294,8 +271,8 @@ function construirMetodologia() {
 
 /* ====================== Visão geral ====================== */
 
-const serieKPI = campo => (ent, ep) => Dados.kpi(ent, ep)?.[campo] ?? null;
-const serieDR = campo => (ent, ep) => Dados.base().dr.find(r => r.entidade === ent && r.epoca === ep)?.[campo] ?? null;
+const serieKPI = campo => ep => Dados.kpi(ep)?.[campo] ?? null;
+const serieDR = campo => ep => Dados.dr(ep)?.[campo] ?? null;
 
 const DIMENSAO_A = [
   { id: "ativo", nome: "Ativo total", valor: serieKPI("ativo_total"), bom: 1 },
@@ -307,8 +284,8 @@ const DIMENSAO_B = [
   { id: "vendas", nome: "Vendas e serviços prestados", valor: serieKPI("vendas_servicos"), bom: 1 },
   {
     id: "rendimentos", nome: "Rendimentos operacionais", bom: 1,
-    // SAD: soma das rubricas (consulta complementar D3); restantes: rubrica agregada da DR
-    valor: (ent, ep) => (ent === "SAD" ? Dados.linhas(103).find(r => r.epoca === ep)?.rendimentos_operacionais ?? null : serieDR("rendimentos_operacionais")(ent, ep)),
+    // Soma das rubricas (consulta complementar D3): a rubrica agregada só existe numa época
+    valor: ep => Dados.linhas(103).find(r => r.epoca === ep)?.rendimentos_operacionais ?? null,
   },
   { id: "pessoal", nome: "Gastos com pessoal", valor: serieKPI("gastos_pessoal"), bom: -1 },
   { id: "ro", nome: "Resultado operacional", valor: serieDR("resultado_operacional"), bom: 1 },
@@ -355,7 +332,7 @@ function desenharKPIs(defs) {
   defs.forEach(ind => {
     const d = $(`.kpi[data-id="${ind.id}"]`);
     const unidade = ind.unidade ?? "eur", fmt = x => formatar(unidade, x);
-    const serie = e.map(ep => ind.valor(estado.entidade, ep));
+    const serie = e.map(ep => ind.valor(ep));
     const v = serie[i], a = i > 0 ? serie[i - 1] : null;
     const elV = $(".valor", d), delta = $(".delta", d);
     d.classList.toggle("vazio", v === null);
@@ -387,7 +364,7 @@ function desenharKPIs(defs) {
 
 function desenharVariacoes() {
   const lista = $("#variacoes");
-  const rows = Dados.linhas(104).filter(r => r.entidade === estado.entidade && r.epoca === estado.epoca && r.variacao !== null);
+  const rows = Dados.linhas(104).filter(r => r.epoca === estado.epoca && r.variacao !== null);
   // Ordena pela variação em euros: a percentual engana quando a base é pequena ou muda de sinal
   rows.sort((a, b) => Math.abs(b.variacao) - Math.abs(a.variacao));
   lista.replaceChildren(...(rows.length ? rows.slice(0, 5).map(r => {
@@ -399,9 +376,9 @@ function desenharVariacoes() {
     li.append(criar("span", "ind", r.indicador), criar("span", "var", `${variacaoEuros(r.variacao)}${sinal}`),
       criar("span", "ref", `${euros(r.anterior)} em ${r.epoca_anterior} → ${euros(r.valor)}`));
     return li;
-  }) : [criar("li", "vazio", "Sem época anterior comparável para esta entidade.")]));
+  }) : [criar("li", "vazio", "Sem época anterior comparável.")]));
 
-  const ext = Dados.linhas(105).filter(r => r.entidade === estado.entidade && r.n_epocas > 2);
+  const ext = Dados.linhas(105).filter(r => r.n_epocas > 2);
   const corpo = $("#extremos tbody");
   corpo.replaceChildren(...ext.map(r => {
     const tr = document.createElement("tr");
@@ -439,39 +416,12 @@ function desenharConclusoes() {
     div.appendChild(ul);
     return div;
   }));
-  $("#conclusoes-nota").hidden = estado.entidade === "SAD";
-}
-
-function construirSeletorEntidade() {
-  const seg = $("#f-entidade");
-  ENTIDADES.forEach(e => {
-    const b = criar("button", "", e.nome);
-    b.type = "button"; b.dataset.id = e.id; b.setAttribute("role", "radio");
-    b.addEventListener("click", () => { estado.entidade = e.id; atualizar(); });
-    seg.appendChild(b);
-  });
-  seg.addEventListener("keydown", ev => {
-    if (!["ArrowLeft", "ArrowRight"].includes(ev.key)) return;
-    ev.preventDefault();
-    const i = ENTIDADES.findIndex(x => x.id === estado.entidade);
-    const n = ENTIDADES[(i + (ev.key === "ArrowRight" ? 1 : ENTIDADES.length - 1)) % ENTIDADES.length];
-    estado.entidade = n.id; atualizar();
-    seg.querySelector(`[data-id="${n.id}"]`).focus();
-  });
 }
 
 function desenharGeral() {
-  const ent = ENTIDADES.find(x => x.id === estado.entidade);
   document.querySelectorAll("[data-ref-epoca]").forEach(el => (el.textContent = estado.epoca));
   // Data de fecho do exercício: a época 2025/26 termina a 30 de junho de 2026
   document.querySelectorAll("[data-ref-fecho]").forEach(el => (el.textContent = `30 de junho de 20${estado.epoca.slice(-2)}`));
-  $("#entidade-nome").textContent = ent.longo;
-  $("#entidade-desc").textContent = ent.desc;
-  $("#f-entidade").querySelectorAll("button").forEach(b => {
-    const ativo = b.dataset.id === estado.entidade;
-    b.setAttribute("aria-checked", String(ativo));
-    b.tabIndex = ativo ? 0 : -1;
-  });
   desenharKPIs(DIMENSAO_A);
   desenharKPIs(DIMENSAO_B);
   desenharVariacoes();
@@ -604,8 +554,8 @@ async function iniciar() {
 
   const e = Dados.epocas();
   PADRAO = {
-    entidade: "SAD", inicio: e[0], fim: e[e.length - 1],
-    epoca: [...e].reverse().find(x => Dados.kpi("SAD", x)?.resultado_liquido != null),
+    inicio: e[0], fim: e[e.length - 1],
+    epoca: [...e].reverse().find(x => Dados.kpi(x)?.resultado_liquido != null),
   };
   lerURL();
   const nProjeto = info.consultas.filter(c => c.n < 100).length;
@@ -614,10 +564,8 @@ async function iniciar() {
   $("#gerado").textContent = new Date(info.gerado).toLocaleDateString("pt-PT", { day: "numeric", month: "long", year: "numeric" });
 
   construirSeccoes();
-  construirSeletorEntidade();
   construirKPIs($("#kpis-a"), DIMENSAO_A);
   construirKPIs($("#kpis-b"), DIMENSAO_B);
-  construirEntidades();
   construirMetodologia();
   construirFiltros();
   explorador = montarExplorador($("[data-explorador]"), { aoSelecionar: n => { location.hash = `sql/${n}`; } });

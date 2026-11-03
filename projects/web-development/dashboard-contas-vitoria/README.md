@@ -1,6 +1,6 @@
 <p align="center"><img src="img/icone.png" alt="" width="72"></p>
 
-# As contas do Vitória SC · painel de análise financeira
+# As contas da Vitória SC SAD · painel de análise financeira
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english) · 🇫🇷 [Français](#-français)
 
@@ -10,19 +10,18 @@
 
 ## 🇵🇹 Português
 
-Painel interativo sobre as contas do Vitória Sport Clube de 2012/13 a 2025/26, em três perspetivas: a **SAD** (futebol profissional), o **Clube** (associação) e o **Grupo consolidado**. É a camada de apresentação do projeto [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql): todos os valores resultam de consultas SQL a uma base de dados SQLite construída com os Relatórios e Contas.
+Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** de 2012/13 a 2025/26. É a camada de apresentação do projeto [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql): todos os valores resultam de consultas SQL a uma base de dados SQLite construída com os Relatórios e Contas da SAD.
 
 ### Secções
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Visão geral** | Quatro dimensões para a entidade e a época escolhidas: (A) situação financeira, (B) desempenho operacional, (C) evolução histórica, com variações, máximos e mínimos, e (D) conclusões automáticas (melhorias, riscos, pontos de atenção, alterações estruturais) |
+| **Visão geral** | Quatro dimensões para a época escolhida: (A) situação financeira, (B) desempenho operacional, (C) evolução histórica, com variações, máximos e mínimos, e (D) conclusões automáticas (melhorias, riscos, pontos de atenção, alterações estruturais) |
 | **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com resposta, indicadores, gráficos e limitações |
-| **SAD, Clube e Grupo** | Natureza de cada entidade, cobertura dos dados e diferença entre o resultado consolidado e a soma das entidades |
 | **Rácios financeiros** | Resultados contabilísticos e sustentabilidade financeira (autonomia, solvabilidade, endividamento, liquidez), com o que mede, a fórmula, os dados e as limitações de cada rácio |
 | **Receitas e transferências** · **Gastos e pessoal** · **Dívida e liquidez** · **Desporto** · **Cenários** | Análise temática |
-| **Consultas SQL** | Explorador das 59 consultas do projeto e de 6 consultas complementares: pesquisa, filtro por técnica SQL (detetada no código), resultado ordenável e exportação para CSV |
-| **Metodologia** | Fontes, tratamento, critérios de comparação e de consolidação, limitações, convenções de apresentação e glossário |
+| **Consultas SQL** | Explorador das 48 consultas do projeto relativas à SAD e de 5 consultas complementares: pesquisa, filtro por técnica SQL (detetada no código), resultado ordenável e exportação para CSV |
+| **Metodologia** | Fontes, tratamento, critérios de comparação, limitações, convenções de apresentação e glossário |
 
 ### Como funciona
 
@@ -32,8 +31,8 @@ contas-vitoria-sql/sql/04_analises.sql ─┼─► scripts/exportar_json.py ─
 sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a coerência)
 ```
 
-- O painel **não refaz os cálculos**: lê os resultados das consultas. Os rácios que o projeto SQL não tinha (autonomia e solvabilidade por entidade, variações com `LAG`, máximos e mínimos com `ROW_NUMBER`, diferença de consolidação) estão em [`sql/indicadores_dashboard.sql`](sql/indicadores_dashboard.sql), com divisões protegidas por `NULLIF`.
-- O script de exportação **interrompe a geração** se alguma verificação falhar: por exemplo, se ativo − passivo ≠ capital próprio, ou se os rácios da consulta complementar D1 divergirem da consulta 29.
+- O painel **não refaz os cálculos**: lê os resultados das consultas. Os indicadores que o projeto SQL não tinha (autonomia e solvabilidade, resultado operacional sem mais-valias, variações com `LAG`, máximos e mínimos com `ROW_NUMBER`) estão em [`sql/indicadores_dashboard.sql`](sql/indicadores_dashboard.sql), com divisões protegidas por `NULLIF`.
+- O script de exportação seleciona apenas as consultas sobre as contas da SAD (a lista de exclusões está em `scripts/exportar_json.py`) e **interrompe a geração** se alguma verificação falhar: por exemplo, se ativo − passivo ≠ capital próprio, ou se os rácios da consulta complementar D1 divergirem da consulta 29.
 - JavaScript em módulos ES, sem *frameworks*. O Chart.js 4 está incluído no repositório.
 
 | Ficheiro | Função |
@@ -62,12 +61,12 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=4`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=5`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 
-- O Clube e o Grupo consolidado têm menos épocas e rubricas do que a SAD e ainda não têm contas de 2025/26.
-- Em três épocas, o resultado consolidado coincide com a soma das entidades; os ajustes de consolidação não são visíveis nos dados.
+- Algumas séries começam mais tarde: transferências desde 2017/18; a demonstração de resultados de 2012/13 só tem o resultado líquido.
+- A composição das receitas por fonte só está disponível para 2024/25 e 2025/26.
 - As simulações da centralização dos direitos de TV são ilustrativas.
 - A regressão entre despesas e classificação usa 13 épocas: mostra uma associação, não uma relação de causa e efeito.
 
@@ -75,9 +74,9 @@ Ao publicar alterações, aumente o número de versão (`?v=4`) no `index.html`,
 
 ## 🇬🇧 English
 
-Interactive financial dashboard of Vitória Sport Clube (2012/13–2025/26) covering the SAD (professional football company), the Club and the consolidated Group. Every figure comes from SQL queries run against the SQLite database of my [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) project: 59 project queries plus 6 dashboard queries (ratios, `LAG` variations, `ROW_NUMBER` extremes, consolidation differences), exported to JSON by a Python script that stops if a consistency check fails. The browser does not recompute the analysis.
+Interactive financial dashboard of Vitória Sport Clube – Futebol, SAD (the club's professional football company), 2012/13–2025/26. Every figure comes from SQL queries run against the SQLite database of my [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) project: 48 project queries on the SAD plus 5 dashboard queries (ratios, `LAG` variations, `ROW_NUMBER` extremes). A Python script exports them to JSON and stops if a consistency check fails; the browser does not recompute the analysis.
 
-The overview is organised into four dimensions: financial position, operating performance, historical trends and automatic conclusions. There are also sections for the five research questions, the entity comparison, financial ratios (each with what it measures, its formula, data and limitations), an SQL explorer with technique filters and CSV export, and a full methodology. Built with plain JavaScript modules and Chart.js; accessible, responsive, and written in European Portuguese.
+The overview is organised into four dimensions: financial position, operating performance, historical trends and automatic conclusions. There are also sections for the five research questions, financial ratios (each with what it measures, its formula, data and limitations), an SQL explorer with technique filters and CSV export, and a full methodology. Built with plain JavaScript modules and Chart.js; accessible, responsive, and written in European Portuguese.
 
 **Run locally:** `python -m http.server`, then open `http://localhost:8000`.
 
@@ -85,9 +84,9 @@ The overview is organised into four dimensions: financial position, operating pe
 
 ## 🇫🇷 Français
 
-Tableau de bord financier interactif du Vitória Sport Clube (2012/13–2025/26) : la SAD (société de football professionnel), le Club et le Groupe consolidé. Tous les chiffres proviennent de requêtes SQL exécutées sur la base SQLite de mon projet [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) : 59 requêtes du projet et 6 requêtes propres au tableau de bord. Elles sont exportées en JSON par un script Python qui s'arrête si un contrôle de cohérence échoue.
+Tableau de bord financier interactif de la Vitória Sport Clube – Futebol, SAD (société de football professionnel du club), 2012/13–2025/26. Tous les chiffres proviennent de requêtes SQL exécutées sur la base SQLite de mon projet [`contas-vitoria-sql`](../../data-analysis/contas-vitoria-sql) : 48 requêtes du projet sur la SAD et 5 requêtes propres au tableau de bord. Elles sont exportées en JSON par un script Python qui s'arrête si un contrôle de cohérence échoue.
 
-La vue d'ensemble s'organise en quatre dimensions : situation financière, performance opérationnelle, évolution historique et conclusions automatiques. Le tableau de bord comprend aussi les cinq questions de recherche, la comparaison des entités, les ratios financiers (avec formule et limites), un explorateur SQL et une méthodologie complète. Réalisé en JavaScript (modules ES) avec Chart.js ; accessible et adapté au mobile.
+La vue d'ensemble s'organise en quatre dimensions : situation financière, performance opérationnelle, évolution historique et conclusions automatiques. Le tableau de bord comprend aussi les cinq questions de recherche, les ratios financiers (avec formule et limites), un explorateur SQL et une méthodologie complète. Réalisé en JavaScript (modules ES) avec Chart.js ; accessible et adapté au mobile.
 
 **Lancer en local :** `python -m http.server`, puis ouvrir `http://localhost:8000`.
 
