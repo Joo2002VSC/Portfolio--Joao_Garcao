@@ -1,0 +1,28 @@
+# Testes do projeto "Simulador de Juros Compostos" (projects/data-analysis/simulador-juros-compostos).
+# Corre sempre que algo muda nessa pasta: testa o modelo e confirma que os gráficos se geram.
+name: simulador-juros-compostos
+
+on:
+  push:
+    paths: ["projects/data-analysis/simulador-juros-compostos/**", ".github/workflows/simulador-juros-compostos.yml"]
+  pull_request:
+    paths: ["projects/data-analysis/simulador-juros-compostos/**"]
+  workflow_dispatch:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/data-analysis/simulador-juros-compostos
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+      - name: Testes do modelo
+        run: python scripts/testes.py
+      - name: Gerar cenários e gráficos
+        run: python scripts/correr_cenarios.py
