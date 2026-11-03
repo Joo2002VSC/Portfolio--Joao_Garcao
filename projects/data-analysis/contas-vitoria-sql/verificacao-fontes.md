@@ -1,13 +1,13 @@
 # Verificação das fontes
 
-Todos os números do balanço, dos juros e do pessoal da SAD usados neste projeto foram conferidos, um a um, com os **Relatórios e Contas (R&C) da Vitória SC – Futebol, SAD de 2012/13 a 2024/25**. Seis desses relatórios (2012/13 a 2016/17 e 2022/23) são digitalizados e foram lidos com OCR e confirmados visualmente na página original.
+Todos os números do balanço, dos juros e do pessoal da SAD usados neste projeto foram conferidos, um a um, com os **Relatórios e Contas (R&C) da Vitória SC – Futebol, SAD de 2012/13 a 2025/26**. Seis desses relatórios (2012/13 a 2016/17 e 2022/23) são digitalizados e foram lidos com OCR e confirmados visualmente na página original.
 
 Foram comparadas três fontes secundárias com os R&C:
 
 | Fonte | Divergências | Épocas afetadas | Diagnóstico |
 |:---|:---:|:---|:---|
 | CSV `VitóriaSCContasSAD.csv` (e o script e os rácios que dele dependem) | 24 | 2020/21 a 2023/24 | **2022/23 e 2023/24 errados**; 2020/21 e 2021/22 com totais certos mas divisão corrente/não corrente errada |
-| Site VSC Contas (fonte original deste projeto) | 13 | 2014/15 a 2018/19 e 2021/22 a 2023/24 | **Balanços de 2014/15 a 2016/17 errados**; juros líquidos em vez de brutos |
+| Site VSC Contas (fonte original deste projeto) | 15 | 2014/15 a 2018/19 e 2021/22 a 2024/25 | **Balanços de 2014/15 a 2016/17 errados**; juros líquidos em vez de brutos; duas rubricas da DR (2023/24 e 2024/25) |
 | Excel `HistóricoContasSAD.xlsx` | 3 | 2016/17, 2020/21, 2023/24 | Duas gralhas e uma reclassificação. **No resto, bate certo** |
 
 O resultado também está na base de dados (tabela `divergencia`, consulta 35).
@@ -90,9 +90,22 @@ O site, que serviu de base ao projeto, tem os **balanços de 2014/15 a 2016/17 e
 
 Os juros de 2021/22 a 2023/24 aparecem **líquidos** dos juros obtidos, mas os de 2024/25 aparecem brutos.
 
+Os testes de soma das rubricas operacionais (ver `testes.md`) encontraram mais duas falhas na demonstração de resultados do site, confirmadas nos R&C:
+
+| Época | Rubrica | No site | Nos R&C | O que é |
+|:---|:---|---:|---:|:---|
+| 2023/24 | Provisões | (149 013) | (57 515) | Repete o valor de 2022/23 |
+| 2024/25 | Imparidade de dívidas a receber | — | (58 484) | Rubrica em falta |
+
 O site regista também um aumento de capital de 450 000 € em 2016/17. Os R&C não o confirmam: o capital próprio de 2016/17 é exatamente o de 2015/16 mais o resultado do ano.
 
-**O que foi corrigido no projeto:** a tabela `balanco` usa agora os valores dos R&C para a SAD, de 2012/13 a 2024/25. A nova tabela `balanco_sad_rc` guarda o balanço detalhado, a dívida financeira e os juros brutos. Os valores antigos do site ficam registados na tabela `divergencia`.
+**O que foi corrigido no projeto:** a tabela `balanco` usa agora os valores dos R&C para a SAD, de 2012/13 a 2025/26. A nova tabela `balanco_sad_rc` guarda o balanço detalhado, a dívida financeira e os juros brutos. Os valores antigos do site ficam registados na tabela `divergencia`.
+
+## 5. Contas de 2025/26: comunicado vs. Relatório e Contas
+
+Até 1 de novembro de 2026, o projeto usava os indicadores do comunicado de contas de 2025/26. Com o R&C completo (aprovado pelo Conselho de Administração a 26/10/2026), todos os valores de 2025/26 passaram a vir das demonstrações financeiras e das notas: balanço, demonstração de resultados, fluxos de caixa, pessoal (nota 18), passes (nota 7), dívida (nota 11.5), partes relacionadas (nota 24) e parecer do auditor. Os valores do comunicado coincidem com os do R&C, com uma exceção: o comunicado arredonda o resultado líquido para (11 063 044 €), e o R&C dá (11 063 043,17 €).
+
+O R&C 2025/26 também **reexpressou 2024/25** (nota 2.3) e **reclassificou os fluxos de caixa** desse ano. A base mantém os valores publicados no R&C 2024/25 e guarda os reexpressos na tabela `reexpressao`, para que cada época seja comparável com o que foi publicado na altura.
 
 ## Método
 

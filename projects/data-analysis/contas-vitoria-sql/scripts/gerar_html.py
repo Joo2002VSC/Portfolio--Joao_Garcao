@@ -79,7 +79,7 @@ def pos_html(corpo, pid, embutir=True):
         if embutir:
             return f'src="data:image/png;base64,{b64(caminho)}"'
         return f'src="img/{caminho.name}" loading="lazy"'
-    corpo = re.sub(r'src="(graficos/[^"]+\.png)"', img, corpo)
+    corpo = re.sub(r'src="((?:relatorio/)?graficos/[^"]+\.png)"', img, corpo)
 
     # Ligações entre documentos passam a mudar de separador.
     def ligacao(m):
@@ -87,7 +87,7 @@ def pos_html(corpo, pid, embutir=True):
         if ficheiro in PAGINA_DE:
             return f'href="@{PAGINA_DE[ficheiro]}{":" + ancora[1:] if ancora else ""}"'
         return f'href="../{ficheiro}{ancora}" target="_blank" rel="noopener"'
-    corpo = re.sub(r'href="([^"#:]+\.(?:md|sql|db|py|csv))(#[^"]*)?"', ligacao, corpo)
+    corpo = re.sub(r'href="([^"#:]+\.(?:md|sql|db|py|csv|pdf))(#[^"]*)?"', ligacao, corpo)
 
     # Âncoras internas ficam prefixadas com o separador.
     corpo = re.sub(r'href="#([^"]+)"', lambda m: f'href="#{pid}:{m.group(1)}"', corpo)
@@ -191,7 +191,7 @@ def gerar_site(abas):
         f'const WASM_B64 = "{b64(VENDOR / "sql-wasm.wasm")}";\n', encoding="utf-8")
     shutil.copy(VENDOR / "sql-wasm.js", destino / "js" / "vendor" / "sql-wasm.js")
     shutil.copy(VENDOR / "sql.js-LICENSE", destino / "js" / "vendor" / "sql.js-LICENSE")
-    for png in (RAIZ / "graficos").glob("*.png"):
+    for png in [*(RAIZ / "graficos").glob("*.png"), *(RAIZ / "relatorio" / "graficos").glob("*.png")]:
         shutil.copy(png, destino / "img" / png.name)
     for f in (RAIZ / "fontes").iterdir():
         shutil.copy(f, destino / "fontes" / f.name)

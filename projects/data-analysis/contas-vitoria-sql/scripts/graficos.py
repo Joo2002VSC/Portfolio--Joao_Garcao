@@ -87,7 +87,28 @@ def figura(titulo, subtitulo, altura=5.6, base=0.14):
     return fig, ax
 
 
+# Emblema do Vitória SC no canto superior direito de cada gráfico.
+EMBLEMA = RAIZ / "relatorio" / "assets" / "emblema-vitoria-sc-pequeno.png"
+
+
+def emblema(fig, x=0.985, y=None, altura=0.5):
+    """Põe o emblema com o canto direito em x e o centro vertical em y (fração da figura).
+
+    Por omissão, centra-o na faixa amarela do título (0,62 polegadas de altura).
+    """
+    if not EMBLEMA.exists():
+        return
+    from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+    img = plt.imread(EMBLEMA)
+    if y is None:
+        y = 1 - 0.31 / fig.get_size_inches()[1]
+    caixa = OffsetImage(img, zoom=altura * 72 / img.shape[0])  # dpi_cor: 72 pontos por polegada
+    fig.add_artist(AnnotationBbox(caixa, (x, y), xycoords="figure fraction", box_alignment=(1, 0.5),
+                                  frameon=False, pad=0, zorder=5))
+
+
 def guardar(fig, nome, fonte=FONTE):
+    emblema(fig)
     fig.patches.append(Rectangle((0, 0), 1, 0.006, transform=fig.transFigure,
                                  color=AMARELO, zorder=0))
     fig.text(0.035, 0.03, fonte, fontsize=8, color=CINZA_ESCURO)
@@ -141,6 +162,7 @@ def capa(con):
         fig.text(x + 0.015, 0.37, rot, fontsize=8.5, fontweight="bold", color=TEXTO_2)
         fig.text(x + 0.015, 0.22, val, fontsize=21, color=PRETO, **TITULO)
         fig.text(x + 0.015, 0.125, nota, fontsize=8.5, color=TEXTO_2)
+    emblema(fig, x=0.965, y=0.76, altura=1.75)
     fig.savefig(OUT / "00_capa.png", dpi=170)
     plt.close(fig)
     print("  00_capa.png")
@@ -154,7 +176,7 @@ def resultado_por_entidade(con):
                      FROM v_resultado_por_entidade WHERE epoca_id >= '2017/18'""")
     epocas = [r[0] for r in rows]
     fig, ax = figura("Resultado líquido por entidade",
-                     "SAD, Clube e Grupo consolidado, por época (exercício a 30 de junho) · 2025/26: só SAD, comunicado de contas")
+                     "SAD, Clube e Grupo consolidado, por época (exercício a 30 de junho) · 2025/26: só SAD (Clube e Grupo ainda sem contas)")
     barras_agrupadas(ax, epocas, [
         ("SAD", [r[1] for r in rows], PRETO),
         ("Grupo consolidado", [r[3] for r in rows], CINZA),
@@ -255,7 +277,7 @@ def balanco_sad(con):
     at, ps = [r[1] for r in rows], [r[2] for r in rows]
     x = range(len(epocas))
     fig, ax = figura("Ativo vs. passivo da SAD",
-                     "Balanço a 30 de junho · A área amarela é o capital próprio negativo (passivo > ativo) · 2025/26: comunicado de contas")
+                     "Balanço a 30 de junho · A área amarela é o capital próprio negativo (passivo > ativo)")
     ax.fill_between(x, at, ps, where=[p > a for p, a in zip(ps, at)], interpolate=True,
                     color=AMARELO, alpha=0.55, linewidth=0, label="Capital próprio negativo")
     ax.plot(x, ps, color=PRETO, linewidth=2.4, marker="o", markersize=6, label="Passivo")
@@ -304,7 +326,7 @@ def posicao_vs_pessoal(con):
     ax.invert_yaxis()
     ax.set_yticks(range(1, 12), [f"{i}.º" for i in range(1, 12)])
     ax.set_ylim(11, 3)
-    ax.set_xlim(3e6, 23e6)
+    ax.set_xlim(3e6, 25e6)
     ax.xaxis.set_major_formatter(eixo_m)
     ax.grid(axis="both")
     ax.set_xlabel("Gastos com pessoal da SAD")
@@ -314,17 +336,18 @@ def posicao_vs_pessoal(con):
 
 
 def divida_e_juros(con):
-    rows = q(con, """SELECT epoca_id, financiamentos_nc, financiamentos_c, juros_suportados
+    rows = q(con, """SELECT epoca_id, financiamentos_nc, financiamentos_c,
+                            COALESCE(juros_financiamentos, juros_suportados)
                      FROM balanco_sad_rc WHERE financiamentos_nc IS NOT NULL ORDER BY epoca_id""")
     taxas = dict(q(con, """WITH f AS (SELECT epoca_id, financiamentos_nc + financiamentos_c AS fin,
-                                juros_suportados AS j,
+                                COALESCE(juros_financiamentos, juros_suportados) AS j,
                                 LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS ant
                                 FROM balanco_sad_rc WHERE financiamentos_nc IS NOT NULL)
                            SELECT epoca_id, 100.0 * j / ((fin + ant) / 2.0) FROM f WHERE ant IS NOT NULL"""))
     epocas = [r[0] for r in rows]
     x = range(len(epocas))
     fig, ax = figura("Dívida financeira e juros da SAD",
-                     "Financiamentos obtidos a 30 de junho (esquerda) e juros suportados na época (direita) · Fonte: R&C da SAD")
+                     "Financiamentos obtidos a 30 de junho (esquerda) e juros dos financiamentos (direita; 2025/26 sem o efeito do custo amortizado) · R&C da SAD")
     fig.delaxes(ax)
     topo = 1 - 0.62 / 5.6 - 0.95 / 5.6
     ax1 = fig.add_axes([0.085, 0.14, 0.40, topo - 0.14])
@@ -336,7 +359,7 @@ def divida_e_juros(con):
         ax1.text(i, r[1] + r[2] + 0.6e6, euros_m(r[1] + r[2], 1), ha="center", fontsize=7.5)
     ax1.set_xticks(list(x), [e[2:] for e in epocas], fontsize=8.5)
     ax1.yaxis.set_major_formatter(eixo_m)
-    ax1.set_ylim(0, 40e6)
+    ax1.set_ylim(0, 46e6)
     ax1.legend(loc="upper left", fontsize=8.5)
     ax1.set_title("Financiamentos obtidos", loc="left", fontsize=10.5, fontweight="bold")
     ax2.bar(x, [r[3] or 0 for r in rows], color=AMARELO, edgecolor=PRETO, linewidth=0.6, width=0.68)
@@ -346,8 +369,8 @@ def divida_e_juros(con):
         ax2.text(i, (r[3] or 0) + 0.1e6, rot, ha="center", fontsize=7.5, linespacing=1.1)
     ax2.set_xticks(list(x), [e[2:] for e in epocas], fontsize=8.5)
     ax2.yaxis.set_major_formatter(eixo_m)
-    ax2.set_ylim(0, 6.2e6)
-    ax2.set_title("Juros suportados · % = taxa de juro implícita", loc="left", fontsize=10.5, fontweight="bold")
+    ax2.set_ylim(0, 6.6e6)
+    ax2.set_title("Juros dos financiamentos · % = taxa de juro implícita", loc="left", fontsize=10.5, fontweight="bold")
     guardar(fig, "07_divida_e_juros.png")
 
 
@@ -386,7 +409,7 @@ def funcionarios(con):
     epocas = [r[0] for r in rows]
     x = range(len(epocas))
     fig, ax = figura("Funcionários da SAD",
-                     "Número médio de funcionários por categoria · Desde 2012/13, os jogadores quase duplicaram e o restante pessoal multiplicou-se por mais de 8")
+                     "Número médio de funcionários por categoria · Desde 2012/13, os jogadores quase triplicaram e o restante pessoal multiplicou-se por mais de 10")
     base = [0] * len(rows)
     for idx, nome, cor in [(1, "Jogadores", PRETO), (2, "Treinadores", CINZA_ESCURO), (3, "Staff e apoio", AMARELO)]:
         vals = [r[idx] for r in rows]
@@ -395,7 +418,7 @@ def funcionarios(con):
     for i, r in enumerate(rows):
         ax.text(i, r[4] + 4, str(r[4]), ha="center", fontsize=9, fontweight="bold")
     ax.set_xticks(list(x), epocas, fontsize=9)
-    ax.set_ylim(0, 255)
+    ax.set_ylim(0, 335)
     ax.set_ylabel("Funcionários")
     ax.legend(loc="upper left")
     guardar(fig, "09_funcionarios.png")
@@ -504,12 +527,12 @@ def custo_por_ponto(con):
                      WHERE d.epoca_id >= '2013/14' ORDER BY d.epoca_id""")
     epocas = [r[0] for r in rows]
     fig, ax = figura("Quanto custa cada ponto",
-                     "SAD · Gastos com pessoal ÷ pontos na Liga · Em 2014/15, um ponto custava 80 mil €; em 2024/25, 380 mil €")
+                     "SAD · Gastos com pessoal ÷ pontos na Liga · Em 2014/15, um ponto custava 80 mil €; em 2025/26, 517 mil €")
     xs = barras_simples(ax, epocas, [r[1] for r in rows], cor=PRETO)
     for x, r in enumerate(rows):
         ax.text(x, r[1] + 8e3, f"{r[1] / 1e3:.0f} mil €\n{r[2]} pts", ha="center", fontsize=8, linespacing=1.1)
     ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v / 1e3:.0f} mil €" if v else "0"))
-    ax.set_ylim(0, 560e3)
+    ax.set_ylim(0, 600e3)
     guardar(fig, "14_custo_por_ponto.png")
 
 
@@ -567,9 +590,11 @@ def dispersao_regressao(con):
     sqe = sum((y - (a + b * x)) ** 2 for x, y in zip(xs, ys))
     r2 = 1 - sqe / sum((y - my) ** 2 for y in ys)
     ep = (sqe / (n - 2) / sum((x - mx) ** 2 for x in xs)) ** 0.5
-    ic = (b - 2.228 * ep, b + 2.228 * ep)  # t(0,975; 10 graus de liberdade)
+    t_critico = {8: 2.306, 9: 2.262, 10: 2.228, 11: 2.201, 12: 2.179, 13: 2.160,
+                 14: 2.145, 15: 2.131, 16: 2.120, 17: 2.110, 18: 2.101}[n - 2]  # t(0,975; n-2)
+    ic = (b - t_critico * ep, b + t_critico * ep)
     fig, ax = figura("Despesas da SAD vs. classificação",
-                     "Despesas = pessoal + FSE + depreciações e amortizações · Regressão linear (mínimos quadrados), 2013/14 a 2024/25")
+                     f"Despesas = pessoal + FSE + depreciações e amortizações · Regressão linear (mínimos quadrados), {rows[0][0]} a {rows[-1][0]}")
     lim = (5, 40)
     ax.plot(lim, [a + b * lim[0], a + b * lim[1]], color=PRETO, linewidth=2, zorder=2)
     for ep, x, y, fase in rows:
@@ -587,7 +612,7 @@ def dispersao_regressao(con):
           f"Cada 10 M€ a mais: {num(abs(b) * 10, 1)} lugares melhor, em média.\n"
           f"IC a 95%: de {num(ic[1] * 10, 1)} lugares pior a {num(-ic[0] * 10, 1)} melhor (inclui zero).\n"
           f"n = {n} épocas. Associação, não causa.")
-    ax.text(0.985, 0.05, eq, transform=ax.transAxes, ha="right", va="bottom", fontsize=9.5,
+    ax.text(0.62, 0.05, eq, transform=ax.transAxes, ha="center", va="bottom", fontsize=9.5,
             bbox=dict(boxstyle="square,pad=0.6", facecolor=CINZA_CLARO, edgecolor="none"))
     ax.scatter([], [], s=110, color=AMARELO, edgecolor=PRETO, label="Fase de grupos europeia ou mais")
     ax.scatter([], [], s=110, color=BRANCO, edgecolor=PRETO, label="Restantes épocas")
@@ -621,8 +646,11 @@ def vendas_vs_receitas(con):
 
 
 def centralizacao_equilibrio(con):
-    defice = q(con, """SELECT AVG(rl_sem_mais_valias) FROM v_kpis
-                       WHERE entidade_id = 'SAD' AND epoca_id BETWEEN '2022/23' AND '2024/25'""")[0][0]
+    ultimas = q(con, """SELECT epoca_id, rl_sem_mais_valias FROM v_kpis
+                         WHERE entidade_id = 'SAD' AND rl_sem_mais_valias IS NOT NULL
+                         ORDER BY epoca_id DESC LIMIT 3""")
+    defice = sum(r[1] for r in ultimas) / len(ultimas)
+    periodo = f"{ultimas[-1][0]}–{ultimas[0][0]}"
     tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos TV' AND epoca_id='2024/25'")[0][0]
     cen = []
     for contrato in (200e6, 250e6, 300e6):
@@ -630,7 +658,7 @@ def centralizacao_equilibrio(con):
             novo = contrato * 0.9 * 0.332 / 18 + contrato * 0.9 * 0.442 * (19 - n) / 171
             cen.append((f"{contrato / 1e6:.0f} M€ · {n}.º lugar", novo - tv))
     fig, ax = figura("Centralização: ajuda, mas não fecha o défice sozinha",
-                     f"Défice antes de vendas de jogadores: {euros_m(defice, 1)} por época (média 2022/23–2024/25) · Ganho face aos {euros_m(tv, 1)} de TV atuais",
+                     f"Défice antes de vendas de jogadores: {euros_m(defice, 1)} por época (média {periodo}) · Ganho face aos {euros_m(tv, 1)} de TV atuais",
                      altura=6.2, base=0.2)
     pos = ax.get_position()
     ax.set_position([0.17, pos.y0, 0.8, pos.height])
@@ -670,7 +698,7 @@ def painel_indicadores(con):
                      ORDER BY d.epoca_id""")
     ep = [r[0][2:] for r in rows]
     fig, ax0 = figura("Painel de indicadores financeiros",
-                      "SAD · 2016/17 a 2024/25 · Percentagens sobre as receitas da operação (vendas e serviços), salvo indicação",
+                      "SAD · 2016/17 a 2025/26 · Percentagens sobre as receitas da operação (vendas e serviços), salvo indicação",
                       altura=7.4, base=0.1)
     ax0.remove()
     paineis = [

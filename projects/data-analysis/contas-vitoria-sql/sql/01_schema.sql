@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS operacao_jogador;
 DROP TABLE IF EXISTS transferencias;
 DROP TABLE IF EXISTS gastos_pessoal_composicao;
 DROP TABLE IF EXISTS receitas_composicao;
+DROP TABLE IF EXISTS detalhe_rubrica;
 DROP TABLE IF EXISTS cash_flow;
 DROP TABLE IF EXISTS balanco;
 DROP TABLE IF EXISTS demonstracao_resultados;
@@ -192,6 +193,7 @@ CREATE TABLE balanco_sad_rc (
     financiamentos_c     INTEGER,               -- financiamentos obtidos correntes
     juros_suportados     INTEGER,               -- valor bruto, positivo
     juros_obtidos        INTEGER,
+    juros_financiamentos INTEGER,               -- só juros dos financiamentos (2025/26: sem o efeito do custo amortizado)
     documento            TEXT,
     CHECK (ABS(ativo_total - ativo_nao_corrente - ativo_corrente) <= 1),
     CHECK (ABS(passivo_total - passivo_nao_corrente - passivo_corrente) <= 1),
@@ -316,6 +318,18 @@ CREATE TABLE bce_taxa (
     data_efeito          TEXT PRIMARY KEY,
     facilidade_deposito  REAL NOT NULL,
     refinanciamento      REAL NOT NULL
+);
+
+-- Detalhe das rubricas da DR da SAD segundo as notas do R&C (vendas e serviços,
+-- FSE, outros rendimentos e outros gastos). Valores em euros, positivos.
+CREATE TABLE detalhe_rubrica (
+    epoca_id   TEXT NOT NULL REFERENCES epoca(epoca_id),
+    nota       TEXT NOT NULL,                  -- número da nota do anexo
+    grupo      TEXT NOT NULL,                  -- rubrica da demonstração de resultados
+    rubrica    TEXT NOT NULL,                  -- linha de detalhe
+    valor      INTEGER NOT NULL,
+    documento  TEXT,
+    PRIMARY KEY (epoca_id, nota, rubrica)
 );
 
 CREATE INDEX idx_dr_rubrica ON demonstracao_resultados (rubrica_id, epoca_id);

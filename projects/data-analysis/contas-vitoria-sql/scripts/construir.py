@@ -23,6 +23,7 @@ PASSOS = [
     ("Gráficos", ["graficos.py"], "matplotlib"),
     ("Cabeçalhos do README", ["cabecalhos.py"], "matplotlib"),
     ("Versão HTML e site/", ["gerar_html.py", "--site"], "markdown"),
+    ("Relatório PDF", ["relatorio_pdf.py"], "playwright"),
 ]
 
 

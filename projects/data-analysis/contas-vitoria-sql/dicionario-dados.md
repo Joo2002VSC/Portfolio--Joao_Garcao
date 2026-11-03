@@ -16,11 +16,11 @@ Gerado por `scripts/dicionario.py` a partir de `vsc_contas.db` e dos comentário
 
 ## Índice
 
-[`auditoria`](#auditoria) · [`balanco`](#balanco) · [`balanco_rubrica`](#balanco_rubrica) · [`balanco_sad_rc`](#balanco_sad_rc) · [`bce_taxa`](#bce_taxa) · [`cash_flow`](#cash_flow) · [`demonstracao_resultados`](#demonstracao_resultados) · [`desempenho_desportivo`](#desempenho_desportivo) · [`divergencia`](#divergencia) · [`divida`](#divida) · [`entidade`](#entidade) · [`epoca`](#epoca) · [`evento`](#evento) · [`financiamento_detalhe`](#financiamento_detalhe) · [`fonte`](#fonte) · [`gastos_pessoal_composicao`](#gastos_pessoal_composicao) · [`operacao_jogador`](#operacao_jogador) · [`partes_relacionadas`](#partes_relacionadas) · [`passes_jogadores`](#passes_jogadores) · [`pessoal_sad`](#pessoal_sad) · [`receitas_composicao`](#receitas_composicao) · [`reexpressao`](#reexpressao) · [`rubrica`](#rubrica) · [`taxa_referencia`](#taxa_referencia) · [`transferencias`](#transferencias) · [`treinador`](#treinador) · [`v_dr`](#v_dr) · [`v_kpis`](#v_kpis) · [`v_resultado_por_entidade`](#v_resultado_por_entidade) · [`v_taxas_epoca`](#v_taxas_epoca)
+[`auditoria`](#auditoria) · [`balanco`](#balanco) · [`balanco_rubrica`](#balanco_rubrica) · [`balanco_sad_rc`](#balanco_sad_rc) · [`bce_taxa`](#bce_taxa) · [`cash_flow`](#cash_flow) · [`demonstracao_resultados`](#demonstracao_resultados) · [`desempenho_desportivo`](#desempenho_desportivo) · [`detalhe_rubrica`](#detalhe_rubrica) · [`divergencia`](#divergencia) · [`divida`](#divida) · [`entidade`](#entidade) · [`epoca`](#epoca) · [`evento`](#evento) · [`financiamento_detalhe`](#financiamento_detalhe) · [`fonte`](#fonte) · [`gastos_pessoal_composicao`](#gastos_pessoal_composicao) · [`operacao_jogador`](#operacao_jogador) · [`partes_relacionadas`](#partes_relacionadas) · [`passes_jogadores`](#passes_jogadores) · [`pessoal_sad`](#pessoal_sad) · [`receitas_composicao`](#receitas_composicao) · [`reexpressao`](#reexpressao) · [`rubrica`](#rubrica) · [`taxa_referencia`](#taxa_referencia) · [`transferencias`](#transferencias) · [`treinador`](#treinador) · [`v_dr`](#v_dr) · [`v_kpis`](#v_kpis) · [`v_resultado_por_entidade`](#v_resultado_por_entidade) · [`v_taxas_epoca`](#v_taxas_epoca)
 
 ## `auditoria`
 
-*Tabela · 13 linhas · épocas 2012/13 a 2024/25*
+*Tabela · 14 linhas · épocas 2012/13 a 2025/26*
 
 Parecer do auditor (certificação legal de contas) e artigo 35.º do CSC
 
@@ -48,7 +48,7 @@ Balanço a 30/06 de cada época (NULL = não disponível)
 
 ## `balanco_rubrica`
 
-*Tabela · 159 linhas · épocas 2016/17 a 2024/25*
+*Tabela · 175 linhas · épocas 2016/17 a 2025/26*
 
 Balanço da SAD por rubrica (formato longo), 2016/17 a 2024/25
 
@@ -62,7 +62,7 @@ Balanço da SAD por rubrica (formato longo), 2016/17 a 2024/25
 
 ## `balanco_sad_rc`
 
-*Tabela · 13 linhas · épocas 2012/13 a 2024/25*
+*Tabela · 14 linhas · épocas 2012/13 a 2025/26*
 
 Balanço detalhado da SAD tal como publicado nos Relatórios e Contas, com dívida financeira e juros (verificado documento a documento)
 
@@ -81,6 +81,7 @@ Balanço detalhado da SAD tal como publicado nos Relatórios e Contas, com dívi
 | `financiamentos_c` | INTEGER |  | 4 | financiamentos obtidos correntes |
 | `juros_suportados` | INTEGER |  | 1 | valor bruto, positivo |
 | `juros_obtidos` | INTEGER |  | 7 | Juros obtidos (€) |
+| `juros_financiamentos` | INTEGER |  | 13 | só juros dos financiamentos (2025/26: sem o efeito do custo amortizado) |
 | `documento` | TEXT |  |  | Documento e nota de origem (Relatório e Contas) |
 
 ## `bce_taxa`
@@ -97,7 +98,7 @@ Alterações das taxas diretoras do BCE (em vigor a partir de data_efeito).
 
 ## `cash_flow`
 
-*Tabela · 12 linhas · épocas 2013/14 a 2024/25*
+*Tabela · 13 linhas · épocas 2013/14 a 2025/26*
 
 Fluxos de caixa (só SAD)
 
@@ -111,7 +112,7 @@ Fluxos de caixa (só SAD)
 
 ## `demonstracao_resultados`
 
-*Tabela · 293 linhas · épocas 2012/13 a 2025/26*
+*Tabela · 306 linhas · épocas 2012/13 a 2025/26*
 
 Demonstração de resultados em formato longo (uma linha por rubrica)
 
@@ -139,9 +140,24 @@ Desempenho desportivo da equipa principal em cada época
 | `trofeu` | TEXT |  | 12 | Troféu conquistado na época |
 | `nota` | TEXT |  | 12 | Observação sobre o valor ou a época |
 
+## `detalhe_rubrica`
+
+*Tabela · 48 linhas · épocas 2024/25 a 2025/26*
+
+Detalhe das rubricas da DR da SAD segundo as notas do R&C (vendas e serviços, FSE, outros rendimentos e outros gastos). Valores em euros, positivos.
+
+| Coluna | Tipo | Chave | Em falta | Descrição |
+|:---|:---|:---|---:|:---|
+| `epoca_id` | TEXT | PK · FK → `epoca.epoca_id` |  | Época desportiva, `AAAA/AA` |
+| `nota` | TEXT | PK |  | número da nota do anexo |
+| `grupo` | TEXT |  |  | rubrica da demonstração de resultados |
+| `rubrica` | TEXT | PK |  | linha de detalhe |
+| `valor` | INTEGER |  |  | Valor em euros |
+| `documento` | TEXT |  |  | Documento e nota de origem (Relatório e Contas) |
+
 ## `divergencia`
 
-*Tabela · 40 linhas · épocas 2014/15 a 2023/24*
+*Tabela · 42 linhas · épocas 2014/15 a 2024/25*
 
 Divergências encontradas entre fontes secundárias e os Relatórios e Contas
 
@@ -158,7 +174,7 @@ Divergências encontradas entre fontes secundárias e os Relatórios e Contas
 
 ## `divida`
 
-*Tabela · 6 linhas*
+*Tabela · 12 linhas*
 
 Dívida da SAD por credor e maturidade
 
@@ -170,8 +186,8 @@ Dívida da SAD por credor e maturidade
 | `total` | INTEGER |  |  | Montante total em dívida (€) |
 | `menos_1_ano` | INTEGER |  | 2 | Parte que vence em menos de um ano (€) |
 | `entre_1_3_anos` | INTEGER |  | 2 | Parte que vence entre um e três anos (€) |
-| `mais_3_anos` | INTEGER |  | 2 | Parte que vence a mais de três anos (€) |
-| `nota` | TEXT |  |  | Observação sobre o valor ou a época |
+| `mais_3_anos` | INTEGER |  | 4 | Parte que vence a mais de três anos (€) |
+| `nota` | TEXT |  | 1 | Observação sobre o valor ou a época |
 
 ## `entidade`
 
@@ -199,7 +215,7 @@ As três "vistas" do Vitória: SAD, Clube e Grupo consolidado
 
 ## `evento`
 
-*Tabela · 51 linhas · épocas 2013/14 a 2025/26*
+*Tabela · 53 linhas · épocas 2013/14 a 2025/26*
 
 Acontecimentos e observações relevantes de cada época
 
@@ -210,11 +226,11 @@ Acontecimentos e observações relevantes de cada época
 | `epoca_id` | TEXT | FK → `epoca.epoca_id` |  | Época desportiva, `AAAA/AA` |
 | `tipo` | TEXT |  |  | Tipo de registo |
 | `descricao` | TEXT |  |  | Texto descritivo |
-| `valor` | INTEGER |  | 23 | Valor em euros |
+| `valor` | INTEGER |  | 25 | Valor em euros |
 
 ## `financiamento_detalhe`
 
-*Tabela · 8 linhas*
+*Tabela · 12 linhas*
 
 Dívida financeira por instrumento e maturidade
 
@@ -269,7 +285,7 @@ Principais vendas e aquisições individuais
 
 ## `partes_relacionadas`
 
-*Tabela · 26 linhas · épocas 2020/21 a 2024/25*
+*Tabela · 31 linhas · épocas 2020/21 a 2025/26*
 
 Transações e saldos entre a SAD e o Clube (partes relacionadas)
 
@@ -283,7 +299,7 @@ Transações e saldos entre a SAD e o Clube (partes relacionadas)
 
 ## `passes_jogadores`
 
-*Tabela · 8 linhas · épocas 2017/18 a 2024/25*
+*Tabela · 9 linhas · épocas 2017/18 a 2025/26*
 
 Movimentos dos passes de jogadores (ativos intangíveis), nota 7 dos R&C
 
@@ -302,7 +318,7 @@ Movimentos dos passes de jogadores (ativos intangíveis), nota 7 dos R&C
 
 ## `pessoal_sad`
 
-*Tabela · 13 linhas · épocas 2012/13 a 2024/25*
+*Tabela · 14 linhas · épocas 2012/13 a 2025/26*
 
 Número médio de funcionários e gastos com pessoal da SAD (nota "Benefícios dos empregados")
 
@@ -319,7 +335,7 @@ Número médio de funcionários e gastos com pessoal da SAD (nota "Benefícios d
 | `rem_pessoal_administrativo` | INTEGER |  | 4 | Remunerações do pessoal administrativo (€) |
 | `rem_treinadores` | INTEGER |  | 4 | Remunerações dos treinadores (€) |
 | `rem_jogadores` | INTEGER |  | 4 | Remunerações dos jogadores (€) |
-| `rem_apoio_futebol` | INTEGER |  | 11 | Remunerações do pessoal de apoio ao futebol (€) |
+| `rem_apoio_futebol` | INTEGER |  | 12 | Remunerações do pessoal de apoio ao futebol (€) |
 | `encargos_remuneracoes` | INTEGER |  |  | Encargos sociais sobre remunerações (€) |
 | `seguro_acidentes` | INTEGER |  |  | Seguros de acidentes de trabalho (€) |
 | `outros_gastos` | INTEGER |  |  | Outros gastos com pessoal (€) |
@@ -341,7 +357,7 @@ Composição das receitas operacionais (os totais coincidem com os rendimentos o
 
 ## `reexpressao`
 
-*Tabela · 8 linhas · épocas 2024/25 a 2024/25*
+*Tabela · 12 linhas · épocas 2024/25 a 2024/25*
 
 Valores de 2024/25 reexpressos nas contas de 2025/26 (custo amortizado)
 
@@ -381,7 +397,7 @@ Taxas de juro de referência (mercado e crédito), em percentagem.
 
 ## `transferencias`
 
-*Tabela · 16 linhas · épocas 2017/18 a 2024/25*
+*Tabela · 17 linhas · épocas 2017/18 a 2025/26*
 
 Transferências de jogadores (resumo por época)
 
@@ -416,16 +432,16 @@ Demonstração de resultados em formato largo (pivot com CASE)
 |:---|:---|:---|---:|:---|
 | `entidade_id` | TEXT |  |  | `SAD`, `CLUBE` ou `CONSOLIDADO` |
 | `epoca_id` | TEXT |  |  | Época desportiva, `AAAA/AA` |
-| `vendas_servicos` | — |  | 16 | Vendas e prestações de serviços: receitas da operação (€) |
+| `vendas_servicos` | — |  | 15 | Vendas e prestações de serviços: receitas da operação (€) |
 | `rendimentos_operacionais` | — |  | 25 | Rendimentos operacionais sem operações com jogadores (€; 2025/26) |
-| `outros_rendimentos` | — |  | 20 | Outros rendimentos, incluindo mais-valias com jogadores (€) |
-| `fse` | — |  | 9 | Fornecimentos e serviços externos (€, negativo) |
-| `gastos_pessoal` | — |  | 9 | Gastos com pessoal (€; negativo em `v_dr`, positivo em `v_kpis`) |
-| `depreciacoes` | — |  | 9 | Depreciações e amortizações, incluindo passes (€, negativo) |
+| `outros_rendimentos` | — |  | 19 | Outros rendimentos, incluindo mais-valias com jogadores (€) |
+| `fse` | — |  | 8 | Fornecimentos e serviços externos (€, negativo) |
+| `gastos_pessoal` | — |  | 8 | Gastos com pessoal (€; negativo em `v_dr`, positivo em `v_kpis`) |
+| `depreciacoes` | — |  | 8 | Depreciações e amortizações, incluindo passes (€, negativo) |
 | `ebitda` | — |  | 23 | Resultado antes de juros, impostos, depreciações e amortizações (€) |
 | `ebitda_sem_transferencias` | — |  | 28 | EBITDA sem operações com jogadores (€) |
-| `resultado_operacional` | — |  | 19 | Resultado operacional (€) |
-| `juros` | — |  | 9 | Juros (€; nalgumas épocas líquidos dos juros obtidos, ver `balanco_sad_rc`) |
+| `resultado_operacional` | — |  | 18 | Resultado operacional (€) |
+| `juros` | — |  | 8 | Juros (€; nalgumas épocas líquidos dos juros obtidos, ver `balanco_sad_rc`) |
 | `resultado_liquido` | — |  |  | Resultado líquido do período (€) |
 
 ## `v_kpis`
@@ -438,13 +454,13 @@ Indicadores principais por entidade e época
 |:---|:---|:---|---:|:---|
 | `entidade_id` | TEXT |  |  | `SAD`, `CLUBE` ou `CONSOLIDADO` |
 | `epoca_id` | TEXT |  |  | Época desportiva, `AAAA/AA` |
-| `vendas_servicos` | — |  | 16 | Vendas e prestações de serviços: receitas da operação (€) |
-| `gastos_pessoal` | — |  | 9 | Gastos com pessoal (€; negativo em `v_dr`, positivo em `v_kpis`) |
+| `vendas_servicos` | — |  | 15 | Vendas e prestações de serviços: receitas da operação (€) |
+| `gastos_pessoal` | — |  | 8 | Gastos com pessoal (€; negativo em `v_dr`, positivo em `v_kpis`) |
 | `resultado_liquido` | — |  |  | Resultado líquido do período (€) |
-| `mais_valias_liquidas` | INTEGER |  | 17 | Preço de venda − valor contabilístico − custos da venda (€) |
-| `rl_sem_mais_valias` | — |  | 17 | Resultado líquido − mais-valias com jogadores (€) |
-| `pct_pessoal_receitas` | — |  | 16 | Gastos com pessoal em % das vendas e serviços |
-| `juros` | — |  | 9 | Juros (€; nalgumas épocas líquidos dos juros obtidos, ver `balanco_sad_rc`) |
+| `mais_valias_liquidas` | INTEGER |  | 16 | Preço de venda − valor contabilístico − custos da venda (€) |
+| `rl_sem_mais_valias` | — |  | 16 | Resultado líquido − mais-valias com jogadores (€) |
+| `pct_pessoal_receitas` | — |  | 15 | Gastos com pessoal em % das vendas e serviços |
+| `juros` | — |  | 8 | Juros (€; nalgumas épocas líquidos dos juros obtidos, ver `balanco_sad_rc`) |
 | `ativo_total` | INTEGER |  | 10 | Ativo total a 30/06 (€) |
 | `passivo_total` | INTEGER |  |  | Passivo total a 30/06 (€) |
 | `capital_proprio` | INTEGER |  | 10 | Capital próprio = ativo − passivo (€); no Clube, fundos patrimoniais |
@@ -476,5 +492,5 @@ Taxas de juro por época (julho a junho): referências de mercado e taxa implíc
 | `euribor_12m` | — |  |  | Euribor a 12 meses, média da época (%) |
 | `ot_portugal_10a` | — |  |  | Obrigações do Estado português a 10 anos, média da época (%) |
 | `credito_empresas_pt` | — |  | 5 | Crédito novo a empresas em Portugal, média dos meses disponíveis (%) |
-| `vitoria_implicita` | — |  | 2 | Juros suportados ÷ dívida financeira média da SAD (%) |
+| `vitoria_implicita` | — |  | 1 | Juros suportados ÷ dívida financeira média da SAD (%) |
 | `meses_euribor` | — |  |  | Número de observações mensais da Euribor na época |

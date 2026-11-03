@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Rendimentos, gastos e transferências · Vitória SC – Futebol, SAD</title>
+<style>
+@font-face { font-family: "Archivo Expanded"; font-weight: 800; src: url("../fontes/ArchivoExpanded-ExtraBold.ttf"); }
+@font-face { font-family: "Archivo"; font-weight: 400; src: url("../fontes/Archivo-Regular.ttf"); }
+@font-face { font-family: "Archivo"; font-weight: 700; src: url("../fontes/Archivo-Bold.ttf"); }
+
+/* Identidade: amarelo e preto dos documentos financeiros do clube, cinzentos neutros,
+   Archivo Expanded nos títulos e números, Archivo no texto. Página A4 com grelha
+   de margens de 18 mm e faixa amarela como elemento de assinatura. */
+:root {
+  --amarelo: #F5D510; --amarelo-suave: #FCF1A6; --preto: #111111;
+  --cinza-escuro: #4A4949; --cinza: #8C8A8B; --linha: #DCDBDB; --zebra: #F6F5F3;
+  --titulo: "Archivo Expanded", "Archivo", sans-serif;
+  --texto: "Archivo", "Helvetica Neue", Arial, sans-serif;
+}
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; color: var(--preto); }
+body { font: 400 9.4pt/1.45 var(--texto); -webkit-print-color-adjust: exact; print-color-adjust: exact; font-variant-numeric: tabular-nums; }
+
+.pagina { width: 210mm; height: 297mm; position: relative; overflow: hidden; page-break-after: always; break-after: page;
+  padding: 0 18mm; display: flex; flex-direction: column; }
+.pagina:last-child { page-break-after: auto; break-after: auto; }
+
+/* Cabeçalho e rodapé das páginas interiores */
+.cabecalho { display: flex; align-items: center; gap: 4mm; padding: 9mm 0 3.2mm; border-bottom: 1.2mm solid var(--amarelo); }
+.cabecalho img { height: 10mm; }
+.cabecalho .titulo-curto { font: 800 8pt var(--titulo); text-transform: uppercase; letter-spacing: .03em; }
+.cabecalho .entidade { margin-left: auto; font-size: 7.6pt; color: var(--cinza-escuro); }
+.corpo { flex: 1; padding-top: 6mm; display: flex; flex-direction: column; min-height: 0; }
+.rodape { display: flex; justify-content: space-between; align-items: center; gap: 8mm; padding: 3mm 0 8mm;
+  border-top: .3mm solid var(--linha); font-size: 6.8pt; color: var(--cinza); }
+.rodape .num { font: 800 8pt var(--titulo); color: var(--preto); }
+
+/* Tipografia */
+.seccao-num { display: inline-block; align-self: flex-start; margin: 0 0 2.5mm; padding: .8mm 2.6mm; background: var(--preto); color: var(--amarelo);
+  font: 800 8pt var(--titulo); letter-spacing: .06em; text-transform: uppercase; }
+h2 { font: 800 17pt/1.15 var(--titulo); margin: 0 0 3mm; letter-spacing: -.005em; text-wrap: balance; }
+h3 { font: 800 9.5pt var(--titulo); text-transform: uppercase; letter-spacing: .04em; margin: 6mm 0 2.5mm;
+  padding-bottom: 1.2mm; border-bottom: .6mm solid var(--preto); }
+h4 { font: 700 9pt var(--texto); margin: 3mm 0 1.5mm; }
+h4 span { font-weight: 400; color: var(--cinza); font-size: 7.6pt; margin-left: 1.5mm; }
+.lead { font-size: 10pt; line-height: 1.5; margin: 0 0 4mm; max-width: 165mm; color: #222; }
+.nota { font-size: 6.9pt; line-height: 1.45; color: var(--cinza-escuro); margin: 2.5mm 0 0; }
+code { font: 6.8pt ui-monospace, Menlo, monospace; background: var(--zebra); padding: 0 1mm; }
+figure { margin: 0 0 3.5mm; }
+figure img { width: 100%; display: block; }
+
+/* Tabelas */
+table { width: 100%; border-collapse: collapse; font-size: 7.5pt; }
+th { background: var(--preto); color: #fff; font-weight: 700; text-align: right; padding: 1.5mm 1.8mm; white-space: nowrap; }
+th.t, th:first-child { text-align: left; }
+td { padding: 1.15mm 1.8mm; border-bottom: .25mm solid var(--linha); }
+td.n { text-align: right; white-space: nowrap; }
+td.forte { font-weight: 700; }
+tbody tr:nth-child(even) td { background: var(--zebra); }
+tr.destaque td { background: var(--amarelo-suave) !important; font-weight: 700; border-bottom: .5mm solid var(--preto); }
+
+/* Síntese */
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; margin: 2mm 0 1mm; }
+.kpi { border-top: 1.4mm solid var(--amarelo); background: var(--zebra); padding: 4mm 4.5mm 4.5mm; display: flex; flex-direction: column; gap: 1.5mm; }
+.kpi .v { font: 800 22pt/1 var(--titulo); }
+.kpi .v small { font-size: 11pt; }
+.kpi .l { font-size: 8pt; color: var(--cinza-escuro); line-height: 1.35; }
+.kpi.escuro { background: var(--preto); border-top-color: var(--amarelo); }
+.kpi.escuro .v { color: var(--amarelo); }
+.kpi.escuro .l { color: #ddd; }
+.conclusoes { margin: 0; padding-left: 0; list-style: none; counter-reset: c; display: grid; gap: 2.6mm; }
+.conclusoes li { counter-increment: c; display: grid; grid-template-columns: 9mm 1fr; align-items: start; font-size: 9pt; line-height: 1.45; }
+.conclusoes li::before { content: counter(c, decimal-leading-zero); font: 800 9pt var(--titulo); color: var(--preto);
+  background: var(--amarelo); height: 6mm; width: 6mm; display: grid; place-items: center; font-size: 7pt; }
+.indice { list-style: none; margin: 0; padding: 0; counter-reset: i; }
+.indice li { counter-increment: i; display: flex; gap: 3mm; padding: 1.6mm 0; border-bottom: .25mm solid var(--linha); font-size: 9pt; }
+.indice li::before { content: counter(i, decimal-leading-zero); font: 800 8pt var(--titulo); color: var(--cinza); width: 7mm; }
+.indice li span:last-child { margin-left: auto; font: 800 8pt var(--titulo); }
+
+/* Duas colunas */
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+.duas > div { min-width: 0; }
+.tabelas-pequenas table { font-size: 6.9pt; }
+.tabelas-pequenas td { padding: .8mm 1.6mm; }
+.compacta td { padding: .8mm 1.8mm; }
+.texto p { font-size: 8.4pt; margin: 0 0 2mm; }
+.texto h4 { margin-top: 3.5mm; font: 800 8.2pt var(--titulo); text-transform: uppercase; letter-spacing: .04em; }
+.assinatura { margin-top: 6mm !important; font: 800 10pt var(--titulo); border-top: 1.2mm solid var(--amarelo); padding-top: 3mm; }
+.assinatura span { font: 400 8pt var(--texto); color: var(--cinza-escuro); }
+
+/* Capa */
+.capa { padding: 0; background: #fff; }
+.capa-faixa { position: absolute; left: 0; top: 0; bottom: 0; width: 13mm; background: var(--amarelo); }
+.capa-topo { position: absolute; left: 30mm; top: 24mm; display: flex; align-items: center; gap: 7mm; }
+.capa-emblema { width: 46mm; }
+.capa-entidade { font: 800 11pt/1.3 var(--titulo); text-transform: uppercase; letter-spacing: .05em; border-left: 1.2mm solid var(--preto); padding-left: 5mm; }
+.capa-titulo { position: absolute; left: 30mm; right: 20mm; top: 116mm; }
+.sobretitulo { font: 700 9pt var(--texto); text-transform: uppercase; letter-spacing: .14em; color: var(--cinza-escuro); margin: 0 0 5mm; }
+.capa h1 { font: 800 40pt/1.02 var(--titulo); margin: 0 0 7mm; letter-spacing: -.01em; }
+.subtitulo { font-size: 12pt; line-height: 1.45; max-width: 125mm; color: #333; margin: 0; }
+.capa-numeros { position: absolute; left: 13mm; right: 0; bottom: 30mm; background: var(--preto); color: #fff; display: grid;
+  grid-template-columns: repeat(3, 1fr); padding: 8mm 17mm 8mm 17mm; gap: 6mm; }
+.capa-numeros div { display: flex; flex-direction: column; gap: 2mm; border-left: .8mm solid var(--amarelo); padding-left: 4mm; }
+.capa-numeros .v { font: 800 17pt var(--titulo); color: var(--amarelo); }
+.capa-numeros .l { font-size: 7.8pt; color: #ccc; line-height: 1.35; }
+.capa-rodape { position: absolute; left: 30mm; right: 18mm; bottom: 12mm; display: flex; justify-content: space-between; font-size: 7.8pt; color: var(--cinza-escuro); }
+</style>
+</head>
+<body>
+{{PAGINAS}}
+</body>
+</html>

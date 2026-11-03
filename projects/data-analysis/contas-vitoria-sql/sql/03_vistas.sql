@@ -96,7 +96,9 @@ med AS (
 ),
 divida AS (
     SELECT epoca_id,
-           juros_suportados,
+           -- Em 2025/26 os juros suportados incluem o efeito do custo amortizado;
+           -- usa-se só o juro dos financiamentos, comparável com as épocas anteriores.
+           COALESCE(juros_financiamentos, juros_suportados) AS juros_suportados,
            financiamentos_nc + financiamentos_c AS financiamentos,
            LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS fin_anterior
     FROM balanco_sad_rc

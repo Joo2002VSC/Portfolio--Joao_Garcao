@@ -19,7 +19,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 739 904 | 15 469 598 | lucro |
 | 2023/24 | -14 723 467 | -16 463 371 | prejuízo |
 | 2024/25 | 7 610 319 | 22 333 786 | lucro |
-| 2025/26 | -11 063 044 | -18 673 363 | prejuízo |
+| 2025/26 | -11 063 043 | -18 673 362 | prejuízo |
 
 ## 2. Dependência das vendas de jogadores: resultado da SAD sem mais-valias
 
@@ -33,23 +33,25 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 739 904 | 23 216 097 | -21 476 193 | lucro só graças às vendas |
 | 2023/24 | -14 723 467 | 6 665 467 | -21 388 934 |  |
 | 2024/25 | 7 610 319 | 27 540 964 | -19 930 645 | lucro só graças às vendas |
+| 2025/26 | -11 063 043 | 16 055 187 | -27 118 230 |  |
 
 ## 3. Peso dos gastos com pessoal nas receitas da SAD (ranking)
 
 | epoca | receitas | pessoal | pct | ranking_pior |
 |---|---|---|---|---|
-| 2013/14 | 8 900 528 | 4 621 871 | 51,9 | 12 |
-| 2014/15 | 6 786 697 | 4 413 612 | 65,0 | 10 |
-| 2015/16 | 6 226 662 | 5 278 997 | 84,8 | 9 |
-| 2016/17 | 10 535 891 | 6 758 553 | 64,1 | 11 |
-| 2017/18 | 9 822 148 | 8 843 968 | 90,0 | 8 |
-| 2018/19 | 12 558 787 | 11 559 940 | 92,0 | 6 |
-| 2019/20 | 17 014 051 | 16 100 077 | 94,6 | 5 |
+| 2013/14 | 8 900 528 | 4 621 871 | 51,9 | 13 |
+| 2014/15 | 6 786 697 | 4 413 612 | 65,0 | 11 |
+| 2015/16 | 6 226 662 | 5 278 997 | 84,8 | 10 |
+| 2016/17 | 10 535 891 | 6 758 553 | 64,1 | 12 |
+| 2017/18 | 9 822 148 | 8 843 968 | 90,0 | 9 |
+| 2018/19 | 12 558 787 | 11 559 940 | 92,0 | 7 |
+| 2019/20 | 17 014 051 | 16 100 077 | 94,6 | 6 |
 | 2020/21 | 10 334 411 | 20 655 205 | 199,9 | 1 |
 | 2021/22 | 11 285 014 | 19 627 255 | 173,9 | 2 |
-| 2022/23 | 13 159 010 | 15 602 700 | 118,6 | 4 |
-| 2023/24 | 12 900 965 | 16 946 060 | 131,4 | 3 |
-| 2024/25 | 22 584 987 | 20 526 758 | 90,9 | 7 |
+| 2022/23 | 13 159 010 | 15 602 700 | 118,6 | 5 |
+| 2023/24 | 12 900 965 | 16 946 060 | 131,4 | 4 |
+| 2024/25 | 22 584 987 | 20 526 758 | 90,9 | 8 |
+| 2025/26 | 14 880 806 | 21 730 779 | 146,0 | 3 |
 
 ## 4. EBITDA sem transferências da SAD
 
@@ -116,8 +118,9 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 13 159 010 | 1 726 960 | 13,1 |
 | 2023/24 | 12 900 965 | 3 694 091 | 28,6 |
 | 2024/25 | 22 584 987 | 5 006 965 | 22,2 |
+| 2025/26 | 14 880 806 | 7 075 959 | 47,6 |
 
-## 9. Crescimento dos juros da SAD nas últimas 5 épocas (taxa média anual)
+## 9. Crescimento dos juros da SAD entre 2019/20 e 2024/25 (taxa média anual)
 
 | juros_2019_20 | juros_2024_25 | multiplicador | crescimento_anual_pct |
 |---|---|---|---|
@@ -140,7 +143,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 739 904 | -354 034 | 6 365 870 | 4 980 000 |
 | 2023/24 | -14 723 467 | -1 134 830 | -15 858 297 | 0 |
 | 2024/25 | 7 610 319 | -1 036 024 | 6 574 295 | 0 |
-| 2025/26 | -11 063 044 | — | — | — |
+| 2025/26 | -11 063 043 | — | — | — |
 
 ## 11. Passivo do Clube vs passivo da SAD
 
@@ -171,6 +174,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 30 921 739 | 6 049 650 | 23 216 097 | 75,1 | 17 257 061 |
 | 2023/24 | 14 626 816 | 3 711 075 | 6 665 467 | 45,6 | 13 808 110 |
 | 2024/25 | 49 518 024 | 17 285 567 | 27 540 964 | 55,6 | 19 140 842 |
+| 2025/26 | 30 820 000 | 8 764 218 | 16 055 187 | 52,1 | 16 753 872 |
 
 ## 13. Gastos com pessoal do grupo: atletas vs restante pessoal
 
@@ -193,7 +197,11 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | Factoring | 5 700 000 | 2 850 000 | 50,0 |
 | Apollo | 2 513 999 | 2 513 999 | 100,0 |
 | Locações Financeiras | 48 670 | 19 130 | 39,3 |
-| TOTAL | 34 584 487 | 31 704 947 | 91,7 |
+| MSD & Fasanara | 25 332 987 | 25 332 987 | 100,0 |
+| Score (antecipação TV 2026/27) | 6 450 170 | 6 450 170 | 100,0 |
+| Factoring | 8 517 273 | 6 443 106 | 75,6 |
+| Locações Financeiras | 529 665 | 155 173 | 29,3 |
+| TOTAL | 75 414 582 | 70 086 383 | 92,9 |
 
 ## 15. Fluxos de caixa da SAD: como se financiou cada época
 
@@ -211,6 +219,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 683 008 | 20 266 | -642 506 | 138 410 | operação gerou caixa |
 | 2023/24 | -6 361 290 | -231 368 | 6 532 932 | 78 684 | tapou o buraco com financiamento |
 | 2024/25 | 882 080 | 3 061 189 | -1 276 694 | 2 745 259 | operação gerou caixa |
+| 2025/26 | -18 991 622 | -2 188 268 | 18 939 673 | 505 042 | tapou o buraco com financiamento |
 
 ## 16. Melhor e pior época de cada entidade
 
@@ -226,7 +235,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 |---|---|---|---|
 | CLUBE | 11 | 48 | 4,40 |
 | CONSOLIDADO | 8 | 65 | 8,10 |
-| SAD | 14 | 180 | 12,9 |
+| SAD | 14 | 193 | 13,8 |
 
 ## 18. Qualidade dos dados: valores repetidos de época para época
 
@@ -263,7 +272,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 6 | Liga Conferência · Pré-eliminatória |  | 13 159 010 | 15 602 700 | 1 739 904 |
 | 2023/24 | 5 | Liga Conferência · Pré-eliminatória |  | 12 900 965 | 16 946 060 | -14 723 467 |
 | 2024/25 | 6 | Liga Conferência · Oitavos de final |  | 22 584 987 | 20 526 758 | 7 610 319 |
-| 2025/26 | 9 | — | Taça da Liga | 15 102 461 | — | -11 063 044 |
+| 2025/26 | 9 | — | Taça da Liga | 14 880 806 | 21 730 779 | -11 063 043 |
 
 ## 21. Quanto vale a Europa: receitas e resultado médios por tipo de época
 
@@ -271,30 +280,31 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 |---|---|---|---|---|
 | 1. Fase de grupos ou mais | 4 | 2013/14, 2017/18, 2019/20, 2024/25 | 14 580 428 | 1 520 216 |
 | 2. Só pré-eliminatórias | 3 | 2015/16, 2022/23, 2023/24 | 10 762 212 | -4 206 556 |
-| 3. Sem Europa | 5 | 2014/15, 2016/17, 2018/19, 2020/21, 2021/22 | 10 300 160 | -3 345 426 |
+| 3. Sem Europa | 6 | 2014/15, 2016/17, 2018/19, 2020/21, 2021/22, 2025/26 | 11 063 601 | -4 631 695 |
 
 ## 22. Gastar mais em salários garante melhor classificação?
 
 | epocas | correlacao | pessoal_medio | lugar_medio |
 |---|---|---|---|
-| 12 | -0,31 | 12 577 916 | 6,70 |
+| 13 | -0,15 | 13 281 982 | 6,80 |
 
 ## 23. Custo de cada lugar: gastos com pessoal por época e lugar obtido
 
 | epoca | lugar | pessoal | ranking_gasto | ranking_lugar |
 |---|---|---|---|---|
-| 2013/14 | 10 | 4 621 871 | 11 | 11 |
-| 2014/15 | 5 | 4 413 612 | 12 | 2 |
-| 2015/16 | 10 | 5 278 997 | 10 | 11 |
-| 2016/17 | 4 | 6 758 553 | 9 | 1 |
-| 2017/18 | 9 | 8 843 968 | 8 | 10 |
-| 2018/19 | 5 | 11 559 940 | 7 | 2 |
-| 2019/20 | 7 | 16 100 077 | 5 | 8 |
-| 2020/21 | 7 | 20 655 205 | 1 | 8 |
-| 2021/22 | 6 | 19 627 255 | 3 | 5 |
-| 2022/23 | 6 | 15 602 700 | 6 | 5 |
-| 2023/24 | 5 | 16 946 060 | 4 | 2 |
-| 2024/25 | 6 | 20 526 758 | 2 | 5 |
+| 2013/14 | 10 | 4 621 871 | 12 | 12 |
+| 2014/15 | 5 | 4 413 612 | 13 | 2 |
+| 2015/16 | 10 | 5 278 997 | 11 | 12 |
+| 2016/17 | 4 | 6 758 553 | 10 | 1 |
+| 2017/18 | 9 | 8 843 968 | 9 | 10 |
+| 2018/19 | 5 | 11 559 940 | 8 | 2 |
+| 2019/20 | 7 | 16 100 077 | 6 | 8 |
+| 2020/21 | 7 | 20 655 205 | 2 | 8 |
+| 2021/22 | 6 | 19 627 255 | 4 | 5 |
+| 2022/23 | 6 | 15 602 700 | 7 | 5 |
+| 2023/24 | 5 | 16 946 060 | 5 | 2 |
+| 2024/25 | 6 | 20 526 758 | 3 | 5 |
+| 2025/26 | 9 | 21 730 779 | 1 | 10 |
 
 ## 24. Aproximação ao rácio de custos do plantel da UEFA (limite de 70% desde 2025/26)
 
@@ -313,7 +323,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 | resultado_com_jogadores_2025_26 | resultado_liquido_2025_26 | necessario_para_equilibrio | falta_face_a_2025_26 |
 |---|---|---|---|
-| 12 591 584 | -11 063 044 | 23 654 628 | 11 063 044 |
+| 12 591 584 | -11 063 043 | 23 654 627 | 11 063 043 |
 
 ## 26. Centralização dos direitos TV (2028/29): parte igual estimada por clube
 
@@ -336,6 +346,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 23 762 940 | 1 966 111 | 9,20 | 14,9 |
 | 2023/24 | 33 964 068 | 3 741 936 | 13,0 | 29,0 |
 | 2024/25 | 34 584 487 | 5 006 965 | 14,6 | 22,2 |
+| 2025/26 | 40 830 095 | 5 612 620 | 14,9 | 37,7 |
 
 ## 28. Estrutura da dívida financeira: curto prazo e dívida líquida
 
@@ -350,24 +361,26 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 23 762 940 | 22,0 | 138 410 | 23 624 530 | 29 194 575 |
 | 2023/24 | 33 964 068 | 66,5 | 78 684 | 33 885 384 | 33 052 587 |
 | 2024/25 | 34 584 487 | 91,7 | 2 745 259 | 31 839 228 | 34 868 426 |
+| 2025/26 | 40 830 095 | 94,0 | 505 042 | 40 325 053 | 44 468 711 |
 
 ## 29. Rácios de balanço da SAD (12 épocas)
 
 | epoca | endividamento | autonomia_pct | liquidez_geral | liquidez_imediata_pct | ranking_endividamento |
 |---|---|---|---|---|---|
-| 2012/13 | 1,22 | -21,8 | 0,82 | 31,1 | 7 |
+| 2012/13 | 1,22 | -21,8 | 0,82 | 31,1 | 8 |
 | 2013/14 | 1,80 | -80,3 | 0,56 | 0,50 | 2 |
-| 2014/15 | 1,51 | -51,3 | 0,87 | 20,6 | 4 |
-| 2015/16 | 1,05 | -4,60 | 1,01 | 14,5 | 9 |
-| 2016/17 | 0,85 | 14,9 | 1,20 | 2,20 | 11 |
-| 2017/18 | 0,88 | 11,7 | 0,69 | 8,70 | 10 |
-| 2018/19 | 0,84 | 15,9 | 0,51 | 9,30 | 13 |
-| 2019/20 | 0,84 | 15,8 | 0,77 | 22,6 | 12 |
-| 2020/21 | 1,07 | -6,60 | 0,68 | 14,6 | 8 |
-| 2021/22 | 1,51 | -50,9 | 0,25 | 0,20 | 5 |
-| 2022/23 | 1,45 | -45,1 | 0,46 | 0,50 | 6 |
+| 2014/15 | 1,51 | -51,3 | 0,87 | 20,6 | 5 |
+| 2015/16 | 1,05 | -4,60 | 1,01 | 14,5 | 10 |
+| 2016/17 | 0,85 | 14,9 | 1,20 | 2,20 | 12 |
+| 2017/18 | 0,88 | 11,7 | 0,69 | 8,70 | 11 |
+| 2018/19 | 0,84 | 15,9 | 0,51 | 9,30 | 14 |
+| 2019/20 | 0,84 | 15,8 | 0,77 | 22,6 | 13 |
+| 2020/21 | 1,07 | -6,60 | 0,68 | 14,6 | 9 |
+| 2021/22 | 1,51 | -50,9 | 0,25 | 0,20 | 6 |
+| 2022/23 | 1,45 | -45,1 | 0,46 | 0,50 | 7 |
 | 2023/24 | 1,87 | -87,1 | 0,34 | 0,10 | 1 |
-| 2024/25 | 1,53 | -52,9 | 0,40 | 4,60 | 3 |
+| 2024/25 | 1,53 | -52,9 | 0,40 | 4,60 | 4 |
+| 2025/26 | 1,76 | -76,0 | 0,27 | 0,70 | 3 |
 
 ## 30. Cobertura de juros: quantas vezes o EBITDA paga os juros
 
@@ -385,6 +398,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 11 798 039 | 1 966 111 | 6,00 | confortável |
 | 2023/24 | -6 268 055 | 3 741 936 | -1,70 | EBITDA negativo |
 | 2024/25 | 18 658 237 | 5 006 965 | 3,70 | confortável |
+| 2025/26 | 1 557 218 | 7 075 959 | 0,20 | fraca (< 3x) |
 
 ## 31. Funcionários da SAD por categoria
 
@@ -403,6 +417,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 192 | 79 | 29 | 84 | 41,1 | -5 |
 | 2023/24 | 200 | 79 | 36 | 85 | 39,5 | 8 |
 | 2024/25 | 229 | 82 | 42 | 105 | 35,8 | 29 |
+| 2025/26 | 302 | 118 | 47 | 137 | 39,1 | 73 |
 
 ## 32. Custo médio por funcionário e por jogador
 
@@ -420,6 +435,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 81 264 | 123 028 | 37 006 | 3,40 |
 | 2023/24 | 84 730 | 118 364 | 55 357 | 3,70 |
 | 2024/25 | 89 636 | 134 494 | 67 228 | 4,40 |
+| 2025/26 | 71 956 | 95 884 | 61 577 | 4,70 |
 
 ## 33. Estrutura cresceu mais do que a equipa? Staff não-jogador vs jogadores
 
@@ -438,6 +454,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 79 | 113 | 1,43 |
 | 2023/24 | 79 | 121 | 1,53 |
 | 2024/25 | 82 | 147 | 1,79 |
+| 2025/26 | 118 | 184 | 1,56 |
 
 ## 34. Funcionários, salários, espectadores e classificação
 
@@ -456,23 +473,28 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 6 | 16 116 | 192 | 15 602 700 | 968 |
 | 2023/24 | 5 | 17 388 | 200 | 16 946 060 | 974 |
 | 2024/25 | 6 | 18 447 | 229 | 20 526 758 | 1 112 |
+| 2025/26 | 9 | — | 302 | 21 730 779 | — |
 
 ## 35. Auditoria das fontes: divergências face aos Relatórios e Contas
 
 | fonte | divergencias | epocas_afetadas | epocas | maior_diferenca |
 |---|---|---|---|---|
 | CSV VitóriaSCContasSAD | 24 | 4 | 2020/21,2021/22,2022/23,2023/24 | 39 465 278 |
-| Site VSC Contas | 13 | 8 | 2014/15,2015/16,2016/17,2017/18,2018/19,2021/22,2022/23,2023/24 | 3 853 861 |
+| Site VSC Contas | 15 | 9 | 2014/15,2015/16,2016/17,2017/18,2018/19,2021/22,2022/23,2023/24,2024/25 | 3 853 861 |
 | Excel HistóricoContasSAD | 3 | 3 | 2023/24,2016/17,2020/21 | 3 000 000 |
 
 ## 36. Custo amortizado: o que mudou com a reexpressão de 2024/25
 
 | indicador | valor_original | valor_reexpresso | diferenca | variacao_pct |
 |---|---|---|---|---|
+| Fluxo de caixa de financiamento | -1 276 694 | 32 825 372 | 34 102 066 | 2671,1 |
+| Fluxo de caixa operacional | 882 080 | -18 893 835 | -19 775 915 | -2242,0 |
+| Fluxo de caixa de investimento | 3 061 189 | -11 264 962 | -14 326 151 | -468,0 |
 | Ativo total | 45 426 643 | 43 070 143 | -2 356 500 | -5,20 |
 | Capital próprio | -24 026 270 | -25 769 006 | -1 742 736 | -7,30 |
 | Clientes | 19 059 664 | 17 602 059 | -1 457 605 | -7,60 |
 | Passivo líquido | 47 322 521 | 48 217 088 | 894 567 | 1,90 |
+| Juros suportados | 5 006 965 | 5 699 869 | 692 904 | 13,8 |
 | Passivo total | 69 452 913 | 68 839 149 | -613 764 | -0,90 |
 | Resultado líquido | 7 610 319 | 7 355 524 | -254 795 | -3,30 |
 | Inventários | 325 469 | 274 743 | -50 726 | -15,6 |
@@ -491,6 +513,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 23 624 530 | 11 798 039 | 2,00 | -10 224 059 | até 3x |
 | 2023/24 | 33 885 384 | -6 268 055 | — | -12 933 523 | EBITDA negativo: rácio sem leitura |
 | 2024/25 | 31 839 228 | 18 658 237 | 1,70 | -8 882 727 | até 3x |
+| 2025/26 | 40 325 053 | 1 557 218 | 25,9 | -17 206 178 | acima de 3x: alavancagem elevada |
 
 ## 38. Fundo de maneio e prazos médios
 
@@ -505,6 +528,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | -16 131 149 | 10 998 360 | 91 | 117 | 23 199 459 | 43,8 |
 | 2023/24 | -34 851 158 | 14 487 465 | 192 | 178 | 24 699 412 | 36,9 |
 | 2024/25 | -35 449 118 | 19 059 663 | 96 | 71 | 28 920 551 | 41,6 |
+| 2025/26 | -52 531 448 | 28 945 763 | 231 | 162 | 33 503 203 | 39,3 |
 
 ## 39. Factoring e composição da dívida financeira por instrumento
 
@@ -518,6 +542,10 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2025-06-30 | Factoring | 5 700 000 | 16,5 | 50,0 |
 | 2025-06-30 | Apollo | 2 514 000 | 7,30 | 100,0 |
 | 2025-06-30 | Locações financeiras | 48 670 | 0,10 | 39,3 |
+| 2026-06-30 | Empréstimos (MSD & Fasanara) | 25 332 987 | 62,0 | 100,0 |
+| 2026-06-30 | Factoring | 8 517 273 | 20,9 | 75,6 |
+| 2026-06-30 | Antecipação de direitos TV 2026/27 | 6 450 170 | 15,8 | 100,0 |
+| 2026-06-30 | Locações financeiras | 529 665 | 1,30 | 29,3 |
 
 ## 40. Passes de jogadores: investimento, amortizações e abates
 
@@ -531,6 +559,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 6 330 725 | 7 563 564 | -1 232 839 | -21 911 | 13 239 151 | 32,1 |
 | 2023/24 | 3 783 527 | 3 990 983 | -207 456 | 66 763 | 8 678 501 | 23,4 |
 | 2024/25 | 9 387 188 | 4 813 432 | 4 573 756 | 0 | 10 418 438 | 26,6 |
+| 2025/26 | 7 279 731 | 6 171 811 | 1 107 920 | 0 | 7 705 510 | 36,6 |
 
 ## 41. Valor contabilístico vs. valor de venda: as "reservas ocultas" do plantel
 
@@ -544,6 +573,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 2 761 954 | 30 921 739 | 28 159 785 | 11,2 | 13 239 151 |
 | 2023/24 | 4 286 430 | 14 626 816 | 10 340 386 | 3,40 | 8 678 501 |
 | 2024/25 | 2 833 819 | 49 518 024 | 46 684 205 | 17,5 | 10 418 438 |
+| 2025/26 | 2 972 677 | 30 820 000 | 27 847 323 | 10,4 | 7 705 510 |
 
 ## 42. Alavancagem operacional: peso dos custos fixos
 
@@ -561,6 +591,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 13 159 010 | 31 230 272 | 42,1 | -18 071 262 |
 | 2023/24 | 12 900 965 | 29 247 877 | 44,1 | -16 346 912 |
 | 2024/25 | 22 584 987 | 36 100 879 | 62,6 | -13 515 892 |
+| 2025/26 | 14 880 806 | 37 692 338 | 39,5 | -22 811 532 |
 
 ## 43. Artigo 35.º do CSC e continuidade: capital próprio vs. metade do capital social
 
@@ -579,6 +610,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | -16 469 640 | 2 250 000 | sim | Incerteza material sobre a continuidade |
 | 2023/24 | -31 193 107 | 2 250 000 | sim | Incerteza material sobre a continuidade |
 | 2024/25 | -24 026 270 | 2 250 000 | sim | Incerteza material sobre a continuidade |
+| 2025/26 | -36 832 050 | 2 250 000 | sim | Incerteza material sobre a continuidade; ênfase (reexpressão de 2024/25) |
 
 ## 44. Partes relacionadas: fluxos entre o Clube e a SAD
 
@@ -589,6 +621,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1 200 480 | 360 000 | 781 053 | 444 569 |
 | 2023/24 | 1 277 729 | 360 000 | 794 272 | 697 325 |
 | 2024/25 | 1 551 254 | 360 000 | 823 973 | 1 853 041 |
+| 2025/26 | 1 490 259 | 360 000 | 702 323 | 1 841 780 |
 
 ## 45. Rácio de custos do plantel da UEFA, versão mais próxima do regulamento
 
@@ -602,6 +635,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 18 355 995 | 30 416 071 | 60,3 | cumpre 70% |
 | 2023/24 | 15 334 631 | 26 709 075 | 57,4 | cumpre 70% |
 | 2024/25 | 18 665 562 | 41 725 829 | 44,7 | cumpre 70% |
+| 2025/26 | 20 380 340 | 31 634 678 | 64,4 | cumpre 70% |
 
 ## 46. Intermediários e terceiros: quanto das vendas não fica no clube
 
@@ -611,7 +645,9 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 30 921 739 | 6 049 650 | 19,6 | 75,1 |
 | 2023/24 | 14 626 816 | 3 711 075 | 25,4 | 45,6 |
 | 2024/25 | 49 518 024 | 17 285 567 | 34,9 | 55,6 |
+| 2025/26 | 30 820 000 | 8 764 218 | 28,4 | 52,1 |
 | dívida 30/06/2025 | — | 21 226 481 | — | — |
+| dívida 30/06/2026 | — | 23 564 078 | — | — |
 
 ## 47. Mecanismo de solidariedade e compensação por formação
 
@@ -656,6 +692,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 53 | 6 | 15 602 700 | 294 390 | 8 |
 | 2023/24 | 63 | 5 | 16 946 060 | 268 985 | 7 |
 | 2024/25 | 54 | 6 | 20 526 758 | 380 125 | 10 |
+| 2025/26 | 42 | 9 | 21 730 779 | 517 399 | 13 |
 
 ## 50. Rotação de treinadores desde 2015
 
@@ -676,6 +713,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | -74,7 | 27,0 | 4,80 | 0,36 | 56,1 | 1,81 | 5,20 |
 | 2023/24 | -90,5 | -84,8 | -41,1 | 0,36 | 59,1 | 2,63 | -49,3 |
 | 2024/25 | -35,3 | 58,1 | 16,8 | 0,50 | 44,4 | 1,53 | 3,90 |
+| 2025/26 | -106,5 | -36,3 | -22,8 | 0,31 | 60,5 | 2,74 | -127,6 |
 
 ## 52. Taxas de juro: o que o Vitória paga vs. referências de mercado
 
@@ -690,24 +728,25 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 1,70 | 2,80 | 2,98 | — | 9,21 | 6,40 | 6,20 | 3,10 |
 | 2023/24 | 3,91 | 3,86 | 3,19 | 5,54 | 13,0 | 9,10 | 9,80 | 4,10 |
 | 2024/25 | 3,01 | 2,62 | 2,95 | — | 14,6 | 12,0 | 11,7 | 5,00 |
-| 2025/26 | 2,01 | 2,35 | 3,20 | 3,67 | — | — | — | — |
+| 2025/26 | 2,01 | 2,35 | 3,20 | 3,67 | 14,9 | 12,5 | 11,7 | 4,70 |
 
 ## 53. Despesas da SAD vs. classificação: regressão linear (mínimos quadrados)
 
 | epoca | despesas_m | lugar | lugar_previsto | residuo | a_ordenada | b_declive_por_m | erro_padrao_b | ic95_inferior | ic95_superior | r_quadrado | n |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 2013/14 | 11,9 | 10 | 7,30 | 2,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2014/15 | 8,90 | 5 | 7,50 | -2,50 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2015/16 | 10,8 | 10 | 7,40 | 2,60 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2016/17 | 13,3 | 4 | 7,30 | -3,30 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2017/18 | 18,4 | 9 | 7,00 | 2,00 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2018/19 | 23,1 | 5 | 6,70 | -1,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2019/20 | 29,0 | 7 | 6,30 | 0,70 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2020/21 | 32,5 | 7 | 6,10 | 0,90 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2021/22 | 33,2 | 6 | 6,10 | -0,10 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2022/23 | 31,2 | 6 | 6,20 | -0,20 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2023/24 | 29,2 | 5 | 6,30 | -1,30 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
-| 2024/25 | 36,1 | 6 | 5,90 | 0,10 | 8,05 | -0,06 | 0,06 | -0,20 | 0,08 | 0,09 | 12 |
+| 2013/14 | 11,9 | 10 | 7,20 | 2,80 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2014/15 | 8,90 | 5 | 7,30 | -2,30 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2015/16 | 10,8 | 10 | 7,20 | 2,80 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2016/17 | 13,3 | 4 | 7,10 | -3,10 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2017/18 | 18,4 | 9 | 7,00 | 2,00 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2018/19 | 23,1 | 5 | 6,90 | -1,90 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2019/20 | 29,0 | 7 | 6,70 | 0,30 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2020/21 | 32,5 | 7 | 6,60 | 0,40 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2021/22 | 33,2 | 6 | 6,60 | -0,60 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2022/23 | 31,2 | 6 | 6,70 | -0,70 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2023/24 | 29,2 | 5 | 6,70 | -1,70 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2024/25 | 36,1 | 6 | 6,50 | -0,50 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
+| 2025/26 | 37,7 | 9 | 6,50 | 2,50 | 7,49 | -0,03 | 0,06 | -0,15 | 0,10 | 0,02 | 13 |
 
 ## 54. Vendas de jogadores face às receitas, ao longo do tempo
 
@@ -721,17 +760,97 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2022/23 | 13 159 010 | 30 921 739 | 23 216 097 | 2,35 | 63,8 | 1,78 |
 | 2023/24 | 12 900 965 | 14 626 816 | 6 665 467 | 1,13 | 34,1 | 1,61 |
 | 2024/25 | 22 584 987 | 49 518 024 | 27 540 964 | 2,19 | 54,9 | 1,89 |
+| 2025/26 | 14 880 806 | 30 820 000 | 16 055 187 | 2,07 | 51,9 | 1,80 |
 
 ## 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
 
 | contrato | lugar | tv_centralizada | ganho_vs_atual | defice_antes_vendas | mais_valias_necessarias | pct_do_defice_coberto |
 |---|---|---|---|---|---|---|
-| 200 M€ | 4.º | 10 298 947 | 3 376 328 | -20 931 924 | 17 555 595 | 16,1 |
-| 200 M€ | 6.º | 9 368 421 | 2 445 802 | -20 931 924 | 18 486 121 | 11,7 |
-| 200 M€ | 9.º | 7 972 631 | 1 050 012 | -20 931 924 | 19 881 911 | 5,00 |
-| 250 M€ | 4.º | 12 873 684 | 5 951 065 | -20 931 924 | 14 980 858 | 28,4 |
-| 250 M€ | 6.º | 11 710 526 | 4 787 907 | -20 931 924 | 16 144 016 | 22,9 |
-| 250 M€ | 9.º | 9 965 789 | 3 043 170 | -20 931 924 | 17 888 753 | 14,5 |
-| 300 M€ | 4.º | 15 448 421 | 8 525 802 | -20 931 924 | 12 406 121 | 40,7 |
-| 300 M€ | 6.º | 14 052 631 | 7 130 012 | -20 931 924 | 13 801 911 | 34,1 |
-| 300 M€ | 9.º | 11 958 947 | 5 036 328 | -20 931 924 | 15 895 595 | 24,1 |
+| 200 M€ | 4.º | 10 298 947 | 3 376 328 | -22 812 603 | 19 436 274 | 14,8 |
+| 200 M€ | 6.º | 9 368 421 | 2 445 802 | -22 812 603 | 20 366 800 | 10,7 |
+| 200 M€ | 9.º | 7 972 631 | 1 050 012 | -22 812 603 | 21 762 590 | 4,60 |
+| 250 M€ | 4.º | 12 873 684 | 5 951 065 | -22 812 603 | 16 861 537 | 26,1 |
+| 250 M€ | 6.º | 11 710 526 | 4 787 907 | -22 812 603 | 18 024 695 | 21,0 |
+| 250 M€ | 9.º | 9 965 789 | 3 043 170 | -22 812 603 | 19 769 432 | 13,3 |
+| 300 M€ | 4.º | 15 448 421 | 8 525 802 | -22 812 603 | 14 286 800 | 37,4 |
+| 300 M€ | 6.º | 14 052 631 | 7 130 012 | -22 812 603 | 15 682 590 | 31,3 |
+| 300 M€ | 9.º | 11 958 947 | 5 036 328 | -22 812 603 | 17 776 274 | 22,1 |
+
+## 56. Gastos operacionais vs. receitas de transferências e saldo
+
+| epoca | gastos_operacionais | vendas_brutas | receitas_transferencias | saldo | transferencias_cobrem_pct | receitas_operacao | saldo_com_receitas_operacao |
+|---|---|---|---|---|---|---|---|
+| 2017/18 | 19 838 667 | 10 660 000 | 6 735 474 | -13 103 193 | 34,0 | 9 822 148 | -3 281 045 |
+| 2018/19 | 25 082 363 | 21 744 390 | 7 309 152 | -17 773 211 | 29,1 | 12 558 787 | -5 214 424 |
+| 2019/20 | 32 196 891 | 21 309 347 | 15 009 861 | -17 187 030 | 46,6 | 17 014 051 | -172 979 |
+| 2020/21 | 35 391 835 | 17 012 320 | 17 012 320 | -18 379 515 | 48,1 | 10 334 411 | -8 045 104 |
+| 2021/22 | 35 511 792 | 15 217 500 | 11 542 768 | -23 969 024 | 32,5 | 11 285 014 | -12 684 010 |
+| 2022/23 | 33 677 445 | 30 921 739 | 23 216 097 | -10 461 348 | 68,9 | 13 159 010 | 2 697 662 |
+| 2023/24 | 32 813 851 | 14 626 816 | 6 665 467 | -26 148 384 | 20,3 | 12 900 965 | -13 247 419 |
+| 2024/25 | 38 334 162 | 49 518 024 | 27 540 964 | -10 793 198 | 71,8 | 22 584 987 | 11 791 789 |
+| 2025/26 | 40 283 996 | 30 820 000 | 16 055 187 | -24 228 809 | 39,9 | 14 880 806 | -9 348 003 |
+
+## 57. Evolução das rubricas de rendimentos operacionais da SAD
+
+| epoca | vendas_servicos | subsidios | outros_rendimentos | total_rendimentos | outros_rendimentos_pct |
+|---|---|---|---|---|---|
+| 2013/14 | 8 900 528 | 47 318 | 1 508 534 | 10 456 380 | 14,4 |
+| 2014/15 | 6 786 697 | 48 255 | 4 301 110 | 11 136 062 | 38,6 |
+| 2015/16 | 6 226 662 | 50 773 | 5 116 350 | 11 393 785 | 44,9 |
+| 2016/17 | 10 535 891 | 139 613 | 6 234 899 | 16 910 403 | 36,9 |
+| 2017/18 | 9 822 148 | 145 970 | 10 970 761 | 20 938 879 | 52,4 |
+| 2018/19 | 12 558 787 | 9 381 | 14 362 820 | 26 930 988 | 53,3 |
+| 2019/20 | 17 014 051 | 163 567 | 15 494 489 | 32 672 107 | 47,4 |
+| 2020/21 | 10 334 411 | 59 486 | 17 497 369 | 27 891 266 | 62,7 |
+| 2021/22 | 11 285 014 | 64 130 | 12 143 813 | 23 492 957 | 51,7 |
+| 2022/23 | 13 159 010 | 282 784 | 23 791 505 | 37 233 299 | 63,9 |
+| 2023/24 | 12 900 965 | 106 373 | 8 865 536 | 21 872 874 | 40,5 |
+| 2024/25 | 22 584 987 | 48 544 | 28 817 437 | 51 450 968 | 56,0 |
+| 2025/26 | 14 880 806 | 357 389 | 19 638 622 | 34 876 817 | 56,3 |
+
+## 58. Evolução das rubricas de gastos operacionais da SAD
+
+| epoca | pessoal | fse | depreciacoes | mercadorias | outros_gastos | imparidades_provisoes | total_gastos | pessoal_pct | variacao_pct |
+|---|---|---|---|---|---|---|---|---|---|
+| 2013/14 | 4 621 871 | 3 891 074 | 3 356 173 | 154 796 | 998 623 | 7 363 | 13 029 900 | 35,5 | — |
+| 2014/15 | 4 413 612 | 3 235 328 | 1 201 758 | 274 582 | 257 894 | 487 872 | 9 871 046 | 44,7 | -24,2 |
+| 2015/16 | 5 278 997 | 4 347 617 | 1 190 607 | 355 749 | 225 359 | -447 700 | 10 950 629 | 48,2 | 10,9 |
+| 2016/17 | 6 758 553 | 4 849 388 | 1 737 722 | 357 800 | 266 892 | 0 | 13 970 355 | 48,4 | 27,6 |
+| 2017/18 | 8 843 968 | 5 471 720 | 4 034 406 | 480 702 | 1 007 871 | 0 | 19 838 667 | 44,6 | 42,0 |
+| 2018/19 | 11 559 940 | 5 981 676 | 5 523 046 | 525 659 | 1 492 042 | 0 | 25 082 363 | 46,1 | 26,4 |
+| 2019/20 | 16 100 077 | 6 919 038 | 5 960 690 | 319 888 | 2 698 831 | 198 367 | 32 196 891 | 50,0 | 28,4 |
+| 2020/21 | 20 655 205 | 5 045 147 | 6 815 353 | 497 677 | 1 895 430 | 483 023 | 35 391 835 | 58,4 | 9,90 |
+| 2021/22 | 19 627 255 | 5 822 670 | 7 769 947 | 542 627 | 893 371 | 855 922 | 35 511 792 | 55,3 | 0,30 |
+| 2022/23 | 15 602 700 | 7 385 387 | 8 242 185 | 508 492 | 1 788 893 | 149 788 | 33 677 445 | 46,3 | -5,20 |
+| 2023/24 | 16 946 060 | 7 628 896 | 4 672 921 | 479 517 | 2 863 469 | 222 988 | 32 813 851 | 51,6 | -2,60 |
+| 2024/25 | 20 526 758 | 10 032 690 | 5 541 431 | 654 102 | 1 520 697 | 58 484 | 38 334 162 | 53,5 | 16,8 |
+| 2025/26 | 21 730 779 | 8 997 162 | 6 964 397 | 772 962 | 1 817 758 | 938 | 40 283 996 | 53,9 | 5,10 |
+
+## 59. Detalhe das rubricas no R&C 2025/26: o que mudou face a 2024/25
+
+| nota | grupo | rubrica | valor_2024_25 | valor_2025_26 | variacao | variacao_pct |
+|---|---|---|---|---|---|---|
+| 15 | Vendas e serviços prestados | Direitos televisivos | 6 922 619 | 6 922 619 | 0 | 0,00 |
+| 15 | Vendas e serviços prestados | Publicidade e patrocínios | 2 009 296 | 2 306 533 | 297 237 | 14,8 |
+| 15 | Vendas e serviços prestados | Bilheteira, quotização e pack-sócio | 2 438 222 | 1 975 548 | -462 674 | -19,0 |
+| 15 | Vendas e serviços prestados | Prémios de competições (nacionais e UEFA) | 9 720 482 | 1 629 469 | -8 091 013 | -83,2 |
+| 15 | Vendas e serviços prestados | Venda de mercadorias | 947 279 | 1 037 932 | 90 653 | 9,60 |
+| 15 | Vendas e serviços prestados | Mecanismo de solidariedade | 516 936 | 938 009 | 421 073 | 81,5 |
+| 15 | Vendas e serviços prestados | Outros serviços | 30 153 | 70 697 | 40 544 | 134,5 |
+| 17 | Fornecimentos e serviços externos | Outros serviços especializados | 2 396 802 | 2 518 821 | 122 019 | 5,10 |
+| 17 | Fornecimentos e serviços externos | Despesas com provas | 3 266 637 | 1 554 580 | -1 712 057 | -52,4 |
+| 17 | Fornecimentos e serviços externos | Deslocações e estadas | 1 186 211 | 1 338 554 | 152 343 | 12,8 |
+| 17 | Fornecimentos e serviços externos | Materiais | 522 628 | 868 926 | 346 298 | 66,3 |
+| 17 | Fornecimentos e serviços externos | Rendas e alugueres | 748 773 | 842 936 | 94 163 | 12,6 |
+| 17 | Fornecimentos e serviços externos | Outros serviços diversos | 769 300 | 841 510 | 72 210 | 9,40 |
+| 17 | Fornecimentos e serviços externos | Pessoal do Clube ao serviço da SAD | 823 973 | 702 323 | -121 650 | -14,8 |
+| 17 | Fornecimentos e serviços externos | Energia e fluidos | 318 365 | 329 512 | 11 147 | 3,50 |
+| 19 | Outros rendimentos e ganhos | Ganhos com alienação de passes e outros investimentos | 26 385 026 | 17 209 377 | -9 175 649 | -34,8 |
+| 19 | Outros rendimentos e ganhos | Compensação financeira de atletas alienados | 1 396 329 | 1 626 970 | 230 641 | 16,5 |
+| 19 | Outros rendimentos e ganhos | Apostas (Placard), seguros e outros rendimentos suplementares | 453 373 | 486 026 | 32 653 | 7,20 |
+| 19 | Outros rendimentos e ganhos | Outros | 130 535 | 316 249 | 185 714 | 142,3 |
+| 20 | Outros gastos e perdas | Perdas com alienação e rescisão de passes | 700 191 | 1 011 203 | 311 012 | 44,4 |
+| 20 | Outros gastos e perdas | Outros (donativos, impostos e diversos) | 316 142 | 285 283 | -30 859 | -9,80 |
+| 20 | Outros gastos e perdas | Multas e penalidades | 313 004 | 249 198 | -63 806 | -20,4 |
+| 20 | Outros gastos e perdas | Correções de exercícios anteriores | 132 393 | 149 926 | 17 533 | 13,2 |
+| 20 | Outros gastos e perdas | Quotizações (Liga) | 58 968 | 122 147 | 63 179 | 107,1 |

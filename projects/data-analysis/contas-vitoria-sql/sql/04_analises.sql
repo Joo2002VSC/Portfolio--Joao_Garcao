@@ -132,7 +132,7 @@ WHERE entidade_id = 'SAD' AND juros IS NOT NULL
 ORDER BY epoca_id;
 
 
--- @q 9. Crescimento dos juros da SAD nas últimas 5 épocas (taxa média anual)
+-- @q 9. Crescimento dos juros da SAD entre 2019/20 e 2024/25 (taxa média anual)
 -- Conceitos: subconsultas escalares, CTE recursiva para resolver (1 + r)^5 = rácio
 -- Usa bisseção (só somas e multiplicações) em vez de exp()/ln(), que não existem
 -- em todas as instalações de SQLite (por exemplo, no sql.js usado no browser).
@@ -419,7 +419,8 @@ ORDER BY p.epoca_id;
 
 
 -- @q 25. Ponto de equilíbrio 2025/26: quanto é preciso ganhar com jogadores
--- Valores do comunicado de contas 2025/26 (tabela evento). Para resultado
+-- Resultado com direitos de atletas: comunicado e relatório de gestão de 2025/26
+-- (tabela evento); resultado líquido: R&C 2025/26. Para resultado
 -- líquido zero, o resultado com direitos de atletas tem de cobrir o resto.
 WITH v AS (
     SELECT
@@ -462,7 +463,7 @@ FROM cenarios, atual;
 WITH f AS (
     SELECT epoca_id,
            financiamentos_nc + financiamentos_c                       AS financiamentos,
-           juros_suportados,
+           COALESCE(juros_financiamentos, juros_suportados)           AS juros_suportados,
            LAG(financiamentos_nc + financiamentos_c) OVER (ORDER BY epoca_id) AS fin_anterior
     FROM balanco_sad_rc
     WHERE financiamentos_nc IS NOT NULL
@@ -783,7 +784,8 @@ SELECT
 FROM transferencias t
 WHERE t.entidade_id = 'SAD' AND t.custo_vendas IS NOT NULL
 UNION ALL
-SELECT 'dívida 30/06/2025', NULL, total, NULL, NULL
+SELECT 'dívida ' || substr(data_ref, 9, 2) || '/' || substr(data_ref, 6, 2) || '/' || substr(data_ref, 1, 4),
+       NULL, total, NULL, NULL
 FROM divida WHERE credor = 'Intermediários desportivos'
 ORDER BY 1;
 
@@ -902,12 +904,18 @@ r2 AS (
     SELECT 1 - SUM((lugar - previsto) * (lugar - previsto)) / SUM((lugar - my) * (lugar - my)) AS r2,
            -- Erro-padrão do declive: sqrt( SQE / (n - 2) / Sxx )
            sqrt(SUM((lugar - previsto) * (lugar - previsto)) / (MAX(n) - 2)
-                / SUM((despesas_m - mx) * (despesas_m - mx)))              AS ep_b
+                / SUM((despesas_m - mx) * (despesas_m - mx)))              AS ep_b,
+           CASE MAX(n) - 2 WHEN 8 THEN 2.306 WHEN 9 THEN 2.262 WHEN 10 THEN 2.228
+                           WHEN 11 THEN 2.201 WHEN 12 THEN 2.179 WHEN 13 THEN 2.160
+                           WHEN 14 THEN 2.145 WHEN 15 THEN 2.131 WHEN 16 THEN 2.120
+                           WHEN 17 THEN 2.110 WHEN 18 THEN 2.101 WHEN 19 THEN 2.093
+                           WHEN 20 THEN 2.086 END                            AS t_critico
     FROM ajuste
 )
--- Intervalo de confiança a 95% do declive: b ± t(0,975; n-2) × EP.
--- Com n = 12, t(0,975; 10) = 2,228. Se o intervalo inclui 0, a relação não é
--- estatisticamente distinguível de zero. É uma associação, não uma causa.
+-- Intervalo de confiança a 95% do declive: b ± t(0,975; n-2) × EP, com o valor t
+-- da distribuição de Student lido de uma pequena tabela (8 a 20 graus de liberdade).
+-- Se o intervalo inclui 0, a relação não é estatisticamente distinguível de zero.
+-- É uma associação, não uma causa.
 SELECT
     a.epoca_id                                   AS epoca,
     ROUND(a.despesas_m, 1)                       AS despesas_m,
@@ -917,8 +925,8 @@ SELECT
     ROUND(a.my - a.b * a.mx, 2)                  AS a_ordenada,
     ROUND(a.b, 3)                                AS b_declive_por_m,
     ROUND(r2.ep_b, 3)                            AS erro_padrao_b,
-    ROUND(a.b - 2.228 * r2.ep_b, 3)              AS ic95_inferior,
-    ROUND(a.b + 2.228 * r2.ep_b, 3)              AS ic95_superior,
+    ROUND(a.b - r2.t_critico * r2.ep_b, 3)       AS ic95_inferior,
+    ROUND(a.b + r2.t_critico * r2.ep_b, 3)       AS ic95_superior,
     ROUND(r2.r2, 2)                              AS r_quadrado,
     a.n
 FROM ajuste a, r2
@@ -945,13 +953,14 @@ ORDER BY t.epoca_id;
 
 
 -- @q 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
--- Défice antes de vendas = média das três últimas épocas (2022/23 a 2024/25) do
--- resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
+-- Défice antes de vendas = média das três épocas mais recentes com dados (hoje
+-- 2023/24 a 2025/26) do resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
 -- lugar (4.º, 6.º, 9.º), com a mesma repartição ilustrativa da consulta 48.
 WITH base AS (
     SELECT AVG(rl_sem_mais_valias) AS defice
-    FROM v_kpis
-    WHERE entidade_id = 'SAD' AND epoca_id BETWEEN '2022/23' AND '2024/25'
+    FROM (SELECT rl_sem_mais_valias FROM v_kpis
+          WHERE entidade_id = 'SAD' AND rl_sem_mais_valias IS NOT NULL
+          ORDER BY epoca_id DESC LIMIT 3)
 ),
 tv AS (SELECT valor AS tv_atual FROM receitas_composicao
        WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'),
@@ -972,3 +981,102 @@ SELECT
     ROUND(100.0 * (tv_centralizada - tv_atual) / -base.defice, 1)  AS pct_do_defice_coberto
 FROM sim, base, tv
 ORDER BY contrato, n;
+
+
+-- =====================================================================
+-- RENDIMENTOS, GASTOS E TRANSFERÊNCIAS
+-- =====================================================================
+
+
+-- @q 56. Gastos operacionais vs. receitas de transferências e saldo
+-- Gastos operacionais = mercadorias + FSE + pessoal + depreciações e amortizações
+-- (inclui passes) + outros gastos + imparidades + provisões.
+-- Receitas de transferências = mais-valias líquidas com a venda de passes.
+-- Saldo = receitas de transferências - gastos operacionais: o que falta cobrir
+-- com as receitas da operação (TV, bilheteira, patrocínios, prémios).
+WITH g AS (
+    SELECT epoca_id,
+           -SUM(CASE WHEN rubrica_id IN ('cmvmc', 'fse', 'gastos_pessoal', 'depreciacoes',
+                                         'outros_gastos', 'imparidades', 'provisoes')
+                     THEN valor END)                                        AS gastos_operacionais,
+           SUM(CASE WHEN rubrica_id = 'vendas_servicos' THEN valor END)     AS receitas_operacao
+    FROM demonstracao_resultados
+    WHERE entidade_id = 'SAD'
+    GROUP BY epoca_id
+)
+SELECT
+    g.epoca_id                                                   AS epoca,
+    g.gastos_operacionais,
+    t.vendas_brutas,
+    t.mais_valias_liquidas                                       AS receitas_transferencias,
+    t.mais_valias_liquidas - g.gastos_operacionais               AS saldo,
+    ROUND(100.0 * t.mais_valias_liquidas / g.gastos_operacionais, 1) AS transferencias_cobrem_pct,
+    g.receitas_operacao,
+    g.receitas_operacao + t.mais_valias_liquidas - g.gastos_operacionais AS saldo_com_receitas_operacao
+FROM g
+JOIN transferencias t ON t.epoca_id = g.epoca_id AND t.entidade_id = 'SAD'
+WHERE g.gastos_operacionais IS NOT NULL
+ORDER BY g.epoca_id;
+
+
+-- @q 57. Evolução das rubricas de rendimentos operacionais da SAD
+-- Outros rendimentos incluem as mais-valias com jogadores.
+SELECT
+    epoca_id                                                                  AS epoca,
+    MAX(CASE WHEN rubrica_id = 'vendas_servicos'      THEN valor END)         AS vendas_servicos,
+    MAX(CASE WHEN rubrica_id = 'subsidios_exploracao' THEN valor END)         AS subsidios,
+    MAX(CASE WHEN rubrica_id = 'outros_rendimentos'   THEN valor END)         AS outros_rendimentos,
+    SUM(CASE WHEN rubrica_id IN ('vendas_servicos', 'subsidios_exploracao', 'outros_rendimentos')
+             THEN valor END)                                                  AS total_rendimentos,
+    ROUND(100.0 * MAX(CASE WHEN rubrica_id = 'outros_rendimentos' THEN valor END)
+          / SUM(CASE WHEN rubrica_id IN ('vendas_servicos', 'subsidios_exploracao', 'outros_rendimentos')
+                     THEN valor END), 1)                                      AS outros_rendimentos_pct
+FROM demonstracao_resultados
+WHERE entidade_id = 'SAD'
+GROUP BY epoca_id
+HAVING MAX(CASE WHEN rubrica_id = 'vendas_servicos' THEN valor END) IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 58. Evolução das rubricas de gastos operacionais da SAD
+-- Valores positivos; pessoal_pct = peso dos gastos com pessoal no total.
+WITH r AS (
+    SELECT epoca_id,
+           -MAX(CASE WHEN rubrica_id = 'gastos_pessoal' THEN valor END)          AS pessoal,
+           -MAX(CASE WHEN rubrica_id = 'fse'            THEN valor END)          AS fse,
+           -MAX(CASE WHEN rubrica_id = 'depreciacoes'   THEN valor END)          AS depreciacoes,
+           -MAX(CASE WHEN rubrica_id = 'cmvmc'          THEN valor END)          AS mercadorias,
+           -MAX(CASE WHEN rubrica_id = 'outros_gastos'  THEN valor END)          AS outros_gastos,
+           -COALESCE(MAX(CASE WHEN rubrica_id = 'imparidades' THEN valor END), 0)
+           -COALESCE(MAX(CASE WHEN rubrica_id = 'provisoes'   THEN valor END), 0) AS imparidades_provisoes
+    FROM demonstracao_resultados
+    WHERE entidade_id = 'SAD'
+    GROUP BY epoca_id
+)
+SELECT
+    epoca_id                                                            AS epoca,
+    pessoal, fse, depreciacoes, mercadorias, outros_gastos, imparidades_provisoes,
+    pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes AS total_gastos,
+    ROUND(100.0 * pessoal / (pessoal + fse + depreciacoes + mercadorias + outros_gastos
+                             + imparidades_provisoes), 1)              AS pessoal_pct,
+    ROUND(100.0 * (pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes)
+          / LAG(pessoal + fse + depreciacoes + mercadorias + outros_gastos + imparidades_provisoes)
+                OVER (ORDER BY epoca_id) - 100, 1)                     AS variacao_pct
+FROM r
+WHERE pessoal IS NOT NULL AND fse IS NOT NULL
+ORDER BY epoca_id;
+
+
+-- @q 59. Detalhe das rubricas no R&C 2025/26: o que mudou face a 2024/25
+SELECT
+    a.nota,
+    a.grupo,
+    a.rubrica,
+    b.valor                                   AS valor_2024_25,
+    a.valor                                   AS valor_2025_26,
+    a.valor - b.valor                         AS variacao,
+    ROUND(100.0 * (a.valor - b.valor) / NULLIF(b.valor, 0), 1) AS variacao_pct
+FROM detalhe_rubrica a
+JOIN detalhe_rubrica b ON b.nota = a.nota AND b.rubrica = a.rubrica AND b.epoca_id = '2024/25'
+WHERE a.epoca_id = '2025/26'
+ORDER BY a.nota, a.valor DESC;
