@@ -575,11 +575,36 @@ function desenharGeral() {
 /* ====================== Filtros ====================== */
 
 function construirFiltros() {
-  const e = Dados.epocas();
+  const e = Dados.epocas(), n = e.length;
   const ini = $("#f-inicio"), fim = $("#f-fim");
-  e.forEach(x => { ini.add(new Option(x, x)); fim.add(new Option(x, x)); });
-  ini.addEventListener("change", () => { estado.inicio = ini.value; ajustarDestaque(); atualizar({ recriar: true }); });
-  fim.addEventListener("change", () => { estado.fim = fim.value; ajustarDestaque(); atualizar({ recriar: true }); });
+  $("#linha-tempo").style.setProperty("--n", n);
+  [ini, fim].forEach(r => { r.max = n - 1; });
+
+  // Pegas do período: atualizam o texto ao arrastar e os gráficos ao largar (ou a cada tecla)
+  const mover = qual => {
+    let i = Number(ini.value), f = Number(fim.value);
+    if (i > f) { if (qual === "inicio") i = f; else f = i; ini.value = i; fim.value = f; }
+    estado.inicio = e[i]; estado.fim = e[f];
+    ajustarDestaque();
+    sincronizarFiltros();
+  };
+  ini.addEventListener("input", () => mover("inicio"));
+  fim.addEventListener("input", () => mover("fim"));
+  [ini, fim].forEach(r => r.addEventListener("change", () => atualizar({ recriar: true })));
+
+  // Atalhos de período
+  const atalhos = [["Todas", 0], ["Últimas 5", n - 5], ["Últimas 3", n - 3]];
+  const caixa = $("#f-atalhos");
+  atalhos.forEach(([rot, k]) => {
+    const b = criar("button", "atalho", rot);
+    b.type = "button"; b.dataset.inicio = e[Math.max(0, k)];
+    b.addEventListener("click", () => {
+      Object.assign(estado, { inicio: b.dataset.inicio, fim: e[n - 1] });
+      ajustarDestaque();
+      atualizar({ recriar: true });
+    });
+    caixa.appendChild(b);
+  });
 
   // Época em destaque: grupo de botões de opção, com navegação por setas
   const grupo = $("#f-epocas");
@@ -621,12 +646,16 @@ function ajustarDestaque() {
 }
 
 function sincronizarFiltros() {
-  const e = Dados.epocas(), i = e.indexOf(estado.inicio), f = e.indexOf(estado.fim);
+  const e = Dados.epocas(), n = e.length, i = e.indexOf(estado.inicio), f = e.indexOf(estado.fim);
   const ini = $("#f-inicio"), fim = $("#f-fim");
-  ini.value = estado.inicio; fim.value = estado.fim;
-  // Impede combinações inválidas: a época inicial não pode ser posterior à final
-  [...ini.options].forEach((o, k) => (o.disabled = k > f));
-  [...fim.options].forEach((o, k) => (o.disabled = k < i));
+  ini.value = i; fim.value = f;
+  ini.setAttribute("aria-valuetext", estado.inicio);
+  fim.setAttribute("aria-valuetext", estado.fim);
+  // Quando as duas pegas coincidem no fim, a inicial fica por cima para poder ser arrastada
+  ini.style.zIndex = i === f && f === n - 1 ? 3 : 2;
+  const passo = 100 / (n - 1);
+  $("#f-preenchido").style.left = `${i * passo}%`;
+  $("#f-preenchido").style.width = `${(f - i) * passo}%`;
   const vis = epocasVisiveis();
   document.querySelectorAll(".epoca-btn").forEach(b => {
     const ativa = b.dataset.epoca === estado.epoca, dentro = vis.includes(b.dataset.epoca);
@@ -634,13 +663,13 @@ function sincronizarFiltros() {
     b.tabIndex = ativa ? 0 : -1;
     b.disabled = !dentro;
   });
-  // Em ecrãs estreitos, mantém visível a época em destaque na faixa de épocas (sem mexer na página)
-  const faixa = $("#f-epocas"), btn = $(".epoca-btn[aria-checked='true']", faixa);
-  if (btn && faixa.scrollWidth > faixa.clientWidth) faixa.scrollLeft = btn.offsetLeft - faixa.offsetLeft - faixa.clientWidth / 2 + btn.offsetWidth / 2;
-  const n = vis.length;
+  document.querySelectorAll(".atalho").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.inicio === estado.inicio && estado.fim === e[n - 1])));
+  // Em ecrãs estreitos, mantém visível a época em destaque na linha do tempo (sem mexer na página)
+  const rolar = $(".linha-tempo-rolar"), btn = $(".epoca-btn[aria-checked='true']");
+  if (btn && rolar.scrollWidth > rolar.clientWidth) rolar.scrollLeft = btn.offsetLeft - rolar.clientWidth / 2 + btn.offsetWidth / 2;
+  const nv = vis.length;
   const resumo = $("#f-resumo");
-  resumo.replaceChildren(
-    "Período ", criar("strong", "", n > 1 ? `${vis[0]} a ${vis[n - 1]}` : vis[0]), ` (${n} ${n === 1 ? "época" : "épocas"}) · Em destaque `,
+  resumo.replaceChildren(criar("strong", "", nv > 1 ? `${vis[0]} a ${vis[nv - 1]}` : vis[0]), ` · ${nv} ${nv === 1 ? "época" : "épocas"} · em destaque `,
     criar("strong", "", estado.epoca));
   estadoContas(estado.epoca).forEach(([, curto]) => { if (curto) resumo.append(` · ${curto}`); });
 }

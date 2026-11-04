@@ -49,7 +49,7 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 
 - HTML semântico, navegação completa por teclado e ligação para saltar para o conteúdo.
 - Cada gráfico tem uma descrição para leitores de ecrã e uma alternativa em tabela.
-- Paleta com significado fixo: verde (positivo, favorável), vermelho (negativo, desfavorável, risco), amarelo (alerta) e cinzento (neutro). A cor nunca é a única indicação.
+- Paleta do projeto SQL (preto, amarelo e cinzentos), com verde e vermelho reservados para evolução favorável e desfavorável. A cor nunca é a única indicação.
 - Contraste verificado em modo claro e escuro.
 - Respeita a opção do sistema para reduzir o movimento.
 - Português europeu em toda a interface, com glossário e convenções de apresentação descritas na secção Metodologia.
@@ -63,7 +63,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=8`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=9`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 

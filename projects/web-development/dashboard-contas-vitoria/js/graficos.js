@@ -13,8 +13,8 @@ export const cor = nome => getComputedStyle(raiz).getPropertyValue(`--${nome}`).
     (positivo, negativo/risco, alerta) e só se usam através de coresSinal e coresCondicao (paineis.js). */
 export const PAPEIS = ["tinta", "cinza-escuro", "cinza", "cinza-claro"];
 
-/** Cor de cada papel nas séries: tons bem distintos (cinzento-escuro, azul, azul-claro, cinzento-claro),
-    para que séries vizinhas não se confundam. Fora das séries, os papéis mantêm os cinzentos. */
+/** Cor de cada papel nas séries, com a paleta do projeto SQL: preto, amarelo, cinzento e amarelo-claro.
+    São tons bem distintos, para que séries vizinhas não se confundam. */
 const SERIE = { "tinta": "serie-1", "cinza-escuro": "serie-2", "cinza": "serie-3", "cinza-claro": "serie-4" };
 export const corSerie = papel => cor(SERIE[papel] ?? papel);
 
@@ -29,10 +29,11 @@ export function aplicarTema() {
 
 /** Barras: as cores claras levam contorno para não se perderem no fundo */
 export function barras(label, data, papel = "tinta", extra = {}) {
-  const claro = papel === "cinza-claro" || papel === "amarelo";
+  // Os amarelos levam um contorno fino para não se perderem no fundo claro
+  const claro = ["cinza-escuro", "cinza-claro", "amarelo"].includes(papel);
   return {
     label, data, backgroundColor: corSerie(papel),
-    borderColor: claro ? cor("cinza-escuro") : corSerie(papel), borderWidth: claro ? 1 : 0,
+    borderColor: claro ? cor("contorno") : corSerie(papel), borderWidth: claro ? 1 : 0,
     borderRadius: 2, borderSkipped: false, maxBarThickness: 30, categoryPercentage: 0.8, barPercentage: 0.9,
     ...extra,
   };
