@@ -217,6 +217,18 @@ const ICONES = {
   metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
 };
 
+/** Fotografia do Estádio D. Afonso Henriques no topo da secção Futebol */
+function capaEstadio() {
+  const f = criar("figure", "capa capa-estadio");
+  f.innerHTML = `<picture>
+      <source type="image/webp" srcset="img/estadio-800.webp?v=10 800w, img/estadio-1400.webp?v=10 1400w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/estadio-1400.webp?v=10" width="1400" height="581" loading="lazy" alt="Estádio D. Afonso Henriques, em Guimarães, cheio e iluminado durante um jogo noturno.">
+    </picture>
+    <figcaption><p class="capa-sobre">Guimarães</p><p class="capa-titulo">Estádio D. Afonso Henriques</p></figcaption>
+    <a class="capa-credito" href="https://www.amap.pt/p/campos-de-jogos-do-vitoria-sport-clube">Foto: AMAP</a>`;
+  return f;
+}
+
 function construirSeccoes() {
   const main = $("#conteudo .dentro");
   const nav = $("#abas");
@@ -237,6 +249,7 @@ function construirSeccoes() {
     $("h2", cab).textContent = s.nome;
     $("p", cab).textContent = s.intro;
     sec.prepend(cab);
+    if (s.id === "desporto") cab.after(capaEstadio());
 
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));

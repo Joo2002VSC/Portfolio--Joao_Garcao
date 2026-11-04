@@ -66,7 +66,7 @@ export const SECCOES = [
   { id: "custos", nome: "Gastos", intro: "A evolução e a composição dos gastos operacionais: pessoal, fornecimentos e serviços externos, amortizações e outros gastos." },
   { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
   { id: "divida", nome: "Endividamento", intro: "Estrutura financeira (ativo, passivo e capitais próprios) e dívida financeira, encargos financeiros, fluxos de caixa e liquidez." },
-  { id: "desporto", nome: "Desporto", intro: "A relação entre os gastos e os resultados desportivos." },
+  { id: "desporto", nome: "Futebol", intro: "Os resultados desportivos da equipa principal e a sua relação com os gastos." },
   { id: "cenarios", nome: "Cenários", intro: "Simulações do projeto SQL. São ilustrativas: dependem de pressupostos sobre contratos e classificações." },
   { id: "solucoes", nome: "Soluções", intro: "Propostas para a sustentabilidade financeira da SAD, a partir dos indicadores da última época disponível. Cada proposta junta o diagnóstico, as medidas e os indicadores a acompanhar." },
   { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel: objetivo, código, técnicas e resultado." },
@@ -481,7 +481,33 @@ export const PAINEIS = [
     descricao: "Margens, rendibilidade e rotação do ativo, peso dos fornecimentos e serviços externos, dívida face às vendas e fluxo de caixa operacional.",
     conclusao: rows => `A margem corrente sem vendas foi negativa em ${contar(rows, r => r.margem_corrente_sem_vendas_pct < 0)} de ${rows.length} épocas.`,
   },
-  /* ---------------- Desporto ---------------- */
+  /* ---------------- Futebol ---------------- */
+  {
+    id: "classificacoes", seccao: "desporto", consulta: 20, largo: true, temporal: true,
+    pergunta: "Como evoluiu a classificação na Liga?",
+    descricao: "Lugar final na Liga em cada época (o 1.º lugar fica no topo). As épocas com competições europeias e troféus aparecem na dica.",
+    construir: rows => {
+      const cfg = temporal(rows, [{ col: "lugar", rotulo: "Lugar na Liga", papel: "tinta", tipo: "line" }],
+        { tipo: "line", unidade: "lugar", tooltipUnidade: "lugar", legenda: false, inverter: true, min: 1, max: 18 });
+      Object.assign(cfg.options.scales.y.ticks, { stepSize: 1, autoSkip: false, maxTicksLimit: 18 });
+      cfg.options.scales.y.ticks.callback = v => (v === 1 || v % 3 === 0 ? `${v}.º` : "");
+      cfg.data.datasets[0].pointRadius = 5;
+      cfg.options.plugins.tooltip.callbacks.label = c => ` ${lugar(c.raw)} lugar`;
+      cfg.options.plugins.tooltip.callbacks.footer = i => {
+        const r = rows[i[0].dataIndex];
+        return [r.europa && r.europa !== "—" ? r.europa : "Sem competições europeias", r.trofeu ? `Vencedor da ${r.trofeu}` : null].filter(Boolean);
+      };
+      cfg.options.plugins.valoresNasBarras = { formatar: v => `${v}.º` };
+      return cfg;
+    },
+    conclusao: rows => {
+      const v = com(rows, "lugar");
+      if (!v.length) return "";
+      const melhor = v.reduce((a, b) => (b.lugar < a.lugar ? b : a)), pior = v.reduce((a, b) => (b.lugar > a.lugar ? b : a));
+      return `Melhor classificação: ${lugar(melhor.lugar)} lugar (${melhor.epoca}); pior: ${lugar(pior.lugar)} (${pior.epoca}). ` +
+        `Lugar médio no intervalo: ${decimal(Math.round(10 * media(col(v, "lugar"))) / 10)}.º; ${plural(contar(v, r => r.europa && r.europa !== "—"), "época", "épocas")} com competições europeias.`;
+    },
+  },
   {
     id: "regressao", seccao: "perguntas", questao: 4, consulta: 53, largo: true, temporal: true,
     pergunta: "Gastos de estrutura da SAD e classificação na Liga",
@@ -599,18 +625,24 @@ export const PAINEIS = [
     },
   },
   {
-    id: "centralizacao", seccao: "perguntas", questao: 5, consulta: 55, matriz: true, largo: true,
+    id: "centralizacao", seccao: "perguntas", questao: 5, consulta: 55, largo: true,
     pergunta: "A centralização dos direitos de TV elimina o défice?",
-    descricao: "Percentagem do défice antes de vendas (média de 2023/24 a 2025/26) coberta pelos direitos de TV centralizados, por valor do contrato e classificação na Liga.",
-    matriz: rows => ({
-      linhas: [...new Set(rows.map(r => r.contrato))],
-      colunas: [...new Set(rows.map(r => r.lugar))],
-      celula: (l, c) => rows.find(r => r.contrato === l && r.lugar === c),
-      valor: r => r.pct_do_defice_coberto,
-      texto: r => pct(r.pct_do_defice_coberto),
-      detalhe: r => `Ganho face à situação atual: ${euros(r.ganho_vs_atual)} · mais-valias ainda necessárias: ${euros(r.mais_valias_necessarias)}`,
-      rotuloLinhas: "Contrato", rotuloColunas: "Lugar",
-    }),
+    descricao: "Parte do défice antes de vendas (média de 2023/24 a 2025/26) que os direitos de TV centralizados cobririam, por valor do contrato e lugar na Liga. 100% significaria eliminar o défice sem vender jogadores.",
+    construir: rows => {
+      const contratos = [...new Set(rows.map(r => r.contrato))], lugares = [...new Set(rows.map(r => r.lugar))];
+      const papeis = ["tinta", "cinza-escuro", "cinza"];
+      const datasets = lugares.map((l, k) => barras(`${l} lugar`, contratos.map(c => rows.find(r => r.contrato === c && r.lugar === l)?.pct_do_defice_coberto ?? null), papeis[k % 3], { maxBarThickness: 22 }));
+      const cfg = { type: "bar", data: { labels: contratos.map(c => `Contrato de ${c}`), datasets }, options: opcoes({ horizontal: true, unidade: "pct", min: 0, max: 100 }) };
+      cfg.options.plugins.valoresNasBarras = { formatar: v => pct(v) };
+      // Em ecrãs estreitos, o rótulo da linha sobrepunha-se às barras: fica só a marca de 100% no eixo
+      cfg.options.plugins.referencias = { linhas: [{ valor: 100, rotulo: innerWidth < 640 ? "" : "100% = défice eliminado" }] };
+      cfg.options.plugins.tooltip.callbacks.afterLabel = c => {
+        const r = rows.find(x => `Contrato de ${x.contrato}` === c.label && `${x.lugar} lugar` === c.dataset.label);
+        return r ? `   Ganho face à situação atual: ${euros(r.ganho_vs_atual)}\n   Mais-valias ainda necessárias: ${euros(r.mais_valias_necessarias)}` : "";
+      };
+      cfg.options.layout.padding.right = 12;
+      return cfg;
+    },
     conclusao: rows => {
       const max = rows.reduce((a, b) => (b.pct_do_defice_coberto > a.pct_do_defice_coberto ? b : a));
       return `Défice antes de vendas: ${euros(rows[0].defice_antes_vendas)} por época. No melhor cenário (${max.contrato}, ${max.lugar} lugar), a centralização cobre ${pct(max.pct_do_defice_coberto)}; ` +
@@ -905,6 +937,7 @@ export const ORDEM = {
   geral: ["geral-receitas-gastos", "geral-resultados", "geral-estrutura", "geral-divida"],
   receitas: ["rendimentos", "composicao-vendas", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
   custos: ["gastos-rubricas", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
+  desporto: ["classificacoes", "custo-ponto", "espectadores", "treinadores", "epocas-desporto"],
   rentabilidade: ["resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
   divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",
     "divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",

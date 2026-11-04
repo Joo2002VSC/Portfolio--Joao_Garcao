@@ -165,6 +165,10 @@ main:focus { outline: none; }
 .capa-sobre { font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--amarelo) !important; }
 .capa-titulo { margin-top: 4px !important; font: 800 clamp(19px, 2.8vw, 30px)/1.15 "Archivo Expanded", sans-serif; }
 .capa-titulo span { display: block; }
+.capa-credito { position: absolute; right: 10px; bottom: 10px; font-size: 11.5px; color: rgba(255, 255, 255, .85); background: rgba(0, 0, 0, .45);
+  padding: 2px 8px; border-radius: 3px; text-decoration: none; }
+.capa-credito:hover { color: #FFFFFF; text-decoration: underline; }
+.capa-estadio img { height: clamp(170px, 24vw, 300px); object-position: 50% 45%; }
 
 /* ---------- 4. Secções e blocos ---------- */
 main { padding-top: 28px; padding-bottom: 56px; }
@@ -320,7 +324,7 @@ main { padding-top: 28px; padding-bottom: 56px; }
 .pergunta-bloco { margin-bottom: 36px; padding: 20px 22px; background: var(--cartao); border: 1px solid var(--linha); border-radius: var(--raio); }
 .pergunta-bloco:focus { outline: none; }
 .pergunta-bloco > header { display: flex; align-items: center; gap: 14px; }
-.pergunta-bloco .num { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--tinta); color: var(--cartao); font: 700 18px "Archivo", sans-serif; }
+.pergunta-bloco > header .num { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--tinta); color: var(--cartao); font: 700 18px "Archivo", sans-serif; }
 .pergunta-bloco h3 { margin: 0; font-size: clamp(19px, 2.2vw, 23px); }
 .contexto { margin: 12px 0 0; color: var(--suave); max-width: 900px; }
 .resposta-rotulo { margin: 16px 0 2px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mudo); }

@@ -6,27 +6,27 @@
   <title>As Contas do Vitória SC · Análise Financeira</title>
   <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=9" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=9" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=9">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=9">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=11" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=11" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=11">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=11">
   <meta name="theme-color" content="#343A40">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=9",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=9",
-      "./js/dados.js": "./js/dados.js?v=9",
-      "./js/explorador.js": "./js/explorador.js?v=9",
-      "./js/formato.js": "./js/formato.js?v=9",
-      "./js/graficos.js": "./js/graficos.js?v=9",
-      "./js/paineis.js": "./js/paineis.js?v=9",
-      "./js/tabelas.js": "./js/tabelas.js?v=9"
+      "./js/animacoes.js": "./js/animacoes.js?v=11",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=11",
+      "./js/dados.js": "./js/dados.js?v=11",
+      "./js/explorador.js": "./js/explorador.js?v=11",
+      "./js/formato.js": "./js/formato.js?v=11",
+      "./js/graficos.js": "./js/graficos.js?v=11",
+      "./js/paineis.js": "./js/paineis.js?v=11",
+      "./js/tabelas.js": "./js/tabelas.js?v=11"
     }
   }
   </script>
-  <link rel="stylesheet" href="css/style.css?v=9">
+  <link rel="stylesheet" href="css/style.css?v=11">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -34,7 +34,7 @@
   <header class="topo gutter">
     <div class="dentro">
       <a class="marca" href="#geral" aria-label="As contas do Vitória SC: visão geral">
-        <img class="icone" src="img/icone-claro.png?v=9" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=11" alt="" width="47" height="60">
         <h1>As Contas do Vitória SC</h1>
       </a>
     </div>
@@ -78,13 +78,14 @@
       <section id="sec-geral">
         <figure class="capa">
           <picture>
-            <source type="image/webp" srcset="img/plantel-800.webp?v=9 800w, img/plantel-1600.webp?v=9 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
-            <img src="img/plantel-1600.webp?v=9" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
+            <source type="image/webp" srcset="img/plantel-800.webp?v=11 800w, img/plantel-1600.webp?v=11 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
+            <img src="img/plantel-1600.webp?v=11" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
           </picture>
           <figcaption>
             <p class="capa-sobre">Vitória Sport Clube – Futebol, SAD</p>
             <p class="capa-titulo">Análise Financeira <span data-intervalo>2012/13 – 2025/26</span></p>
           </figcaption>
+          <a class="capa-credito" href="https://x.com/VitoriaSC1922/status/2111445705810452710">Foto: Vitória SC (@VitoriaSC1922)</a>
         </figure>
 
         <section class="bloco" aria-labelledby="h-sintese">
@@ -171,6 +172,7 @@
           <li><span class="rotulo-claro">Organização dos dados</span><strong>Base de dados SQLite</strong><span>Projeto <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql">contas-vitoria-sql</a></span></li>
           <li><span class="rotulo-claro">Período</span><strong data-intervalo>2012/13 – 2025/26</strong><span><span data-n-epocas>14</span> épocas; exercícios de 1 de julho a 30 de junho</span></li>
           <li><span class="rotulo-claro">Exportação dos dados</span><strong data-gerado>—</strong><span>Data em que as consultas SQL foram executadas e os resultados gravados em JSON</span></li>
+          <li><span class="rotulo-claro">Imagens</span><strong>Fotografias</strong><span>Plantel: <a href="https://x.com/VitoriaSC1922/status/2111445705810452710">Vitória SC no X (@VitoriaSC1922)</a>. Estádio: <a href="https://www.amap.pt/p/campos-de-jogos-do-vitoria-sport-clube">AMAP</a>.</span></li>
           <li><span class="rotulo-claro">Âmbito</span><strong>Apenas a SAD</strong><span>Sem as contas do Clube nem as consolidadas. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</span></li>
         </ul>
         <div class="texto-longo">
@@ -254,7 +256,7 @@
   <footer class="rodape gutter">
     <div class="dentro">
       <div class="rodape-marca">
-        <img src="img/icone-claro.png?v=9" alt="" width="28" height="36">
+        <img src="img/icone-claro.png?v=11" alt="" width="28" height="36">
         <div>
           <p class="rodape-titulo">As Contas do Vitória SC</p>
           <p>© <span data-ano>2026</span> João Garção. Todos os direitos reservados.</p>
@@ -268,7 +270,7 @@
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=9"></script>
-  <script type="module" src="js/app.js?v=9"></script>
+  <script src="js/vendor/chart.umd.min.js?v=11"></script>
+  <script type="module" src="js/app.js?v=11"></script>
 </body>
 </html>

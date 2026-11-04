@@ -142,7 +142,8 @@ export const referencias = {
         ctx.setLineDash([]);
         ctx.font = '700 11px "Archivo", sans-serif';
         ctx.fillStyle = cor("texto");
-        if (chart.options.indexAxis === "y") { ctx.textAlign = "left"; ctx.fillText(rotulo, p + 5, a.top + 10); }
+        // Rótulo à esquerda da linha, para não sair do gráfico quando a linha está no limite direito
+        if (chart.options.indexAxis === "y") { ctx.textAlign = "right"; ctx.fillText(rotulo, p - 6, a.top + 10); }
         else { ctx.textAlign = "right"; ctx.textBaseline = "bottom"; ctx.fillText(rotulo, a.right - 2, p - 4); }
       }
     });
@@ -166,7 +167,7 @@ export const valoresNasBarras = {
         const v = ds.data[i];
         if (v === null || v === undefined) return;
         if (chart.options.indexAxis === "y") { ctx.textAlign = "left"; ctx.fillText(op.formatar(v), b.x + 6, b.y); }
-        else { ctx.textAlign = "center"; ctx.fillText(op.formatar(v), b.x, v >= 0 ? b.y - 9 : b.y + 10); }
+        else { ctx.textAlign = "center"; ctx.fillText(op.formatar(v), b.x, v >= 0 ? b.y - 12 : b.y + 12); }
       });
     });
     ctx.restore();
