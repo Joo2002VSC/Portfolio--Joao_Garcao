@@ -200,8 +200,8 @@ const CAPAS = {
 function criarCapa(c) {
   const f = criar("figure", `capa ${c.classe ?? ""}`);
   f.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/${c.img}-800.webp?v=22 800w, img/${c.img}-${c.larg}.webp?v=22 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/${c.img}-${c.larg}.webp?v=22" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
+      <source type="image/webp" srcset="img/${c.img}-800.webp?v=23 800w, img/${c.img}-${c.larg}.webp?v=23 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/${c.img}-${c.larg}.webp?v=23" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
     <a class="capa-credito" href="${c.fonte}" rel="noopener noreferrer"></a>`;
   $("img", f).alt = c.alt_txt;
