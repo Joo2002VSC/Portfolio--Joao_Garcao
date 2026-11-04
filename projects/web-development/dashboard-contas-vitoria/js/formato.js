@@ -82,6 +82,7 @@ export const formatar = (unidade, v) => (typeof v === "string" ? v : (porUnidade
    iguais com significados diferentes (ex.: "variacao" em euros na consulta 1, em pessoas na 31). */
 
 const COLUNAS = {
+  acionista: ["Acionista", "txt"], categoria: ["Categoria de ações", "txt"], pct_capital: ["Percentagem do capital", "pct"],
   epoca: ["Época", "txt"], lugar: ["Lugar", "lugar"], posicao_liga: ["Lugar", "lugar"], pontos: ["Pontos", "int"],
   rl: ["Resultado líquido", "eur"], variacao: ["Variação", "eur"], sinal: ["Sinal", "txt"], leitura: ["Leitura", "txt"],
   mais_valias: ["Mais-valias", "eur"], rl_sem_mais_valias: ["Resultado sem mais-valias", "eur"],

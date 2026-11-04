@@ -90,11 +90,32 @@ main:focus { outline: none; }
 
 .barra { position: sticky; top: 0; z-index: 10; }
 .faixa-abas { background: var(--topo); border-bottom: 4px solid var(--amarelo); }
+.faixa-abas { position: relative; }
+.faixa-abas-linha { display: flex; align-items: stretch; gap: 8px; }
+.abas-nav { flex: 1 1 auto; min-width: 0; }
+.botao-pesquisa { flex: none; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 76px; padding: 10px 8px 9px;
+  background: none; border: 0; border-left: 1px solid #333333; color: #DDDDDD; font: 700 13.5px "Archivo", sans-serif; cursor: pointer; }
+.botao-pesquisa svg, .pesquisa-caixa svg { width: 30px; height: 30px; fill: none; stroke: #F5D510; stroke-width: 2.2; stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(245, 213, 16, .35)); }
+.botao-pesquisa:hover, .botao-pesquisa[aria-expanded="true"] { color: #FFFFFF; background: #222222; }
+.pesquisa-global { position: absolute; left: 0; right: 0; top: 100%; z-index: 20; padding-top: 4px; }
+.pesquisa-global .dentro { max-width: 760px; margin: 0 auto; background: var(--cartao); border: 1px solid var(--linha); border-top: 4px solid var(--amarelo);
+  border-radius: 0 0 var(--raio) var(--raio); box-shadow: 0 14px 34px rgba(0, 0, 0, .28); padding: 12px; }
+.pesquisa-caixa { display: flex; align-items: center; gap: 10px; border: 2px solid var(--tinta); border-radius: var(--raio-p); padding: 4px 6px 4px 10px; }
+.pesquisa-caixa svg { width: 22px; height: 22px; stroke: var(--tinta); filter: none; flex: none; }
+.pesquisa-caixa input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--texto); font: 16px "Archivo", sans-serif; padding: 8px 0; }
+.fechar-pesquisa { flex: none; border: 1px solid var(--borda-forte); background: var(--superficie); border-radius: 4px; padding: 3px 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.resultados-pesquisa { list-style: none; margin: 8px 0 0; padding: 0; max-height: min(60vh, 460px); overflow: auto; }
+.resultados-pesquisa li { display: flex; flex-direction: column; gap: 2px; padding: 9px 10px; border-radius: var(--raio-p); cursor: pointer; border-left: 3px solid transparent; }
+.resultados-pesquisa li:hover, .resultados-pesquisa li[aria-selected="true"] { background: var(--superficie); border-left-color: var(--amarelo); }
+.res-titulo { font-weight: 700; }
+.res-meta { font-size: 12.5px; color: var(--mudo); }
+.pesquisa-estado { margin: 6px 2px 0; font-size: 12.5px; color: var(--mudo); }
 .abas { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
 .abas::-webkit-scrollbar { display: none; }
-.abas a { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 88px;
+.abas a { flex: 1 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 70px;
   color: #DDDDDD; text-decoration: none; white-space: nowrap; font-weight: 700; font-size: 13.5px; line-height: 1.2;
-  padding: 10px 10px 9px; border-radius: 4px 4px 0 0; transition: color .2s, background-color .2s; }
+  padding: 10px 7px 9px; border-radius: 4px 4px 0 0; transition: color .2s, background-color .2s; }
 .abas svg { width: 30px; height: 30px; fill: none; stroke: var(--icone, #FFFFFF); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--icone, #FFFFFF) 35%, transparent)); transition: transform .2s; }
 .abas a:hover { color: #FFFFFF; background: #222222; }
@@ -175,6 +196,8 @@ main:focus { outline: none; }
   padding: 2px 8px; border-radius: 3px; text-decoration: none; }
 .capa-credito:hover { color: #FFFFFF; text-decoration: underline; }
 .capa-solucoes img { object-position: 50% 45%; }
+.capa-taca img { object-position: 50% 25%; }
+#p-acionistas .tela, #p-acionistas-operacao .tela { height: 340px; }
 .capa-estadio img { height: clamp(170px, 24vw, 300px); object-position: 50% 45%; }
 
 /* ---------- 4. Secções e blocos ---------- */
@@ -504,6 +527,10 @@ main { padding-top: 28px; padding-bottom: 56px; }
   .barra { position: static; }
   .abas a { min-width: 78px; font-size: 12.5px; padding: 9px 6px 8px; }
   .abas svg { width: 26px; height: 26px; }
+  .botao-pesquisa { min-width: 60px; font-size: 12.5px; }
+  .botao-pesquisa span { display: none; }
+  .pesquisa-global { position: fixed; top: 0; padding-top: 0; }
+  .pesquisa-global .dentro { border-radius: 0; }
   .filtros-acoes { margin-left: 0; }
   .capa p { max-width: 100%; }
   .capa figcaption { padding: 16px; background: linear-gradient(0deg, rgba(0, 0, 0, .82) 0%, rgba(0, 0, 0, .3) 60%, rgba(0, 0, 0, 0) 100%); }

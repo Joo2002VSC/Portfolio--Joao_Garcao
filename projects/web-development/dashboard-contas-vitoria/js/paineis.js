@@ -35,6 +35,68 @@ function temporal(rows, series, { tipo = "bar", ...op } = {}) {
 
 const comReferencias = (config, linhas) => { config.options.plugins.referencias = { linhas }; return config; };
 
+/* ---------- Estrutura acionista ----------
+   Fonte: Relatório e Contas da SAD 2025/26 — nota 1 (900 000 ações de 5 €: 610 533 da categoria A, detidas pelo
+   Vitória Sport Clube, e 289 467 da categoria B) e relatório de gestão (V Sports com 29%, a passar para 46% com a
+   compra ao Clube de ações representativas de 17% do capital). Não está na base SQL: são os valores do relatório. */
+const ACOES_TOTAL = 900000, ACOES_CLUBE = 610533;
+const PCT_CLUBE = (100 * ACOES_CLUBE) / ACOES_TOTAL; // 67,84%
+const ACIONISTAS = {
+  atual: [
+    { acionista: "Vitória Sport Clube", categoria: "A", pct_capital: PCT_CLUBE },
+    { acionista: "V Sports", categoria: "B", pct_capital: 29 },
+    { acionista: "Outros acionistas", categoria: "B", pct_capital: 100 - PCT_CLUBE - 29 },
+  ],
+  operacao: [
+    { acionista: "Vitória Sport Clube", categoria: "A", pct_capital: PCT_CLUBE - 17 },
+    { acionista: "V Sports", categoria: "B", pct_capital: 46 },
+    { acionista: "Outros acionistas", categoria: "B", pct_capital: 100 - PCT_CLUBE - 29 },
+  ],
+};
+
+/** Percentagem escrita dentro de cada fatia (branco sobre preto, preto sobre amarelo e cinzento) */
+const rotulosFatias = {
+  id: "rotulosFatias",
+  afterDatasetsDraw(chart) {
+    const { ctx } = chart, meta = chart.getDatasetMeta(0), ds = chart.data.datasets[0];
+    ctx.save();
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    meta.data.forEach((arco, i) => {
+      const v = ds.data[i];
+      if (v < 8) return; // fatias pequenas: o valor fica na legenda e na dica
+      const { x, y } = arco.tooltipPosition();
+      ctx.font = `800 ${v > 20 ? 17 : 13}px "Archivo Expanded", sans-serif`;
+      ctx.fillStyle = ds.texto[i];
+      ctx.fillText(pct(v), x, y);
+    });
+    ctx.restore();
+  },
+};
+
+/** Gráfico circular com as fatias destacadas (afastadas do centro e separadas por um traço branco) */
+function circular(rows) {
+  const cores = ["#111111", "#F5D510", "#A9A7A8"], texto = ["#FFFFFF", "#111111", "#111111"];
+  return {
+    type: "pie",
+    data: {
+      labels: rows.map(r => `${r.acionista} · ${pct(r.pct_capital)}`),
+      datasets: [{ data: col(rows, "pct_capital"), backgroundColor: cores, texto, borderColor: "#FFFFFF", borderWidth: 3,
+        offset: [6, 22, 30], hoverOffset: 30 }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, layout: { padding: 12 },
+      plugins: {
+        legend: { position: "bottom", labels: { color: cor("texto"), boxWidth: 16, boxHeight: 16, padding: 14, font: { size: 13, weight: "700" } } },
+        tooltip: {
+          backgroundColor: cor("dica-fundo"), titleColor: cor("dica-texto"), bodyColor: cor("dica-texto"), borderColor: cor("dica-borda"), borderWidth: 1, padding: 10,
+          callbacks: { label: c => ` ${rows[c.dataIndex].acionista}: ${pct(rows[c.dataIndex].pct_capital)} do capital (ações da categoria ${rows[c.dataIndex].categoria})` },
+        },
+      },
+    },
+    plugins: [rotulosFatias],
+  };
+}
+
 /** Composição de um grupo de rubricas (consulta 59): barras horizontais, 2024/25 a cinzento claro e 2025/26 a escuro */
 function composicao(rows) {
   const cfg = {
@@ -676,6 +738,26 @@ export const PAINEIS = [
     pergunta: "Quanto vale a parte igual por clube?",
     descricao: "Parte igual estimada por clube para três valores do contrato centralizado (2028/29), face aos direitos de TV do Vitória em 2024/25.",
     conclusao: rows => `Só a parte igual valeria entre ${pct(rows[0].parte_igual_em_pct_do_atual)} e ${pct(ultimo(rows).parte_igual_em_pct_do_atual)} dos direitos de TV atuais.`,
+  },
+
+  /* ---------------- Visão geral: estrutura acionista ---------------- */
+  {
+    id: "acionistas", seccao: "geral", bloco: "acionistas", fonteTexto: "Relatório e Contas 2025/26",
+    dados: () => ACIONISTAS.atual,
+    pergunta: "Quem são os acionistas da SAD?",
+    descricao: "Repartição do capital social a 30 de junho de 2026 (900 000 ações). As ações da categoria A pertencem ao Vitória Sport Clube.",
+    construir: rows => circular(rows),
+    conclusao: () => `O Vitória Sport Clube detém ${pct(PCT_CLUBE)} do capital e a V Sports 29%; os restantes ${pct(100 - PCT_CLUBE - 29)} estão dispersos por outros acionistas.`,
+    nota: "Fonte: Relatório e Contas da SAD 2025/26 (nota 1 e relatório de gestão). A parte dos outros acionistas é calculada por diferença.",
+  },
+  {
+    id: "acionistas-operacao", seccao: "geral", bloco: "acionistas", fonteTexto: "Relatório e Contas 2025/26",
+    dados: () => ACIONISTAS.operacao,
+    pergunta: "E depois da operação com a V Sports?",
+    descricao: "Repartição prevista se for aprovada a venda à V Sports, pelo Clube, de ações representativas de 17% do capital.",
+    construir: rows => circular(rows),
+    conclusao: () => `A V Sports passaria a deter 46% e o Clube ${pct(PCT_CLUBE - 17)}, mantendo a maioria do capital.`,
+    nota: "Operação sujeita a aprovação das assembleias gerais e das entidades reguladoras. Não inclui o efeito da conversão em capital das entradas de 3,8 M€ previstas.",
   },
 
   /* ---------------- Visão geral: evolução ---------------- */

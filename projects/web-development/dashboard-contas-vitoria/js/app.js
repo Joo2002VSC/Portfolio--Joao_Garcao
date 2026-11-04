@@ -217,15 +217,30 @@ const ICONES = {
   metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
 };
 
-/** Fotografia do Estádio D. Afonso Henriques no topo da secção Futebol */
-function capaEstadio() {
-  const f = criar("figure", "capa capa-estadio");
+/** Fotografias no topo das secções: imagem, legenda e crédito com ligação para a fonte */
+const CAPAS = {
+  perguntas: { img: "bandeiras", larg: 1600, alt: 642, alt_txt: "Bandeiras do Vitória SC, de Guimarães e de Portugal penduradas na bancada do Estádio D. Afonso Henriques, com adeptos.",
+    sobre: "Estádio D. Afonso Henriques", titulo: "Cinco Perguntas sobre as Contas da SAD", credito: "Foto: Vitória SC", fonte: "https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" },
+  desporto: { img: "taca-liga", larg: 1600, alt: 781, alt_txt: "Jogadores do Vitória SC a festejar a conquista da Taça da Liga, com o troféu erguido ao centro.",
+    sobre: "Época 2025/26", titulo: "Vencedor da Taça da Liga", credito: "Foto: Público", fonte: "https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&db=IMAGENS&type=JPG", classe: "capa-taca" },
+  cenarios: { img: "estadio", larg: 1400, alt: 581, alt_txt: "Estádio D. Afonso Henriques, em Guimarães, cheio e iluminado durante um jogo noturno.",
+    sobre: "Guimarães", titulo: "Estádio D. Afonso Henriques", credito: "Foto: AMAP", fonte: "https://www.amap.pt/p/campos-de-jogos-do-vitoria-sport-clube", classe: "capa-estadio" },
+  solucoes: { img: "solucoes", larg: 1600, alt: 788, alt_txt: "Jakupovic e Camara, de camisola cor-de-rosa do Vitória SC, a festejar um golo.",
+    titulo: "Propostas para a Sustentabilidade Financeira", credito: "Foto: Diário do Minho", fonte: "https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg", classe: "capa-solucoes" },
+};
+
+function criarCapa(c) {
+  const f = criar("figure", `capa ${c.classe ?? ""}`);
   f.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/estadio-800.webp?v=10 800w, img/estadio-1400.webp?v=10 1400w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/estadio-1400.webp?v=10" width="1400" height="581" loading="lazy" alt="Estádio D. Afonso Henriques, em Guimarães, cheio e iluminado durante um jogo noturno.">
+      <source type="image/webp" srcset="img/${c.img}-800.webp?v=14 800w, img/${c.img}-${c.larg}.webp?v=14 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/${c.img}-${c.larg}.webp?v=14" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
-    <figcaption><p class="capa-sobre">Guimarães</p><p class="capa-titulo">Estádio D. Afonso Henriques</p></figcaption>
-    <a class="capa-credito" href="https://www.amap.pt/p/campos-de-jogos-do-vitoria-sport-clube">Foto: AMAP</a>`;
+    <figcaption>${c.sobre ? '<p class="capa-sobre"></p>' : ""}<p class="capa-titulo"></p></figcaption>
+    <a class="capa-credito" href="${c.fonte}"></a>`;
+  $("img", f).alt = c.alt_txt;
+  if (c.sobre) $(".capa-sobre", f).textContent = c.sobre;
+  $(".capa-titulo", f).textContent = c.titulo;
+  $(".capa-credito", f).textContent = c.credito;
   return f;
 }
 
@@ -249,7 +264,7 @@ function construirSeccoes() {
     $("h2", cab).textContent = s.nome;
     $("p", cab).textContent = s.intro;
     sec.prepend(cab);
-    if (s.id === "desporto") cab.after(capaEstadio());
+    if (CAPAS[s.id]) cab.after(criarCapa(CAPAS[s.id]));
 
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
@@ -264,7 +279,12 @@ function construirSeccoes() {
       });
       return;
     }
-    if (paineis.length) ($("[data-paineis]", sec) ?? sec).appendChild(grelhaDe(paineis));
+    // Painéis com «bloco» vão para o contentor com o mesmo nome (ex.: estrutura acionista na visão geral)
+    const blocos = [...new Set(paineis.map(p => p.bloco ?? ""))];
+    blocos.forEach(b => {
+      const lista = paineis.filter(p => (p.bloco ?? "") === b);
+      ($(b ? `[data-paineis="${b}"]` : "[data-paineis]", sec) ?? sec).appendChild(grelhaDe(lista));
+    });
   });
 }
 
@@ -331,14 +351,7 @@ function construirSolucoes(sec) {
     }));
     lista.appendChild(li);
   });
-  const capa = criar("figure", "capa capa-solucoes");
-  capa.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/solucoes-800.webp?v=12 800w, img/solucoes-1600.webp?v=12 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/solucoes-1600.webp?v=12" width="1600" height="788" loading="lazy" alt="Jakupovic e Camara, de camisola cor-de-rosa do Vitória SC, a festejar um golo.">
-    </picture>
-    <figcaption><p class="capa-sobre">Jakupovic e Camara</p><p class="capa-titulo">Propostas para a Sustentabilidade Financeira</p></figcaption>
-    <a class="capa-credito" href="https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg">Foto: Diário do Minho</a>`;
-  sec.append(capa, aviso, lista);
+  sec.append(aviso, lista);
 }
 
 function construirMetodologia() {
@@ -739,6 +752,82 @@ function atualizar({ recriar = false } = {}) {
   });
 }
 
+/* ====================== Pesquisa global ====================== */
+
+const sem = t => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+
+/** Índice de tudo o que se pode encontrar: gráficos, indicadores, perguntas, soluções, glossário e consultas */
+function indicePesquisa() {
+  const nomeSec = id => SECCOES.find(s => s.id === id)?.nome ?? "";
+  const itens = [];
+  KPIS.forEach(k => itens.push({ titulo: k.nome, tipo: "Indicador", sec: "Visão Geral", destino: "geral/h-sintese" }));
+  PAINEIS.forEach(p => itens.push({ titulo: p.pergunta, texto: p.descricao, tipo: "Gráfico", sec: nomeSec(p.seccao),
+    destino: p.seccao === "perguntas" ? `perguntas/pergunta-${p.questao}` : `${p.seccao}/${p.id}` }));
+  PERGUNTAS.forEach(p => itens.push({ titulo: p.pergunta, texto: p.contexto, tipo: "Pergunta", sec: "Cinco Perguntas", destino: `perguntas/pergunta-${p.n}` }));
+  SOLUCOES.forEach(p => itens.push({ titulo: p.titulo, tipo: "Solução", sec: "Soluções", destino: `solucoes/solucao-${p.n}` }));
+  document.querySelectorAll(".glossario dt").forEach((dt, i) => {
+    dt.id ||= `glossario-${i}`;
+    itens.push({ titulo: dt.textContent, texto: dt.nextElementSibling?.textContent, tipo: "Glossário", sec: "Metodologia e Fontes", destino: `metodologia/${dt.id}` });
+  });
+  Dados.todasConsultas().forEach(c => itens.push({ titulo: c.titulo, tipo: `Consulta ${c.codigo}`, sec: "Consultas SQL", destino: `sql/${c.n}` }));
+  itens.forEach(i => { i.chaveTitulo = sem(i.titulo); i.chave = sem(`${i.titulo} ${i.texto ?? ""}`); });
+  return itens;
+}
+
+function construirPesquisa() {
+  const itens = indicePesquisa();
+  const painel = $("#pesquisa-global"), campo = $("#campo-pesquisa"), lista = $("#resultados-pesquisa"), estadoP = $("#pesquisa-estado"), botao = $("#abrir-pesquisa");
+  let atual = -1, resultados = [];
+
+  const abrir = () => { painel.hidden = false; botao.setAttribute("aria-expanded", "true"); campo.focus(); campo.select(); };
+  const fechar = (devolverFoco = true) => {
+    painel.hidden = true; botao.setAttribute("aria-expanded", "false"); campo.setAttribute("aria-expanded", "false");
+    if (devolverFoco) botao.focus();
+  };
+  const ir = r => { fechar(false); campo.value = ""; desenhar(); navegar(r.destino); };
+
+  function desenhar() {
+    const termos = sem(campo.value.trim()).split(/\s+/).filter(Boolean);
+    if (!termos.length) { lista.replaceChildren(); estadoP.textContent = "Escreva um indicador, uma rubrica ou um conceito."; campo.setAttribute("aria-expanded", "false"); return; }
+    // Todos os termos têm de aparecer; os resultados com os termos no título vêm primeiro
+    resultados = itens.filter(i => termos.every(t => i.chave.includes(t)))
+      .map(i => ({ ...i, peso: termos.filter(t => i.chaveTitulo.includes(t)).length * 10 - (i.tipo.startsWith("Consulta") ? 3 : 0) }))
+      .sort((a, b) => b.peso - a.peso).slice(0, 12);
+    atual = resultados.length ? 0 : -1;
+    lista.replaceChildren(...resultados.map((r, k) => {
+      const li = criar("li");
+      li.id = `res-${k}`; li.setAttribute("role", "option");
+      li.append(criar("span", "res-titulo", r.titulo), criar("span", "res-meta", `${r.tipo} · ${r.sec}`));
+      li.addEventListener("mousedown", ev => ev.preventDefault());
+      li.addEventListener("click", () => ir(r));
+      return li;
+    }));
+    marcar();
+    campo.setAttribute("aria-expanded", String(resultados.length > 0));
+    estadoP.textContent = resultados.length ? `${resultados.length} ${resultados.length === 1 ? "resultado" : "resultados"} · Enter para abrir` : "Nenhum resultado. Experimente outro termo.";
+  }
+  function marcar() {
+    lista.querySelectorAll("li").forEach((li, k) => li.setAttribute("aria-selected", String(k === atual)));
+    if (atual >= 0) { campo.setAttribute("aria-activedescendant", `res-${atual}`); $(`#res-${atual}`)?.scrollIntoView({ block: "nearest" }); }
+    else campo.removeAttribute("aria-activedescendant");
+  }
+
+  botao.addEventListener("click", () => (painel.hidden ? abrir() : fechar()));
+  $("#fechar-pesquisa").addEventListener("click", () => fechar());
+  campo.addEventListener("input", desenhar);
+  campo.addEventListener("keydown", ev => {
+    if (ev.key === "ArrowDown" && resultados.length) { atual = (atual + 1) % resultados.length; marcar(); ev.preventDefault(); }
+    else if (ev.key === "ArrowUp" && resultados.length) { atual = (atual - 1 + resultados.length) % resultados.length; marcar(); ev.preventDefault(); }
+    else if (ev.key === "Enter" && atual >= 0) { ir(resultados[atual]); ev.preventDefault(); }
+    else if (ev.key === "Escape") { fechar(); ev.stopPropagation(); }
+  });
+  document.addEventListener("keydown", ev => {
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "k") { ev.preventDefault(); abrir(); }
+  });
+  document.addEventListener("click", ev => { if (!painel.hidden && !ev.target.closest(".faixa-abas")) fechar(false); });
+  desenhar();
+}
+
 /* ====================== Navegação ====================== */
 
 /** Muda de secção substituindo o endereço atual (sem nova entrada no histórico do browser) */
@@ -756,7 +845,7 @@ function mostrarSeccao() {
   document.querySelectorAll("#abas a").forEach(a => {
     if (a.dataset.seccao === seccao) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
   });
-  document.title = `${SECCOES.find(s => s.id === seccao).nome} · As contas do Vitória SC`;
+  document.title = `${SECCOES.find(s => s.id === seccao).nome} · As Contas da Vitória SC SAD`;
   // Mantém a aba ativa visível em ecrãs estreitos, sem mexer no foco
   const aba = $("#abas a[aria-current]"), abas = $("#abas");
   if (aba && (aba.offsetLeft < abas.scrollLeft || aba.offsetLeft + aba.offsetWidth > abas.scrollLeft + abas.clientWidth)) {
@@ -853,6 +942,7 @@ async function iniciar() {
 
   construirSeccoes();
   construirKPIs();
+  construirPesquisa();
   construirCartoesGeral();
   construirMetodologia();
   construirFiltros();

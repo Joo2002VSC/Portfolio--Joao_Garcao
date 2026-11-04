@@ -1,6 +1,6 @@
 <p align="center"><img src="img/icone.png" alt="" width="72"></p>
 
-# As contas da Vitória SC SAD · painel de análise financeira
+# As Contas da Vitória SC SAD · painel de análise financeira
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english) · 🇫🇷 [Français](#-français)
 
@@ -16,7 +16,7 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Visão geral** | Síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
+| **Visão geral** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
 | **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com contexto, resposta, indicadores, gráficos e limitações |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
 | **Soluções** | Sete propostas para a sustentabilidade financeira da SAD, cada uma com diagnóstico calculado a partir das consultas, medidas, indicadores a acompanhar e prioridade |
@@ -63,7 +63,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=13`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=14`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 
