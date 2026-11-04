@@ -6,30 +6,30 @@
   <title>As Contas da Vitória SC SAD · Análise Financeira</title>
   <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=15" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=15" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=15">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=15">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=16" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=16" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=16">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=16">
   <meta name="theme-color" content="#343A40">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=15",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=15",
-      "./js/dados.js": "./js/dados.js?v=15",
-      "./js/explorador.js": "./js/explorador.js?v=15",
-      "./js/formato.js": "./js/formato.js?v=15",
-      "./js/graficos.js": "./js/graficos.js?v=15",
-      "./js/paineis.js": "./js/paineis.js?v=15",
-      "./js/tabelas.js": "./js/tabelas.js?v=15"
+      "./js/animacoes.js": "./js/animacoes.js?v=16",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=16",
+      "./js/dados.js": "./js/dados.js?v=16",
+      "./js/explorador.js": "./js/explorador.js?v=16",
+      "./js/formato.js": "./js/formato.js?v=16",
+      "./js/graficos.js": "./js/graficos.js?v=16",
+      "./js/paineis.js": "./js/paineis.js?v=16",
+      "./js/tabelas.js": "./js/tabelas.js?v=16"
     }
   }
   </script>
   <link rel="preload" href="fontes/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fontes/Inter-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fontes/Inter-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -37,7 +37,7 @@
   <header class="topo gutter">
     <div class="dentro">
       <a class="marca" href="#geral" aria-label="As Contas da Vitória SC SAD: visão geral">
-        <img class="icone" src="img/icone-claro.png?v=15" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=16" alt="" width="47" height="60">
         <h1>As Contas da Vitória SC SAD</h1>
       </a>
     </div>
@@ -74,13 +74,15 @@
           <p class="resumo" id="f-resumo" aria-live="polite"></p>
           <div class="atalhos" role="group" aria-label="Atalhos de período" id="f-atalhos"></div>
           <div class="filtros-acoes">
+            <button type="button" class="botao-barra alternar-filtros" id="f-alternar" aria-expanded="false" aria-controls="f-detalhe">Épocas</button>
             <button type="button" class="botao-barra" id="f-repor" disabled>Repor filtros</button>
             <button type="button" class="botao-barra icone-tema" id="f-tema">
               <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
             </button>
           </div>
         </div>
-        <div class="linha-tempo-rolar">
+        <div class="filtros-detalhe" id="f-detalhe">
+        <div class="linha-tempo-rolar" title="Clique numa época para a pôr em destaque e depois noutra para definir o período. Também pode arrastar as pegas amarelas.">
           <div class="linha-tempo" id="linha-tempo">
             <div class="epocas" id="f-epocas" role="radiogroup" aria-label="Época em destaque" aria-describedby="ajuda-destaque"></div>
             <div class="intervalo" id="f-intervalo">
@@ -91,19 +93,21 @@
           </div>
         </div>
         <p class="ajuda" id="ajuda-destaque" aria-live="polite">Clique numa época para a pôr em destaque e depois noutra para definir o período entre as duas. Também pode arrastar as pegas amarelas.</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <main id="conteudo" class="gutter" tabindex="-1">
+  <main id="conteudo" class="gutter" tabindex="-1" aria-busy="true">
     <div class="dentro">
+      <p class="a-carregar" id="a-carregar" role="status">A carregar os dados…</p>
 
       <!-- =============== Visão geral =============== -->
       <section id="sec-geral">
         <figure class="capa">
           <picture>
-            <source type="image/webp" srcset="img/plantel-800.webp?v=15 800w, img/plantel-1600.webp?v=15 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
-            <img src="img/plantel-1600.webp?v=15" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
+            <source type="image/webp" srcset="img/plantel-800.webp?v=16 800w, img/plantel-1600.webp?v=16 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
+            <img src="img/plantel-1600.webp?v=16" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
           </picture>
           <figcaption>
             <p class="capa-sobre">Vitória Sport Clube – Futebol, SAD</p>
@@ -286,7 +290,7 @@
   <footer class="rodape gutter">
     <div class="dentro">
       <div class="rodape-marca">
-        <img src="img/icone-claro.png?v=15" alt="" width="28" height="36">
+        <img src="img/icone-claro.png?v=16" alt="" width="28" height="36">
         <div>
           <p class="rodape-titulo">As Contas da Vitória SC SAD</p>
           <p>© <span data-ano>2026</span> João Garção. Todos os direitos reservados.</p>
@@ -300,7 +304,7 @@
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=15"></script>
-  <script type="module" src="js/app.js?v=15"></script>
+  <script src="js/vendor/chart.umd.min.js?v=16"></script>
+  <script type="module" src="js/app.js?v=16"></script>
 </body>
 </html>

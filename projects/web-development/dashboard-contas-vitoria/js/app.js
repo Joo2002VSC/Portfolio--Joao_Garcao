@@ -76,7 +76,7 @@ function criarFigura(p) {
     <div class="painel-cabeca">
       <h4 id="t-${p.id}"></h4>
       <div class="painel-acoes">
-        ${p.tabela || p.factos || p.matriz ? "" : `<button type="button" class="ver-tabela" aria-pressed="false" aria-controls="v-${p.id}">Ver tabela</button>`}
+        ${p.tabela || p.factos ? "" : `<button type="button" class="ver-tabela" aria-pressed="false" aria-controls="v-${p.id}">Ver tabela</button>`}
         ${sqlDe(p) ? `<a class="ver-sql" href="#sql/${sqlDe(p)}" title="Ver a consulta SQL que alimenta este gráfico">SQL</a>` : ""}
       </div>
     </div>
@@ -134,7 +134,6 @@ function desenharFigura(reg, { recriar = false } = {}) {
   reg.tema = versaoTema;
 
   if (p.factos) { vista.replaceChildren(criarFactos(p.factos(rows))); return; }
-  if (p.matriz) { vista.replaceChildren(criarMatriz(p.matriz(rows))); return; }
   if (p.tabela || reg.vista === "tabela") {
     reg.grafico?.destroy(); reg.grafico = null;
     const colunas = p.consulta ? Dados.consulta(p.consulta).colunas : Object.keys(rows[0]);
@@ -167,37 +166,6 @@ function criarFactos(lista) {
     ul.appendChild(li);
   });
   return ul;
-}
-
-/** Matriz de cenários com sombreado sequencial de um só tom */
-function criarMatriz(m) {
-  const env = criar("div", "tabela matriz");
-  env.tabIndex = 0;
-  env.setAttribute("role", "region");
-  env.setAttribute("aria-label", "Tabela de cenários");
-  const t = document.createElement("table");
-  const valores = m.linhas.flatMap(l => m.colunas.map(c => m.celula(l, c)).filter(Boolean).map(m.valor));
-  const max = Math.max(...valores, 1);
-  const cab = t.createTHead().insertRow();
-  [m.rotuloLinhas, ...m.colunas.map(c => `${c} lugar`)].forEach((txt, i) => {
-    const th = criar("th", i ? "num" : "", txt); th.scope = "col"; cab.appendChild(th);
-  });
-  const corpo = t.createTBody();
-  m.linhas.forEach(l => {
-    const tr = corpo.insertRow();
-    const th = criar("th", "", l); th.scope = "row"; tr.appendChild(th);
-    m.colunas.forEach(c => {
-      const r = m.celula(l, c), td = tr.insertCell();
-      td.className = "num";
-      if (!r) { td.textContent = "—"; return; }
-      const f = m.valor(r) / max;
-      td.style.setProperty("--intensidade", f.toFixed(3));
-      td.classList.toggle("escura", f > 0.62);
-      td.append(criar("strong", "", m.texto(r)), criar("small", "", m.detalhe(r)));
-    });
-  });
-  env.appendChild(t);
-  return env;
 }
 
 /* ====================== Construção das secções ====================== */
@@ -731,6 +699,7 @@ function sincronizarFiltros() {
     ? `Clique noutra época para analisar o período entre ${ancora} e essa época (Esc para cancelar).`
     : "Clique numa época para a pôr em destaque e depois noutra para definir o período entre as duas. Também pode arrastar as pegas amarelas.";
   ajuda.classList.toggle("ativa", !!ancora);
+  $("#f-alternar").textContent = `Épocas · ${estado.epoca}`;
   document.querySelectorAll(".atalho").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.inicio === estado.inicio && estado.fim === e[n - 1])));
   // Em ecrãs estreitos, mantém visível a época em destaque na linha do tempo (sem mexer na página)
   const rolar = $(".linha-tempo-rolar"), btn = $(".epoca-btn[aria-checked='true']");
@@ -910,6 +879,7 @@ async function iniciar() {
   } catch (erro) {
     console.error(erro);
     const caixa = $("#conteudo .dentro");
+    $("#conteudo").removeAttribute("aria-busy");
     caixa.innerHTML = `<div class="erro-carregar" role="alert"><h2>Não foi possível carregar os dados</h2><p></p>
       <p>Se abriu o ficheiro diretamente a partir do disco, utilize um servidor local (extensão Live Server do VS Code ou <code>python -m http.server</code>).</p></div>`;
     $(".erro-carregar p", caixa).textContent = erro.message;
@@ -940,6 +910,8 @@ async function iniciar() {
   nota.textContent = `O projeto SQL tem ${info.totalProjeto ?? nProjeto} consultas, numeradas de 1 a ${info.totalProjeto ?? nProjeto}. Aqui apresentam-se as ${nProjeto} que tratam das contas da SAD, com a numeração original, e ${nComp} consultas complementares do painel (D1 a D${nComp}), escritas para este painel sobre a mesma base de dados.` +
     (info.excluidas.length ? ` Os números em falta (${info.excluidas.slice(0, -1).join(", ")} e ${info.excluidas.at(-1)}) correspondem a consultas sobre o Clube ou o Grupo consolidado, que podem ser consultadas no ficheiro 04_analises.sql do projeto.` : "");
 
+  $("#a-carregar")?.remove();
+  $("#conteudo").removeAttribute("aria-busy");
   construirSeccoes();
   construirKPIs();
   construirPesquisa();
@@ -954,6 +926,23 @@ async function iniciar() {
   sincronizarFiltros();
   escreverURL();
   window.addEventListener("hashchange", mostrarSeccao);
+  // A altura real da barra fixa define a margem de deslocamento para os títulos (varia com a largura do ecrã)
+  const barra = $(".barra");
+  new ResizeObserver(() => document.documentElement.style.setProperty("--altura-barra", `${Math.ceil(barra.getBoundingClientRect().height)}px`)).observe(barra);
+  // Indica quando a barra das secções tem mais secções à direita (ecrãs estreitos)
+  const nav = $(".abas-nav"), abas = $("#abas");
+  const marcarRolagem = () => {
+    nav.classList.toggle("rola", abas.scrollWidth > abas.clientWidth + 1);
+    nav.classList.toggle("fim", abas.scrollLeft + abas.clientWidth >= abas.scrollWidth - 2);
+  };
+  abas.addEventListener("scroll", marcarRolagem, { passive: true });
+  new ResizeObserver(marcarRolagem).observe(abas);
+  // No telemóvel, a linha das épocas abre e fecha com o botão «Épocas»
+  $("#f-alternar").addEventListener("click", ev => {
+    const faixa = $(".faixa-filtros"), aberto = faixa.classList.toggle("aberto");
+    ev.currentTarget.setAttribute("aria-expanded", String(aberto));
+    if (aberto) sincronizarFiltros();
+  });
   // As ligações internas (#secção) trocam o endereço sem criar entradas no histórico:
   // o botão «Voltar» do browser regressa à página anterior, e não à secção anterior do painel.
   document.addEventListener("click", ev => {

@@ -24,7 +24,7 @@ export const corSerie = papel => cor(SERIE[papel] ?? papel);
 export function aplicarTema() {
   // A mesma família e escala do resto do painel (variáveis --fonte e --t-* em style.css)
   Chart.defaults.font.family = cor("fonte");
-  Chart.defaults.font.size = 12;
+  Chart.defaults.font.size = 12.5;
   Chart.defaults.font.weight = "400";
   Chart.defaults.color = cor("suave");
   Chart.defaults.borderColor = cor("grelha");
@@ -48,7 +48,7 @@ export function barras(label, data, papel = "tinta", extra = {}) {
 export function linha(label, data, papel = "tinta", { oca = false, tracejada = false, ...extra } = {}) {
   return {
     label, data, borderColor: corSerie(papel), backgroundColor: oca ? cor("cartao") : corSerie(papel),
-    borderWidth: 2.4, borderDash: tracejada ? [6, 4] : [], pointRadius: tracejada ? 0 : 4, pointHoverRadius: 6,
+    borderWidth: 2.2, borderDash: tracejada ? [6, 4] : [], pointRadius: tracejada ? 0 : 3.5, pointHoverRadius: 6,
     pointBorderWidth: oca ? 2.2 : 0, pointBorderColor: corSerie(papel), tension: 0, spanGaps: false,
     ...extra,
   };
@@ -82,7 +82,7 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
       legend: {
         display: legenda, position: "top", align: "start",
         labels: {
-          boxWidth: 20, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 12.5, weight: "500" },
+          boxWidth: 14, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 13, weight: "500" },
           // Séries com cor por valor (verde/vermelho): a legenda usa um cinzento neutro, não a cor do primeiro valor
           generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart).map(l => {
             const ds = chart.data.datasets[l.datasetIndex];
