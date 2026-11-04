@@ -226,6 +226,8 @@ main:focus { outline: none; }
 .capa-credito:hover { color: #FFFFFF; text-decoration: underline; }
 .capa-solucoes img { object-position: 50% 45%; }
 .capa-taca img { object-position: 50% 25%; }
+.capa-rosa img { object-position: 50% 40%; }
+.capa-rosa-gastos img { object-position: 50% 30%; }
 #p-acionistas .tela, #p-acionistas-operacao .tela { height: 340px; }
 .capa-estadio img { height: clamp(170px, 24vw, 300px); object-position: 50% 45%; }
 
