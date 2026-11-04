@@ -180,7 +180,6 @@ const ICONES = {
   rentabilidade: '<path d="M18 6.6A7 7 0 1 0 18 17.4"/><path d="M4.5 10.2h9M4.5 13.8h9"/>',
   divida: '<circle cx="15" cy="6.5" r="4.6"/><text x="15" y="8.9" text-anchor="middle">€</text><path d="M2 14.5h3.2l3.3 2.2h4.7a1.4 1.4 0 0 0 0-2.8H9.8"/><path d="M8.5 16.7l5.8 1.6 6.4-3.3a1.5 1.5 0 0 0-1.4-2.6l-4.8 2"/><path d="M2 13v8"/>',
   desporto: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.6h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.5-1.5M14.5 15l2.8 3.8M9.5 15l-2.8 3.8M8 10.4L3.5 8.9"/>',
-  cenarios: '<path d="M3 6.5v11"/><path d="M3 12h2.5M8 12h2.5M13 12h7.5"/><path d="M16 7.5L20.5 12 16 16.5"/>',
   solucoes: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
   sql: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
@@ -196,8 +195,6 @@ const CAPAS = {
     sobre: "Vitória SC", titulo: "Outubro Rosa", credito: "Foto: Vitória SC (Instagram)", fonte: "https://scontent.fbru2-1.fna.fbcdn.net/v/t51.82787-15/865775105_18639420289039940_3970287875633482051_n.jpg?stp=dst-jpg_tt6&cstp=mx3072x4096&ctp=s3072x4096&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rhv7uzZXz2AQ7kNvwH8hL3V&_nc_oc=AdrQkFN9vpFo12ka--zwj8V-a6Oz3yfhHoN5JgVJZn6xh75MtgyiN20VfxpIbhCTYk3kshoDyAcuYHswIPKSrNBI&_nc_zt=23&_nc_ht=scontent.fbru2-1.fna&_nc_gid=QZFofMqpAEq586E0mFFX3w&_nc_ss=7b2a8&oh=00_AQSIZ7EQ1QjcHS1gtg3hxEvGWwQRpvydkARLtLwM8prbrQ&oe=6AF10D78", classe: "capa-rosa-gastos" },
   desporto: { img: "taca-liga", larg: 1600, alt: 781, alt_txt: "Jogadores do Vitória SC a festejar a conquista da Taça da Liga, com o troféu erguido ao centro.",
     sobre: "Época 2025/26", titulo: "Vencedor da Taça da Liga", credito: "Foto: Público", fonte: "https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&db=IMAGENS&type=JPG", classe: "capa-taca" },
-  cenarios: { img: "estadio", larg: 1400, alt: 581, alt_txt: "Estádio D. Afonso Henriques, em Guimarães, cheio e iluminado durante um jogo noturno.",
-    sobre: "Guimarães", titulo: "Estádio D. Afonso Henriques", credito: "Foto: AMAP", fonte: "https://www.amap.pt/p/campos-de-jogos-do-vitoria-sport-clube", classe: "capa-estadio" },
   solucoes: { img: "solucoes", larg: 1600, alt: 788, alt_txt: "Jakupovic e Camara, de camisola cor-de-rosa do Vitória SC, a festejar um golo.",
     titulo: "Propostas para a Sustentabilidade Financeira", credito: "Foto: Diário do Minho", fonte: "https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg", classe: "capa-solucoes" },
 };
@@ -205,8 +202,8 @@ const CAPAS = {
 function criarCapa(c) {
   const f = criar("figure", `capa ${c.classe ?? ""}`);
   f.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/${c.img}-800.webp?v=18 800w, img/${c.img}-${c.larg}.webp?v=18 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/${c.img}-${c.larg}.webp?v=18" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
+      <source type="image/webp" srcset="img/${c.img}-800.webp?v=19 800w, img/${c.img}-${c.larg}.webp?v=19 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/${c.img}-${c.larg}.webp?v=19" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
     <figcaption>${c.sobre ? '<p class="capa-sobre"></p>' : ""}<p class="capa-titulo"></p></figcaption>
     <a class="capa-credito" href="${c.fonte}" rel="noopener noreferrer"></a>`;
@@ -242,7 +239,7 @@ function construirSeccoes() {
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
     if (s.id === "previsao") { construirPrevisao(sec, paineis); return; }
-    if (s.id === "solucoes") { construirSolucoes(sec); return; }
+    if (s.id === "solucoes") { construirSolucoes(sec, paineis); return; }
     if (GRUPOS[s.id]) {
       const padrao = GRUPOS[s.id].at(-1)[0];
       GRUPOS[s.id].forEach(([g, titulo, texto]) => {
@@ -304,10 +301,14 @@ function construirPrevisao(sec, paineis) {
       </ul>
     </div>`;
   const fonte = criar("p", "nota-painel", "Fonte: Relatório e Contas da SAD 2025/26, relatório de gestão («Orçamento época desportiva 2026-2027», «Continuidade da atividade e perspetivas de reequilíbrio financeiro» e «Evolução previsível da sociedade»).");
-  sec.append(aviso, factos, grelhaDe(paineis), texto, fonte);
+  const tv = paineis.filter(p => p.grupo === "centralizacao");
+  const cabTV = criar("div", "grupo-cabeca");
+  cabTV.append(criar("h3", "", "Centralização dos direitos de TV"),
+    criar("p", "", "Simulações do projeto SQL para o regime centralizado (a partir de 2028/29). São ilustrativas: dependem do valor do contrato, do modelo de repartição e da classificação."));
+  sec.append(aviso, factos, grelhaDe(paineis.filter(p => !p.grupo)), texto, fonte, cabTV, grelhaDe(tv));
 }
 
-function construirSolucoes(sec) {
+function construirSolucoes(sec, paineis) {
   const q = n => Dados.linhas(n);
   const aviso = criar("p", "caixa-nota", "Propostas do autor, com base nos indicadores do painel. Não representam a posição da SAD nem constituem aconselhamento financeiro. A prioridade é alta quando o indicador principal está fora da referência.");
   const lista = criar("ol", "solucoes");
@@ -338,7 +339,12 @@ function construirSolucoes(sec) {
     }));
     lista.appendChild(li);
   });
-  sec.append(aviso, lista);
+  const cabEq = criar("div", "grupo-cabeca");
+  cabEq.append(criar("h3", "", "Ponto de partida: o equilíbrio"),
+    criar("p", "", "Simulação do projeto SQL: o que a venda de jogadores teria de render para a SAD não ter prejuízo, com a estrutura de 2025/26."));
+  const cabProp = criar("div", "grupo-cabeca");
+  cabProp.append(criar("h3", "", "Propostas"), criar("p", "", `${SOLUCOES.length} medidas, por ordem de área, com diagnóstico e indicadores a acompanhar.`));
+  sec.append(aviso, cabEq, grelhaDe(paineis), cabProp, lista);
 }
 
 function construirMetodologia() {
@@ -549,7 +555,7 @@ function estadoContas(ep) {
 
 function construirCartoesGeral() {
   const contagem = id => PAINEIS.filter(p => p.seccao === id).length;
-  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["previsao", "receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios", "solucoes"].includes(s.id)).map(s => {
+  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "previsao", "solucoes"].includes(s.id)).map(s => {
     const li = criar("li", "cartao-area");
     li.innerHTML = `<h4><a href="#${s.id}"></a></h4><p></p><span class="contagem"></span>`;
     $("a", li).textContent = s.nome;
@@ -812,7 +818,8 @@ function navegar(destino) {
 }
 
 function mostrarSeccao() {
-  const [id, alvo] = decodeURIComponent(location.hash.slice(1)).split("/");
+  let [id, alvo] = decodeURIComponent(location.hash.slice(1)).split("/");
+  if (id === "cenarios") { id = "previsao"; history.replaceState(null, "", `${location.pathname}${location.search}#previsao`); } // ligações antigas
   const seccao = SECCOES.some(s => s.id === id) ? id : "geral";
   const mudou = seccao !== estado.seccao;
   estado.seccao = seccao;

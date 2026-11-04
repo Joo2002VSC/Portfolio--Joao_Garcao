@@ -144,13 +144,12 @@ const coresSinal = v => (v === null || v === 0 ? cor("cinza") : v < 0 ? cor("ver
 
 export const SECCOES = [
   { id: "geral", nome: "Início", intro: "Os principais indicadores financeiros da SAD na época em destaque: síntese, leitura da época, evolução, estrutura acionista e pontos de entrada para a análise." },
-  { id: "previsao", nome: "Evolução Previsível", titulo: "Evolução Previsível da Sociedade", intro: "O que a Administração prevê para 2026/27 e para o plano de negócios 2026–2031, segundo o Relatório e Contas de 2025/26. São previsões e intenções, não resultados." },
   { id: "receitas", nome: "Receitas", intro: "A origem das receitas: a atividade corrente, a composição das vendas (incluindo os direitos de TV), as competições europeias e a venda de jogadores." },
   { id: "custos", nome: "Gastos", intro: "A evolução e a composição dos gastos operacionais: pessoal, fornecimentos e serviços externos, amortizações e outros gastos." },
   { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
   { id: "divida", nome: "Endividamento", intro: "Estrutura financeira (ativo, passivo e capitais próprios) e dívida financeira, encargos financeiros, fluxos de caixa e liquidez." },
   { id: "desporto", nome: "Futebol", intro: "Os resultados desportivos da equipa principal e a sua relação com os gastos." },
-  { id: "cenarios", nome: "Cenários", intro: "Simulações do projeto SQL. São ilustrativas: dependem de pressupostos sobre contratos e classificações." },
+  { id: "previsao", nome: "Evolução Previsível", titulo: "Evolução Previsível da Sociedade", intro: "O que a Administração prevê para 2026/27 e para o plano de negócios 2026–2031, segundo o Relatório e Contas de 2025/26, e simulações da centralização dos direitos de TV. São previsões, intenções e cenários, não resultados." },
   { id: "solucoes", nome: "Soluções", intro: "Propostas para a sustentabilidade financeira da SAD, a partir dos indicadores da última época disponível. Cada proposta junta o diagnóstico, as medidas e os indicadores a acompanhar." },
   { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel: objetivo, código, técnicas e resultado." },
   { id: "metodologia", nome: "Metodologia e Fontes", intro: "Fontes, tratamento dos dados, critérios de comparação, convenções e limitações." },
@@ -692,9 +691,9 @@ export const PAINEIS = [
     descricao: "Classificação, competições europeias, troféus, vendas e serviços prestados, gastos com pessoal e resultado líquido da SAD.",
     conclusao: rows => `No intervalo: ${plural(contar(rows, r => r.europa && r.europa !== "—"), "época", "épocas")} com competições europeias e ${plural(contar(rows, r => r.trofeu), "troféu", "troféus")}.`,
   },
-  /* ---------------- Cenários ---------------- */
+  /* ---- Antigos «Cenários»: o equilíbrio vai para Soluções; a centralização, para Evolução Previsível ---- */
   {
-    id: "equilibrio", seccao: "cenarios", consulta: 25, factos: true, largo: true,
+    id: "equilibrio", seccao: "solucoes", consulta: 25, factos: true, largo: true,
     pergunta: "Quanto teria de render a venda de jogadores para a SAD atingir o equilíbrio?",
     descricao: "Ponto de equilíbrio de 2025/26, a partir do resultado com direitos de atletas e do resultado líquido.",
     factos: rows => {
@@ -708,7 +707,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "centralizacao", seccao: "cenarios", consulta: 55, largo: true,
+    id: "centralizacao", seccao: "previsao", grupo: "centralizacao", consulta: 55, largo: true,
     pergunta: "A centralização dos direitos de TV elimina o défice?",
     descricao: "Parte do défice antes de vendas (média de 2023/24 a 2025/26) que os direitos de TV centralizados cobririam, por valor do contrato e lugar na Liga. 100% significaria eliminar o défice sem vender jogadores.",
     construir: rows => {
@@ -734,7 +733,7 @@ export const PAINEIS = [
     nota: "Simulação ilustrativa: o modelo de repartição dos direitos de TV centralizados ainda não está definido.",
   },
   {
-    id: "tv-por-lugar", seccao: "cenarios", consulta: 48,
+    id: "tv-por-lugar", seccao: "previsao", grupo: "centralizacao", consulta: 48,
     pergunta: "Quanto receberia o Vitória com os direitos de TV centralizados?",
     descricao: "Contrato de 250 M€: parte igual e parte por mérito (ilustrativa), por classificação na Liga, sem a componente de audiências.",
     construir: rows => {
@@ -755,7 +754,7 @@ export const PAINEIS = [
     nota: "Simulação ilustrativa da consulta 48.",
   },
   {
-    id: "parte-igual", seccao: "cenarios", consulta: 26, tabela: true,
+    id: "parte-igual", seccao: "previsao", grupo: "centralizacao", consulta: 26, tabela: true,
     pergunta: "Quanto vale a parte igual por clube?",
     descricao: "Parte igual estimada por clube para três valores do contrato centralizado (2028/29), face aos direitos de TV do Vitória em 2024/25.",
     conclusao: rows => `Só a parte igual valeria entre ${pct(rows[0].parte_igual_em_pct_do_atual)} e ${pct(ultimo(rows).parte_igual_em_pct_do_atual)} dos direitos de TV atuais.`,
@@ -1091,8 +1090,7 @@ export const ORDEM = {
   receitas: ["rendimentos", "composicao-vendas", "vendas-por-euro", "valor-europa", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
   custos: ["gastos-rubricas", "custos-fixos", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
   desporto: ["classificacoes", "regressao", "custo-ponto", "espectadores", "treinadores", "epocas-desporto"],
-  cenarios: ["centralizacao", "tv-por-lugar", "parte-igual", "equilibrio"],
-  previsao: ["previsao-orcamento", "previsao-transferencias"],
+  previsao: ["previsao-orcamento", "previsao-transferencias", "centralizacao", "tv-por-lugar", "parte-igual"],
   rentabilidade: ["dependencia-vendas", "resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
   divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",
     "divida-financeira", "juros-receitas", "taxas", "curto-prazo", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",
