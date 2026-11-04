@@ -9,6 +9,9 @@ import { entrada, transicao } from "./animacoes.js";
 const raiz = document.documentElement;
 export const cor = nome => getComputedStyle(raiz).getPropertyValue(`--${nome}`).trim();
 
+/** Fonte para texto desenhado diretamente no canvas (rótulos e linhas de referência) */
+export const letra = (peso, px) => `${peso} ${px}px ${cor("fonte")}`;
+
 /** Papéis das séries categóricas: só cinzentos. O verde, o vermelho e o amarelo têm significado
     (positivo, negativo/risco, alerta) e só se usam através de coresSinal e coresCondicao (paineis.js). */
 export const PAPEIS = ["tinta", "cinza-escuro", "cinza", "cinza-claro"];
@@ -19,8 +22,10 @@ const SERIE = { "tinta": "serie-1", "cinza-escuro": "serie-2", "cinza": "serie-3
 export const corSerie = papel => cor(SERIE[papel] ?? papel);
 
 export function aplicarTema() {
-  Chart.defaults.font.family = '"Archivo", system-ui, sans-serif';
+  // A mesma família e escala do resto do painel (variáveis --fonte e --t-* em style.css)
+  Chart.defaults.font.family = cor("fonte");
   Chart.defaults.font.size = 12;
+  Chart.defaults.font.weight = "400";
   Chart.defaults.color = cor("suave");
   Chart.defaults.borderColor = cor("grelha");
 }
@@ -77,7 +82,7 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
       legend: {
         display: legenda, position: "top", align: "start",
         labels: {
-          boxWidth: 20, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 12.5 },
+          boxWidth: 20, boxHeight: 10, padding: 14, color: cor("texto"), font: { size: 12.5, weight: "500" },
           // Séries com cor por valor (verde/vermelho): a legenda usa um cinzento neutro, não a cor do primeiro valor
           generateLabels: chart => Chart.defaults.plugins.legend.labels.generateLabels(chart).map(l => {
             const ds = chart.data.datasets[l.datasetIndex];
@@ -89,7 +94,7 @@ export function opcoes({ unidade = "eur", legenda = true, indice = true, empilha
       tooltip: {
         backgroundColor: cor("dica-fundo"), titleColor: cor("dica-texto"), bodyColor: cor("dica-texto"), footerColor: cor("dica-suave"),
         borderColor: cor("dica-borda"), borderWidth: 1, padding: 10, cornerRadius: 6, boxPadding: 5,
-        titleFont: { weight: "700", size: 12.5 }, footerFont: { weight: "400" }, usePointStyle: false,
+        titleFont: { weight: "600", size: 12.5 }, bodyFont: { weight: "400", size: 12.5 }, footerFont: { weight: "400", size: 12 }, usePointStyle: false,
         callbacks: { label: c => ` ${c.dataset.label}: ${fmtTooltip(c.raw)}` },
         filter: c => c.raw !== null && c.raw !== undefined,
       },
@@ -140,7 +145,7 @@ export const referencias = {
       ctx.stroke();
       if (rotulo) {
         ctx.setLineDash([]);
-        ctx.font = '700 11px "Archivo", sans-serif';
+        ctx.font = letra(600, 11.5);
         ctx.fillStyle = cor("texto");
         // Rótulo à esquerda da linha, para não sair do gráfico quando a linha está no limite direito
         if (chart.options.indexAxis === "y") { ctx.textAlign = "right"; ctx.fillText(rotulo, p - 6, a.top + 10); }
@@ -158,7 +163,7 @@ export const valoresNasBarras = {
     if (!op?.formatar) return;
     const { ctx } = chart;
     ctx.save();
-    ctx.font = '700 11.5px "Archivo", sans-serif';
+    ctx.font = letra(600, 11.5);
     ctx.fillStyle = cor("texto"); ctx.textBaseline = "middle";
     chart.data.datasets.forEach((ds, d) => {
       const meta = chart.getDatasetMeta(d);

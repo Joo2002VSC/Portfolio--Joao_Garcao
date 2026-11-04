@@ -2,7 +2,7 @@
 // como se desenha e a conclusão, calculada a partir dos dados filtrados.
 // Nenhum valor é inventado aqui: tudo sai das linhas das consultas.
 
-import { barras, linha, areaAcima, opcoes, cor } from "./graficos.js";
+import { barras, linha, areaAcima, opcoes, cor, letra } from "./graficos.js";
 import { euros, pct, razao, vezes, racio, inteiro, decimal, lugar, milhoes, pp } from "./formato.js";
 import { media, soma, dividir, ultimo, numeros, linhas } from "./dados.js";
 
@@ -65,7 +65,7 @@ const rotulosFatias = {
       const v = ds.data[i];
       if (v < 8) return; // fatias pequenas: o valor fica na legenda e na dica
       const { x, y } = arco.tooltipPosition();
-      ctx.font = `800 ${v > 20 ? 17 : 13}px "Archivo Expanded", sans-serif`;
+      ctx.font = letra(700, v > 20 ? 17 : 13);
       ctx.fillStyle = ds.texto[i];
       ctx.fillText(pct(v), x, y);
     });
@@ -86,7 +86,7 @@ function circular(rows) {
     options: {
       responsive: true, maintainAspectRatio: false, layout: { padding: 12 },
       plugins: {
-        legend: { position: "bottom", labels: { color: cor("texto"), boxWidth: 16, boxHeight: 16, padding: 14, font: { size: 13, weight: "700" } } },
+        legend: { position: "bottom", labels: { color: cor("texto"), boxWidth: 16, boxHeight: 16, padding: 14, font: { size: 13, weight: "600" } } },
         tooltip: {
           backgroundColor: cor("dica-fundo"), titleColor: cor("dica-texto"), bodyColor: cor("dica-texto"), borderColor: cor("dica-borda"), borderWidth: 1, padding: 10,
           callbacks: { label: c => ` ${rows[c.dataIndex].acionista}: ${pct(rows[c.dataIndex].pct_capital)} do capital (ações da categoria ${rows[c.dataIndex].categoria})` },
@@ -999,7 +999,7 @@ const rotulosPontos = {
     ctx.textBaseline = "middle";
     ordem.forEach(i => {
       const p = meta.data[i], forte = raios[i] > 8;
-      ctx.font = `${forte ? 700 : 400} 11.5px "Archivo", sans-serif`;
+      ctx.font = letra(forte ? 600 : 400, 11.5);
       ctx.fillStyle = forte ? cor("texto") : cor("suave");
       const larg = ctx.measureText(dados[i].epoca).width;
       const direita = p.x + 12 + larg < chart.chartArea.right;

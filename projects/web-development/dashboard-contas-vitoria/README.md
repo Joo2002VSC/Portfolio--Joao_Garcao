@@ -50,6 +50,7 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 - HTML semântico, navegação completa por teclado e ligação para saltar para o conteúdo.
 - Cada gráfico tem uma descrição para leitores de ecrã e uma alternativa em tabela.
 - Paleta do projeto SQL (preto, amarelo e cinzentos), com verde e vermelho reservados para evolução favorável e desfavorável. A cor nunca é a única indicação.
+- Tipografia: Inter (texto, títulos e números, com algarismos tabulares nos indicadores e tabelas) e IBM Plex Mono (código SQL e identificadores das consultas), alojadas na pasta `fontes/` com licença OFL; escala de tamanhos e pesos centralizada em variáveis CSS.
 - Contraste verificado em modo claro e escuro.
 - Respeita a opção do sistema para reduzir o movimento.
 - Português europeu em toda a interface, com glossário e convenções de apresentação descritas na secção Metodologia.
@@ -63,7 +64,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=14`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=15`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 
