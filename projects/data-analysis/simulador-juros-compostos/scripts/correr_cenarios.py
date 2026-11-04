@@ -131,16 +131,21 @@ def grafico_alocacao(base) -> None:
     plt.close(fig)
 
 
+def pct(v) -> str:
+    return "—" if v is None else f"{v * 100:.1f} %".replace(".", ",")
+
+
 def tabela_md(resultados: dict) -> str:
     linhas = [
-        "| Cenário | Investido | p10 | Mediana | p90 | Mediana (€ de hoje) | Juros simples | P(objetivo) | P(ganho) |",
+        "| Cenário | Investido | Mediana (nominal) | Mediana (€ de hoje) | P10–P90 (€ de hoje) | TIR real mediana | P(objetivo) | P(perda real) | Queda máx. mediana |",
         "|---|--:|--:|--:|--:|--:|--:|--:|--:|",
     ]
     for nome, r in resultados.items():
         s = r.resumo_final()
         linhas.append(
-            f"| {nome} | {fmt(s['investido_medio'])} | {fmt(s['p10'])} | **{fmt(s['mediana'])}** | {fmt(s['p90'])} "
-            f"| {fmt(s['mediana_real'])} | {fmt(s['deterministico'])} | {s['prob_objetivo']:.0%} | {s['prob_ganho']:.0%} |"
+            f"| {nome} | {fmt(s['investido_medio'])} | {fmt(s['mediana_nominal'])} | **{fmt(s['mediana_real'])}** "
+            f"| {fmt(s['p10_real'])} – {fmt(s['p90_real'])} | {pct(s['tir_real'][50])} | {pct(s['prob_objetivo'])} "
+            f"| {pct(s['prob_perda_real'])} | {pct(s['drawdown_mediano'])} |"
         )
     return "\n".join(linhas)
 
@@ -164,10 +169,15 @@ rebalanceamento anual, de {base.anos[0]} a {base.anos[-1]}. Objetivo: {fmt(p.obj
 
 {tabela_md(resultados)}
 
-- **p10 / p90**: 10 % dos cenários terminam abaixo / acima destes valores.
-- **Juros simples**: o que daria uma calculadora clássica com o retorno médio, sem volatilidade nem choques.
+Todos os cenários usam o mesmo plano e a mesma semente aleatória (números aleatórios comuns),
+por isso as diferenças entre linhas vêm dos pressupostos de mercado e não do acaso da simulação.
+
+- **Mediana**: metade dos cenários termina acima deste valor. *Nominal* = euros do ano final; *€ de hoje* = poder de compra atual.
+- **P10–P90**: 80 % dos cenários terminam dentro deste intervalo.
+- **TIR real mediana**: rentabilidade anual ponderada pelo dinheiro, já descontada a inflação.
 - **P(objetivo)**: probabilidade de chegar ao objetivo em poder de compra de hoje.
-- **P(ganho)**: probabilidade de acabar com mais dinheiro (nominal) do que o investido.
+- **P(perda real)**: probabilidade de o valor final valer menos do que o dinheiro investido, ambos em € de hoje.
+- **Queda máx. mediana**: maior queda, do pico ao mínimo, da unidade de participação da carteira (*drawdown*).
 """
     (RAIZ / "resultados.md").write_text(texto, encoding="utf-8")
     print(tabela_md(resultados))

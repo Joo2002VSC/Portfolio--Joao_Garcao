@@ -1,5 +1,6 @@
 # Testes do projeto "Simulador de Juros Compostos" (projects/data-analysis/simulador-juros-compostos).
-# Corre sempre que algo muda nessa pasta: testa o modelo e confirma que os gráficos se geram.
+# Corre sempre que algo muda nessa pasta: testa os dois motores (Python e JavaScript), compara-os
+# e confirma que os gráficos e os estudos de robustez se geram.
 name: simulador-juros-compostos
 
 on:
@@ -20,9 +21,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
       - name: Instalar dependências
         run: pip install -r requirements.txt
-      - name: Testes do modelo
+      - name: Testes do motor JavaScript
+        run: node scripts/testes_web.js
+      - name: Testes do motor Python e comparação entre motores
         run: python scripts/testes.py
       - name: Gerar cenários e gráficos
         run: python scripts/correr_cenarios.py
+      - name: Estudos de robustez
+        run: python scripts/convergencia.py
