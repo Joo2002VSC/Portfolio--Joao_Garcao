@@ -208,10 +208,10 @@ const ICONES = {
   perguntas: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.4"/><circle cx="12" cy="16.8" r=".4"/>',
   receitas: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
   custos: '<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>',
-  rentabilidade: '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
-  divida: '<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8"/><path d="M3 20.5h18"/>',
+  rentabilidade: '<path d="M18 6.6A7 7 0 1 0 18 17.4"/><path d="M4.5 10.2h9M4.5 13.8h9"/>',
+  divida: '<circle cx="15" cy="6.5" r="4.6"/><text x="15" y="8.9" text-anchor="middle">€</text><path d="M2 14.5h3.2l3.3 2.2h4.7a1.4 1.4 0 0 0 0-2.8H9.8"/><path d="M8.5 16.7l5.8 1.6 6.4-3.3a1.5 1.5 0 0 0-1.4-2.6l-4.8 2"/><path d="M2 13v8"/>',
   desporto: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.6h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.5-1.5M14.5 15l2.8 3.8M9.5 15l-2.8 3.8M8 10.4L3.5 8.9"/>',
-  cenarios: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1.5 14h5M9.5 8h5M17.5 16h5"/>',
+  cenarios: '<path d="M3 6.5v11"/><path d="M3 12h2.5M8 12h2.5M13 12h7.5"/><path d="M16 7.5L20.5 12 16 16.5"/>',
   solucoes: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
   sql: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
@@ -331,7 +331,14 @@ function construirSolucoes(sec) {
     }));
     lista.appendChild(li);
   });
-  sec.append(aviso, lista);
+  const capa = criar("figure", "capa capa-solucoes");
+  capa.innerHTML = `<picture>
+      <source type="image/webp" srcset="img/solucoes-800.webp?v=12 800w, img/solucoes-1600.webp?v=12 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/solucoes-1600.webp?v=12" width="1600" height="788" loading="lazy" alt="Jakupovic e Camara, de camisola cor-de-rosa do Vitória SC, a festejar um golo.">
+    </picture>
+    <figcaption><p class="capa-sobre">Jakupovic e Camara</p><p class="capa-titulo">Propostas para a Sustentabilidade Financeira</p></figcaption>
+    <a class="capa-credito" href="https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg">Foto: Diário do Minho</a>`;
+  sec.append(capa, aviso, lista);
 }
 
 function construirMetodologia() {
@@ -595,6 +602,7 @@ function construirFiltros() {
 
   // Pegas do período: atualizam o texto ao arrastar e os gráficos ao largar (ou a cada tecla)
   const mover = qual => {
+    ancora = null;
     let i = Number(ini.value), f = Number(fim.value);
     if (i > f) { if (qual === "inicio") i = f; else f = i; ini.value = i; fim.value = f; }
     estado.inicio = e[i]; estado.fim = e[f];
@@ -612,6 +620,7 @@ function construirFiltros() {
     const b = criar("button", "atalho", rot);
     b.type = "button"; b.dataset.inicio = e[Math.max(0, k)];
     b.addEventListener("click", () => {
+      ancora = null;
       Object.assign(estado, { inicio: b.dataset.inicio, fim: e[n - 1] });
       ajustarDestaque();
       atualizar({ recriar: true });
@@ -627,9 +636,12 @@ function construirFiltros() {
     b.setAttribute("role", "radio");
     b.setAttribute("aria-label", x);
     b.title = x;
-    b.addEventListener("click", () => escolherDestaque(x));
+    b.addEventListener("click", () => clicarEpoca(x));
     grupo.appendChild(b);
   });
+  // O segundo clique só conta se for logo a seguir, na linha do tempo; Esc ou um clique fora cancelam
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape" && ancora) { ancora = null; sincronizarFiltros(); } });
+  document.addEventListener("click", ev => { if (ancora && !ev.target.closest("#f-epocas")) { ancora = null; sincronizarFiltros(); } });
   grupo.addEventListener("keydown", ev => {
     const passo = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
     const vis = epocasVisiveis();
@@ -639,10 +651,34 @@ function construirFiltros() {
     if (ev.key === "End") alvo = vis[vis.length - 1];
     if (!alvo) return;
     ev.preventDefault();
+    ancora = null;
     escolherDestaque(alvo);
     $(`.epoca-btn[data-epoca="${alvo}"]`, grupo).focus();
   });
-  $("#f-repor").addEventListener("click", () => { Object.assign(estado, { ...PADRAO, seccao: estado.seccao }); atualizar({ recriar: true }); });
+  $("#f-repor").addEventListener("click", () => { ancora = null; Object.assign(estado, { ...PADRAO, seccao: estado.seccao }); atualizar({ recriar: true }); });
+}
+
+/** Época do primeiro clique, à espera de um segundo para definir o período */
+let ancora = null;
+
+function clicarEpoca(x) {
+  const e = Dados.epocas();
+  if (ancora && x !== ancora) {
+    // Segundo clique: período entre as duas épocas; fica em destaque a última clicada
+    const [a, b] = [e.indexOf(ancora), e.indexOf(x)].sort((p, q) => p - q);
+    Object.assign(estado, { inicio: e[a], fim: e[b], epoca: x });
+    ancora = null;
+    atualizar({ recriar: true });
+    return;
+  }
+  if (ancora === x) { ancora = null; sincronizarFiltros(); return; }
+  // Primeiro clique: põe a época em destaque (alargando o período, se estiver fora) e guarda-a como âncora
+  ancora = x;
+  const i = e.indexOf(x), mudaPeriodo = i < e.indexOf(estado.inicio) || i > e.indexOf(estado.fim);
+  if (i < e.indexOf(estado.inicio)) estado.inicio = x;
+  if (i > e.indexOf(estado.fim)) estado.fim = x;
+  estado.epoca = x;
+  atualizar({ recriar: mudaPeriodo });
 }
 
 function escolherDestaque(ep) {
@@ -674,8 +710,14 @@ function sincronizarFiltros() {
     const ativa = b.dataset.epoca === estado.epoca, dentro = vis.includes(b.dataset.epoca);
     b.setAttribute("aria-checked", String(ativa));
     b.tabIndex = ativa ? 0 : -1;
-    b.disabled = !dentro;
+    b.classList.toggle("fora", !dentro);
+    b.classList.toggle("ancora", b.dataset.epoca === ancora);
   });
+  const ajuda = $("#ajuda-destaque");
+  ajuda.textContent = ancora
+    ? `Clique noutra época para analisar o período entre ${ancora} e essa época (Esc para cancelar).`
+    : "Clique numa época para a pôr em destaque e depois noutra para definir o período entre as duas. Também pode arrastar as pegas amarelas.";
+  ajuda.classList.toggle("ativa", !!ancora);
   document.querySelectorAll(".atalho").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.inicio === estado.inicio && estado.fim === e[n - 1])));
   // Em ecrãs estreitos, mantém visível a época em destaque na linha do tempo (sem mexer na página)
   const rolar = $(".linha-tempo-rolar"), btn = $(".epoca-btn[aria-checked='true']");
@@ -698,6 +740,12 @@ function atualizar({ recriar = false } = {}) {
 }
 
 /* ====================== Navegação ====================== */
+
+/** Muda de secção substituindo o endereço atual (sem nova entrada no histórico do browser) */
+function navegar(destino) {
+  history.replaceState(null, "", `${location.pathname}${location.search}#${destino}`);
+  mostrarSeccao();
+}
 
 function mostrarSeccao() {
   const [id, alvo] = decodeURIComponent(location.hash.slice(1)).split("/");
@@ -808,7 +856,7 @@ async function iniciar() {
   construirCartoesGeral();
   construirMetodologia();
   construirFiltros();
-  explorador = montarExplorador($("[data-explorador]"), { aoSelecionar: n => { location.hash = `sql/${n}`; } });
+  explorador = montarExplorador($("[data-explorador]"), { aoSelecionar: n => navegar(`sql/${n}`) });
   prepararTema();
   await document.fonts.ready;
   aplicarTema();
@@ -816,6 +864,16 @@ async function iniciar() {
   sincronizarFiltros();
   escreverURL();
   window.addEventListener("hashchange", mostrarSeccao);
+  // As ligações internas (#secção) trocam o endereço sem criar entradas no histórico:
+  // o botão «Voltar» do browser regressa à página anterior, e não à secção anterior do painel.
+  document.addEventListener("click", ev => {
+    const a = ev.target.closest('a[href^="#"]');
+    if (!a || ev.defaultPrevented || ev.button !== 0 || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
+    const destino = a.getAttribute("href").slice(1);
+    ev.preventDefault();
+    if (destino === "conteudo") { $("#conteudo").focus(); $("#conteudo").scrollIntoView(); return; } // «Saltar para o conteúdo»
+    navegar(destino);
+  });
   mostrarSeccao();
 }
 

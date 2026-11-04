@@ -101,6 +101,8 @@ main:focus { outline: none; }
 .abas a:hover svg { transform: translateY(-1px) scale(1.06); }
 .abas a[aria-current="page"] { color: #111111; background: var(--amarelo); }
 .abas a[aria-current="page"] svg { stroke: #111111; filter: none; }
+.abas svg text { fill: var(--icone, #FFFFFF); stroke: none; font: 700 6.6px "Archivo", sans-serif; }
+.abas a[aria-current="page"] svg text { fill: #111111; }
 /* Cor de cada ícone pelo que a secção representa (o nome por baixo repete a informação) */
 .abas a[data-seccao="geral"] { --icone: #FFFFFF; }
 .abas a[data-seccao="perguntas"] { --icone: #FAEB8A; }
@@ -139,7 +141,10 @@ main:focus { outline: none; }
   background: var(--superficie); color: var(--suave); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer; }
 .epoca-btn:hover:not(:disabled) { border-color: var(--texto); color: var(--texto); }
 .epoca-btn[aria-checked="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--cartao); box-shadow: inset 0 -3px 0 var(--amarelo); }
-.epoca-btn:disabled { opacity: .35; cursor: not-allowed; }
+/* Épocas fora do período: esbatidas, mas clicáveis (um clique alarga o período) */
+.epoca-btn.fora { opacity: .45; }
+.epoca-btn.fora:hover { opacity: 1; }
+.epoca-btn.ancora { outline: 2px dashed var(--amarelo); outline-offset: 2px; }
 .intervalo { position: relative; height: 26px; margin: 4px calc((100% - (var(--n) - 1) * var(--gap)) / var(--n) / 2) 0; }
 .trilho { position: absolute; left: 0; right: 0; top: 11px; height: 4px; border-radius: 2px; background: var(--linha); }
 .preenchido { position: absolute; top: 0; bottom: 0; background: var(--amarelo); border-radius: 2px; }
@@ -155,6 +160,7 @@ main:focus { outline: none; }
 .intervalo input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--tinta); outline-offset: 2px; }
 .intervalo input[type="range"]:focus-visible::-moz-range-thumb { outline: 3px solid var(--tinta); outline-offset: 2px; }
 .ajuda { margin: 2px 0 0; font-size: 12.5px; color: var(--mudo); }
+.ajuda.ativa { color: var(--texto); font-weight: 700; }
 
 /* Capa da visão geral: fotografia do plantel */
 .capa { position: relative; margin: 0 0 28px; border-radius: var(--raio); overflow: hidden; background: #111111; }
@@ -168,6 +174,7 @@ main:focus { outline: none; }
 .capa-credito { position: absolute; right: 10px; bottom: 10px; font-size: 11.5px; color: rgba(255, 255, 255, .85); background: rgba(0, 0, 0, .45);
   padding: 2px 8px; border-radius: 3px; text-decoration: none; }
 .capa-credito:hover { color: #FFFFFF; text-decoration: underline; }
+.capa-solucoes img { object-position: 50% 45%; }
 .capa-estadio img { height: clamp(170px, 24vw, 300px); object-position: 50% 45%; }
 
 /* ---------- 4. Secções e blocos ---------- */
