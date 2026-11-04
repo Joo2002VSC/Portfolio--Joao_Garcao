@@ -220,6 +220,8 @@ main:focus { outline: none; }
 .capa-solucoes img { object-position: 50% 45%; }
 .capa-taca img { object-position: 50% 25%; }
 .capa-bandeira-preta img { object-position: 50% 34%; }
+.capa-charles img { object-position: 50% 12%; }
+.capa-neno img { object-position: 50% 45%; }
 .capa-rosa img { object-position: 50% 40%; }
 .capa-rosa-gastos img { object-position: 50% 30%; }
 #p-acionistas .tela, #p-acionistas-operacao .tela { height: 340px; }

@@ -66,7 +66,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=23`) com `python3 scripts/versao.py 24` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
+Ao publicar alterações, aumente o número de versão (`?v=24`) com `python3 scripts/versao.py 25` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
 
 ### Limitações
 
