@@ -7,32 +7,32 @@
   <meta name="description" content="Painel de análise financeira da Vitória Sport Clube – Futebol, SAD, de 2012/13 a 2025/26, construído sobre consultas SQL a uma base de dados SQLite.">
   <meta name="color-scheme" content="light dark">
   <!-- Segurança: só recursos do próprio site; o único script em linha (mapa de importação) é autorizado pelo hash -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-HsE3H0yCwdFzFvgG1FNAZkE6G7YLQch8NxK01UG/8ww='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-8xV/2tj34QCQ5QnsHgFJFSxesK4H8aBWP2bCpv1AgK8='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=21" media="(prefers-color-scheme: light)">
-  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=21" media="(prefers-color-scheme: dark)">
-  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=21">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=21">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=22" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32-claro.png?v=22" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/icone-192.png?v=22">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=22">
   <meta name="theme-color" content="#343A40">
   <!-- Versão dos ficheiros: muda o número ao publicar alterações, para o browser não misturar versões em cache -->
   <script type="importmap">
   {
     "imports": {
-      "./js/animacoes.js": "./js/animacoes.js?v=21",
-      "./js/conclusoes.js": "./js/conclusoes.js?v=21",
-      "./js/dados.js": "./js/dados.js?v=21",
-      "./js/explorador.js": "./js/explorador.js?v=21",
-      "./js/formato.js": "./js/formato.js?v=21",
-      "./js/graficos.js": "./js/graficos.js?v=21",
-      "./js/paineis.js": "./js/paineis.js?v=21",
-      "./js/tabelas.js": "./js/tabelas.js?v=21"
+      "./js/animacoes.js": "./js/animacoes.js?v=22",
+      "./js/conclusoes.js": "./js/conclusoes.js?v=22",
+      "./js/dados.js": "./js/dados.js?v=22",
+      "./js/explorador.js": "./js/explorador.js?v=22",
+      "./js/formato.js": "./js/formato.js?v=22",
+      "./js/graficos.js": "./js/graficos.js?v=22",
+      "./js/paineis.js": "./js/paineis.js?v=22",
+      "./js/tabelas.js": "./js/tabelas.js?v=22"
     }
   }
   </script>
   <link rel="preload" href="fontes/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fontes/Inter-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fontes/Inter-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
   <a class="saltar" href="#conteudo">Saltar para o conteúdo</a>
@@ -40,7 +40,7 @@
   <header class="topo gutter">
     <div class="dentro">
       <a class="marca" href="#geral" aria-label="As Contas da Vitória SC SAD: início">
-        <img class="icone" src="img/icone-claro.png?v=21" alt="" width="47" height="60">
+        <img class="icone" src="img/icone-claro.png?v=22" alt="" width="47" height="60">
         <h1>As Contas da Vitória SC SAD</h1>
       </a>
     </div>
@@ -109,8 +109,8 @@
       <section id="sec-geral">
         <figure class="capa">
           <picture>
-            <source type="image/webp" srcset="img/plantel-800.webp?v=21 800w, img/plantel-1600.webp?v=21 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
-            <img src="img/plantel-1600.webp?v=21" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
+            <source type="image/webp" srcset="img/plantel-800.webp?v=22 800w, img/plantel-1600.webp?v=22 1600w" sizes="(max-width: 1240px) 100vw, 1240px">
+            <img src="img/plantel-1600.webp?v=22" width="1600" height="875" alt="Plantel da equipa principal do Vitória SC, de equipamento preto, alinhado para a fotografia de grupo antes de um jogo.">
           </picture>
           <a class="capa-credito" href="https://x.com/VitoriaSC1922/status/2111445705810452710" rel="noopener noreferrer">Fonte: Vitória SC (@VitoriaSC1922)</a>
         </figure>
@@ -199,7 +199,7 @@
           <li><span class="rotulo-claro">Organização dos dados</span><strong>Base de dados SQLite</strong><span>Projeto <a href="https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/tree/main/projects/data-analysis/contas-vitoria-sql" rel="noopener noreferrer">contas-vitoria-sql</a></span></li>
           <li><span class="rotulo-claro">Período</span><strong data-intervalo>2012/13 – 2025/26</strong><span><span data-n-epocas>14</span> épocas; exercícios de 1 de julho a 30 de junho</span></li>
           <li><span class="rotulo-claro">Exportação dos dados</span><strong data-gerado>—</strong><span>Data em que as consultas SQL foram executadas e os resultados gravados em JSON</span></li>
-          <li><span class="rotulo-claro">Imagens</span><strong>Fotografias</strong><span>Plantel: <a href="https://x.com/VitoriaSC1922/status/2111445705810452710" rel="noopener noreferrer">Vitória SC no X (@VitoriaSC1922)</a>. Jakupovic e Camara: <a href="https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg" rel="noopener noreferrer">Diário do Minho</a>. Bandeiras: <a href="https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" rel="noopener noreferrer">Vitória SC</a>. Taça da Liga: <a href="https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&amp;db=IMAGENS&amp;type=JPG" rel="noopener noreferrer">Público</a>. Outubro Rosa: Vitória SC (Facebook e Instagram).</span></li>
+          <li><span class="rotulo-claro">Imagens</span><strong>Fotografias</strong><span>Plantel: <a href="https://x.com/VitoriaSC1922/status/2111445705810452710" rel="noopener noreferrer">Vitória SC no X (@VitoriaSC1922)</a>. Jakupovic e Camara: <a href="https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg" rel="noopener noreferrer">Diário do Minho</a>. Bandeiras: <a href="https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" rel="noopener noreferrer">Vitória SC</a>. Taça da Liga: <a href="https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&amp;db=IMAGENS&amp;type=JPG" rel="noopener noreferrer">Público</a>. Outubro Rosa: Vitória SC (Facebook e Instagram). Bandeira preta: <a href="https://vitoriasc.pt/wp-content/uploads/2025/07/adeptos_40-2-2048x1365.jpg" rel="noopener noreferrer">Vitória SC</a>.</span></li>
           <li><span class="rotulo-claro">Estrutura acionista</span><strong>Relatório e Contas 2025/26</strong><span>Nota 1 e relatório de gestão: único dado do painel que não vem da base SQL</span></li>
           <li><span class="rotulo-claro">Comparação com outros clubes</span><strong>Relatórios e Contas 2024/25</strong><span>Braga SAD, Famalicão SAD e Gil Vicente SDUQ; classificação e espectadores: <a href="https://en.wikipedia.org/wiki/2024%E2%80%9325_Primeira_Liga" rel="noopener noreferrer">Wikipédia</a></span></li>
           <li><span class="rotulo-claro">Âmbito</span><strong>Apenas a SAD</strong><span>Sem as contas do Clube nem as consolidadas; outros clubes só na secção Comparação. Projeto pessoal, sem ligação oficial ao Vitória Sport Clube.</span></li>
@@ -288,7 +288,7 @@
   <footer class="rodape gutter">
     <div class="dentro">
       <div class="rodape-marca">
-        <img src="img/icone-claro.png?v=21" alt="" width="28" height="36">
+        <img src="img/icone-claro.png?v=22" alt="" width="28" height="36">
         <div>
           <p class="rodape-titulo">As Contas da Vitória SC SAD</p>
           <p>© <span data-ano>2026</span> João Garção. Todos os direitos reservados.</p>
@@ -302,7 +302,7 @@
     </div>
   </footer>
 
-  <script src="js/vendor/chart.umd.min.js?v=21"></script>
-  <script type="module" src="js/app.js?v=21"></script>
+  <script src="js/vendor/chart.umd.min.js?v=22"></script>
+  <script type="module" src="js/app.js?v=22"></script>
 </body>
 </html>

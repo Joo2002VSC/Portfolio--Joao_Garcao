@@ -191,6 +191,8 @@ const CAPAS = {
   previsao: { img: "bandeiras", larg: 1600, alt: 642, alt_txt: "Bandeiras do Vitória SC, de Guimarães e de Portugal penduradas na bancada do Estádio D. Afonso Henriques, com adeptos.", credito: "Fonte: Vitória SC", fonte: "https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" },
   receitas: { img: "rosa-receitas", larg: 1600, alt: 781, alt_txt: "Camisola cor-de-rosa do Vitória SC, da campanha Outubro Rosa, segurada por uma adepta.", credito: "Fonte: Vitória SC (Facebook)", fonte: "https://scontent.fbru4-1.fna.fbcdn.net/v/t39.99422-6/854650806_983408674256481_7997273921154351159_n.png?stp=dst-jpg_tt6&cstp=mx1638x2048&ctp=s1638x2048&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=833d8c&_nc_ohc=nqpoHKrvLOgQ7kNvwH-C1xu&_nc_oc=AdoIZmBLUctxQ8KwIGHqszZWRmHJvd8Bum3WtxXL7RoLZgk6jyHW8sGVBJfXzgeOGzcGxg5sGozvQ-h2G9QbA-XF&_nc_zt=14&_nc_ht=scontent.fbru4-1.fna&_nc_gid=1vAwDtqWY1AIfncxKCrW3g&_nc_ss=7b2a8&oh=00_AQRRINmOrs7VGaDrBbnKFdfI_uyaw2aE_xksgrM_sdX6Sw&oe=6AF10224", classe: "capa-rosa" },
   custos: { img: "rosa-gastos", larg: 1600, alt: 729, alt_txt: "Jogadores do Vitória SC, de equipamento cor-de-rosa do Outubro Rosa, reunidos em círculo antes de um jogo.", credito: "Fonte: Vitória SC (Instagram)", fonte: "https://scontent.fbru2-1.fna.fbcdn.net/v/t51.82787-15/865775105_18639420289039940_3970287875633482051_n.jpg?stp=dst-jpg_tt6&cstp=mx3072x4096&ctp=s3072x4096&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=rhv7uzZXz2AQ7kNvwH8hL3V&_nc_oc=AdrQkFN9vpFo12ka--zwj8V-a6Oz3yfhHoN5JgVJZn6xh75MtgyiN20VfxpIbhCTYk3kshoDyAcuYHswIPKSrNBI&_nc_zt=23&_nc_ht=scontent.fbru2-1.fna&_nc_gid=QZFofMqpAEq586E0mFFX3w&_nc_ss=7b2a8&oh=00_AQSIZ7EQ1QjcHS1gtg3hxEvGWwQRpvydkARLtLwM8prbrQ&oe=6AF10D78", classe: "capa-rosa-gastos" },
+  rentabilidade: { img: "bandeira-preta", larg: 1600, alt: 1066, alt_txt: "Bandeira preta do Vitória SC, com o emblema do clube, agitada por um adepto na bancada.",
+    credito: "Fonte: Vitória SC", fonte: "https://vitoriasc.pt/wp-content/uploads/2025/07/adeptos_40-2-2048x1365.jpg", classe: "capa-bandeira-preta" },
   desporto: { img: "taca-liga", larg: 1600, alt: 781, alt_txt: "Jogadores do Vitória SC a festejar a conquista da Taça da Liga, com o troféu erguido ao centro.", credito: "Fonte: Público", fonte: "https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&db=IMAGENS&type=JPG", classe: "capa-taca" },
   solucoes: { img: "solucoes", larg: 1600, alt: 788, alt_txt: "Jakupovic e Camara, de camisola cor-de-rosa do Vitória SC, a festejar um golo.", credito: "Fonte: Diário do Minho", fonte: "https://www.diariodominho.pt/storage/posts/doc202610234799816720261023es11_6adbdceb75cee_2xl.jpg", classe: "capa-solucoes" },
 };
@@ -198,8 +200,8 @@ const CAPAS = {
 function criarCapa(c) {
   const f = criar("figure", `capa ${c.classe ?? ""}`);
   f.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/${c.img}-800.webp?v=21 800w, img/${c.img}-${c.larg}.webp?v=21 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/${c.img}-${c.larg}.webp?v=21" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
+      <source type="image/webp" srcset="img/${c.img}-800.webp?v=22 800w, img/${c.img}-${c.larg}.webp?v=22 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/${c.img}-${c.larg}.webp?v=22" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
     <a class="capa-credito" href="${c.fonte}" rel="noopener noreferrer"></a>`;
   $("img", f).alt = c.alt_txt;
