@@ -16,7 +16,7 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Início** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
+| **Início** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V-Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
 | **Futebol** | Evolução da classificação na Liga, gastos e resultados desportivos |
 | **Evolução Previsível da Sociedade** | Orçamento de 2026/27 face ao fecho de 2025/26, venda de jogadores prevista face ao histórico, plano de negócios 2026–2031 e incertezas (Relatório e Contas 2025/26); simulações da centralização dos direitos de TV |
@@ -65,7 +65,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=19`) com `python3 scripts/versao.py 20` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
+Ao publicar alterações, aumente o número de versão (`?v=20`) com `python3 scripts/versao.py 21` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
 
 ### Limitações
 

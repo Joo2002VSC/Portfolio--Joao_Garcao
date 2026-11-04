@@ -58,19 +58,19 @@ const mediaHistorica = () => media(col(SALDO_ATLETAS.filter(r => !r.previsto), "
 
 /* ---------- Estrutura acionista ----------
    Fonte: Relatório e Contas da SAD 2025/26 — nota 1 (900 000 ações de 5 €: 610 533 da categoria A, detidas pelo
-   Vitória Sport Clube, e 289 467 da categoria B) e relatório de gestão (V Sports com 29%, a passar para 46% com a
+   Vitória Sport Clube, e 289 467 da categoria B) e relatório de gestão (V-Sports com 29%, a passar para 46% com a
    compra ao Clube de ações representativas de 17% do capital). Não está na base SQL: são os valores do relatório. */
 const ACOES_TOTAL = 900000, ACOES_CLUBE = 610533;
 const PCT_CLUBE = (100 * ACOES_CLUBE) / ACOES_TOTAL; // 67,84%
 const ACIONISTAS = {
   atual: [
     { acionista: "Vitória Sport Clube", categoria: "A", pct_capital: PCT_CLUBE },
-    { acionista: "V Sports", categoria: "B", pct_capital: 29 },
+    { acionista: "V-Sports", categoria: "B", pct_capital: 29 },
     { acionista: "Outros acionistas", categoria: "B", pct_capital: 100 - PCT_CLUBE - 29 },
   ],
   operacao: [
     { acionista: "Vitória Sport Clube", categoria: "A", pct_capital: PCT_CLUBE - 17 },
-    { acionista: "V Sports", categoria: "B", pct_capital: 46 },
+    { acionista: "V-Sports", categoria: "B", pct_capital: 46 },
     { acionista: "Outros acionistas", categoria: "B", pct_capital: 100 - PCT_CLUBE - 29 },
   ],
 };
@@ -817,16 +817,16 @@ export const PAINEIS = [
     pergunta: "Quem são os acionistas da SAD?",
     descricao: "Repartição do capital social a 30 de junho de 2026 (900 000 ações). As ações da categoria A pertencem ao Vitória Sport Clube.",
     construir: rows => circular(rows),
-    conclusao: () => `O Vitória Sport Clube detém ${pct(PCT_CLUBE)} do capital e a V Sports 29%; os restantes ${pct(100 - PCT_CLUBE - 29)} estão dispersos por outros acionistas.`,
+    conclusao: () => `O Vitória Sport Clube detém ${pct(PCT_CLUBE)} do capital e a V-Sports 29%; os restantes ${pct(100 - PCT_CLUBE - 29)} estão dispersos por outros acionistas.`,
     nota: "Fonte: Relatório e Contas da SAD 2025/26 (nota 1 e relatório de gestão). A parte dos outros acionistas é calculada por diferença.",
   },
   {
     id: "acionistas-operacao", seccao: "geral", bloco: "acionistas", fonteTexto: "Relatório e Contas 2025/26",
     dados: () => ACIONISTAS.operacao,
-    pergunta: "E depois da operação com a V Sports?",
-    descricao: "Repartição prevista se for aprovada a venda à V Sports, pelo Clube, de ações representativas de 17% do capital.",
+    pergunta: "E depois da operação com a V-Sports?",
+    descricao: "Repartição prevista se for aprovada a venda à V-Sports, pelo Clube, de ações representativas de 17% do capital.",
     construir: rows => circular(rows),
-    conclusao: () => `A V Sports passaria a deter 46% e o Clube ${pct(PCT_CLUBE - 17)}, mantendo a maioria do capital.`,
+    conclusao: () => `A V-Sports passaria a deter 46% e o Clube ${pct(PCT_CLUBE - 17)}, mantendo a maioria do capital.`,
     nota: "Operação sujeita a aprovação das assembleias gerais e das entidades reguladoras. Não inclui o efeito da conversão em capital das entradas de 3,8 M€ previstas.",
   },
 

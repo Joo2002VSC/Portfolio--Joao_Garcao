@@ -37,7 +37,6 @@
   --fonte-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --t-titulo: clamp(24px, 3.4vw, 38px);   /* título principal */
   --t-seccao: clamp(22px, 2.4vw, 26px);   /* títulos das secções */
-  --t-capa: clamp(20px, 2.6vw, 30px);     /* títulos sobre as fotografias */
   --t-kpi: clamp(24px, 2.3vw, 30px);      /* indicadores principais */
   --t-bloco: 19px;                        /* títulos de blocos e subsecções */
   --t-subtitulo: 17px;                    /* títulos de gráficos e propostas */
@@ -214,12 +213,6 @@ main:focus { outline: none; }
 /* Capa da visão geral: fotografia do plantel */
 .capa { position: relative; margin: 0 0 28px; border-radius: var(--raio); overflow: hidden; background: #111111; }
 .capa img { display: block; width: 100%; height: clamp(210px, 31vw, 390px); object-fit: cover; object-position: 50% 22%; }
-.capa figcaption { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 26px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .45) 42%, rgba(0, 0, 0, 0) 72%); }
-.capa p { margin: 0; color: #FFFFFF; max-width: 60%; }
-.capa-sobre { font-size: var(--t-meta); font-weight: var(--p-semi); letter-spacing: .08em; text-transform: uppercase; color: var(--amarelo) !important; }
-.capa-titulo { margin-top: 4px !important; font: var(--p-forte) var(--t-capa)/1.15 var(--fonte); letter-spacing: -.015em; }
-.capa-titulo span { display: block; }
 .capa-credito { position: absolute; right: 10px; bottom: 10px; font-size: var(--t-micro); color: rgba(255, 255, 255, .9); background: rgba(0, 0, 0, .55);
   padding: 5px 9px; border-radius: 3px; text-decoration: none; }
 .capa-credito:hover { color: #FFFFFF; text-decoration: underline; }
@@ -228,7 +221,6 @@ main:focus { outline: none; }
 .capa-rosa img { object-position: 50% 40%; }
 .capa-rosa-gastos img { object-position: 50% 30%; }
 #p-acionistas .tela, #p-acionistas-operacao .tela { height: 340px; }
-.capa-estadio img { height: clamp(170px, 24vw, 300px); object-position: 50% 45%; }
 
 /* ---------- 4. Secções e blocos ---------- */
 main { padding-top: 28px; padding-bottom: 56px; }
@@ -553,9 +545,7 @@ main { padding-top: 28px; padding-bottom: 56px; }
   .botao-pesquisa span { display: none; }
   .pesquisa-global { position: fixed; top: 0; padding-top: 0; }
   .pesquisa-global .dentro { border-radius: 0; }
-  .capa p { max-width: 100%; }
-  .capa-credito { top: 8px; bottom: auto; right: 8px; font-size: var(--t-micro); }
-  .capa figcaption { padding: 16px; background: linear-gradient(0deg, rgba(0, 0, 0, .82) 0%, rgba(0, 0, 0, .3) 60%, rgba(0, 0, 0, 0) 100%); }
+  .capa-credito { right: 8px; bottom: 8px; }
   .rodape .dentro { grid-template-columns: 1fr; }
   .solucao-corpo { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .topo .dentro { padding-block: 18px 16px; }
