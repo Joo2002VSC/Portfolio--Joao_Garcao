@@ -157,6 +157,7 @@ main:focus { outline: none; }
 .abas a[data-seccao="rentabilidade"] { --icone: #F5D510; }
 .abas a[data-seccao="divida"] { --icone: #F4A261; }
 .abas a[data-seccao="desporto"] { --icone: #FFFFFF; }
+.abas a[data-seccao="comparacao"] { --icone: #8EC5FF; }
 .abas a[data-seccao="solucoes"] { --icone: #4CC38A; }
 .abas a[data-seccao="sql"] { --icone: #C9C7C8; }
 .abas a[data-seccao="metodologia"] { --icone: #C9C7C8; }

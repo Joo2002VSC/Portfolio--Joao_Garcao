@@ -2,7 +2,7 @@
 // como se desenha e a conclusão, calculada a partir dos dados filtrados.
 // Nenhum valor é inventado aqui: tudo sai das linhas das consultas.
 
-import { barras, linha, areaAcima, opcoes, cor, letra } from "./graficos.js";
+import { barras, linha, areaAcima, opcoes, cor, corSerie, letra } from "./graficos.js";
 import { euros, pct, razao, vezes, racio, inteiro, decimal, lugar, milhoes, pp, variacaoEuros } from "./formato.js";
 import { media, soma, dividir, ultimo, numeros, linhas } from "./dados.js";
 
@@ -74,6 +74,52 @@ const ACIONISTAS = {
     { acionista: "Outros acionistas", categoria: "B", pct_capital: 100 - PCT_CLUBE - 29 },
   ],
 };
+
+/* ---------- Comparação com outros clubes (época 2024/25) ----------
+   Fontes: Relatórios e Contas de 2024/25 (exercícios findos a 30/06/2025) — demonstração dos resultados por
+   naturezas, balanço e notas indicadas — de cada sociedade; classificação, pontos e média de espectadores da
+   Liga 2024/25 (Wikipédia, «2024–25 Primeira Liga»). Os valores do Vitória vêm da base SQL do projeto.
+   «rend_atletas»: rendimentos de operações com jogadores incluídos nos rendimentos operacionais, retirados para obter
+   os rendimentos sem transferências. «venda_jogadores»: mais-valias na venda de jogadores; no Gil Vicente, a DR
+   regista o valor bruto das vendas e cedências dentro das vendas e não isola a mais-valia (bruto = true). */
+const CLUBES = [
+  { clube: "Braga", sociedade: "Sporting Clube de Braga – Futebol, SAD", fonte: "R&C 2024/25 (DR, balanço, notas 15, 19 e 20)",
+    vendas_servicos: 18108204, subsidios: 164543, outros_rendimentos: 51061710,
+    rend_atletas: 27097990 + 4187140 + 2200000 + 80498 + 1263757, // nota 19: alienações, outros ganhos, empréstimos, seleções, solidariedade e formação
+    gastos_pessoal: 39469883, fse: 18969499, depreciacoes: 15406616, resultado_operacional: -9244727, juros: 2060617, resultado_liquido: -10985400,
+    venda_jogadores: 27097990, ativo_total: 169782643, passivo_total: 100763026, capital_proprio: 69019615, financiamentos: 15556786 + 6086914, caixa: 2343588,
+    lugar: 4, pontos: 66, espectadores: 13868, europa: "Liga Europa (fase de liga)" },
+  { clube: "Vitória", vitoria: true, sociedade: "Vitória Sport Clube – Futebol, SAD", fonte: "Base SQL do projeto (R&C 2024/25)",
+    vendas_servicos: 22584987, subsidios: 48544, outros_rendimentos: 28817437,
+    rend_atletas: 26385026 + 1396329 + 516936, // ganhos com alienação de passes, compensação de atletas alienados, mecanismo de solidariedade
+    gastos_pessoal: 20526758, fse: 10032690, depreciacoes: 5541431, resultado_operacional: 13116806, juros: 5006965, resultado_liquido: 7610319,
+    venda_jogadores: 27540964, ativo_total: 45426643, passivo_total: 69452913, capital_proprio: -24026270, financiamentos: 2879539 + 31704948, caixa: 2745259,
+    lugar: 6, pontos: 54, espectadores: 18447, europa: "Liga Conferência (oitavos de final)" },
+  { clube: "Famalicão", sociedade: "Futebol Clube de Famalicão – Futebol, SAD", fonte: "R&C 2024/25 (DR, balanço, notas 19 e 24)",
+    vendas_servicos: 6578691.63, subsidios: 605789.34, outros_rendimentos: 16442860.42,
+    rend_atletas: 15147416, // nota 24: mais-valia na alienação de jogadores
+    gastos_pessoal: 15475096.67, fse: 4330034.53, depreciacoes: 2327416.04, resultado_operacional: 262412.53, juros: 3494664.04, resultado_liquido: -3257811.34,
+    venda_jogadores: 15147416, ativo_total: 37480659.44, passivo_total: 54613149.53, capital_proprio: -17132490.09, financiamentos: 24580000, caixa: 1502019.54,
+    lugar: 7, pontos: 47, espectadores: 3808, europa: null },
+  { clube: "Gil Vicente", sociedade: "Gil Vicente Futebol Clube – Futebol, SDUQ, Lda.", fonte: "R&C 2024/25 (DR, balanço, nota 19)",
+    vendas_servicos: 16569850.12, subsidios: 29200.57, outros_rendimentos: 712246.77,
+    rend_atletas: 10922690.35, // nota 19: venda e cedência de atletas, registada nas vendas e serviços prestados
+    gastos_pessoal: 8798700, fse: 3976042.17, depreciacoes: 2575474.37, resultado_operacional: -2165257.37, juros: 809161.70, resultado_liquido: -2410557.70,
+    venda_jogadores: 10922690.35, bruto: true, ativo_total: 10809558.50, passivo_total: 15045281.22, capital_proprio: -4235722.72, financiamentos: 2233228 + 1515000, caixa: 186924.33,
+    lugar: 13, pontos: 34, espectadores: 5496, europa: null },
+];
+/** Indicadores derivados, todos calculados aqui a partir dos valores acima */
+const COMPARACAO = CLUBES.map(c => {
+  const rend = c.vendas_servicos + c.subsidios + c.outros_rendimentos - c.rend_atletas;
+  return { ...c, rend_sem_transf: rend, ebitda: c.resultado_operacional + c.depreciacoes,
+    pessoal_rend_pct: (100 * c.gastos_pessoal) / rend, custo_por_ponto: c.gastos_pessoal / c.pontos,
+    rl_sem_venda: c.bruto ? null : c.resultado_liquido - c.venda_jogadores,
+    autonomia_pct: (100 * c.capital_proprio) / c.ativo_total, juros_rend_pct: (100 * c.juros) / rend };
+});
+/** Valor com sinal de menos (em texto corrido, os parênteses dos negativos confundem-se com a pontuação) */
+const comSinal = v => (v < 0 ? `−${euros(-v)}` : euros(v));
+const corClube = (r, normal = "cinza") => (r.vitoria ? cor("amarelo") : corSerie(normal));
+const contornoClube = r => (r.vitoria ? cor("contorno") : "transparent");
 
 /** Percentagem escrita dentro de cada fatia (branco sobre preto, preto sobre amarelo e cinzento) */
 const rotulosFatias = {
@@ -149,6 +195,8 @@ export const SECCOES = [
   { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
   { id: "divida", nome: "Endividamento", intro: "Estrutura financeira (ativo, passivo e capitais próprios) e dívida financeira, encargos financeiros, fluxos de caixa e liquidez." },
   { id: "desporto", nome: "Futebol", intro: "Os resultados desportivos da equipa principal e a sua relação com os gastos." },
+  { id: "comparacao", nome: "Comparação", titulo: "Comparação com Outros Clubes", intro: "As contas de 2024/25 do Vitória ao lado das do Braga, do Famalicão e do Gil Vicente, cruzadas com a classificação na Liga: receitas, salários, venda de jogadores, resultados e estrutura financeira.",
+    aviso: "Época 2024/25, a última com Relatório e Contas publicado por todos estes clubes: o filtro de épocas não se aplica a esta secção. O Moreirense entra quando houver acesso ao seu relatório." },
   { id: "previsao", nome: "Evolução Previsível", titulo: "Evolução Previsível da Sociedade", intro: "O que a Administração prevê para 2026/27 e para o plano de negócios 2026–2031, segundo o Relatório e Contas de 2025/26, e simulações da centralização dos direitos de TV. São previsões, intenções e cenários, não resultados." },
   { id: "solucoes", nome: "Soluções", intro: "Propostas para a sustentabilidade financeira da SAD, a partir dos indicadores da última época disponível. Cada proposta junta o diagnóstico, as medidas e os indicadores a acompanhar." },
   { id: "sql", nome: "Consultas SQL", intro: "As consultas do projeto SQL sobre as contas da SAD e as consultas complementares do painel: objetivo, código, técnicas e resultado." },
@@ -760,6 +808,135 @@ export const PAINEIS = [
     conclusao: rows => `Só a parte igual valeria entre ${pct(rows[0].parte_igual_em_pct_do_atual)} e ${pct(ultimo(rows).parte_igual_em_pct_do_atual)} dos direitos de TV atuais.`,
   },
 
+  /* ---------------- Comparação com outros clubes (2024/25) ---------------- */
+  {
+    id: "comp-resumo", seccao: "comparacao", largo: true, tabela: true, fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, lugar: c.lugar, pontos: c.pontos, europa: c.europa ?? "—", espectadores: c.espectadores,
+      rend_sem_transf: c.rend_sem_transf, gastos_pessoal: c.gastos_pessoal, venda_jogadores: c.venda_jogadores, resultado_liquido: c.resultado_liquido,
+      passivo_total: c.passivo_total, capital_proprio: c.capital_proprio })),
+    pergunta: "Os clubes lado a lado",
+    descricao: "Classificação e média de espectadores na Liga 2024/25 e os principais valores das contas da época, ordenados pela classificação.",
+    conclusao: () => {
+      const v = COMPARACAO.find(c => c.vitoria);
+      const acima = COMPARACAO.filter(c => !c.vitoria && c.gastos_pessoal > v.gastos_pessoal);
+      const maisPublico = COMPARACAO.every(c => c.vitoria || c.espectadores < v.espectadores);
+      const lucro = COMPARACAO.filter(c => c.resultado_liquido > 0);
+      const unicoLucro = lucro.length === 1 && lucro[0].vitoria;
+      return `O Vitória foi ${lugar(v.lugar)}${maisPublico ? `, com a maior média de espectadores dos clubes comparados (${inteiro(v.espectadores)}),` : ""} e ${unicoLucro ? "o único com resultado líquido positivo" : "teve um resultado líquido de"} (${euros(v.resultado_liquido)}); ` +
+        `${acima.length === 0 ? "nenhum clube gastou mais" : acima.length === 1 ? `só o ${acima[0].clube} gastou mais` : `${acima.length} clubes gastaram mais`} com pessoal.`;
+    },
+    nota: "Gil Vicente: a coluna «Venda de jogadores» tem o valor bruto das vendas e cedências, porque a demonstração dos resultados não isola a mais-valia; nos outros clubes, é a mais-valia.",
+  },
+  {
+    id: "comp-pessoal-pontos", seccao: "comparacao", largo: true, fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, gastos_pessoal: c.gastos_pessoal, pontos: c.pontos, lugar: c.lugar })),
+    pergunta: "Gastar mais com pessoal deu mais pontos?",
+    descricao: "Gastos com pessoal de 2024/25 e pontos na Liga. Cada ponto é um clube; o Vitória está a amarelo.",
+    construir: rows => {
+      const pontos = rows.map(r => ({ x: r.gastos_pessoal / 1e6, y: r.pontos, epoca: r.clube, lugar: r.lugar }));
+      const vit = rows.map(r => COMPARACAO.find(c => c.clube === r.clube));
+      const op = opcoes({ unidade: "milhoes", legenda: false, indice: false });
+      op.scales.x.title = { display: true, text: "Gastos com pessoal (M€)", color: cor("suave") };
+      op.scales.x.grid = { color: cor("grelha") };
+      op.scales.x.min = 0;
+      op.scales.y = { min: 20, max: 80, ticks: { stepSize: 10, color: cor("suave") }, title: { display: true, text: "Pontos na Liga", color: cor("suave") }, grid: { color: cor("grelha") }, border: { display: false } };
+      op.plugins.tooltip.callbacks = { title: i => i[0].raw.epoca, label: c => [` ${c.raw.y} pontos (${lugar(c.raw.lugar)} lugar)`, ` Gastos com pessoal: ${milhoes(c.raw.x)}`] };
+      return { type: "scatter", data: { datasets: [{ label: "Clubes", data: pontos,
+        backgroundColor: vit.map(c => corClube(c, "tinta")), borderColor: vit.map(c => (c.vitoria ? cor("contorno") : cor("cartao"))),
+        borderWidth: 1.5, pointRadius: vit.map(c => (c.vitoria ? 9 : 7)), pointHoverRadius: 10 }] }, options: op, plugins: [rotulosPontos] };
+    },
+    conclusao: rows => {
+      const ord = [...rows].sort((a, b) => b.gastos_pessoal - a.gastos_pessoal);
+      const mesmaOrdem = ord.every((r, i) => i === 0 || r.pontos <= ord[i - 1].pontos);
+      const v = rows.find(r => r.clube === "Vitória");
+      return `${mesmaOrdem ? "A ordem dos gastos com pessoal coincide com a da classificação" : "A ordem dos gastos com pessoal não coincide com a da classificação"}: ` +
+        `o ${ord[0].clube} gastou ${milhoes(ord[0].gastos_pessoal / 1e6)} e fez ${ord[0].pontos} pontos; o Vitória, ${milhoes(v.gastos_pessoal / 1e6)} e ${v.pontos} pontos.`;
+    },
+    nota: "Quatro clubes numa só época: serve para comparar, não para tirar conclusões sobre causa e efeito.",
+  },
+  {
+    id: "comp-custo-ponto", seccao: "comparacao", fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, gastos_pessoal: c.gastos_pessoal, pontos: c.pontos, custo_por_ponto: c.custo_por_ponto })),
+    pergunta: "Quanto custou cada ponto na Liga?",
+    descricao: "Gastos com pessoal a dividir pelos pontos conquistados na Liga 2024/25.",
+    construir: rows => {
+      const ds = barras("Gastos com pessoal por ponto", col(rows, "custo_por_ponto"), "cinza", { maxBarThickness: 26 });
+      const cs = rows.map(r => COMPARACAO.find(c => c.clube === r.clube));
+      ds.backgroundColor = cs.map(c => corClube(c)); ds.borderColor = cs.map(contornoClube); ds.borderWidth = cs.map(c => (c.vitoria ? 1 : 0));
+      const cfg = { type: "bar", data: { labels: col(rows, "clube"), datasets: [ds] }, options: opcoes({ horizontal: true, legenda: false }) };
+      cfg.options.plugins.valoresNasBarras = { formatar: v => euros(v) };
+      cfg.options.layout.padding.right = 70;
+      cfg.options.plugins.tooltip.callbacks.footer = i => `${rows[i[0].dataIndex].pontos} pontos`;
+      return cfg;
+    },
+    conclusao: rows => {
+      const ord = [...rows].sort((a, b) => b.custo_por_ponto - a.custo_por_ponto), v = rows.find(r => r.clube === "Vitória");
+      return `O ponto mais caro foi o do ${ord[0].clube} (${euros(ord[0].custo_por_ponto)}) e o mais barato o do ${ultimo(ord).clube} (${euros(ultimo(ord).custo_por_ponto)}); o do Vitória foi o ${ord.indexOf(v) + 1}.º mais caro (${euros(v.custo_por_ponto)}).`;
+    },
+  },
+  {
+    id: "comp-receitas-pessoal", seccao: "comparacao", fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, rend_sem_transf: c.rend_sem_transf, gastos_pessoal: c.gastos_pessoal, pessoal_rend_pct: c.pessoal_rend_pct })),
+    pergunta: "As receitas sem transferências pagam os salários?",
+    descricao: "Rendimentos operacionais sem as operações com jogadores (bilheteira, direitos de TV, patrocínios, prémios de competições e outros) e gastos com pessoal.",
+    construir: rows => {
+      const cfg = { type: "bar", data: { labels: col(rows, "clube"), datasets: [
+        barras("Rendimentos sem transferências", col(rows, "rend_sem_transf"), "tinta"),
+        barras("Gastos com pessoal", col(rows, "gastos_pessoal"), "cinza"),
+      ] }, options: opcoes() };
+      cfg.options.plugins.tooltip.callbacks.footer = i => `Pessoal / rendimentos: ${pct(rows[i[0].dataIndex].pessoal_rend_pct)}`;
+      return cfg;
+    },
+    conclusao: rows => {
+      const cobre = rows.filter(r => r.pessoal_rend_pct < 100), resto = rows.filter(r => r.pessoal_rend_pct >= 100);
+      const nomes = cobre.map(r => `o ${r.clube}`).join(" e ");
+      return `${cobre.length ? `Só ${nomes} ${cobre.length === 1 ? "pagou" : "pagaram"} os gastos com pessoal com os rendimentos sem transferências (${cobre.map(r => pct(r.pessoal_rend_pct)).join(" e ")} desses rendimentos)` : "Nenhum clube pagou os gastos com pessoal com os rendimentos sem transferências"}. ` +
+        (resto.length ? `Nos outros, o pessoal custou entre ${pct(Math.min(...resto.map(r => r.pessoal_rend_pct)))} e ${pct(Math.max(...resto.map(r => r.pessoal_rend_pct)))} desses rendimentos.` : "");
+    },
+    nota: "Os prémios da UEFA contam como rendimentos sem transferências: pesam no Braga (14,2 M€, fase de liga da Liga Europa) e no Vitória (Liga Conferência).",
+  },
+  {
+    id: "comp-venda-jogadores", seccao: "comparacao", fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, resultado_liquido: c.resultado_liquido, venda_jogadores: c.bruto ? null : c.venda_jogadores, rl_sem_venda: c.rl_sem_venda })),
+    pergunta: "Quem dependeu da venda de jogadores?",
+    descricao: "Resultado líquido de 2024/25 e o resultado que sobraria sem as mais-valias na venda de jogadores.",
+    construir: rows => {
+      const cfg = { type: "bar", data: { labels: col(rows, "clube"), datasets: [
+        barras("Resultado líquido", col(rows, "resultado_liquido"), "tinta"),
+        barras("Sem a venda de jogadores", col(rows, "rl_sem_venda"), "cinza"),
+      ] }, options: opcoes() };
+      cfg.options.plugins.tooltip.callbacks.footer = i => { const r = rows[i[0].dataIndex]; return r.venda_jogadores === null ? "Mais-valia não isolada nas contas" : `Mais-valias: ${euros(r.venda_jogadores)}`; };
+      return cfg;
+    },
+    conclusao: rows => {
+      const comVenda = rows.filter(r => r.rl_sem_venda !== null);
+      return `Sem as mais-valias, ${comVenda.every(r => r.rl_sem_venda < 0) ? "todos" : "nem todos"} os clubes com a mais-valia isolada nas contas teriam prejuízo: ` +
+        comVenda.map(r => `${r.clube} ${comSinal(r.rl_sem_venda)}`).join(", ") + ".";
+    },
+    nota: "Gil Vicente: as contas registam 10,9 M€ de vendas e cedências de atletas (valor bruto) sem isolar a mais-valia, por isso só aparece o resultado líquido.",
+  },
+  {
+    id: "comp-estrutura", seccao: "comparacao", fonteTexto: "Relatórios e Contas 2024/25",
+    dados: () => COMPARACAO.map(c => ({ clube: c.clube, ativo_total: c.ativo_total, passivo_total: c.passivo_total, capital_proprio: c.capital_proprio, financiamentos: c.financiamentos, autonomia_pct: c.autonomia_pct })),
+    pergunta: "Quem tem capitais próprios positivos?",
+    descricao: "Ativo, passivo e capitais próprios a 30 de junho de 2025.",
+    construir: rows => {
+      const cp = barras("Capitais próprios", col(rows, "capital_proprio"), "cinza-escuro");
+      cp.backgroundColor = col(rows, "capital_proprio").map(coresSinal); cp.borderWidth = 0;
+      const cfg = { type: "bar", data: { labels: col(rows, "clube"), datasets: [
+        barras("Ativo", col(rows, "ativo_total"), "tinta"), barras("Passivo", col(rows, "passivo_total"), "cinza"), cp,
+      ] }, options: opcoes() };
+      cfg.options.plugins.tooltip.callbacks.footer = i => { const r = rows[i[0].dataIndex]; return `Dívida financeira: ${euros(r.financiamentos)} · Autonomia financeira: ${pct(r.autonomia_pct)}`; };
+      return cfg;
+    },
+    conclusao: rows => {
+      const pos = rows.filter(r => r.capital_proprio > 0), neg = rows.filter(r => r.capital_proprio < 0);
+      const lista = l => l.map(r => `${r.clube} (${comSinal(r.capital_proprio)})`).join(", ");
+      return `${pos.length ? `Capitais próprios positivos: ${lista(pos)}.` : "Nenhum clube tinha capitais próprios positivos."}` +
+        `${neg.length ? ` Negativos, ou seja, passivo maior do que o ativo: ${lista(neg)}.` : ""}`;
+    },
+  },
+
   /* ---------------- Evolução previsível da sociedade ---------------- */
   {
     id: "previsao-orcamento", seccao: "previsao", largo: true, fonteTexto: "Relatório e Contas 2025/26",
@@ -1090,6 +1267,7 @@ export const ORDEM = {
   receitas: ["rendimentos", "composicao-vendas", "vendas-por-euro", "valor-europa", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
   custos: ["gastos-rubricas", "custos-fixos", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
   desporto: ["classificacoes", "regressao", "custo-ponto", "espectadores", "treinadores", "epocas-desporto"],
+  comparacao: ["comp-resumo", "comp-pessoal-pontos", "comp-custo-ponto", "comp-receitas-pessoal", "comp-venda-jogadores", "comp-estrutura"],
   previsao: ["previsao-orcamento", "previsao-transferencias", "centralizacao", "tv-por-lugar", "parte-igual"],
   rentabilidade: ["dependencia-vendas", "resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
   divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",

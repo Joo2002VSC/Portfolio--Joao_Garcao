@@ -19,6 +19,7 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 | **Início** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V-Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
 | **Futebol** | Evolução da classificação na Liga, gastos e resultados desportivos |
+| **Comparação** | Contas de 2024/25 do Vitória, do Braga, do Famalicão e do Gil Vicente, cruzadas com a classificação na Liga: gastos com pessoal por ponto, receitas sem transferências face aos salários, dependência da venda de jogadores e estrutura financeira |
 | **Evolução Previsível da Sociedade** | Orçamento de 2026/27 face ao fecho de 2025/26, venda de jogadores prevista face ao histórico, plano de negócios 2026–2031 e incertezas (Relatório e Contas 2025/26); simulações da centralização dos direitos de TV |
 | **Soluções** | Ponto de equilíbrio (quanto teria de render a venda de jogadores) e sete propostas para a sustentabilidade financeira da SAD, cada uma com diagnóstico calculado a partir das consultas, medidas, indicadores a acompanhar e prioridade |
 | **Consultas SQL** | Explorador das 48 consultas do projeto relativas à SAD e de 6 consultas complementares, agrupadas por tema: objetivo, código com realce de sintaxe e numeração de linhas, técnicas SQL detetadas, resultado ordenável e exportação para CSV |
@@ -65,7 +66,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=20`) com `python3 scripts/versao.py 21` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
+Ao publicar alterações, aumente o número de versão (`?v=21`) com `python3 scripts/versao.py 22` (por exemplo): o script muda a versão no `index.html` e recalcula o hash da política de segurança (CSP), sem o qual o painel não arranca. Atualize também o `?v=` das imagens em `js/app.js`.
 
 ### Limitações
 

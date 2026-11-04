@@ -180,6 +180,7 @@ const ICONES = {
   rentabilidade: '<path d="M18 6.6A7 7 0 1 0 18 17.4"/><path d="M4.5 10.2h9M4.5 13.8h9"/>',
   divida: '<circle cx="15" cy="6.5" r="4.6"/><text x="15" y="8.9" text-anchor="middle">€</text><path d="M2 14.5h3.2l3.3 2.2h4.7a1.4 1.4 0 0 0 0-2.8H9.8"/><path d="M8.5 16.7l5.8 1.6 6.4-3.3a1.5 1.5 0 0 0-1.4-2.6l-4.8 2"/><path d="M2 13v8"/>',
   desporto: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.6h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.5-1.5M14.5 15l2.8 3.8M9.5 15l-2.8 3.8M8 10.4L3.5 8.9"/>',
+  comparacao: '<path d="M4 20V10M9.5 20V4M14.5 20v-7M20 20V8"/><path d="M2.5 20.5h19"/>',
   solucoes: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z"/>',
   sql: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   metodologia: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
@@ -197,8 +198,8 @@ const CAPAS = {
 function criarCapa(c) {
   const f = criar("figure", `capa ${c.classe ?? ""}`);
   f.innerHTML = `<picture>
-      <source type="image/webp" srcset="img/${c.img}-800.webp?v=20 800w, img/${c.img}-${c.larg}.webp?v=20 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
-      <img src="img/${c.img}-${c.larg}.webp?v=20" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
+      <source type="image/webp" srcset="img/${c.img}-800.webp?v=21 800w, img/${c.img}-${c.larg}.webp?v=21 ${c.larg}w" sizes="(max-width: 1240px) 100vw, 1240px">
+      <img src="img/${c.img}-${c.larg}.webp?v=21" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
     <a class="capa-credito" href="${c.fonte}" rel="noopener noreferrer"></a>`;
   $("img", f).alt = c.alt_txt;
@@ -227,6 +228,7 @@ function construirSeccoes() {
     $("p", cab).textContent = s.intro;
     sec.prepend(cab);
     if (CAPAS[s.id]) cab.after(criarCapa(CAPAS[s.id]));
+    if (s.aviso) sec.append(criar("p", "caixa-nota", s.aviso));
 
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
@@ -547,7 +549,7 @@ function estadoContas(ep) {
 
 function construirCartoesGeral() {
   const contagem = id => PAINEIS.filter(p => p.seccao === id).length;
-  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "previsao", "solucoes"].includes(s.id)).map(s => {
+  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "comparacao", "previsao", "solucoes"].includes(s.id)).map(s => {
     const li = criar("li", "cartao-area");
     li.innerHTML = `<h4><a href="#${s.id}"></a></h4><p></p><span class="contagem"></span>`;
     $("a", li).textContent = s.nome;
