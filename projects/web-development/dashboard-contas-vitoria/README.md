@@ -16,8 +16,8 @@ Painel interativo sobre as contas da **Vitória Sport Clube – Futebol, SAD** d
 
 | Secção | Conteúdo |
 |:---|:---|
-| **Visão geral** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
-| **Cinco perguntas** | As perguntas de investigação do projeto, cada uma com contexto, resposta, indicadores, gráficos e limitações |
+| **Início** | Estrutura acionista (gráficos circulares, antes e depois da operação com a V Sports); síntese financeira da época em destaque (8 cartões: rendimentos e gastos operacionais, resultado operacional e líquido, passivo, capitais próprios, gastos com pessoal, juros dos financiamentos), leitura da época (evolução face à época anterior, riscos, alertas, alterações estruturais) e selos que distinguem contas publicadas, reexpressas e sujeitas a aprovação, quatro gráficos de evolução e pontos de entrada para as perguntas e as áreas de análise |
+| **Evolução Previsível da Sociedade** | Orçamento de 2026/27 face ao fecho de 2025/26, venda de jogadores prevista face ao histórico, plano de negócios 2026–2031 e incertezas (Relatório e Contas 2025/26) |
 | **Receitas** · **Gastos** · **Rentabilidade** · **Endividamento** | Análise por área financeira: composição das vendas (incluindo os direitos de TV) e dos gastos, margens, estrutura financeira, dívida, encargos financeiros e liquidez; cada rácio com o que mede, a fórmula, os dados e as limitações |
 | **Soluções** | Sete propostas para a sustentabilidade financeira da SAD, cada uma com diagnóstico calculado a partir das consultas, medidas, indicadores a acompanhar e prioridade |
 | **Futebol** · **Cenários** | Evolução da classificação na Liga, gastos e resultados desportivos; simulações da centralização dos direitos de TV |
@@ -40,10 +40,10 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 |:---|:---|
 | `js/dados.js` | Carregamento e validação dos dados; funções numéricas protegidas contra nulos e divisões por zero |
 | `js/formato.js` | Convenções portuguesas: vírgula decimal, espaço nos milhares, parênteses nos valores monetários negativos; rótulos das colunas |
-| `js/paineis.js` | Definição de cada visualização (pergunta, consulta, gráfico, conclusão, ficha do indicador) e das cinco perguntas |
-| `js/conclusoes.js` | Conclusões automáticas da visão geral, com limiares explícitos |
+| `js/paineis.js` | Definição de cada visualização (pergunta, consulta, gráfico, conclusão, ficha do indicador) e dados do orçamento e da estrutura acionista (Relatório e Contas) |
+| `js/conclusoes.js` | Conclusões automáticas do início, com limiares explícitos |
 | `js/graficos.js` · `js/tabelas.js` · `js/explorador.js` · `js/animacoes.js` | Gráficos, tabelas ordenáveis e exportação, explorador SQL, animações |
-| `js/app.js` | Estado, filtros (guardados no endereço), navegação e visão geral |
+| `js/app.js` | Estado, filtros (guardados no endereço), navegação e início |
 
 ### Acessibilidade e apresentação
 
@@ -51,6 +51,7 @@ sql/indicadores_dashboard.sql ─┘          (executa as consultas e verifica a
 - Cada gráfico tem uma descrição para leitores de ecrã e uma alternativa em tabela.
 - Paleta do projeto SQL (preto, amarelo e cinzentos), com verde e vermelho reservados para evolução favorável e desfavorável. A cor nunca é a única indicação.
 - Tipografia: Inter (texto, títulos e números, com algarismos tabulares nos indicadores e tabelas) e IBM Plex Mono (código SQL e identificadores das consultas), alojadas na pasta `fontes/` com licença OFL; escala de tamanhos e pesos centralizada em variáveis CSS.
+- Segurança: política de segurança de conteúdo (CSP) que só permite recursos do próprio site, com o mapa de importação autorizado por hash; ligações externas com `rel="noopener noreferrer"`; política de referência restrita; dados inseridos no HTML sempre escapados ou como texto.
 - Contraste verificado em modo claro e escuro.
 - Respeita a opção do sistema para reduzir o movimento.
 - Português europeu em toda a interface, com glossário e convenções de apresentação descritas na secção Metodologia.
@@ -64,7 +65,7 @@ python -m http.server     # na pasta do painel
 
 Para atualizar os dados depois de alterar a base: `python scripts/exportar_json.py`.
 
-Ao publicar alterações, aumente o número de versão (`?v=16`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
+Ao publicar alterações, aumente o número de versão (`?v=17`) no `index.html`, para que os navegadores não misturem ficheiros novos com ficheiros em cache.
 
 ### Limitações
 

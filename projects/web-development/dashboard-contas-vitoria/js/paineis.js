@@ -3,7 +3,7 @@
 // Nenhum valor é inventado aqui: tudo sai das linhas das consultas.
 
 import { barras, linha, areaAcima, opcoes, cor, letra } from "./graficos.js";
-import { euros, pct, razao, vezes, racio, inteiro, decimal, lugar, milhoes, pp } from "./formato.js";
+import { euros, pct, razao, vezes, racio, inteiro, decimal, lugar, milhoes, pp, variacaoEuros } from "./formato.js";
 import { media, soma, dividir, ultimo, numeros, linhas } from "./dados.js";
 
 /* ---------- Auxiliares ---------- */
@@ -34,6 +34,27 @@ function temporal(rows, series, { tipo = "bar", ...op } = {}) {
 }
 
 const comReferencias = (config, linhas) => { config.options.plugins.referencias = { linhas }; return config; };
+
+/* ---------- Evolução previsível da sociedade ----------
+   Fonte: Relatório e Contas da SAD 2025/26, relatório de gestão («Orçamento época desportiva 2026-2027»,
+   «Continuidade da atividade e perspetivas de reequilíbrio financeiro» e «Evolução previsível da sociedade»).
+   Valores do orçamento aprovado pelo Conselho de Administração; não estão na base SQL. */
+export const ORCAMENTO = [
+  { rubrica: "Rendimentos operacionais (sem transferências)", fecho_2025_26: 15102461, previsao_2026_27: 15969405 },
+  { rubrica: "Gastos com pessoal", fecho_2025_26: 21730779, previsao_2026_27: 19634443 },
+  { rubrica: "Fornecimentos e serviços externos", fecho_2025_26: 8997162, previsao_2026_27: 7346755 },
+  { rubrica: "Gastos operacionais (sem amortizações)", fecho_2025_26: 32308639, previsao_2026_27: 28369292 },
+  { rubrica: "Resultado das operações com atletas", fecho_2025_26: 18763394, previsao_2026_27: 24622100 },
+  { rubrica: "Amortizações", fecho_2025_26: 6964397, previsao_2026_27: 4967138 },
+  { rubrica: "Encargos financeiros líquidos", fecho_2025_26: 5602741, previsao_2026_27: 5585847 },
+  { rubrica: "Resultado antes de impostos", fecho_2025_26: -11009920, previsao_2026_27: 1669228 },
+];
+/** Saldo de transações e empréstimos de atletas (relatório de gestão de 2025/26) e valor orçamentado para 2026/27 */
+export const SALDO_ATLETAS = [
+  { epoca: "2021/22", saldo: 11389130 }, { epoca: "2022/23", saldo: 22922094 }, { epoca: "2023/24", saldo: 6867824 },
+  { epoca: "2024/25", saldo: 27605726 }, { epoca: "2025/26", saldo: 18763394 }, { epoca: "2026/27 (orçamento)", saldo: 24622100, previsto: true },
+];
+const mediaHistorica = () => media(col(SALDO_ATLETAS.filter(r => !r.previsto), "saldo"));
 
 /* ---------- Estrutura acionista ----------
    Fonte: Relatório e Contas da SAD 2025/26 — nota 1 (900 000 ações de 5 €: 610 533 da categoria A, detidas pelo
@@ -122,8 +143,8 @@ const coresSinal = v => (v === null || v === 0 ? cor("cinza") : v < 0 ? cor("ver
    ===================================================================== */
 
 export const SECCOES = [
-  { id: "geral", nome: "Visão Geral", intro: "A situação financeira da SAD na época em destaque e a sua evolução: indicadores principais, leitura da época, tendências e pontos de entrada para a análise." },
-  { id: "perguntas", nome: "Cinco Perguntas", intro: "As perguntas de investigação do projeto, cada uma com o contexto, a resposta, os indicadores que a fundamentam, os gráficos e as limitações." },
+  { id: "geral", nome: "Início", intro: "Os principais indicadores financeiros da SAD na época em destaque: síntese, leitura da época, evolução, estrutura acionista e pontos de entrada para a análise." },
+  { id: "previsao", nome: "Evolução Previsível", titulo: "Evolução Previsível da Sociedade", intro: "O que a Administração prevê para 2026/27 e para o plano de negócios 2026–2031, segundo o Relatório e Contas de 2025/26. São previsões e intenções, não resultados." },
   { id: "receitas", nome: "Receitas", intro: "A origem das receitas: a atividade corrente, a composição das vendas (incluindo os direitos de TV), as competições europeias e a venda de jogadores." },
   { id: "custos", nome: "Gastos", intro: "A evolução e a composição dos gastos operacionais: pessoal, fornecimentos e serviços externos, amortizações e outros gastos." },
   { id: "rentabilidade", nome: "Rentabilidade", intro: "Do resultado operacional ao resultado líquido: margens e peso das mais-valias nos resultados." },
@@ -152,7 +173,7 @@ export const GRUPOS = {
 export const PAINEIS = [
   /* ---------------- Visão geral ---------------- */
   {
-    id: "dependencia-vendas", seccao: "perguntas", questao: 1, consulta: 2, largo: true, temporal: true,
+    id: "dependencia-vendas", seccao: "rentabilidade", consulta: 2, largo: true, temporal: true,
     pergunta: "A SAD consegue ter lucro sem vender jogadores?",
     descricao: "Resultado líquido com e sem as mais-valias líquidas da venda de jogadores.",
     construir: rows => temporal(rows, [
@@ -184,7 +205,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "valor-europa", seccao: "perguntas", questao: 2, consulta: 21,
+    id: "valor-europa", seccao: "receitas", consulta: 21,
     pergunta: "Quanto vale uma época europeia?",
     descricao: "Vendas e serviços prestados e resultado líquido médios da SAD por tipo de época (2013/14 a 2025/26).",
     construir: rows => {
@@ -205,7 +226,7 @@ export const PAINEIS = [
     nota: "Não depende do intervalo de épocas: cada grupo agrega todas as épocas desse tipo. Médias de poucas épocas, que não isolam outros fatores (por exemplo, as vendas de jogadores).",
   },
   {
-    id: "vendas-por-euro", seccao: "perguntas", questao: 2, consulta: 54, temporal: true,
+    id: "vendas-por-euro", seccao: "receitas", consulta: 54, temporal: true,
     pergunta: "As vendas de jogadores superam as vendas e serviços prestados?",
     descricao: "Vendas brutas de jogadores por cada euro de receita da atividade corrente (direitos de TV, bilheteira, patrocínios, quotização).",
     construir: rows => comReferencias(temporal(rows, [
@@ -308,7 +329,7 @@ export const PAINEIS = [
       `As mais-valias cobriram entre ${pct(Math.min(...numeros(col(rows, "transferencias_cobrem_pct"))))} e ${pct(Math.max(...numeros(col(rows, "transferencias_cobrem_pct"))))} dos gastos.`,
   },
   {
-    id: "custos-fixos", seccao: "perguntas", questao: 1, largo: true, consulta: 42, temporal: true,
+    id: "custos-fixos", seccao: "custos", largo: true, consulta: 42, temporal: true,
     pergunta: "As vendas e serviços prestados cobrem os gastos de estrutura?",
     descricao: "Vendas e serviços prestados em percentagem dos gastos de estrutura (gastos com pessoal, fornecimentos e serviços externos, depreciações e amortizações).",
     construir: rows => comReferencias(temporal(rows, [
@@ -424,7 +445,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "taxas", seccao: "perguntas", questao: 3, consulta: 52, temporal: true,
+    id: "taxas", seccao: "divida", consulta: 52, temporal: true,
     pergunta: "O Vitória paga juros acima do mercado?",
     descricao: "Taxa de juro implícita da dívida da SAD contra referências de mercado (%).",
     construir: rows => temporal(rows, [
@@ -449,7 +470,7 @@ export const PAINEIS = [
     nota: "Juros dos financiamentos (notas do Relatório e Contas). A rubrica «juros e gastos similares» da demonstração de resultados, usada nas consultas 8 e 30, é um valor diferente.",
   },
   {
-    id: "curto-prazo", seccao: "perguntas", questao: 3, consulta: 28, temporal: true,
+    id: "curto-prazo", seccao: "divida", consulta: 28, temporal: true,
     pergunta: "Que parte da dívida vence em menos de um ano?",
     descricao: "Dívida financeira de curto prazo em percentagem do total.",
     construir: rows => temporal(rows, [{ col: "pct_curto_prazo", rotulo: "Curto prazo", papel: "tinta", cores: coresCondicao(v => v > 50, "amarelo") }],
@@ -540,7 +561,7 @@ export const PAINEIS = [
   {
     id: "painel-indicadores", seccao: "divida", grupo: "estrutura", consulta: 51, tabela: true, largo: true, temporal: true,
     pergunta: "Quadro de indicadores financeiros da SAD",
-    descricao: "Margens, rendibilidade e rotação do ativo, peso dos fornecimentos e serviços externos, dívida face às vendas e fluxo de caixa operacional.",
+    descricao: "Margens, rentabilidade e rotação do ativo, peso dos fornecimentos e serviços externos, dívida face às vendas e fluxo de caixa operacional.",
     conclusao: rows => `A margem corrente sem vendas foi negativa em ${contar(rows, r => r.margem_corrente_sem_vendas_pct < 0)} de ${rows.length} épocas.`,
   },
   /* ---------------- Futebol ---------------- */
@@ -571,7 +592,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "regressao", seccao: "perguntas", questao: 4, consulta: 53, largo: true, temporal: true,
+    id: "regressao", seccao: "desporto", consulta: 53, largo: true, temporal: true,
     pergunta: "Gastos de estrutura da SAD e classificação na Liga",
     descricao: "Gastos de estrutura (gastos com pessoal, fornecimentos e serviços externos, depreciações e amortizações) e classificação na Liga, com a reta de regressão linear. O 1.º lugar fica no topo.",
     construir: (rows, todas, ctx) => {
@@ -687,7 +708,7 @@ export const PAINEIS = [
     },
   },
   {
-    id: "centralizacao", seccao: "perguntas", questao: 5, consulta: 55, largo: true,
+    id: "centralizacao", seccao: "cenarios", consulta: 55, largo: true,
     pergunta: "A centralização dos direitos de TV elimina o défice?",
     descricao: "Parte do défice antes de vendas (média de 2023/24 a 2025/26) que os direitos de TV centralizados cobririam, por valor do contrato e lugar na Liga. 100% significaria eliminar o défice sem vender jogadores.",
     construir: rows => {
@@ -738,6 +759,56 @@ export const PAINEIS = [
     pergunta: "Quanto vale a parte igual por clube?",
     descricao: "Parte igual estimada por clube para três valores do contrato centralizado (2028/29), face aos direitos de TV do Vitória em 2024/25.",
     conclusao: rows => `Só a parte igual valeria entre ${pct(rows[0].parte_igual_em_pct_do_atual)} e ${pct(ultimo(rows).parte_igual_em_pct_do_atual)} dos direitos de TV atuais.`,
+  },
+
+  /* ---------------- Evolução previsível da sociedade ---------------- */
+  {
+    id: "previsao-orcamento", seccao: "previsao", largo: true, fonteTexto: "Relatório e Contas 2025/26",
+    dados: () => ORCAMENTO.map(r => ({ ...r, variacao: r.previsao_2026_27 - r.fecho_2025_26 })),
+    pergunta: "O que muda do fecho de 2025/26 para o orçamento de 2026/27?",
+    descricao: "Principais rubricas do orçamento para 2026/27, comparadas com os valores de fecho de 2025/26.",
+    construir: rows => {
+      const cfg = {
+        type: "bar",
+        data: { labels: col(rows, "rubrica"), datasets: [
+          barras("Fecho 2025/26", col(rows, "fecho_2025_26"), "cinza", { maxBarThickness: 16 }),
+          barras("Orçamento 2026/27", col(rows, "previsao_2026_27"), "tinta", { maxBarThickness: 16 }),
+        ] },
+        options: opcoes({ horizontal: true }),
+      };
+      cfg.options.scales.y.ticks.autoSkip = false;
+      cfg.options.plugins.tooltip.callbacks.footer = i => `Variação: ${variacaoEuros(rows[i[0].dataIndex].variacao)}`;
+      return cfg;
+    },
+    conclusao: rows => {
+      const rai = rows.find(r => /antes de impostos/.test(r.rubrica)), g = rows.find(r => /Gastos operacionais/.test(r.rubrica)), a = rows.find(r => /atletas/.test(r.rubrica));
+      return `O orçamento prevê um resultado antes de impostos de ${euros(rai.previsao_2026_27)}, contra ${euros(rai.fecho_2025_26)} em 2025/26: ` +
+        `${euros(-g.variacao)} menos de gastos operacionais e ${euros(a.previsao_2026_27)} de resultado das operações com atletas.`;
+    },
+    nota: "Fonte: Relatório e Contas da SAD 2025/26 (orçamento da época 2026/27). Os rendimentos operacionais excluem as transferências, ao contrário do indicador homónimo do painel, que inclui as mais-valias.",
+  },
+  {
+    id: "previsao-transferencias", seccao: "previsao", largo: true, fonteTexto: "Relatório e Contas 2025/26",
+    dados: () => SALDO_ATLETAS,
+    pergunta: "O valor previsto com a venda de jogadores é realista?",
+    descricao: "Saldo de transações e empréstimos de atletas nas cinco épocas anteriores e valor do orçamento para 2026/27, com a média 2021/22–2025/26.",
+    construir: rows => {
+      const ds = barras("Saldo de transações e empréstimos", col(rows, "saldo"), "tinta", { maxBarThickness: 46 });
+      ds.backgroundColor = rows.map(r => (r.previsto ? cor("amarelo") : cor("tinta")));
+      ds.borderColor = rows.map(r => (r.previsto ? cor("contorno") : cor("tinta")));
+      ds.borderWidth = rows.map(r => (r.previsto ? 1.5 : 0));
+      const cfg = { type: "bar", data: { labels: col(rows, "epoca"), datasets: [ds] }, options: opcoes({ legenda: false, min: 0 }) };
+      cfg.options.plugins.valoresNasBarras = { formatar: v => euros(v) };
+      cfg.options.plugins.referencias = { linhas: [{ valor: mediaHistorica(), rotulo: `Média: ${euros(mediaHistorica())}` }] };
+      return cfg;
+    },
+    conclusao: rows => {
+      const prev = rows.find(r => r.previsto), hist = rows.filter(r => !r.previsto);
+      const acima = hist.filter(r => r.saldo > prev.saldo);
+      return `O orçamento conta com ${euros(prev.saldo)}, acima da média de ${euros(mediaHistorica())} das cinco épocas anteriores` +
+        (acima.length ? `; só ${acima.map(r => `${r.epoca} (${euros(r.saldo)})`).join(" e ")} ${acima.length === 1 ? "superou" : "superaram"} esse valor.` : "; nenhuma época anterior atingiu esse valor.");
+    },
+    nota: "A amarelo, o valor orçamentado (previsão, não resultado). Fonte: Relatório e Contas da SAD 2025/26 (relatório de gestão).",
   },
 
   /* ---------------- Visão geral: estrutura acionista ---------------- */
@@ -1017,117 +1088,16 @@ const rotulosPontos = {
 /** Ordem de apresentação dentro de cada secção (pares lado a lado; os largos ocupam a linha toda) */
 export const ORDEM = {
   geral: ["geral-receitas-gastos", "geral-resultados", "geral-estrutura", "geral-divida"],
-  receitas: ["rendimentos", "composicao-vendas", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
-  custos: ["gastos-rubricas", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
-  desporto: ["classificacoes", "custo-ponto", "espectadores", "treinadores", "epocas-desporto"],
-  rentabilidade: ["resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
+  receitas: ["rendimentos", "composicao-vendas", "vendas-por-euro", "valor-europa", "mais-valias", "reservas-ocultas", "custo-vendas", "passes"],
+  custos: ["gastos-rubricas", "custos-fixos", "composicao-fse", "pessoal-rendimentos", "gastos-vs-receitas", "uefa", "nao-jogadores", "funcionarios", "remuneracoes"],
+  desporto: ["classificacoes", "regressao", "custo-ponto", "espectadores", "treinadores", "epocas-desporto"],
+  cenarios: ["centralizacao", "tv-por-lugar", "parte-igual", "equilibrio"],
+  previsao: ["previsao-orcamento", "previsao-transferencias"],
+  rentabilidade: ["dependencia-vendas", "resultados-dr", "resultado-operacional", "margens", "dependencia-extraordinarias"],
   divida: ["balanco", "autonomia", "solvabilidade", "endividamento", "painel-indicadores",
-    "divida-financeira", "juros-receitas", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",
+    "divida-financeira", "juros-receitas", "taxas", "curto-prazo", "fluxos-caixa", "instrumentos", "fundo-maneio", "divida-ebitda", "racios",
     "cobertura-juros", "artigo-35", "reexpressao"],
 };
-
-/* =====================================================================
-   PERGUNTAS DE INVESTIGAÇÃO (Visão geral)
-   As respostas são calculadas a partir das consultas indicadas.
-   ===================================================================== */
-
-export const PERGUNTAS = [
-  {
-    n: 1, contexto: "Os clubes portugueses vendem jogadores com regularidade, mas essas receitas variam muito. Interessa saber se a operação corrente (bilheteira, direitos de TV, patrocínios, prémios) chega para pagar a estrutura.",
-    pergunta: "A atividade corrente cobre os gastos de estrutura?", consultas: [2, 42],
-    resposta: ({ q }) => {
-      const r = q(2), ult3 = r.slice(-3);
-      return `Não. Sem as mais-valias com jogadores, o resultado da SAD foi negativo em ${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length} épocas; ` +
-        `em média faltaram ${euros(-media(col(ult3, "rl_sem_mais_valias")))} por época (${ult3[0].epoca}–${ultimo(ult3).epoca}).`;
-    },
-    indicadores: ({ q }) => {
-      const r = q(2), f = ultimo(q(42));
-      return [
-        { rotulo: "Épocas com resultado sem mais-valias negativo", valor: `${contar(r, x => x.rl_sem_mais_valias < 0)} de ${r.length}` },
-        { rotulo: `Resultado sem mais-valias (${ultimo(r).epoca})`, valor: euros(ultimo(r).rl_sem_mais_valias) },
-        { rotulo: `Vendas / gastos de estrutura (${f.epoca})`, valor: pct(f.cobertura_pct) },
-      ];
-    },
-    limitacoes: "Os dados de transferências só existem desde 2017/18. O resultado sem mais-valias é uma aproximação: subtrai as mais-valias ao resultado líquido, sem ajustar o imposto nem outros efeitos. Cada época usa os valores do seu próprio Relatório e Contas (2024/25 sem a reexpressão).",
-  },
-  {
-    n: 2, contexto: "As mais-valias com jogadores e as receitas das competições da UEFA são as duas fontes de receita mais irregulares. Mede-se o seu peso face às vendas e serviços prestados.",
-    pergunta: "Quanto pesam as vendas de jogadores e a Europa?", consultas: [54, 21],
-    resposta: ({ q }) => {
-      const v = ultimo(q(54)), g = q(21), fase = g[0], sem = ultimo(g);
-      return `As vendas de jogadores superaram as receitas da atividade corrente em ${contar(q(54), x => x.vendas_por_euro_de_receita > 1)} de ${q(54).length} épocas (${racio(v.vendas_por_euro_de_receita)} € por cada euro de receita em ${v.epoca}). ` +
-        `Nas épocas com fase de grupos europeia, as vendas e serviços prestados foram em média de ${euros(fase.receita_media)}, contra ${euros(sem.receita_media)} nas épocas sem competições europeias.`;
-    },
-    indicadores: ({ q }) => {
-      const v = ultimo(q(54)), g = q(21);
-      return [
-        { rotulo: `Vendas por euro de receita (${v.epoca})`, valor: `${racio(v.vendas_por_euro_de_receita)} €` },
-        { rotulo: `Peso das mais-valias (${v.epoca})`, valor: pct(v.peso_mais_valias_no_total_pct) },
-        { rotulo: "Resultado médio da SAD com fase de grupos", valor: euros(g[0].rl_medio) },
-        { rotulo: "Resultado médio sem competições europeias", valor: euros(ultimo(g).rl_medio) },
-      ];
-    },
-    limitacoes: "A comparação europeia assenta em médias de poucas épocas (3 a 6 por grupo) e não isola outros fatores, como as vendas de jogadores na mesma época.",
-  },
-  {
-    n: 3, contexto: "O passivo da SAD cresceu desde 2020/21. A sustentabilidade depende do montante da dívida financeira, do seu custo e do prazo de vencimento.",
-    pergunta: "A dívida é sustentável e a que custo?", consultas: [52, 28, 27],
-    resposta: ({ q }) => {
-      const t = ultimo(com(q(52), "vitoria_implicita")), c = ultimo(q(28));
-      return `É cara e de curto prazo: taxa implícita de ${pct(t.vitoria_implicita)} em ${t.epoca} (${pp(t.spread_vs_euribor)} face à Euribor) ` +
-        `e ${pct(c.pct_curto_prazo)} da dívida financeira a vencer em menos de um ano.`;
-    },
-    indicadores: ({ q }) => {
-      const t = ultimo(com(q(52), "vitoria_implicita")), c = ultimo(q(28)), j = ultimo(q(27));
-      return [
-        { rotulo: `Dívida financeira (${c.epoca})`, valor: euros(c.divida_financeira) },
-        { rotulo: "Taxa de juro implícita", valor: pct(t.vitoria_implicita) },
-        { rotulo: "Juros / vendas", valor: pct(j.juros_em_pct_receitas) },
-        { rotulo: "Dívida a menos de um ano", valor: pct(c.pct_curto_prazo) },
-      ];
-    },
-    limitacoes: "A taxa implícita inclui comissões de factoring e de antecipação de receitas, pelo que não é diretamente comparável a uma taxa nominal de mercado.",
-  },
-  {
-    n: 4, contexto: "Os gastos com o plantel são a principal alavanca desportiva. Testa-se, com uma regressão linear, se as épocas com mais despesa tiveram melhores classificações.",
-    pergunta: "Gastar mais traz melhores classificações?", consultas: [53],
-    resposta: ({ q }) => {
-      const r = q(53)[0];
-      const zero = r.ic95_inferior <= 0 && r.ic95_superior >= 0;
-      return `${zero ? "Os dados não o demonstram" : "Há uma associação estatística, mas não uma prova de causa"}: a reta só acompanha ${pct(100 * r.r_quadrado)} da variação da classificação (R² = ${decimal(r.r_quadrado)}, ${r.n} épocas) ` +
-        `e o intervalo de confiança do declive ${zero ? "inclui o zero" : "não inclui o zero"}.`;
-    },
-    indicadores: ({ q }) => {
-      const r = q(53)[0];
-      return [
-        { rotulo: "R²", valor: decimal(r.r_quadrado) },
-        { rotulo: "Declive (lugares por M€ de gastos)", valor: decimal(r.b_declive_por_m) },
-        { rotulo: "IC 95% do declive", valor: `${decimal(r.ic95_inferior)} a ${decimal(r.ic95_superior)}` },
-        { rotulo: "Épocas", valor: inteiro(r.n) },
-      ];
-    },
-    limitacoes: "Treze observações conferem pouca potência estatística. Trata-se de uma associação, não de uma relação de causa e efeito: a classificação depende de muitos fatores não medidos.",
-  },
-  {
-    n: 5, contexto: "A centralização dos direitos de TV, prevista para 2028/29, pode alterar as receitas da SAD. Simula-se quanto do défice antes de vendas ficaria coberto.",
-    pergunta: "Que combinação reduz a dependência das vendas?", consultas: [55, 48],
-    resposta: ({ q }) => {
-      const r = q(55), max = r.reduce((a, b) => (b.pct_do_defice_coberto > a.pct_do_defice_coberto ? b : a));
-      return `A centralização dos direitos de TV, por si só, cobriria no máximo ${pct(max.pct_do_defice_coberto)} do défice antes de vendas (${max.contrato}, ${max.lugar} lugar). ` +
-        `O restante teria de ser coberto por outras vias: menos gastos, dívida mais barata ou venda de jogadores.`;
-    },
-    indicadores: ({ q }) => {
-      const r = q(55), central = r.find(x => x.contrato === "250 M€" && x.lugar === "6.º");
-      return [
-        { rotulo: "Défice antes de vendas (média de 3 épocas)", valor: euros(r[0].defice_antes_vendas) },
-        { rotulo: "Cenário central (250 M€, 6.º lugar): ganho", valor: euros(central?.ganho_vs_atual) },
-        { rotulo: "Cenário central: défice coberto", valor: pct(central?.pct_do_defice_coberto) },
-        { rotulo: "Mais-valias ainda necessárias", valor: euros(central?.mais_valias_necessarias) },
-      ];
-    },
-    limitacoes: "Simulação ilustrativa: o modelo de repartição dos direitos centralizados ainda não está definido; a componente de mérito é linear e ignora as audiências.",
-  },
-];
 
 /* =====================================================================
    SOLUÇÕES (propostas do autor)

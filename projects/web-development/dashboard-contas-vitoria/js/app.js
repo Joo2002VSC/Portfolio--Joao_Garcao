@@ -4,7 +4,7 @@
 import * as Dados from "./dados.js";
 import { formatar, variacaoEuros, inteiro, pct, euros } from "./formato.js";
 import { aplicarTema, desenhar, definirDestaque } from "./graficos.js";
-import { SECCOES, PAINEIS, PERGUNTAS, ORDEM, GRUPOS, SOLUCOES } from "./paineis.js";
+import { SECCOES, PAINEIS, ORDEM, GRUPOS, SOLUCOES, ORCAMENTO } from "./paineis.js";
 import { tabelaOrdenavel } from "./tabelas.js";
 import { montarExplorador } from "./explorador.js";
 import { conclusoes, SENTIDO, EPOCA_REEXPRESSA } from "./conclusoes.js";
@@ -23,7 +23,8 @@ let explorador = null;
 const $ = (s, el = document) => el.querySelector(s);
 const criar = (tag, cls, texto) => { const e = document.createElement(tag); if (cls) e.className = cls; if (texto !== undefined) e.textContent = texto; return e; };
 const codigoConsulta = n => { try { return Dados.consulta(n).codigo ?? String(n); } catch { return String(n); } };
-const ligacaoConsulta = n => `<a href="#sql/${n}">${n > 100 ? "consulta complementar" : "consulta"} ${codigoConsulta(n)}</a>`;
+const escaparHTML = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const ligacaoConsulta = n => `<a href="#sql/${Number(n)}">${n > 100 ? "consulta complementar" : "consulta"} ${escaparHTML(codigoConsulta(n))}</a>`;
 
 function epocasVisiveis() {
   const e = Dados.epocas(), i = e.indexOf(estado.inicio), f = e.indexOf(estado.fim);
@@ -172,8 +173,8 @@ function criarFactos(lista) {
 
 /** Ícones das secções (traço simples, herdam a cor do texto) */
 const ICONES = {
-  geral: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
-  perguntas: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.4"/><circle cx="12" cy="16.8" r=".4"/>',
+  geral: '<path d="M3.5 11L12 4l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/>',
+  previsao: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M8 15h6.5M12.5 12.8l2.2 2.2-2.2 2.2"/>',
   receitas: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
   custos: '<path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/>',
   rentabilidade: '<path d="M18 6.6A7 7 0 1 0 18 17.4"/><path d="M4.5 10.2h9M4.5 13.8h9"/>',
@@ -187,8 +188,8 @@ const ICONES = {
 
 /** Fotografias no topo das secções: imagem, legenda e crédito com ligação para a fonte */
 const CAPAS = {
-  perguntas: { img: "bandeiras", larg: 1600, alt: 642, alt_txt: "Bandeiras do Vitória SC, de Guimarães e de Portugal penduradas na bancada do Estádio D. Afonso Henriques, com adeptos.",
-    sobre: "Estádio D. Afonso Henriques", titulo: "Cinco Perguntas sobre as Contas da SAD", credito: "Foto: Vitória SC", fonte: "https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" },
+  previsao: { img: "bandeiras", larg: 1600, alt: 642, alt_txt: "Bandeiras do Vitória SC, de Guimarães e de Portugal penduradas na bancada do Estádio D. Afonso Henriques, com adeptos.",
+    sobre: "Estádio D. Afonso Henriques", titulo: "Evolução Previsível da Sociedade", credito: "Foto: Vitória SC", fonte: "https://vitoriasc.pt/wp-content/uploads/2026/10/antevisao_noticia-2-1024x683.jpg" },
   desporto: { img: "taca-liga", larg: 1600, alt: 781, alt_txt: "Jogadores do Vitória SC a festejar a conquista da Taça da Liga, com o troféu erguido ao centro.",
     sobre: "Época 2025/26", titulo: "Vencedor da Taça da Liga", credito: "Foto: Público", fonte: "https://imagens.publico.pt/imagens.aspx/2058208?tp=UH&db=IMAGENS&type=JPG", classe: "capa-taca" },
   cenarios: { img: "estadio", larg: 1400, alt: 581, alt_txt: "Estádio D. Afonso Henriques, em Guimarães, cheio e iluminado durante um jogo noturno.",
@@ -204,7 +205,7 @@ function criarCapa(c) {
       <img src="img/${c.img}-${c.larg}.webp?v=14" width="${c.larg}" height="${c.alt}" loading="lazy" alt="">
     </picture>
     <figcaption>${c.sobre ? '<p class="capa-sobre"></p>' : ""}<p class="capa-titulo"></p></figcaption>
-    <a class="capa-credito" href="${c.fonte}"></a>`;
+    <a class="capa-credito" href="${c.fonte}" rel="noopener noreferrer"></a>`;
   $("img", f).alt = c.alt_txt;
   if (c.sobre) $(".capa-sobre", f).textContent = c.sobre;
   $(".capa-titulo", f).textContent = c.titulo;
@@ -229,14 +230,14 @@ function construirSeccoes() {
     sec.hidden = true;
     const cab = criar("header", "seccao-cabeca");
     cab.innerHTML = `<h2 id="h-${s.id}"></h2><p></p>`;
-    $("h2", cab).textContent = s.nome;
+    $("h2", cab).textContent = s.titulo ?? s.nome;
     $("p", cab).textContent = s.intro;
     sec.prepend(cab);
     if (CAPAS[s.id]) cab.after(criarCapa(CAPAS[s.id]));
 
     const paineis = PAINEIS.filter(p => p.seccao === s.id);
     if (ORDEM[s.id]) paineis.sort((x, y) => ORDEM[s.id].indexOf(x.id) - ORDEM[s.id].indexOf(y.id));
-    if (s.id === "perguntas") { construirPerguntas(sec); return; }
+    if (s.id === "previsao") { construirPrevisao(sec, paineis); return; }
     if (s.id === "solucoes") { construirSolucoes(sec); return; }
     if (GRUPOS[s.id]) {
       const padrao = GRUPOS[s.id].at(-1)[0];
@@ -256,36 +257,50 @@ function construirSeccoes() {
   });
 }
 
-function construirPerguntas(sec) {
-  const q = n => Dados.linhas(n);
-  const indice = criar("ol", "indice-perguntas");
-  sec.appendChild(indice);
-  PERGUNTAS.forEach(per => {
-    const li = criar("li");
-    li.innerHTML = `<a href="#perguntas/pergunta-${per.n}"></a>`;
-    $("a", li).textContent = per.pergunta;
-    indice.appendChild(li);
-
-    const art = criar("article", "pergunta-bloco");
-    art.id = `pergunta-${per.n}`;
-    art.tabIndex = -1;
-    art.setAttribute("aria-labelledby", `pq-${per.n}`);
-    art.innerHTML = `<header><span class="num" aria-hidden="true">${per.n}</span><h3 id="pq-${per.n}"></h3></header>
-      <p class="contexto"></p>
-      <p class="resposta-rotulo">Resposta</p>
-      <p class="resposta"></p><div class="indicadores"></div><div class="graficos"></div>
-      <p class="limitacoes"><strong>Limitações.</strong> <span></span></p>
-      <p class="consultas-ref">Consultas: ${per.consultas.map(ligacaoConsulta).join(", ")}</p>`;
-    $("h3", art).textContent = per.pergunta;
-    $(".contexto", art).textContent = per.contexto ?? "";
-    try {
-      $(".resposta", art).textContent = per.resposta({ q });
-      $(".indicadores", art).appendChild(criarFactos(per.indicadores({ q })));
-    } catch (e) { $(".resposta", art).textContent = "Resposta indisponível."; console.warn(e); }
-    $(".limitacoes span", art).textContent = per.limitacoes;
-    $(".graficos", art).appendChild(grelhaDe(PAINEIS.filter(p => p.seccao === "perguntas" && p.questao === per.n)));
-    sec.appendChild(art);
-  });
+/** Evolução previsível: números-chave do orçamento, gráficos e o plano da Administração (Relatório e Contas 2025/26) */
+function construirPrevisao(sec, paineis) {
+  const linha = t => ORCAMENTO.find(r => r.rubrica.includes(t));
+  const rai = linha("antes de impostos"), gastos = linha("Gastos operacionais"), atletas = linha("atletas");
+  const aviso = criar("p", "caixa-nota", "Previsões e intenções da Administração, publicadas no Relatório e Contas de 2025/26. Não são resultados: dependem de aprovações, de financiamento e do mercado de transferências.");
+  const factos = criarFactos([
+    { rotulo: "Resultado antes de impostos previsto (2026/27)", valor: euros(rai.previsao_2026_27), forte: true },
+    { rotulo: "Resultado antes de impostos em 2025/26", valor: euros(rai.fecho_2025_26) },
+    { rotulo: "Redução dos gastos operacionais", valor: euros(gastos.fecho_2025_26 - gastos.previsao_2026_27) },
+    { rotulo: "Resultado previsto das operações com atletas", valor: euros(atletas.previsao_2026_27) },
+    { rotulo: "Reforço de capitais (operação V Sports)", valor: euros(3800000) },
+    { rotulo: "Nova linha de financiamento (em negociação)", valor: euros(25000000) },
+  ]);
+  const texto = criar("div", "texto-previsao");
+  texto.innerHTML = `
+    <div class="cartao-texto">
+      <h3>Plano de negócios 2026–2031: quatro linhas de ação</h3>
+      <ol>
+        <li><strong>Refinanciamento da dívida:</strong> nova linha de 25 M€ para reembolsar o empréstimo da MSD e libertar as receitas de direitos de TV de 2026/27, com menor custo e prazos mais longos.</li>
+        <li><strong>Reforço dos capitais próprios:</strong> 3,8 M€ no âmbito da operação com a V Sports, sob a forma de prestações acessórias.</li>
+        <li><strong>Venda de jogadores:</strong> manter alienações de direitos de atletas de cerca de 24 M€ em 2026/27.</li>
+        <li><strong>Redução de gastos:</strong> sobretudo gastos com pessoal (−2,10 M€) e fornecimentos e serviços externos (−1,65 M€).</li>
+      </ol>
+    </div>
+    <div class="cartao-texto">
+      <h3>Estratégia para 2026/27</h3>
+      <ul>
+        <li>Maior contenção orçamental e racionalização do investimento no plantel.</li>
+        <li>Aposta em jovens atletas e no talento da formação, com o objetivo de regressar às competições europeias.</li>
+        <li>Aumento das receitas recorrentes: atividade comercial, patrocínios e exploração de ativos.</li>
+        <li>Reduzir a dependência das transferências: que deixem de ser necessárias para cobrir o défice operacional e passem a reduzir o endividamento.</li>
+      </ul>
+    </div>
+    <div class="cartao-texto cartao-incerteza">
+      <h3>Pressupostos e incertezas</h3>
+      <ul>
+        <li>O empréstimo da MSD foi prorrogado até 31/12/2026; o novo financiamento ainda não tem compromisso contratual.</li>
+        <li>A operação com a V Sports depende da Assembleia Geral da SAD (16/11/2026) e das entidades reguladoras.</li>
+        <li>O valor das transferências depende do mercado e do desempenho desportivo.</li>
+        <li>O auditor e a Administração reconhecem uma incerteza material sobre a continuidade; as entradas de 3,8 M€, por si só, não repõem os capitais próprios positivos.</li>
+      </ul>
+    </div>`;
+  const fonte = criar("p", "nota-painel", "Fonte: Relatório e Contas da SAD 2025/26, relatório de gestão («Orçamento época desportiva 2026-2027», «Continuidade da atividade e perspetivas de reequilíbrio financeiro» e «Evolução previsível da sociedade»).");
+  sec.append(aviso, factos, grelhaDe(paineis), texto, fonte);
 }
 
 function construirSolucoes(sec) {
@@ -529,20 +544,8 @@ function estadoContas(ep) {
 }
 
 function construirCartoesGeral() {
-  const q = n => Dados.linhas(n);
-  $("#cartoes-perguntas").replaceChildren(...PERGUNTAS.map(per => {
-    const li = criar("li", "cartao-pergunta");
-    li.innerHTML = `<span class="num" aria-hidden="true">${per.n}</span><h4><a href="#perguntas/pergunta-${per.n}"></a></h4><p></p><span class="seta" aria-hidden="true">Ver análise →</span>`;
-    $("a", li).textContent = per.pergunta;
-    let resposta = "";
-    try { resposta = per.resposta({ q }); } catch (e) { console.warn(e); }
-    // Primeira frase da resposta, calculada a partir das consultas
-    const frases = resposta.split(/(?<=\.)\s/);
-    $("p", li).textContent = frases[0].length < 25 && frases[1] ? `${frases[0]} ${frases[1]}` : frases[0];
-    return li;
-  }));
   const contagem = id => PAINEIS.filter(p => p.seccao === id).length;
-  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios", "solucoes"].includes(s.id)).map(s => {
+  $("#cartoes-areas").replaceChildren(...SECCOES.filter(s => ["previsao", "receitas", "custos", "rentabilidade", "divida", "desporto", "cenarios", "solucoes"].includes(s.id)).map(s => {
     const li = criar("li", "cartao-area");
     li.innerHTML = `<h4><a href="#${s.id}"></a></h4><p></p><span class="contagem"></span>`;
     $("a", li).textContent = s.nome;
@@ -725,14 +728,13 @@ function atualizar({ recriar = false } = {}) {
 
 const sem = t => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 
-/** Índice de tudo o que se pode encontrar: gráficos, indicadores, perguntas, soluções, glossário e consultas */
+/** Índice de tudo o que se pode encontrar: gráficos, indicadores, soluções, glossário e consultas */
 function indicePesquisa() {
   const nomeSec = id => SECCOES.find(s => s.id === id)?.nome ?? "";
   const itens = [];
-  KPIS.forEach(k => itens.push({ titulo: k.nome, tipo: "Indicador", sec: "Visão Geral", destino: "geral/h-sintese" }));
+  KPIS.forEach(k => itens.push({ titulo: k.nome, tipo: "Indicador", sec: "Início", destino: "geral/h-sintese" }));
   PAINEIS.forEach(p => itens.push({ titulo: p.pergunta, texto: p.descricao, tipo: "Gráfico", sec: nomeSec(p.seccao),
-    destino: p.seccao === "perguntas" ? `perguntas/pergunta-${p.questao}` : `${p.seccao}/${p.id}` }));
-  PERGUNTAS.forEach(p => itens.push({ titulo: p.pergunta, texto: p.contexto, tipo: "Pergunta", sec: "Cinco Perguntas", destino: `perguntas/pergunta-${p.n}` }));
+    destino: `${p.seccao}/${p.id}` }));
   SOLUCOES.forEach(p => itens.push({ titulo: p.titulo, tipo: "Solução", sec: "Soluções", destino: `solucoes/solucao-${p.n}` }));
   document.querySelectorAll(".glossario dt").forEach((dt, i) => {
     dt.id ||= `glossario-${i}`;
@@ -852,7 +854,7 @@ function mostrarSeccao() {
 
 function prepararTema() {
   const raiz = document.documentElement;
-  try { const t = localStorage.getItem("tema"); if (t) raiz.dataset.theme = t; } catch { /* sem armazenamento */ }
+  try { const t = localStorage.getItem("tema"); if (t === "light" || t === "dark") raiz.dataset.theme = t; } catch { /* sem armazenamento */ }
   const botao = $("#f-tema");
   const escuro = () => (raiz.dataset.theme ? raiz.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches);
   const rotular = () => {

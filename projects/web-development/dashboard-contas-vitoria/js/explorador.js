@@ -3,7 +3,7 @@
 
 import { todasConsultas, consulta } from "./dados.js";
 import { tabelaOrdenavel, descarregarCSV } from "./tabelas.js";
-import { PAINEIS, SECCOES, PERGUNTAS } from "./paineis.js";
+import { PAINEIS, SECCOES } from "./paineis.js";
 
 /* ---------- Técnicas SQL: detetadas no código, nunca atribuídas à mão ---------- */
 // Os comentários são removidos antes da deteção, para não contar técnicas só mencionadas.
@@ -164,7 +164,6 @@ export function montarExplorador(raiz, { aoSelecionar }) {
     const ordem = consultas.map(x => x.n), i = ordem.indexOf(n);
     const anterior = consultas[i - 1], seguinte = consultas[i + 1];
     const usos = PAINEIS.filter(p => p.consulta === n);
-    const perguntas = PERGUNTAS.filter(p => p.consultas.includes(n));
     const tecs = tecnicasDe(c).map(id => TECNICAS.find(t => t.id === id));
 
     const nLinhas = c.sql.replace(/\s+$/, "").split("\n").length;
@@ -186,8 +185,7 @@ export function montarExplorador(raiz, { aoSelecionar }) {
       <div class="det-acoes">
         <button type="button" class="botao" data-copiar>Copiar SQL</button>
         <button type="button" class="botao secundario" data-csv>Exportar resultado (CSV)</button>
-        ${usos.map(p => `<a class="botao secundario" href="#${p.seccao}/${p.seccao === "perguntas" ? `pergunta-${p.questao}` : p.id}">Ver gráfico em ${escapar(SECCOES.find(s => s.id === p.seccao).nome)}</a>`).join("")}
-        ${perguntas.map(p => `<a class="botao secundario" href="#perguntas/pergunta-${p.n}">Pergunta ${p.n}</a>`).join("")}
+        ${usos.map(p => `<a class="botao secundario" href="#${p.seccao}/${p.id}">Ver gráfico em ${escapar(SECCOES.find(s => s.id === p.seccao).nome)}</a>`).join("")}
       </div>
       <details class="det-sql" open>
         <summary>Código SQL <span class="contagem">${nLinhas} linhas</span></summary>

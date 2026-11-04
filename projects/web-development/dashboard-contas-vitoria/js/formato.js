@@ -136,7 +136,7 @@ const COLUNAS = {
   custo_por_ponto: ["Gastos com pessoal por ponto", "eur"], ranking_eficiencia: ["Posição em eficiência", "int"],
   mudancas_desde_2015: ["Mudanças desde 2015", "int"], interinos: ["Interinos", "int"], treinadores_diferentes: ["Treinadores diferentes", "int"], media_por_epoca_2015_16_a_2025_26: ["Média por época", "num"],
   margem_corrente_sem_vendas_pct: ["Margem corrente sem vendas", "pct"], margem_operacional_com_vendas_pct: ["Margem operacional com vendas", "pct"],
-  rendibilidade_ativo_pct: ["Rendibilidade do ativo", "pct"], rotacao_ativo: ["Rotação do ativo", "rat"], fse_receitas_pct: ["FSE / vendas", "pct"],
+  rendibilidade_ativo_pct: ["Rentabilidade do ativo", "pct"], rotacao_ativo: ["Rotação do ativo", "rat"], fse_receitas_pct: ["FSE / vendas", "pct"],
   divida_fin_receitas: ["Dívida financeira / vendas", "rat"], cash_flow_operacional_pct: ["Fluxo de caixa operacional / vendas", "pct"],
   bce_deposito: ["BCE (facilidade de depósito)", "pct"], euribor_12m: ["Euribor a 12 meses", "pct"], ot_portugal_10a: ["Obrigações do Tesouro a 10 anos", "pct"], credito_empresas_pt: ["Crédito a empresas em Portugal", "pct"],
   vitoria_implicita: ["Vitória (taxa implícita)", "pct"], spread_vs_euribor: ["Diferencial face à Euribor", "pp"], spread_vs_estado_portugues: ["Diferencial face às OT", "pp"], vezes_estado_portugues: ["Múltiplo da taxa das OT", "x"],
