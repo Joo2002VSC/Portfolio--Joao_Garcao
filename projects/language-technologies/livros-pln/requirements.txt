@@ -1,0 +1,7 @@
+spacy>=3.7,<4
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.7
+ebooklib>=0.18
+beautifulsoup4>=4.12
+pytest>=8

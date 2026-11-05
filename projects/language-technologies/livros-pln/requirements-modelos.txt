@@ -1,0 +1,5 @@
+# Modelos spaCy (português, francês, inglês). Instalados por .github/scripts/instalar_modelos.sh,
+# que tenta o GitHub e, se falhar, o espelho no Hugging Face.
+pt_core_news_md==3.8.0
+fr_core_news_md==3.8.0
+en_core_web_md==3.8.0
