@@ -38,7 +38,7 @@ Python · NumPy · JavaScript · GitHub Actions · [Abrir o simulador ↗](https
 | [Humanidades Digitais](./projects/digital-humanities) | Observatório BLCS, filologia, anotação de documentos (XML, LaTeX), OCR, ontologias |
 | [Análise de Dados](./projects/data-analysis) | Projetos em SQL e Python: contas do Vitória SC, simulador financeiro, histórico de leituras, diário de línguas |
 | [Desenvolvimento Web](./projects/web-development) | Dashboards, blog literário, jogo educativo e protótipo de interface |
-| [Tecnologias da Linguagem](./projects/language-technologies) | PLN e IA: chatbot RAG, web scraping e análise de texto, análise de sentimento |
+| [Tecnologias da Linguagem](./projects/language-technologies) | PLN e IA: processamento automático de livros, chatbot RAG, web scraping e análise de texto, análise de sentimento |
 | [Línguas e Literatura](./projects/languages-and-literature) | Tradução, tradução automática, legendagem, terminologia e estudos literários |
 | [Negócio e Inovação](./projects/business-and-innovation) | Validação de ideias de negócio e marketing orientado por dados |
 

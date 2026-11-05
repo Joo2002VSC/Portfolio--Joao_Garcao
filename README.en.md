@@ -38,7 +38,7 @@ Python · NumPy · JavaScript · GitHub Actions · [Open the simulator ↗](http
 | [Digital Humanities](./projects/digital-humanities) | Observatório BLCS, philology, document markup (XML, LaTeX), OCR, ontologies |
 | [Data Analysis](./projects/data-analysis) | SQL and Python projects: Vitória SC accounts, financial simulator, reading history, language-learning log |
 | [Web Development](./projects/web-development) | Dashboards, literary blog, educational game and interface prototype |
-| [Language Technologies](./projects/language-technologies) | NLP and AI: RAG chatbot, web scraping and text analysis, sentiment analysis |
+| [Language Technologies](./projects/language-technologies) | NLP and AI: automatic book processing, RAG chatbot, web scraping and text analysis, sentiment analysis |
 | [Languages and Literature](./projects/languages-and-literature) | Translation, machine translation, subtitling, terminology and literary studies |
 | [Business and Innovation](./projects/business-and-innovation) | Business idea validation and data-driven marketing |
 

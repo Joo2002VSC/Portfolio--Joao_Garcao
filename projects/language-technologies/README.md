@@ -2,7 +2,11 @@
 
 ## 🇵🇹
 
-Projetos de processamento de linguagem natural (PLN) e inteligência artificial, desenvolvidos no Mestrado em Humanidades Digitais (Universidade do Minho).
+Projetos de processamento de linguagem natural (PLN) e inteligência artificial: projetos pessoais e trabalhos do Mestrado em Humanidades Digitais (Universidade do Minho).
+
+### Projetos pessoais
+
+- **[`livros-pln/`](./livros-pln)** — processamento automático de livros (TXT e EPUB, em português, francês e inglês): metadados, indicadores de PLN, gráficos e relatórios com spaCy e pandas, atualizados pelo GitHub Actions sempre que o código muda. [Repositório ↗](https://github.com/Joo2002VSC/livros-pln)
 
 ### Introdução à Inteligência Artificial
 
@@ -24,7 +28,11 @@ O exercício de OCR da mesma cadeira está em [`digital-humanities/ocr`](../digi
 
 ## 🇬🇧
 
-Natural language processing (NLP) and artificial intelligence projects from the Master's in Digital Humanities (University of Minho).
+Natural language processing (NLP) and artificial intelligence projects: personal projects and work from the Master's in Digital Humanities (University of Minho).
+
+### Personal projects
+
+- **[`livros-pln/`](./livros-pln)** — automatic book processing (TXT and EPUB, in Portuguese, French and English): metadata, NLP indicators, charts and reports with spaCy and pandas, updated by GitHub Actions whenever the code changes. [Repository ↗](https://github.com/Joo2002VSC/livros-pln)
 
 ### Introduction to Artificial Intelligence
 
