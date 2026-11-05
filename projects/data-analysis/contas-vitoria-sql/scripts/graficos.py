@@ -235,7 +235,7 @@ def dependencia_vendas(con):
 
 
 def composicao_receitas(con):
-    grupos = [("Direitos TV", PRETO, BRANCO),
+    grupos = [("Direitos de TV", PRETO, BRANCO),
               ("Competições UEFA + Nacionais", AMARELO, PRETO),
               ("Sócios e Camarotes", CINZA_ESCURO, BRANCO),
               ("Patrocínios e Publicidade", CINZA, PRETO),
@@ -250,7 +250,7 @@ def composicao_receitas(con):
     totais = [sum(dados[g][i] for g in nomes) for i in range(len(epocas))]
 
     fig, ax = figura("Composição das receitas operacionais",
-                     "Peso de cada fonte de receita (%) · Os direitos TV dominam, exceto em anos europeus",
+                     "Peso de cada fonte de receita (%) · Os direitos de TV dominam, exceto em anos europeus",
                      altura=6.2, base=0.2)
     base = [0.0] * len(epocas)
     for nome, cor, cor_txt in grupos:
@@ -501,8 +501,8 @@ def racio_uefa(con):
 def centralizacao(con):
     rows = q(con, """WITH RECURSIVE lugar(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM lugar WHERE n < 18)
                      SELECT n, 225000000 * 0.332 / 18, 225000000 * 0.442 * (19 - n) / 171.0 FROM lugar""")
-    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos TV' AND epoca_id='2024/25'")[0][0]
-    fig, ax = figura("Centralização dos direitos TV: quanto vale cada lugar",
+    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos de TV' AND epoca_id='2024/25'")[0][0]
+    fig, ax = figura("Centralização dos direitos de TV: quanto vale cada lugar",
                      "Simulação ilustrativa · Contrato de 250 M€ · Parte igual + mérito repartido de forma linear · Sem a componente de audiências")
     xs = range(len(rows))
     ax.bar(xs, [r[1] for r in rows], color=CINZA, width=0.68, label="Parte igual (33,2%)")
@@ -651,7 +651,7 @@ def centralizacao_equilibrio(con):
                          ORDER BY epoca_id DESC LIMIT 3""")
     defice = sum(r[1] for r in ultimas) / len(ultimas)
     periodo = f"{ultimas[-1][0]}–{ultimas[0][0]}"
-    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos TV' AND epoca_id='2024/25'")[0][0]
+    tv = q(con, "SELECT valor FROM receitas_composicao WHERE categoria='Direitos de TV' AND epoca_id='2024/25'")[0][0]
     cen = []
     for contrato in (200e6, 250e6, 300e6):
         for n in (4, 6, 9):

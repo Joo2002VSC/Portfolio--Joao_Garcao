@@ -23,6 +23,9 @@
   <a href="#projeto:fontes-e-limitações">Fontes e limitações</a>
 </p>
 
+<blockquote>
+<p><strong>Projeto relacionado:</strong> a <a href="../../web-development/dashboard-contas-vitoria">dashboard interativa</a> é a camada de apresentação desta base de dados: os valores que mostra resultam destas consultas SQL, exportados pelo script <code>exportar_json.py</code> da própria dashboard. <a target="_blank" rel="noopener" href="https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/dashboard-contas-vitoria/">Abrir a dashboard ↗</a></p>
+</blockquote>
 <hr />
 <h2 id="projeto:resumo">Resumo</h2>
 <p>Base de dados <strong>SQLite</strong> com as contas do <strong>Vitória Sport Clube</strong> em três perspetivas: a <strong>SAD</strong> (futebol profissional), o <strong>Clube</strong> (associação-mãe) e o <strong>Grupo consolidado</strong>. Cobre 14 épocas, de 2012/13 a 2025/26, e cruza as contas com os resultados desportivos de cada época.</p>
@@ -65,7 +68,7 @@
 <tr>
 <td style="text-align: center;">5</td>
 <td style="text-align: left;">Que combinação reduz a dependência das vendas?</td>
-<td style="text-align: left;">Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 37% do défice. O resto exige cortar custos ou manter vendas.</td>
+<td style="text-align: left;">Centralização dos direitos de TV e juros ao nível do mercado cobririam cerca de 37% do défice. O resto exige cortar custos ou manter vendas.</td>
 <td style="text-align: left;">Conclusão 11, consultas 48, 55</td>
 </tr>
 </tbody>
@@ -164,7 +167,7 @@
 <p><img alt="Taxas de juro" src="img/15_taxas_de_juro.png" loading="lazy" /></p>
 <p><strong>10. A SAD vende sempre mais em jogadores do que fatura na operação.</strong> Em todas as épocas desde 2017/18, as vendas brutas de jogadores superaram as receitas de bilheteira, TV, patrocínios e sócios. Em 2024/25 foram 2,19 € de vendas por cada euro de receita, e em 2025/26 foram 2,07 €. A média de três épocas subiu de 1,09 € (2017/18) para 1,80 € (2025/26).</p>
 <p><img alt="Vendas vs. receitas" src="img/17_vendas_vs_receitas.png" loading="lazy" /></p>
-<p><strong>11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.</strong> O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).</p>
+<p><strong>11. A centralização dos direitos de TV ajuda muito, mas não equilibra as contas sozinha.</strong> O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).</p>
 <p><img alt="Centralização e equilíbrio" src="img/18_centralizacao_equilibrio.png" loading="lazy" /></p>
 <p><strong>13. As vendas de jogadores nunca pagaram os gastos.</strong> Em nove épocas, as mais-valias cobriram entre 20% e 72% dos gastos operacionais; em 2025/26 cobriram 40%, e ficaram por cobrir 24,2 M€, mais do que todas as receitas da operação (14,9 M€). Os gastos operacionais duplicaram desde 2017/18, para um máximo de 40,3 M€. O relatório em PDF <a href="../relatorio/rendimentos-gastos-transferencias.pdf" target="_blank" rel="noopener">Rendimentos, gastos e transferências</a> detalha a evolução de cada rubrica.</p>
 <p><img alt="Gastos operacionais, receitas de transferências e saldo" src="img/01_gastos_transferencias_saldo.png" loading="lazy" /></p>
@@ -186,7 +189,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong><a href="#tecnica">Análise técnica</a></strong></td>
-<td style="text-align: left;">17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas</td>
+<td style="text-align: left;">17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos de TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas</td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong><a href="#verificacao">Verificação das fontes</a></strong></td>
@@ -569,11 +572,11 @@ ORDER BY epoca_id;
 <p>As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:</p>
 <ul>
 <li><strong>Cobertura desigual.</strong> A SAD tem a demonstração de resultados completa em quase todas as épocas. O Clube só tem dados detalhados a partir de 2021/22. O consolidado começa em 2017/18.</li>
-<li><strong>Valores repetidos.</strong> Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas. A nota 15 do R&amp;C 2025/26 confirma esse valor em 2024/25 e 2025/26: é o valor fixo do contrato, não um valor de preenchimento. "Outros" repete-se em 2023/24 e 2024/25, o que continua por confirmar.</li>
+<li><strong>Valores repetidos.</strong> Os direitos de TV têm exatamente 6 922 619 € em quatro épocas seguidas. A nota 15 do R&amp;C 2025/26 confirma esse valor em 2024/25 e 2025/26: é o valor fixo do contrato, não um valor de preenchimento. "Outros" repete-se em 2023/24 e 2024/25, o que continua por confirmar.</li>
 <li><strong>Números diferentes para a mesma coisa.</strong> As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.</li>
 <li><strong>Composição das receitas.</strong> Os totais coincidem com os rendimentos operacionais <em>consolidados</em>, por isso foram associados ao Grupo.</li>
 <li><strong>Rácio de custos do plantel.</strong> A consulta 45 segue a fórmula da UEFA, mas sem as comissões de agentes (não há dados separados), por isso subestima o rácio.</li>
-<li><strong>Simulações.</strong> A centralização dos direitos TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.</li>
+<li><strong>Simulações.</strong> A centralização dos direitos de TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.</li>
 <li><strong>Contas reexpressas.</strong> O R&amp;C 2025/26 reexpressou 2024/25 (resultado de 7,36 M€ em vez de 7,61 M€; capital próprio de (25,8 M€) em vez de (24,0 M€)) e reclassificou os fluxos de caixa. Esta base usa, para cada época, os valores do seu próprio relatório, para que as séries sejam comparáveis com o que foi publicado na altura. Os valores reexpressos estão na tabela <code>reexpressao</code> (consulta 36). Por isso, o valor do plantel no fim de 2024/25 (10,4 M€) não coincide com o valor inicial de 2025/26 (9,6 M€, reexpresso).</li>
 <li><strong>2025/26.</strong> O R&amp;C 2025/26 foi aprovado pelo Conselho de Administração a 26/10/2026 e ainda está sujeito a aprovação da Assembleia Geral. Os juros suportados (7,08 M€) passaram a incluir o efeito financeiro do custo amortizado; para a taxa implícita usam-se só os juros dos financiamentos (5,61 M€, nota 4.7), comparáveis com as épocas anteriores. Ainda não há contas do Clube nem do Grupo consolidado para 2025/26, nem a composição consolidada das receitas.</li>
 <li><strong>Dados desportivos.</strong> Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.</li>
@@ -585,6 +588,10 @@ ORDER BY epoca_id;
 <p>Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo <code>#F5D510</code>, preto <code>#111111</code> e cinzentos <code>#6F6D6E</code> e <code>#EBEBEB</code>. Os valores negativos aparecem entre parênteses. Como o Markdown do GitHub não permite escolher tipos de letra, os títulos das secções deste README são imagens geradas por <code>scripts/cabecalhos.py</code>. O relatório PDF usa o emblema do Vitória Sport Clube, propriedade do clube, apenas para identificar o clube analisado. A tipografia é a <a target="_blank" rel="noopener" href="https://fonts.google.com/specimen/Archivo">Archivo</a>, da Omnibus-Type: Archivo Expanded nos títulos e Archivo no texto. Os ficheiros estão na pasta <code>fontes/</code> (SIL Open Font License), para que os gráficos saiam iguais em qualquer computador.</p>
 <hr />
 <p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p>
+
+<hr />
+<p><strong>Direitos:</strong> todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver <a href="../../../../LICENSE.md" target="_blank" rel="noopener">LICENSE.md</a>.<br />
+<strong>Rights:</strong> all rights reserved by the authors named in this document, unless stated otherwise. See <a href="../../../../LICENSE.md" target="_blank" rel="noopener">LICENSE.md</a>.</p>
 </article>
 <article class="pagina" id="p-estrategica" data-pagina="estrategica">
 <h1 id="estrategica:análise-estratégica-finanças-desporto-e-enquadramento-económico">Análise estratégica: finanças, desporto e enquadramento económico</h1>
@@ -1012,7 +1019,7 @@ ORDER BY epoca_id;
 <a href="#tecnica:13-agentes-e-intermediários">13. Agentes e intermediários</a> ·
 <a href="#tecnica:14-direitos-económicos-de-terceiros-e-co-propriedade">14. Direitos de terceiros</a> ·
 <a href="#tecnica:15-mecanismo-de-solidariedade-e-formação">15. Solidariedade e formação</a> ·
-<a href="#tecnica:16-centralização-dos-direitos-tv-simulação-por-lugar">16. Centralização dos direitos TV</a> ·
+<a href="#tecnica:16-centralização-dos-direitos-tv-simulação-por-lugar">16. Centralização dos direitos de TV</a> ·
 <a href="#tecnica:17-eficiência-desportiva">17. Eficiência desportiva</a></p>
 <p><strong>Indicadores, juros e cenários</strong>
 <a href="#tecnica:18-painel-de-indicadores-financeiros">18. Painel de indicadores</a> ·
@@ -1228,14 +1235,14 @@ ORDER BY epoca_id;
 <td style="text-align: right;">8,5 M€ (21%)</td>
 </tr>
 <tr>
-<td style="text-align: left;">Antecipação de direitos TV (Apollo; em 2026 Score, 11%)</td>
+<td style="text-align: left;">Antecipação de direitos de TV (Apollo; em 2026 Score, 11%)</td>
 <td style="text-align: right;">7,2 M€ (21%)</td>
 <td style="text-align: right;">2,5 M€ (7%)</td>
 <td style="text-align: right;">6,5 M€ (16%)</td>
 </tr>
 </tbody>
 </table></div>
-<p>Segundo o relatório de gestão de 2024/25, algumas operações foram feitas <strong>com recurso</strong>, o que levou a registar 14,8 M€ de empréstimos ligados a valores a receber de clientes. O mesmo relatório atribui a subida dos juros "sobretudo" aos juros das operações de antecipação de recebíveis. Os direitos TV também foram antecipados e estiveram consignados ao empréstimo da Apollo até janeiro de 2026. A 30/06/2026, as receitas TV de <strong>2026/27</strong> já estavam consignadas a um novo financiamento (Score, 6,5 M€), e 12,9 M€ da dívida corrente respeitavam a cessões de créditos e a essa antecipação. O R&amp;C 2025/26 (nota 4.7) diz que os juros dos financiamentos (5,6 M€) correspondem a um custo médio de cerca de 15% da dívida média, "refletindo o recurso a operações de antecipação de recebíveis e o perfil de risco da Sociedade".</p>
+<p>Segundo o relatório de gestão de 2024/25, algumas operações foram feitas <strong>com recurso</strong>, o que levou a registar 14,8 M€ de empréstimos ligados a valores a receber de clientes. O mesmo relatório atribui a subida dos juros "sobretudo" aos juros das operações de antecipação de recebíveis. Os direitos de TV também foram antecipados e estiveram consignados ao empréstimo da Apollo até janeiro de 2026. A 30/06/2026, as receitas TV de <strong>2026/27</strong> já estavam consignadas a um novo financiamento (Score, 6,5 M€), e 12,9 M€ da dívida corrente respeitavam a cessões de créditos e a essa antecipação. O R&amp;C 2025/26 (nota 4.7) diz que os juros dos financiamentos (5,6 M€) correspondem a um custo médio de cerca de 15% da dívida média, "refletindo o recurso a operações de antecipação de recebíveis e o perfil de risco da Sociedade".</p>
 <p><strong>Leitura.</strong> Antecipar receitas resolve a tesouraria de hoje à custa dos resultados de amanhã. É uma das razões para a taxa de juro implícita ter chegado aos <strong>15%</strong> (consulta 27).</p>
 <h2 id="tecnica:5-amortização-de-passes-e-abates">5. Amortização de passes e abates</h2>
 <p><strong>O conceito.</strong> O custo de contratar um jogador (transferência, comissões, formação) é um ativo intangível, amortizado em partes iguais durante o contrato. Se o contrato for rescindido antes do fim, o valor por amortizar é abatido de uma só vez.</p>
@@ -1500,8 +1507,8 @@ ORDER BY epoca_id;
 <p><strong>O conceito.</strong> Em cada transferência internacional, 5% do valor é distribuído pelos clubes que formaram o jogador entre os 12 e os 23 anos. Há ainda a compensação por formação no primeiro contrato profissional.</p>
 <p><strong>No Vitória</strong> (consulta 47): 3,1 M€ recebidos entre 2018/19 e 2024/25, com picos de 0,82 M€ (2020/21) e 0,90 M€ (2022/23). Em 2025/26, o R&amp;C (nota 15) regista mais 0,94 M€, o valor mais alto da série.</p>
 <p><strong>Leitura.</strong> É uma receita sem custo associado, que continua a chegar anos depois de o jogador sair. No entanto, os minutos jogados por atletas formados no clube caíram de cerca de 29 mil (2015/16) para 13 mil (2024/25), segundo a compilação do autor. Menos formação hoje significa menos solidariedade no futuro.</p>
-<h2 id="tecnica:16-centralização-dos-direitos-tv-simulação-por-lugar">16. Centralização dos direitos TV: simulação por lugar</h2>
-<p><strong>O conceito.</strong> A partir de 2028/29, os direitos TV da Liga serão vendidos em conjunto. A proposta reparte 90% do valor pela I Liga:
+<h2 id="tecnica:16-centralização-dos-direitos-de-tv-simulação-por-lugar">16. Centralização dos direitos de TV: simulação por lugar</h2>
+<p><strong>O conceito.</strong> A partir de 2028/29, os direitos de TV da Liga serão vendidos em conjunto. A proposta reparte 90% do valor pela I Liga:
 - 33,2% em partes iguais;
 - 44,2% por mérito desportivo;
 - 17,6% por audiências e assistências.</p>
@@ -1697,7 +1704,7 @@ ORDER BY epoca_id;
 <p><strong>Leitura.</strong>
 - Entre 2016 e 2022, com juros negativos na zona euro, o Vitória pagou entre 6% e 10%. Em 2019/20, a SAD pagou <strong>21 vezes</strong> a taxa do Estado português.
 - Com a subida dos juros do BCE (2022–2023), o spread não diminuiu: aumentou. Em 2024/25 e 2025/26, quando o BCE já estava a descer as taxas, o Vitória pagou os valores mais altos da série: 14,6% e 14,9%. O próprio R&amp;C 2025/26 fala num custo médio de "cerca de 15%", com taxas contratuais entre 8% e 12,5%.
-- <strong>O custo do risco.</strong> Se a SAD pagasse a taxa média do crédito às empresas (entre 4,5% e 5,5%) sobre a dívida média de 2025/26 (37,7 M€), os juros seriam de 1,7 a 2,1 M€, em vez de 5,6 M€. São <strong>3,5 a 3,9 M€ por ano</strong>, quase o mesmo que a centralização dos direitos TV pode trazer (ver ponto 22). Em 2024/25 o excesso foi de 3,1 a 3,5 M€.
+- <strong>O custo do risco.</strong> Se a SAD pagasse a taxa média do crédito às empresas (entre 4,5% e 5,5%) sobre a dívida média de 2025/26 (37,7 M€), os juros seriam de 1,7 a 2,1 M€, em vez de 5,6 M€. São <strong>3,5 a 3,9 M€ por ano</strong>, quase o mesmo que a centralização dos direitos de TV pode trazer (ver ponto 22). Em 2024/25 o excesso foi de 3,1 a 3,5 M€.
 - O spread reflete o risco que os credores veem: capital próprio negativo, incerteza sobre a continuidade, dívida de curto prazo e receitas já antecipadas. Reduzi-lo depende de melhorar esses indicadores, não de negociar melhor.</p>
 <h2 id="tecnica:20-despesas-vs-classificação-regressão-linear">20. Despesas vs. classificação: regressão linear</h2>
 <p><strong>O conceito.</strong> Uma regressão linear por mínimos quadrados mede quanto uma variável explica outra. O <strong>declive</strong> diz quanto muda o lugar por cada milhão gasto, e o <strong>R²</strong> (de 0 a 1) diz que parte das diferenças de classificação é explicada pelas despesas.</p>
@@ -1784,7 +1791,7 @@ ORDER BY epoca_id;
 - Em 2025/26, mesmo com 30,8 M€ em vendas, mais de duas vezes as receitas, a SAD perdeu 11,1 M€. Vender muito já não chega quando não há Europa.
 - As mais-valias valem entre um terço e dois terços do rendimento total. As épocas com poucas vendas (2017/18, 2023/24) coincidem com os piores resultados.</p>
 <h2 id="tecnica:22-centralização-e-equilíbrio-das-contas">22. Centralização e equilíbrio das contas</h2>
-<p><strong>O conceito.</strong> Hoje, cada clube negoceia sozinho os direitos TV. A partir de 2028/29, a Liga vende-os em conjunto e reparte o valor (ver ponto 16). Para o Vitória, isto pode ser a primeira receita <strong>estrutural</strong> nova em muitos anos: não depende de ir à Europa nem de vender jogadores.</p>
+<p><strong>O conceito.</strong> Hoje, cada clube negoceia sozinho os direitos de TV. A partir de 2028/29, a Liga vende-os em conjunto e reparte o valor (ver ponto 16). Para o Vitória, isto pode ser a primeira receita <strong>estrutural</strong> nova em muitos anos: não depende de ir à Europa nem de vender jogadores.</p>
 <p><strong>No Vitória</strong> (consulta 55). O défice antes de vendas de jogadores foi, em média, de <strong>22,8 M€ por época</strong> entre 2023/24 e 2025/26. A simulação cruza três valores de contrato com três lugares na tabela:</p>
 <p><img alt="Centralização e equilíbrio" src="img/18_centralizacao_equilibrio.png" loading="lazy" /></p>
 <div class="tabela"><table>
@@ -1817,7 +1824,7 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
-<p><sub>Ganho face aos 6,9 M€ atuais de direitos TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub></p>
+<p><sub>Ganho face aos 6,9 M€ atuais de direitos de TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub></p>
 <p><strong>Leitura.</strong>
 - <strong>Sozinha, a centralização não equilibra as contas.</strong> No cenário central (250 M€, 6.º lugar), cobre cerca de um quinto do défice. Todos os valores desta secção são <strong>simulações</strong> com pressupostos explícitos, não previsões.
 - <strong>Combinada, muda o modelo.</strong> Centralização (+4,8 M€) e juros ao nível do mercado (+3,5 a 3,9 M€, ponto 19) somam 8,3 a 8,7 M€, cerca de 37% do défice. As mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para cerca de 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€). As vendas deixariam de ser uma questão de sobrevivência e passariam a ser uma margem.
@@ -3569,13 +3576,13 @@ ORDER BY epoca_id;
 </thead>
 <tbody>
 <tr>
-<td>Direitos TV</td>
+<td>Direitos de TV</td>
 <td>6 922 619</td>
 <td>4</td>
 <td>2021/22, 2022/23, 2023/24, 2024/25</td>
 </tr>
 <tr>
-<td>Direitos TV</td>
+<td>Direitos de TV</td>
 <td>7 000 000</td>
 <td>3</td>
 <td>2018/19, 2019/20, 2020/21</td>
@@ -4030,7 +4037,7 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
-<h2 id="resultados:26-centralização-dos-direitos-tv-202829-parte-igual-estimada-por-clube">26. Centralização dos direitos TV (2028/29): parte igual estimada por clube</h2>
+<h2 id="resultados:26-centralização-dos-direitos-de-tv-202829-parte-igual-estimada-por-clube">26. Centralização dos direitos de TV (2028/29): parte igual estimada por clube</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -5361,7 +5368,7 @@ ORDER BY epoca_id;
 </tr>
 <tr>
 <td>2026-06-30</td>
-<td>Antecipação de direitos TV 2026/27</td>
+<td>Antecipação de direitos de TV 2026/27</td>
 <td>6 450 170</td>
 <td>15,8</td>
 <td>100,0</td>
@@ -6027,7 +6034,7 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
-<h2 id="resultados:48-centralização-dos-direitos-tv-simulação-por-lugar-na-tabela-ilustrativa">48. Centralização dos direitos TV: simulação por lugar na tabela (ilustrativa)</h2>
+<h2 id="resultados:48-centralização-dos-direitos-de-tv-simulação-por-lugar-na-tabela-ilustrativa">48. Centralização dos direitos de TV: simulação por lugar na tabela (ilustrativa)</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -6794,7 +6801,7 @@ ORDER BY epoca_id;
 </tr>
 </tbody>
 </table></div>
-<h2 id="resultados:55-centralização-dos-direitos-tv-quanto-reduz-a-dependência-das-vendas">55. Centralização dos direitos TV: quanto reduz a dependência das vendas</h2>
+<h2 id="resultados:55-centralização-dos-direitos-de-tv-quanto-reduz-a-dependência-das-vendas">55. Centralização dos direitos de TV: quanto reduz a dependência das vendas</h2>
 <div class="tabela"><table>
 <thead>
 <tr>
@@ -7529,7 +7536,7 @@ ORDER BY epoca_id;
 <h1 id="testes:testes-de-qualidade-e-reconciliação">Testes de qualidade e reconciliação</h1>
 <p>Gerado por <code>scripts/testes.py</code>. Corre-o depois de <code>build_db.py</code>.</p>
 <p><strong>39 testes aprovados · 0 falhados · 9 avisos</strong></p>
-<p>Python 3.13.17 · SQLite 3.45.1 · Linux</p>
+<p>Python 3.13.18 · SQLite 3.53.1 · Linux</p>
 <h2 id="testes:1-integridade-da-base-de-dados">1. Integridade da base de dados</h2>
 <div class="tabela"><table>
 <thead>
@@ -7810,12 +7817,12 @@ ORDER BY epoca_id;
 <tbody>
 <tr>
 <td style="text-align: center;">⚠</td>
-<td style="text-align: left;">Valor repetido em 4 épocas: Direitos TV</td>
+<td style="text-align: left;">Valor repetido em 4 épocas: Direitos de TV</td>
 <td style="text-align: left;">6 922 619 €</td>
 </tr>
 <tr>
 <td style="text-align: center;">⚠</td>
-<td style="text-align: left;">Valor repetido em 3 épocas: Direitos TV</td>
+<td style="text-align: left;">Valor repetido em 3 épocas: Direitos de TV</td>
 <td style="text-align: left;">7 000 000 €</td>
 </tr>
 <tr>

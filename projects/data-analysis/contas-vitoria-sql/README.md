@@ -37,7 +37,7 @@ Sobre essa base, **59 consultas SQL** respondem a uma pergunta central: *as cont
 | 2 | Quanto pesam as vendas de jogadores e a Europa? | As vendas superaram sempre as receitas da operação (2,07 € por cada euro em 2025/26). A fase de grupos europeia sobe as receitas médias de 14,0 para 21,3 M€. | Conclusões 5 e 10, consultas 6, 54 |
 | 3 | A dívida é sustentável e a que custo? | É cara e curta: taxa implícita de 14,9% (12,5 p.p. acima da Euribor) e 94% a vencer em menos de um ano (30/06/2026). | Conclusões 3, 4 e 9, consultas 27–30, 52 |
 | 4 | Gastar mais traz melhores classificações? | Não se consegue demonstrar: R² = 0,02 em 13 épocas e o intervalo de confiança do efeito inclui o zero. | Conclusão 6, consultas 22, 53 |
-| 5 | Que combinação reduz a dependência das vendas? | Centralização dos direitos TV e juros ao nível do mercado cobririam cerca de 37% do défice. O resto exige cortar custos ou manter vendas. | Conclusão 11, consultas 48, 55 |
+| 5 | Que combinação reduz a dependência das vendas? | Centralização dos direitos de TV e juros ao nível do mercado cobririam cerca de 37% do défice. O resto exige cortar custos ou manter vendas. | Conclusão 11, consultas 48, 55 |
 
 **✓ Dados verificados.** O balanço, a dívida, os juros e o pessoal da SAD foram conferidos com os 14 Relatórios e Contas de 2012/13 a 2025/26 (incluindo os digitalizados, lidos com OCR). A [verificação das fontes](verificacao-fontes.md) documenta 40 divergências encontradas em fontes secundárias e o que foi corrigido.
 
@@ -105,7 +105,7 @@ Sobre essa base, **59 consultas SQL** respondem a uma pergunta central: *as cont
 
 ![Vendas vs. receitas](graficos/17_vendas_vs_receitas.png)
 
-**11. A centralização dos direitos TV ajuda muito, mas não equilibra as contas sozinha.** O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).
+**11. A centralização dos direitos de TV ajuda muito, mas não equilibra as contas sozinha.** O défice antes de vendas foi de 22,8 M€ por época (média 2023/24–2025/26). Num cenário central (contrato de 250 M€, 6.º lugar), a centralização traz mais 4,8 M€, cerca de um quinto do défice. Somada a juros ao nível do mercado, as mais-valias necessárias para o equilíbrio desceriam de cerca de 23 M€ para 14 M€ por época, abaixo da média das três últimas épocas (16,8 M€).
 
 ![Centralização e equilíbrio](graficos/18_centralizacao_equilibrio.png)
 
@@ -125,7 +125,7 @@ Os resultados completos das 59 consultas estão em [`resultados.md`](resultados.
 | Relatório | O que contém |
 |:---|:---|
 | **[Análise estratégica](analise-estrategica.md)** | Diagnóstico, finanças vs. desempenho desportivo, enquadramento económico e 12 recomendações com cenários |
-| **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas |
+| **[Análise técnica](analise-tecnica.md)** | 17 conceitos aprofundados: custo amortizado, dívida líquida/EBITDA, fundo de maneio, factoring, passes, reservas ocultas, artigo 35.º do CSC, alavancagem operacional, partes relacionadas, regras da UEFA, multiclube, Lei 39/2023, intermediários, direitos de terceiros, solidariedade, centralização dos direitos de TV e eficiência desportiva. Uma terceira parte junta o painel de indicadores, a comparação com as taxas de juro de mercado, a regressão entre despesas e classificação, o peso das vendas e a centralização como via para equilibrar as contas |
 | **[Verificação das fontes](verificacao-fontes.md)** | Conferência de cada número com os Relatórios e Contas e as 40 divergências encontradas em fontes secundárias |
 | **[Rendimentos, gastos e transferências](relatorio/rendimentos-gastos-transferencias.pdf)** (PDF, 7 páginas) | Gastos operacionais face às receitas de transferências e saldo, evolução das rubricas de rendimentos e de gastos desde 2013/14 e detalhe das notas do R&C 2025/26 |
 | **[Testes](testes.md)** | Resultado dos testes automáticos de integridade, coerência contabilística e reconciliação |
@@ -341,11 +341,11 @@ Os dados financeiros vêm de duas fontes:
 As consultas de qualidade (17 a 19) revelam limitações que convém conhecer:
 
 - **Cobertura desigual.** A SAD tem a demonstração de resultados completa em quase todas as épocas. O Clube só tem dados detalhados a partir de 2021/22. O consolidado começa em 2017/18.
-- **Valores repetidos.** Os direitos TV têm exatamente 6 922 619 € em quatro épocas seguidas. A nota 15 do R&C 2025/26 confirma esse valor em 2024/25 e 2025/26: é o valor fixo do contrato, não um valor de preenchimento. "Outros" repete-se em 2023/24 e 2024/25, o que continua por confirmar.
+- **Valores repetidos.** Os direitos de TV têm exatamente 6 922 619 € em quatro épocas seguidas. A nota 15 do R&C 2025/26 confirma esse valor em 2024/25 e 2025/26: é o valor fixo do contrato, não um valor de preenchimento. "Outros" repete-se em 2023/24 e 2024/25, o que continua por confirmar.
 - **Números diferentes para a mesma coisa.** As mais-valias da página da SAD diferem das da página consolidada em cinco épocas. As duas versões estão guardadas, cada uma com a entidade de origem.
 - **Composição das receitas.** Os totais coincidem com os rendimentos operacionais *consolidados*, por isso foram associados ao Grupo.
 - **Rácio de custos do plantel.** A consulta 45 segue a fórmula da UEFA, mas sem as comissões de agentes (não há dados separados), por isso subestima o rácio.
-- **Simulações.** A centralização dos direitos TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.
+- **Simulações.** A centralização dos direitos de TV (consulta 48) usa um mérito linear e ignora as audiências; o valor de mercado do plantel (Transfermarkt) só existe para 2026; os treinadores vêm da Wikipédia. São ordens de grandeza, não previsões.
 - **Contas reexpressas.** O R&C 2025/26 reexpressou 2024/25 (resultado de 7,36 M€ em vez de 7,61 M€; capital próprio de (25,8 M€) em vez de (24,0 M€)) e reclassificou os fluxos de caixa. Esta base usa, para cada época, os valores do seu próprio relatório, para que as séries sejam comparáveis com o que foi publicado na altura. Os valores reexpressos estão na tabela `reexpressao` (consulta 36). Por isso, o valor do plantel no fim de 2024/25 (10,4 M€) não coincide com o valor inicial de 2025/26 (9,6 M€, reexpresso).
 - **2025/26.** O R&C 2025/26 foi aprovado pelo Conselho de Administração a 26/10/2026 e ainda está sujeito a aprovação da Assembleia Geral. Os juros suportados (7,08 M€) passaram a incluir o efeito financeiro do custo amortizado; para a taxa implícita usam-se só os juros dos financiamentos (5,61 M€, nota 4.7), comparáveis com as épocas anteriores. Ainda não há contas do Clube nem do Grupo consolidado para 2025/26, nem a composição consolidada das receitas.
 - **Dados desportivos.** Classificações e campanhas europeias recolhidas da Wikipédia e do Maisfutebol; pontos só disponíveis para as três últimas épocas. As médias de espectadores vêm da compilação do autor.

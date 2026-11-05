@@ -4,7 +4,7 @@ Gerado por `scripts/testes.py`. Corre-o depois de `build_db.py`.
 
 **39 testes aprovados · 0 falhados · 9 avisos**
 
-Python 3.13.17 · SQLite 3.45.1 · Linux
+Python 3.13.18 · SQLite 3.53.1 · Linux
 
 ## 1. Integridade da base de dados
 
@@ -74,7 +74,7 @@ Python 3.13.17 · SQLite 3.45.1 · Linux
 
 | Resultado | Teste | Detalhe |
 |:---:|:---|:---|
-| ⚠ | Valor repetido em 4 épocas: Direitos TV | 6 922 619 € |
-| ⚠ | Valor repetido em 3 épocas: Direitos TV | 7 000 000 € |
+| ⚠ | Valor repetido em 4 épocas: Direitos de TV | 6 922 619 € |
+| ⚠ | Valor repetido em 3 épocas: Direitos de TV | 7 000 000 € |
 | ⚠ | Vendas brutas = mais-valias em 2020/21 | a fonte só indica as mais-valias; o rácio de mais-valias sobre vendas dá 100% |
 | ⚠ | Épocas da SAD sem receitas detalhadas | 2012/13 |

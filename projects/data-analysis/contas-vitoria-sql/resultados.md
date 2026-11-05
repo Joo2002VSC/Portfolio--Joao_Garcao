@@ -241,8 +241,8 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 
 | categoria | valor | n_epocas | epocas |
 |---|---|---|---|
-| Direitos TV | 6 922 619 | 4 | 2021/22, 2022/23, 2023/24, 2024/25 |
-| Direitos TV | 7 000 000 | 3 | 2018/19, 2019/20, 2020/21 |
+| Direitos de TV | 6 922 619 | 4 | 2021/22, 2022/23, 2023/24, 2024/25 |
+| Direitos de TV | 7 000 000 | 3 | 2018/19, 2019/20, 2020/21 |
 | Outros | 569 189 | 2 | 2023/24, 2024/25 |
 
 ## 19. Qualidade dos dados: mais-valias SAD vs consolidadas
@@ -325,7 +325,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 |---|---|---|---|
 | 12 591 584 | -11 063 043 | 23 654 627 | 11 063 043 |
 
-## 26. Centralização dos direitos TV (2028/29): parte igual estimada por clube
+## 26. Centralização dos direitos de TV (2028/29): parte igual estimada por clube
 
 | valor_total_contrato | parte_igual_por_clube | tv_vitoria_2024_25 | parte_igual_em_pct_do_atual |
 |---|---|---|---|
@@ -544,7 +544,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2025-06-30 | Locações financeiras | 48 670 | 0,10 | 39,3 |
 | 2026-06-30 | Empréstimos (MSD & Fasanara) | 25 332 987 | 62,0 | 100,0 |
 | 2026-06-30 | Factoring | 8 517 273 | 20,9 | 75,6 |
-| 2026-06-30 | Antecipação de direitos TV 2026/27 | 6 450 170 | 15,8 | 100,0 |
+| 2026-06-30 | Antecipação de direitos de TV 2026/27 | 6 450 170 | 15,8 | 100,0 |
 | 2026-06-30 | Locações financeiras | 529 665 | 1,30 | 29,3 |
 
 ## 40. Passes de jogadores: investimento, amortizações e abates
@@ -661,7 +661,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2023/24 | 202 357 | 6,60 | 2 552 279 |
 | 2024/25 | 516 936 | 16,8 | 3 069 215 |
 
-## 48. Centralização dos direitos TV: simulação por lugar na tabela (ilustrativa)
+## 48. Centralização dos direitos de TV: simulação por lugar na tabela (ilustrativa)
 
 | lugar | parte_igual | merito_ilustrativo | total_sem_audiencias | vs_tv_atual |
 |---|---|---|---|---|
@@ -762,7 +762,7 @@ Gerado automaticamente por `scripts/correr_analises.py`. Valores em euros.
 | 2024/25 | 22 584 987 | 49 518 024 | 27 540 964 | 2,19 | 54,9 | 1,89 |
 | 2025/26 | 14 880 806 | 30 820 000 | 16 055 187 | 2,07 | 51,9 | 1,80 |
 
-## 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
+## 55. Centralização dos direitos de TV: quanto reduz a dependência das vendas
 
 | contrato | lugar | tv_centralizada | ganho_vs_atual | defice_antes_vendas | mais_valias_necessarias | pct_do_defice_coberto |
 |---|---|---|---|---|---|---|

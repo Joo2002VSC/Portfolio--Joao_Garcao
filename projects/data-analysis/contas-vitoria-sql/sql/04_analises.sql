@@ -67,7 +67,7 @@ WITH pct AS (
 )
 SELECT
     epoca_id AS epoca,
-    ROUND(MAX(CASE WHEN categoria = 'Direitos TV' THEN p END), 1)                  AS tv,
+    ROUND(MAX(CASE WHEN categoria = 'Direitos de TV' THEN p END), 1)                  AS tv,
     ROUND(MAX(CASE WHEN categoria = 'Competições UEFA + Nacionais' THEN p END), 1) AS competicoes,
     ROUND(MAX(CASE WHEN categoria = 'Sócios e Camarotes' THEN p END), 1)           AS socios,
     ROUND(MAX(CASE WHEN categoria = 'Patrocínios e Publicidade' THEN p END), 1)    AS patrocinios,
@@ -436,13 +436,13 @@ SELECT
 FROM v;
 
 
--- @q 26. Centralização dos direitos TV (2028/29): parte igual estimada por clube
+-- @q 26. Centralização dos direitos de TV (2028/29): parte igual estimada por clube
 -- Parâmetros da proposta: 90% para a Liga Betclic (18 clubes), 33,2% em
 -- partes iguais. Cenários para o valor total do contrato.
 WITH cenarios(total) AS (VALUES (200000000), (250000000), (275000000)),
      atual AS (
         SELECT valor AS tv_atual FROM receitas_composicao
-        WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'
+        WHERE categoria = 'Direitos de TV' AND epoca_id = '2024/25'
      )
 SELECT
     total                                        AS valor_total_contrato,
@@ -801,7 +801,7 @@ WHERE categoria = 'Mecanismo Solidariedade'
 ORDER BY epoca_id;
 
 
--- @q 48. Centralização dos direitos TV: simulação por lugar na tabela (ilustrativa)
+-- @q 48. Centralização dos direitos de TV: simulação por lugar na tabela (ilustrativa)
 -- Contrato de 250 M€; 90% para 18 clubes; 33,2% igual; 44,2% por mérito, aqui
 -- repartido de forma linear pela classificação (pesos 18 a 1). Exclui audiências.
 WITH RECURSIVE lugar(n) AS (SELECT 1 UNION ALL SELECT n + 1 FROM lugar WHERE n < 18),
@@ -952,7 +952,7 @@ WHERE t.entidade_id = 'SAD' AND d.vendas_servicos IS NOT NULL
 ORDER BY t.epoca_id;
 
 
--- @q 55. Centralização dos direitos TV: quanto reduz a dependência das vendas
+-- @q 55. Centralização dos direitos de TV: quanto reduz a dependência das vendas
 -- Défice antes de vendas = média das três épocas mais recentes com dados (hoje
 -- 2023/24 a 2025/26) do resultado líquido sem mais-valias. Cenários de contrato (200, 250, 300 M€) e de
 -- lugar (4.º, 6.º, 9.º), com a mesma repartição ilustrativa da consulta 48.
@@ -963,7 +963,7 @@ WITH base AS (
           ORDER BY epoca_id DESC LIMIT 3)
 ),
 tv AS (SELECT valor AS tv_atual FROM receitas_composicao
-       WHERE categoria = 'Direitos TV' AND epoca_id = '2024/25'),
+       WHERE categoria = 'Direitos de TV' AND epoca_id = '2024/25'),
 cenario(contrato) AS (VALUES (200000000), (250000000), (300000000)),
 lugar(n) AS (VALUES (4), (6), (9)),
 sim AS (

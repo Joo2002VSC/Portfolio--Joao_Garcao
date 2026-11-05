@@ -14,7 +14,7 @@ FROM anos;
 
 INSERT INTO entidade (entidade_id, nome, descricao) VALUES
 ('SAD',         'Vitória Sport Clube - Futebol, SAD',
-                'Sociedade desportiva: futebol profissional, transferências, UEFA, direitos TV'),
+                'Sociedade desportiva: futebol profissional, transferências, UEFA, direitos de TV'),
 ('CLUBE',       'Vitória Sport Clube (associação)',
                 'Associação-mãe: Estádio D. Afonso Henriques, Academia, modalidades, maioria da SAD'),
 ('CONSOLIDADO', 'Grupo Vitória SC (Clube + SAD)',

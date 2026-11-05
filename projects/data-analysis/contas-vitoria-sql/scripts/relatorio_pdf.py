@@ -330,7 +330,7 @@ def main():
   <p class="lead">Os rendimentos operacionais passaram de {m(rend[0]["total_rendimentos"])} M€ em 2013/14 para {m(r26["total_rendimentos"])} M€ em 2025/26, com um máximo de {m(max(l["total_rendimentos"] for l in rend))} M€ em 2024/25. O crescimento veio sobretudo dos outros rendimentos, onde se registam as mais-valias com jogadores; as vendas e serviços dependem da Europa.</p>
   <figure><img src="{g2}" alt="Rubricas de rendimentos por época"></figure>
   {t2}
-  <p class="nota">Valores em M€. Vendas e serviços prestados = direitos TV, prémios de competições, bilheteira, quotas, patrocínios, mercadorias e mecanismo de solidariedade. Outros rendimentos = sobretudo mais-valias com a alienação de passes, compensações por atletas vendidos em anos anteriores e receitas de apostas. Consulta SQL 57.</p>"""
+  <p class="nota">Valores em M€. Vendas e serviços prestados = direitos de TV, prémios de competições, bilheteira, quotas, patrocínios, mercadorias e mecanismo de solidariedade. Outros rendimentos = sobretudo mais-valias com a alienação de passes, compensações por atletas vendidos em anos anteriores e receitas de apostas. Consulta SQL 57.</p>"""
 
     # --- 3. Gastos -------------------------------------------------------------
     t3 = tabela(

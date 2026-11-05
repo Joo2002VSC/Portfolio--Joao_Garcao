@@ -26,7 +26,7 @@ Este documento aprofunda **17 conceitos**, nove de análise financeira e oito de
 [13. Agentes e intermediários](#13-agentes-e-intermediários) ·
 [14. Direitos de terceiros](#14-direitos-económicos-de-terceiros-e-co-propriedade) ·
 [15. Solidariedade e formação](#15-mecanismo-de-solidariedade-e-formação) ·
-[16. Centralização dos direitos TV](#16-centralização-dos-direitos-tv-simulação-por-lugar) ·
+[16. Centralização dos direitos de TV](#16-centralização-dos-direitos-tv-simulação-por-lugar) ·
 [17. Eficiência desportiva](#17-eficiência-desportiva)
 
 **Indicadores, juros e cenários**
@@ -115,9 +115,9 @@ Em 2025/26, o efeito do custo amortizado reduziu as mais-valias com jogadores em
 |:---|---:|---:|---:|
 | Empréstimos (BDT/MSD; em 2026 MSD e Fasanara, 11% a 12,5%) | 17,6 M€ (52%) | 26,3 M€ (76%) | 25,3 M€ (62%) |
 | Factoring e cessão de créditos com recurso (8% a 10%) | 9,1 M€ (27%) | 5,7 M€ (16%) | 8,5 M€ (21%) |
-| Antecipação de direitos TV (Apollo; em 2026 Score, 11%) | 7,2 M€ (21%) | 2,5 M€ (7%) | 6,5 M€ (16%) |
+| Antecipação de direitos de TV (Apollo; em 2026 Score, 11%) | 7,2 M€ (21%) | 2,5 M€ (7%) | 6,5 M€ (16%) |
 
-Segundo o relatório de gestão de 2024/25, algumas operações foram feitas **com recurso**, o que levou a registar 14,8 M€ de empréstimos ligados a valores a receber de clientes. O mesmo relatório atribui a subida dos juros "sobretudo" aos juros das operações de antecipação de recebíveis. Os direitos TV também foram antecipados e estiveram consignados ao empréstimo da Apollo até janeiro de 2026. A 30/06/2026, as receitas TV de **2026/27** já estavam consignadas a um novo financiamento (Score, 6,5 M€), e 12,9 M€ da dívida corrente respeitavam a cessões de créditos e a essa antecipação. O R&C 2025/26 (nota 4.7) diz que os juros dos financiamentos (5,6 M€) correspondem a um custo médio de cerca de 15% da dívida média, "refletindo o recurso a operações de antecipação de recebíveis e o perfil de risco da Sociedade".
+Segundo o relatório de gestão de 2024/25, algumas operações foram feitas **com recurso**, o que levou a registar 14,8 M€ de empréstimos ligados a valores a receber de clientes. O mesmo relatório atribui a subida dos juros "sobretudo" aos juros das operações de antecipação de recebíveis. Os direitos de TV também foram antecipados e estiveram consignados ao empréstimo da Apollo até janeiro de 2026. A 30/06/2026, as receitas TV de **2026/27** já estavam consignadas a um novo financiamento (Score, 6,5 M€), e 12,9 M€ da dívida corrente respeitavam a cessões de créditos e a essa antecipação. O R&C 2025/26 (nota 4.7) diz que os juros dos financiamentos (5,6 M€) correspondem a um custo médio de cerca de 15% da dívida média, "refletindo o recurso a operações de antecipação de recebíveis e o perfil de risco da Sociedade".
 
 **Leitura.** Antecipar receitas resolve a tesouraria de hoje à custa dos resultados de amanhã. É uma das razões para a taxa de juro implícita ter chegado aos **15%** (consulta 27).
 
@@ -288,9 +288,9 @@ A 30/06/2026, a SAD devia **23,6 M€ a intermediários** (21,2 M€ um ano ante
 
 **Leitura.** É uma receita sem custo associado, que continua a chegar anos depois de o jogador sair. No entanto, os minutos jogados por atletas formados no clube caíram de cerca de 29 mil (2015/16) para 13 mil (2024/25), segundo a compilação do autor. Menos formação hoje significa menos solidariedade no futuro.
 
-## 16. Centralização dos direitos TV: simulação por lugar
+## 16. Centralização dos direitos de TV: simulação por lugar
 
-**O conceito.** A partir de 2028/29, os direitos TV da Liga serão vendidos em conjunto. A proposta reparte 90% do valor pela I Liga:
+**O conceito.** A partir de 2028/29, os direitos de TV da Liga serão vendidos em conjunto. A proposta reparte 90% do valor pela I Liga:
 - 33,2% em partes iguais;
 - 44,2% por mérito desportivo;
 - 17,6% por audiências e assistências.
@@ -378,7 +378,7 @@ A diferença face à referência é o **spread**: o prémio que o mercado cobra 
 **Leitura.**
 - Entre 2016 e 2022, com juros negativos na zona euro, o Vitória pagou entre 6% e 10%. Em 2019/20, a SAD pagou **21 vezes** a taxa do Estado português.
 - Com a subida dos juros do BCE (2022–2023), o spread não diminuiu: aumentou. Em 2024/25 e 2025/26, quando o BCE já estava a descer as taxas, o Vitória pagou os valores mais altos da série: 14,6% e 14,9%. O próprio R&C 2025/26 fala num custo médio de "cerca de 15%", com taxas contratuais entre 8% e 12,5%.
-- **O custo do risco.** Se a SAD pagasse a taxa média do crédito às empresas (entre 4,5% e 5,5%) sobre a dívida média de 2025/26 (37,7 M€), os juros seriam de 1,7 a 2,1 M€, em vez de 5,6 M€. São **3,5 a 3,9 M€ por ano**, quase o mesmo que a centralização dos direitos TV pode trazer (ver ponto 22). Em 2024/25 o excesso foi de 3,1 a 3,5 M€.
+- **O custo do risco.** Se a SAD pagasse a taxa média do crédito às empresas (entre 4,5% e 5,5%) sobre a dívida média de 2025/26 (37,7 M€), os juros seriam de 1,7 a 2,1 M€, em vez de 5,6 M€. São **3,5 a 3,9 M€ por ano**, quase o mesmo que a centralização dos direitos de TV pode trazer (ver ponto 22). Em 2024/25 o excesso foi de 3,1 a 3,5 M€.
 - O spread reflete o risco que os credores veem: capital próprio negativo, incerteza sobre a continuidade, dívida de curto prazo e receitas já antecipadas. Reduzi-lo depende de melhorar esses indicadores, não de negociar melhor.
 
 ## 20. Despesas vs. classificação: regressão linear
@@ -433,7 +433,7 @@ O resultado deve ler-se como "gastar mais não garantiu melhores lugares", não 
 
 ## 22. Centralização e equilíbrio das contas
 
-**O conceito.** Hoje, cada clube negoceia sozinho os direitos TV. A partir de 2028/29, a Liga vende-os em conjunto e reparte o valor (ver ponto 16). Para o Vitória, isto pode ser a primeira receita **estrutural** nova em muitos anos: não depende de ir à Europa nem de vender jogadores.
+**O conceito.** Hoje, cada clube negoceia sozinho os direitos de TV. A partir de 2028/29, a Liga vende-os em conjunto e reparte o valor (ver ponto 16). Para o Vitória, isto pode ser a primeira receita **estrutural** nova em muitos anos: não depende de ir à Europa nem de vender jogadores.
 
 **No Vitória** (consulta 55). O défice antes de vendas de jogadores foi, em média, de **22,8 M€ por época** entre 2023/24 e 2025/26. A simulação cruza três valores de contrato com três lugares na tabela:
 
@@ -445,7 +445,7 @@ O resultado deve ler-se como "gastar mais não garantiu melhores lugares", não 
 | 250 M€ | +6,0 M€ (26%) | **+4,8 M€ (21%)** | +3,0 M€ (13%) |
 | 300 M€ | +8,5 M€ (37%) | +7,1 M€ (31%) | +5,0 M€ (22%) |
 
-<sub>Ganho face aos 6,9 M€ atuais de direitos TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub>
+<sub>Ganho face aos 6,9 M€ atuais de direitos de TV e, entre parênteses, a parte do défice que cobre. Mesma repartição ilustrativa da consulta 48: 90% para a I Liga, 33,2% em partes iguais, 44,2% por mérito linear, sem a componente de audiências.</sub>
 
 **Leitura.**
 - **Sozinha, a centralização não equilibra as contas.** No cenário central (250 M€, 6.º lugar), cobre cerca de um quinto do défice. Todos os valores desta secção são **simulações** com pressupostos explícitos, não previsões.
