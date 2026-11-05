@@ -44,8 +44,8 @@ Python · NumPy · JavaScript · GitHub Actions · [Ouvrir le simulateur ↗](ht
 
 ## Technologies
 
-- **Langages :** Python, SQL (SQLite), JavaScript, HTML, CSS, XML, LaTeX
-- **Données et visualisation :** pandas, NumPy, Matplotlib, Chart.js, SVG
+- **Langages :** Python, SQL (SQLite), R, JavaScript, HTML, CSS, XML, LaTeX
+- **Données et visualisation :** pandas, NumPy, Matplotlib, Chart.js, SVG, Power BI, Excel
 - **TAL et IA :** spaCy, NLTK, BeautifulSoup, TF-IDF, RAG avec modèles locaux (Ollama), Tesseract
 - **Outils :** Git, GitHub Actions, GitHub Pages, Figma, Phaser, Subtitle Workshop
 
