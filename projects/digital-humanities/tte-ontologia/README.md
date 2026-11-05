@@ -21,3 +21,8 @@ The project models the domain of Engineering, defining concepts (branches such a
 - 📊 [`diagrama-ontologia-tte.pdf`](./diagrama-ontologia-tte.pdf) — graphical representation of the concept network
 
 Group project (Micael Lobo, Mariana Gomes, Sofia Freitas, Joana Barros).
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

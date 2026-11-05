@@ -159,3 +159,8 @@ A versão web não precisa de instalação: basta abrir `web/index.html` no nave
 **Ferramentas:** Python · NumPy · matplotlib · JavaScript (Web Workers, Canvas) · HTML/CSS · Node · GitHub Actions
 
 © 2026 João Garção
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

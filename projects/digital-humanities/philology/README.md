@@ -39,3 +39,8 @@ Paleographic transcription of an archival manuscript (fl. 200v–204), of unknow
 Glossary compiled for the same course, gathering historical figures referenced in textual heritage sources.
 
 - **Full file:** [`dicionario-figuras-historicas.pdf`](./dicionario-figuras-historicas.pdf)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

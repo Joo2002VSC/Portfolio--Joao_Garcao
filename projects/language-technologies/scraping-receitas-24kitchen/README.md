@@ -21,3 +21,8 @@ A Python program that scrapes recipes from the [24 Kitchen](https://www.24kitche
 **Technologies:** `requests`, `BeautifulSoup`, `re`, `collections.Counter`, `xml.etree.ElementTree`
 
 - **Full report:** [`relatorio-FPLN.pdf`](./relatorio-FPLN.pdf)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

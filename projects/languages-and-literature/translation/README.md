@@ -17,3 +17,8 @@ Translation work from different courses of the Bachelor's in Applied Languages (
 - **[`metodologias/`](./metodologias)**: practical translation exercises (graphic novel, tourism text, recipe, DIY) and a group final project, from the Translation Methodologies and Multilingual Writing course.
 - **[`traducao-especializada/`](./traducao-especializada)**: legal, economic, technical, and journalistic translations, from the Specialized Translation course, with their corresponding terminology tables.
 - **Machine Translation Errors** (Descriptive Linguistics 2 course): comparison between **DeepL** and **Google Translate** on an English-to-Portuguese translation of a news text, with errors classified by type. Finds that DeepL followed European Portuguese norms and Google Translate Brazilian Portuguese, and that neither is reliable for professional translation. [`erros-traducao-automatica.pdf`](./erros-traducao-automatica.pdf)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

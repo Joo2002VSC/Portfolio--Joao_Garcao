@@ -19,3 +19,8 @@ The project explores the relationship between marketing, advertising, and consum
 📄 [`marketing-publicidade-adpn.pptx`](./marketing-publicidade-adpn.pptx)
 
 Group project.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

@@ -15,3 +15,8 @@ Work on document encoding and markup using different markup languages.
 
 - [`xml/`](./xml): transcription and **XML** encoding of an excerpt from "Memorial de Vários Simplices"
 - [`latex-overleaf/`](./latex-overleaf): **LaTeX** report annotating news articles with XML, DTD, XPath and an ontology
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

@@ -104,3 +104,8 @@ Para explorar à mão: `sqlite3 dados/leituras.db`.
 
 ---
 Dados até 26 de outubro de 2026.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

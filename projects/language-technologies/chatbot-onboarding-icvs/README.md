@@ -37,3 +37,8 @@ Development followed three stages, each documented in its own report:
 *Note: the original institutional manual (data source) is not reproduced here, as it is internal ICVS documentation.*
 
 Group project.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

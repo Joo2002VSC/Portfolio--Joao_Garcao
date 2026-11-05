@@ -27,3 +27,8 @@ The report focuses on Chapter LXXVIII (Book VI, pp. 521-526), which narrates the
 Individual work.
 
 📄 [`ficha-leitura-sete-pilares-sabedoria.pdf`](./ficha-leitura-sete-pilares-sabedoria.pdf)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

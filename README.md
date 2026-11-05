@@ -1,23 +1,69 @@
-# Observatório BLCS
+# João Garção
 
-Dashboard de análise da atividade da Biblioteca Lúcio Craveiro da Silva (2020–2026), desenvolvida no âmbito do Mestrado em Humanidades Digitais da Universidade do Minho.
+<img src="assets/foto.jpg" alt="João Garção" width="150" align="right">
 
-## Direitos de autor e propriedade intelectual
+**Humanidades Digitais · Análise de Dados · Tecnologias da Linguagem**
 
-© 2026 João Garção. Todos os direitos reservados.
+[🇵🇹 Português](README.md) · [🇬🇧 English](README.en.md) · [🇫🇷 Français](README.fr.md)
 
-O desenvolvimento, a estrutura, o código-fonte, a organização visual e as funcionalidades da dashboard Observatório BLCS constituem uma criação intelectual desenvolvida por João Garção no âmbito do projeto académico de Mestrado em Humanidades Digitais da Universidade do Minho.
+<br clear="right">
 
-Salvo indicação expressa em contrário, os direitos de autor relativos aos elementos originais desenvolvidos neste projeto encontram-se reservados ao respetivo autor.
+---
 
-A disponibilização pública deste repositório destina-se à demonstração, consulta e documentação do projeto. Não constitui, por si só, uma concessão de licença para reprodução, redistribuição, modificação ou exploração comercial do código-fonte.
+Sou licenciado em Línguas Aplicadas e estou a concluir o mestrado em Humanidades Digitais, ambos na Universidade do Minho. O meu trabalho junta a formação em línguas, tradução e literatura à programação e à análise de dados, com aplicação a património documental, bibliotecas e informação pública.
 
-O relatório académico associado a este projeto é disponibilizado sob licença Creative Commons Atribuição 4.0 Internacional (CC BY 4.0). Esta reserva de direitos aplica-se ao código-fonte e à dashboard, não ao relatório.
+## Projetos em destaque
 
-Os dados institucionais, documentos, designações, logótipos e outros materiais pertencentes à Biblioteca Lúcio Craveiro da Silva ou a terceiros permanecem sujeitos aos respetivos direitos e condições de utilização.
+### [Observatório BLCS](./projects/digital-humanities/observatorio-blcs)
 
-A utilização de componentes, bibliotecas, fontes ou outros recursos de terceiros encontra-se sujeita às respetivas licenças e condições de utilização.
+Dashboard interativa sobre leitores, circulação e procura documental da Biblioteca Lúcio Craveiro da Silva, 2020–2026. É o trabalho de projeto do mestrado: auditoria e harmonização de dados institucionais, desenvolvimento da dashboard e validação com profissionais da Biblioteca.
+HTML · CSS · JavaScript (SVG) · Python · [Abrir a dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/digital-humanities/observatorio-blcs/)
 
-Para pedidos de autorização relativos à utilização, adaptação ou redistribuição dos elementos originais deste projeto, deverá ser obtido consentimento prévio do respetivo titular dos direitos.
+### Contas do Vitória SC
 
-**Contacto:** joaogarcao2002@gmail.com
+Dois projetos ligados sobre as contas do Vitória Sport Clube, de 2012/13 a 2025/26:
+
+- **[Análise em SQL](./projects/data-analysis/contas-vitoria-sql):** base de dados SQLite construída a partir dos Relatórios e Contas, consultas analíticas, gráficos e uma análise estratégica. Python · SQLite · Matplotlib · testes automáticos
+- **[Dashboard](./projects/web-development/dashboard-contas-vitoria):** camada de apresentação do projeto SQL, com indicadores, rácios e um explorador de consultas. JavaScript · Chart.js · [Abrir a dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/dashboard-contas-vitoria/)
+
+### [Simulador de Juros Compostos](./projects/data-analysis/simulador-juros-compostos)
+
+Simulador Monte Carlo de uma carteira de ações e criptomoedas, com aportes periódicos, inflação aleatória e cenários de choque. O motor em Python e a versão web em JavaScript são testados e comparados automaticamente.
+Python · NumPy · JavaScript · GitHub Actions · [Abrir o simulador ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/data-analysis/simulador-juros-compostos/web/)
+
+## Áreas
+
+| Área | Conteúdo |
+| --- | --- |
+| [Humanidades Digitais](./projects/digital-humanities) | Observatório BLCS, filologia, anotação de documentos (XML, LaTeX), OCR, ontologias |
+| [Análise de Dados](./projects/data-analysis) | Projetos em SQL e Python: contas do Vitória SC, simulador financeiro, histórico de leituras, diário de línguas |
+| [Desenvolvimento Web](./projects/web-development) | Dashboards, blog literário, jogo educativo e protótipo de interface |
+| [Tecnologias da Linguagem](./projects/language-technologies) | PLN e IA: chatbot RAG, web scraping e análise de texto, análise de sentimento |
+| [Línguas e Literatura](./projects/languages-and-literature) | Tradução, tradução automática, legendagem, terminologia e estudos literários |
+| [Negócio e Inovação](./projects/business-and-innovation) | Validação de ideias de negócio e marketing orientado por dados |
+
+## Tecnologias
+
+- **Linguagens:** Python, SQL (SQLite), JavaScript, HTML, CSS, XML, LaTeX
+- **Dados e visualização:** pandas, NumPy, Matplotlib, Chart.js, SVG
+- **PLN e IA:** spaCy, NLTK, BeautifulSoup, TF-IDF, RAG com modelos locais (Ollama), Tesseract
+- **Ferramentas:** Git, GitHub Actions, GitHub Pages, Figma, Phaser, Subtitle Workshop
+
+## Formação
+
+- **Mestrado em Humanidades Digitais**, Universidade do Minho (a concluir)
+- **Licenciatura em Línguas Aplicadas**, Universidade do Minho
+
+## Línguas
+
+Português (nativo) · Inglês (C2) · Francês (B2) · Neerlandês (A2) · Italiano (A2)
+
+## CV e contacto
+
+- [Descarregar o CV (PDF)](./about/CV-Joao-Garcao.pdf)
+- Email: [joaogarcao2002@gmail.com](mailto:joaogarcao2002@gmail.com)
+- LinkedIn: [João Garção](https://www.linkedin.com/in/jo%C3%A3o-gar%C3%A7%C3%A3o-2oo2/)
+
+---
+
+Salvo indicação em contrário no README de cada projeto, todos os direitos estão reservados. Ver [LICENSE.md](./LICENSE.md).

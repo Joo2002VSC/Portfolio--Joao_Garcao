@@ -18,6 +18,8 @@
   <a href="#fontes-e-limitações">Fontes e limitações</a>
 </p>
 
+> **Projeto relacionado:** a [dashboard interativa](../../web-development/dashboard-contas-vitoria) é a camada de apresentação desta base de dados: os valores que mostra resultam destas consultas SQL, exportados pelo script `exportar_json.py` da própria dashboard. [Abrir a dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/web-development/dashboard-contas-vitoria/)
+
 ---
 
 <a id="resumo"></a>
@@ -359,3 +361,8 @@ Os gráficos seguem a paleta dos documentos financeiros do clube: amarelo `#F5D5
 ---
 
 <p align="center"><sub>Projeto de <b>João Garção</b> · Mestrado em Humanidades Digitais, Universidade do Minho</sub></p>
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

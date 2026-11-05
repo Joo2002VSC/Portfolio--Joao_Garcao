@@ -19,3 +19,8 @@ Optical character recognition (OCR) exercise, comparing the results of **[Tesser
 - 📄 [`online-ocr-esp1.txt`](./online-ocr-esp1.txt) — online OCR tool result
 
 Tesseract produced a significantly more faithful result than the online tool tested.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

@@ -13,3 +13,8 @@ Mockup interativo desenvolvido em **Figma** no âmbito da cadeira de **Interface
 Interactive mockup developed in **Figma** for the **Web Interfaces** course.
 
 - **View interactive prototype:** [Figma](https://www.figma.com/proto/u7V6ARy2cYvxRckJMcEwGM/Mockup-Final?node-id=697-13&starting-point-node-id=4%3A5)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

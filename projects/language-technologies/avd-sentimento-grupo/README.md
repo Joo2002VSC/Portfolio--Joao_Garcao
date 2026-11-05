@@ -1,4 +1,4 @@
-# Projeto Definitivo
+# AVD · Análise de sentimento (versão final, em grupo) · Sentiment analysis (final group version)
 
 ## 🇵🇹
 Versão final do trabalho de AVD, em grupo com **Joana Azevedo** e **Mariana Gomes**: pipeline completo de análise textual e estatística em Python, aplicado a um corpus de três entrevistas (uma por membro do grupo).
@@ -27,3 +27,8 @@ Final version of the AVD project, group work with **Joana Azevedo** and **Marian
 The pipeline is orchestrated by a [`makefile.mk`](./makefile.mk).
 
 Group project.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

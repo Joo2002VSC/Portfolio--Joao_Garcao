@@ -15,3 +15,8 @@ Work for the **Terminology and Information Technologies (TTI)** course (Bachelor
 
 - **[`ficha-terminologica.pdf`](./ficha-terminologica.pdf)**: individual terminology entry form, following the course's template, for the term "motor automóvel" / automotive engine (domain: automotive engineering), including definition, conceptual relations and multilingual equivalents.
 - **[`dicionario-regionalismos.pdf`](./dicionario-regionalismos.pdf)**: presentation of a dictionary of regionalisms, developed as a group project.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

@@ -1,0 +1,21 @@
+# Verifica as ligações relativas dos ficheiros Markdown (READMEs e documentação).
+# Corre quando muda algum ficheiro .md ou o próprio script; não instala dependências.
+name: verificar-ligacoes
+
+on:
+  push:
+    paths: ["**.md", ".github/scripts/verificar_ligacoes.py", ".github/workflows/verificar-ligacoes.yml"]
+  pull_request:
+    paths: ["**.md"]
+  workflow_dispatch:
+
+jobs:
+  ligacoes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verificar ligações relativas
+        run: python .github/scripts/verificar_ligacoes.py

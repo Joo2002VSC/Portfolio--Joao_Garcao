@@ -21,3 +21,8 @@ The player enters their name and answers 10 multiple-choice questions about the 
 - 🎨 [`assets/`](./assets) — logo, screenshots, and concept art for the visual theme
 
 Individual work.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

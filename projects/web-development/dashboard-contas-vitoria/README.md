@@ -98,3 +98,8 @@ La vue d'ensemble présente huit indicateurs clés pour la saison choisie, une l
 ---
 
 Projeto pessoal de João Garção, sem ligação oficial ao Vitória Sport Clube.
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

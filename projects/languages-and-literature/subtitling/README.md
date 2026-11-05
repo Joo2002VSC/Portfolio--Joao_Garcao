@@ -17,3 +17,8 @@ Work for the **Introduction to Audiovisual Translation** course (Bachelor's in A
 Subtitling, done in Subtitle Workshop, of an excerpt from the animated film *Cars* (Pixar), translated from English into Portuguese.
 
 - **Subtitle file:** [`legendagem-carros.srt`](./legendagem-carros.srt)
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).

@@ -31,3 +31,8 @@ A página **Em Números** e a lista **Todas as Leituras** são geradas a partir 
 │   └── dados/       # estatisticas.js e leituras.js (gerados por SQL)
 └── analise-sql/     # análise SQL (no Portfolio: data-analysis/leituras-sql)
 ```
+
+---
+
+**Direitos:** todos os direitos reservados aos autores indicados neste documento, salvo indicação em contrário. Ver [LICENSE.md](../../../LICENSE.md).  
+**Rights:** all rights reserved by the authors named in this document, unless stated otherwise. See [LICENSE.md](../../../LICENSE.md).
