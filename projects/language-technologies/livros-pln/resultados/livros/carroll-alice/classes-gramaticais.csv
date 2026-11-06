@@ -1,0 +1,13 @@
+classe,nome,ocorrencias,por_1000_palavras
+NOUN,Substantivos,3384,127.247
+VERB,Verbos,4301,161.728
+ADJ,Adjetivos,1420,53.396
+ADV,Advérbios,2066,77.687
+PRON,Pronomes,4075,153.23
+PROPN,Nomes próprios,1390,52.267
+DET,Determinantes,2744,103.181
+ADP,Preposições,2723,102.392
+CCONJ,Conjunções coordenativas,1130,42.491
+SCONJ,Conjunções subordinativas,782,29.405
+AUX,Verbos auxiliares,1633,61.405
+NUM,Numerais,203,7.633

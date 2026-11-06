@@ -1,5 +1,44 @@
 # Alterações
 
+## 3.0.0 · 2026-11-05
+
+Revisão científica, técnica e visual. Inclui também as funcionalidades da 2.0.0, que não chegou a ser publicada no repositório.
+
+**Indicadores**
+- Diversidade lexical: **MTLD** e **HD-D** (McCarthy e Jarvis, 2010), MATTR com janela configurável. Abaixo do mínimo de palavras, os índices ficam «não aplicável» em vez de devolverem um valor enganador. As implementações coincidem com o pacote `lexical-diversity` nos testes.
+- Frases: mediana, percentis 25 e 75, desvio-padrão e % de frases longas, separados da complexidade sintática.
+- Complexidade sintática: profundidade da árvore de dependências, distância de dependência média (Liu, 2008) e orações subordinadas por frase.
+- Classes gramaticais por 1000 palavras (12 classes UPOS, com valores absolutos), pronomes pessoais e verbos modais. A exatidão declarada do modelo spaCy fica registada.
+- Legibilidade: coeficientes verificados nas fontes, Flesch–Kincaid só para inglês, aviso sobre a calibração brasileira da fórmula portuguesa. Estimativa de sílabas revista (hiatos e ditongos nasais em português, «e» mudo em francês e inglês), com a exatidão medida em listas anotadas.
+- Diálogo: o `--` do Project Gutenberg passa a ser reconhecido como travessão.
+- **Delta de Burrows** entre livros da mesma língua (pelo menos 3), apresentado como medida de distância estilística e não como prova de autoria.
+- Matriz de correlações (Spearman) com pelo menos 5 livros.
+
+**Qualidade e reprodutibilidade**
+- Estados explícitos: válido, não aplicável, desconhecido, falha. Os valores ausentes nunca são substituídos por zero.
+- Avisos de qualidade: texto vazio ou curto, erros de codificação, parágrafos duplicados, língua incerta ou divergente, segmentação suspeita.
+- Parâmetros em `config/parametros.toml`. Cada resultado regista os parâmetros, as versões das bibliotecas e do modelo, e a exatidão do modelo.
+- Catálogo único de indicadores (`catalogo.py`), com definição, fórmula, unidade, interpretação, limitações, comparabilidade entre línguas e referências APA 7. `docs/indicadores.md` é gerado a partir dele.
+
+**Gráficos e relatórios**
+- Identidade visual comum (`tema.py`): paleta azul-petróleo, azul-escuro e verde-acinzentado, título e subtítulo informativos, formato numérico português, PNG e SVG.
+- As séries distinguem-se por cor e forma; sem gráficos circulares; comparações agrupadas por língua; rede de personagens com filtragem das ligações fracas.
+- Relatórios em 13 secções, com interpretação, limitações e comentários automáticos apenas descritivos; Excel com folhas de qualidade e um dicionário de indicadores.
+
+**Testes e workflow**
+- Testes novos: valores de referência calculados à mão, comparação com a implementação de referência, sílabas, árvore de dependências construída, casos-limite, qualidade, Delta e sincronização da documentação.
+- `requirements-dev.txt`; o workflow instala-o e verifica se `docs/` está sincronizado.
+
+## 2.0.0 · 2026-11-05
+
+- **Links como entrada:** `python -m livros_pln analisar <ficheiro ou link>` aceita links do Project Gutenberg (com recurso automático ao EPUB quando o texto não está disponível) e ligações diretas para `.txt` ou `.epub`; mostra um resumo no terminal.
+- **Rede de personagens** para qualquer livro: automática (NER, com normalização de títulos, fusão de variantes do nome e exclusão de lugares) ou por dicionário (`livros/personagens/<livro>.json`); menções, ligações, intermediação, PageRank e comunidades. Dicionário de *Os Maias* incluído.
+- **Painéis interativos (Plotly):** um por livro, com a rede de personagens em 3D (botão para rodar), e um de comparação entre livros, com perfil em radar.
+- **Exportação para Excel:** um ficheiro por livro (uma folha por tabela) e um do corpus.
+- Rede de personagens estática nos relatórios; novos indicadores: personagens, ligações e densidade da rede.
+- A cache passa a considerar também o dicionário de personagens.
+- 37 testes (eram 18).
+
 ## 1.0.0 · 2026-11-05
 
 Primeira versão.

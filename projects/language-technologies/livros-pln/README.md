@@ -1,120 +1,236 @@
 # livros-pln
 
-**Indicadores de PLN, metadados e gráficos para livros em TXT e EPUB, em português, francês e inglês.**
+**Indicadores linguísticos, estilométricos e de rede de personagens para livros em TXT ou EPUB, em português, francês e inglês, com definições, limitações e referências para cada valor.**
 
 [![processar livros](../../actions/workflows/processar.yml/badge.svg)](../../actions/workflows/processar.yml)
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english)
 
-![Comparação entre livros](resultados/graficos/comparacao.png)
+![Rede de personagens de Os Maias](resultados/livros/eca-de-queiros-os-maias/graficos/rede.png)
 
-**[Ver os resultados →](resultados/README.md)**
+**[Resultados](resultados/README.md)** · **[Documentação dos indicadores](docs/indicadores.md)** · **[Painel interativo de comparação](https://joo2002vsc.github.io/livros-pln/resultados/painel.html)** · **[Painel de *Os Maias*](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)**
 
 ---
 
 ## 🇵🇹 Português
 
-Coloca-se um livro na pasta `livros/` e o projeto devolve, para cada um:
+### Objetivo
 
-| Grupo | Indicadores |
-| --- | --- |
-| Metadados | Título, autor, ano, editora, identificador, língua declarada (cabeçalho do Project Gutenberg, metadados Dublin Core do EPUB ou `livros/metadados.csv`) |
-| Dimensão | Palavras, frases, parágrafos, tempo de leitura estimado |
-| Léxico | Vocabulário, lemas distintos, TTR, MATTR (janela 500), hapax, K de Yule, densidade lexical, comprimento médio das palavras |
-| Sintaxe | Frase média, mediana e máxima, parágrafo médio, percentagem de diálogo |
-| Legibilidade | Índice de Flesch na adaptação de cada língua: Martins et al. (1996) para português, Kandel e Moles (1958) para francês, Flesch (1948) para inglês |
-| Classes gramaticais | Percentagem de substantivos, verbos, adjetivos, advérbios, pronomes, etc. |
-| Pontuação | Vírgulas, pontos, exclamações, interrogações, reticências, travessões… por 1000 palavras |
-| Entidades | Pessoas, lugares e organizações mais mencionados (NER) |
-| Frequências | Os 200 lemas de conteúdo mais frequentes |
-| Evolução | Variedade lexical, frase média e densidade lexical por décimo do livro |
+Dado um livro (ficheiro ou link), o livros-pln extrai os metadados e calcula indicadores de processamento de linguagem natural (PLN) sobre o vocabulário, a extensão e a estrutura das frases, as classes gramaticais, a pontuação, o diálogo, as entidades nomeadas e a rede de personagens. Cada valor vem acompanhado da definição, da unidade, de uma interpretação prudente, das limitações e da referência bibliográfica do método.
 
-Cada livro tem um relatório próprio, cinco gráficos e os dados em CSV e JSON. O corpus tem uma tabela de comparação (`resultados/indicadores.csv`), dois gráficos e um relatório geral.
+O projeto descreve textos; não os avalia. Os indicadores servem para formular perguntas sobre um livro e comparar livros da mesma língua. Não servem para emitir juízos de qualidade, atribuir autoria ou provar relações entre personagens.
 
-### Como funciona
+### Perguntas a que procura responder
 
-```text
-livros/*.txt|*.epub ─▶ leitura.py ─▶ lingua.py ─▶ indicadores.py ─▶ graficos.py ─▶ relatorio.py ─▶ resultados/
-                       (texto e       (pt, fr      (spaCy → DataFrame   (matplotlib)   (Markdown)
-                        metadados)     ou en)       pandas de tokens)
+- Quão variado é o vocabulário de um livro, independentemente da sua extensão?
+- Como se distribui a extensão das frases, e quão complexa é a sua estrutura sintática?
+- Que peso têm o diálogo, os nomes próprios e as diferentes classes gramaticais, e como variam ao longo do livro?
+- Que personagens aparecem juntas no texto, e com que frequência?
+- Que livros da mesma língua são estilisticamente mais próximos nas palavras mais frequentes?
+
+### Num comando
+
+```bash
+python -m livros_pln analisar https://www.gutenberg.org/ebooks/40409      # link do Project Gutenberg
+python -m livros_pln analisar https://exemplo.org/um-livro.epub           # link direto para .txt ou .epub
+python -m livros_pln analisar livros/um-livro.txt --abrir                 # ficheiro local; abre o painel no fim
+python -m livros_pln                                                      # todos os livros de livros/ (só o que mudou)
+python -m livros_pln --forcar                                             # reprocessa tudo
 ```
 
-1. **Leitura:** TXT (UTF-8, Windows-1252 ou Latin-1; o cabeçalho e a licença do Gutenberg são retirados e os metadados aproveitados) e EPUB (texto pela ordem de leitura, metadados Dublin Core).
-2. **Língua:** deteção pela frequência de palavras funcionais, sem serviços externos; escolhe o modelo spaCy certo (`pt_core_news_md`, `fr_core_news_md` ou `en_core_web_md`).
-3. **Anotação:** o spaCy anota o texto, que passa a um DataFrame pandas com um token por linha; todos os indicadores são operações sobre essa tabela.
-4. **Cache:** um livro só é reprocessado quando o ficheiro muda ou quando muda o código (impressão digital dos ficheiros do pacote e da configuração). Cada resultado regista a versão, o código e o commit que o produziram.
+Resultados de cada livro, em `resultados/livros/<livro>/`:
+
+| Ficheiro | Conteúdo |
+| --- | --- |
+| `README.md` | Relatório em 13 secções: identificação, qualidade dos dados, indicadores por grupo (com interpretação e limitações), gráficos, comentários automáticos descritivos, metodologia e referências |
+| `painel.html` | Painel interativo (Plotly), com a rede de personagens em 3D |
+| `<livro>.xlsx` | Metadados (incluindo parâmetros, versões e exatidão do modelo), indicadores com estado e definição, avisos de qualidade e todas as tabelas |
+| `indicadores.json`, `*.csv` | Os mesmos dados em formato aberto |
+| `graficos/*.png`, `*.svg` | Gráficos estáticos em PNG (200 ppp) e SVG |
+
+Ao nível do corpus: `resultados/README.md`, `indicadores.csv`/`.xlsx` (com um dicionário de indicadores), gráficos comparativos e um painel de comparação. Quando há livros suficientes, também a matriz de correlações e o Delta de Burrows.
+
+### Indicadores
+
+A lista completa está em **[docs/indicadores.md](docs/indicadores.md)**, com fórmulas, unidades, interpretação, limitações, comparabilidade entre línguas e referências. Esse ficheiro é gerado a partir de `livros_pln/catalogo.py`, a mesma fonte usada pelos relatórios e pelo Excel.
+
+| Grupo | Indicadores principais | Referências |
+| --- | --- | --- |
+| Diversidade lexical | TTR, **MATTR** (janela configurável), **MTLD**, **HD-D**, K de Yule, hapax | Covington e McFall (2010); McCarthy e Jarvis (2010); Tweedie e Baayen (1998); Yule (1944) |
+| Densidade lexical | Palavras de conteúdo ÷ palavras | Ure (1971) |
+| Extensão das frases | Média, mediana, percentis 25 e 75, desvio-padrão, máximo, % de frases longas | — |
+| Complexidade sintática | Profundidade da árvore de dependências, distância de dependência média, orações subordinadas por frase | Liu (2008); Nivre et al. (2020) |
+| Classes gramaticais | 12 classes UPOS por 1000 palavras (valores absolutos e relativos), pronomes pessoais, verbos modais | Nivre et al. (2020) |
+| Legibilidade | Flesch adaptado a cada língua; Flesch–Kincaid só para inglês | Flesch (1948); Kandel e Moles (1958); Martins et al. (1996); Kincaid et al. (1975) |
+| Pontuação e discurso | 10 sinais por 1000 palavras; % de parágrafos de diálogo (heurística) | — |
+| Entidades e rede | Pessoas, lugares e organizações (NER); rede de co-ocorrência com centralidade e comunidades | Blondel et al. (2008) |
+| Estilometria | Delta de Burrows entre livros da mesma língua | Burrows (2002); Evert et al. (2017) |
+
+### Metodologia
+
+```text
+ficheiro ou link ─▶ fontes ─▶ leitura ─▶ língua ─▶ qualidade ─▶ anotação (spaCy) ─▶ indicadores ─▶ relatórios
+                    download   texto e    pt/fr/en  verificações  tokens e frases     catálogo,     Markdown, Excel,
+                               metadados            do texto      em DataFrames       estados       PNG/SVG, Plotly
+```
+
+1. **Leitura.** TXT: UTF-8, Windows-1252 ou Latin-1; o cabeçalho e a licença do Project Gutenberg são retirados e `--` é convertido em travessão. EPUB: texto pela ordem de leitura e metadados Dublin Core.
+2. **Língua.** Deteção pela frequência de palavras funcionais, com aviso quando a margem entre línguas é pequena ou quando diverge da língua declarada.
+3. **Qualidade dos dados.** Verifica texto vazio ou curto, sinais de codificação errada, parágrafos duplicados e segmentação de frases suspeita.
+4. **Anotação.** Modelos spaCy `pt_core_news_md`, `fr_core_news_md` e `en_core_web_md` (versão 3.8.0). O texto passa a duas tabelas pandas: uma com um token por linha e outra com uma frase por linha (extensão, profundidade, distâncias, subordinadas).
+5. **Indicadores.** Cada indicador tem um estado: *válido*, *não aplicável* (com motivo), *desconhecido* ou *falha*. **Um valor ausente nunca é substituído por zero.**
+6. **Comparação.** Os gráficos e relatórios de corpus agrupam os livros por língua e assinalam os indicadores que não são comparáveis entre línguas.
+
+#### Escolhas metodológicas
+
+- **Extensão não é complexidade.** A extensão das frases e a complexidade sintática são grupos separados. A complexidade mede-se na árvore de dependências.
+- **Diversidade lexical independente da extensão.** O TTR diminui com o tamanho do texto, por isso os relatórios dão destaque ao MTLD e ao HD-D, que são menos sensíveis à extensão (McCarthy e Jarvis, 2010). Nos testes, as implementações são comparadas com o pacote `lexical-diversity`.
+- **Legibilidade sem falsa equivalência.** Cada língua usa a sua adaptação da fórmula de Flesch, e os valores de línguas diferentes não se comparam. A adaptação portuguesa (Martins et al., 1996) foi calibrada com manuais escolares em português do Brasil e não foi validada para português europeu nem para prosa literária; os relatórios indicam-no. As sílabas são estimadas por regras, e a exatidão medida está em [docs/indicadores.md](docs/indicadores.md#exatidão-da-estimativa-de-sílabas).
+- **Exatidão dos modelos.** A exatidão declarada de cada modelo spaCy (classes gramaticais, dependências, segmentação, NER) fica registada nos resultados. Os modelos foram treinados com texto contemporâneo, por isso os erros são mais frequentes em textos antigos.
+- **Co-ocorrência não é relação narrativa.** Uma ligação na rede significa que duas personagens aparecem no mesmo parágrafo, não que interagem. Não há resolução de correferência: pronomes e descrições («o rapaz») não contam.
+- **Estilometria não é prova de autoria.** O Delta de Burrows mede distâncias nas palavras mais frequentes. Só é calculado com pelo menos três livros da mesma língua, porque os z-scores exigem uma amostra. Distâncias pequenas indicam semelhança no uso de palavras gramaticais, que também depende do género, da época, da edição e da tradução.
+- **Sem modelação de tópicos.** LDA e BERTopic não foram incluídos. Com poucos livros, os tópicos são instáveis (mudam com a semente aleatória e com o número de tópicos escolhido) e difíceis de validar sem anotação humana. Acrescentariam resultados de aparência objetiva sem garantia de serem interpretáveis. As frequências de lemas de conteúdo, por segmento, cumprem a função descritiva com menos parâmetros arbitrários.
+- **Correlações só com dados suficientes.** A matriz de correlações (Spearman) entre indicadores só é gerada com pelo menos 5 livros; abaixo disso, o relatório explica porquê.
+
+### Exemplo: os dois livros incluídos
+
+Valores do corpus de exemplo, gerados pela versão 3.0.0. Os dois livros estão em línguas diferentes, por isso os indicadores não comparáveis entre línguas não devem ser lidos lado a lado.
+
+| Indicador | *Os Maias* (pt, 1888) | *Alice's Adventures in Wonderland* (en, 1865) | Comparável entre línguas |
+| --- | ---: | ---: | :---: |
+| Palavras | 203 558 | 26 594 | sim |
+| MTLD | 139,0 | 73,3 | não |
+| HD-D | 0,884 | 0,849 | não |
+| Extensão mediana das frases (palavras) | 9 | 12 | sim, com cautela |
+| Frases com mais de 30 palavras | 7,1 % | 15,7 % | sim, com cautela |
+| Profundidade sintática média | 3,29 | 4,14 | não |
+| Distância de dependência média | 2,45 | 2,62 | não |
+| Facilidade de leitura (Flesch adaptado) | 64,0 (padrão) | 79,7 (razoavelmente fácil) | **não** |
+| Parágrafos de diálogo | 52,4 % | 78,8 % | sim, com cautela |
+
+### Instalação e testes
+
+```bash
+python -m pip install -r requirements-dev.txt     # dependências e implementação de referência para os testes
+bash .github/scripts/instalar_modelos.sh          # modelos pt, fr e en (com alternativa no Hugging Face)
+python -m pytest                                   # testes unitários e de integração
+python -m livros_pln.documentacao                  # regenera docs/indicadores.md a partir do catálogo
+```
+
+Os testes cobrem:
+
+- valores de referência calculados à mão: fórmulas de legibilidade, K de Yule, MATTR, e profundidade e distância de dependência numa árvore construída;
+- a comparação com a implementação de referência do MTLD, do HD-D e do MATTR;
+- listas de sílabas anotadas à mão;
+- casos-limite (textos vazios ou curtos dão «não aplicável», não zero);
+- as verificações de qualidade;
+- o Delta de Burrows com dados sintéticos;
+- o pipeline completo.
+
+### Reprodutibilidade
+
+- Os parâmetros (janela do MATTR, limiar do MTLD, limiar de frase longa, número de segmentos, palavras do Delta, etc.) estão em [`config/parametros.toml`](config/parametros.toml).
+- Cada resultado regista os parâmetros usados, as versões do Python, das bibliotecas e do modelo spaCy, a exatidão declarada do modelo, a impressão digital do código e o commit.
+- Um livro é reprocessado quando muda o ficheiro, o dicionário de personagens, o código ou a configuração.
 
 ### Atualização automática no GitHub
 
-O workflow [`processar.yml`](.github/workflows/processar.yml) corre sempre que o código muda (`livros_pln/`, `config/`, `tests/`, dependências ou o próprio workflow):
-
-1. instala as dependências e os três modelos spaCy (com alternativa no Hugging Face se o GitHub falhar);
-2. corre os testes, e se algum falhar os resultados não são atualizados;
-3. reprocessa os livros afetados pela nova versão;
-4. faz um commit automático com a pasta `resultados/` atualizada, e guarda-a também como artefacto.
-
-Acrescentar um livro **não** dispara o workflow. Para o processar, podes:
-- correr o processamento localmente e fazer commit dos resultados; ou
-- ir a **Actions → processar livros → Run workflow**.
-
-### Utilização local
-
-```bash
-python -m pip install -r requirements.txt
-bash .github/scripts/instalar_modelos.sh      # modelos pt, fr e en
-python -m livros_pln                          # livros/ → resultados/
-python -m livros_pln --forcar                 # reprocessa tudo
-python -m pytest                              # testes
-```
-
-### Acrescentar um livro
-
-1. Copiar o ficheiro `.txt` ou `.epub` para `livros/` (o nome do ficheiro dá o identificador: `autor-titulo.txt`).
-2. Se faltarem metadados (o Gutenberg não indica o ano da primeira edição, por exemplo), acrescentar uma linha a `livros/metadados.csv`. A coluna `lingua` (`pt`, `fr` ou `en`) força a língua quando a deteção automática não convém.
-3. Processar localmente ou pelo botão **Run workflow**.
+O workflow [`processar.yml`](.github/workflows/processar.yml) corre quando muda o código, a configuração, os testes, as dependências ou o próprio workflow. Instala as dependências e os modelos, corre os testes, verifica que a documentação está sincronizada com o catálogo, reprocessa os livros e faz commit de `resultados/`. Acrescentar um livro não dispara o workflow: corra-o localmente ou use **Actions → processar livros → Run workflow**.
 
 ### Configuração
 
-`config/stopwords-<língua>.txt` lista palavras a ignorar nas frequências e entidades, além das do spaCy (por exemplo, a grafia anterior a 1911: «elle», «ella», «alli»). Alterar estes ficheiros conta como alteração de código: o workflow reprocessa os livros.
+- `config/parametros.toml`: parâmetros metodológicos.
+- `livros/metadados.csv`: completa ou corrige metadados e pode forçar a língua.
+- `livros/personagens/<livro>.json`: dicionário de personagens ([instruções](livros/personagens/README.md)); *Os Maias* tem um com 35 personagens.
+- `config/stopwords-<língua>.txt`: palavras a ignorar nas frequências (por exemplo, grafias anteriores a 1911: «elle», «ella»).
 
 ### Estrutura
 
 ```text
 livros-pln/
-├── livros/                     livros a processar + metadados.csv
-├── livros_pln/                 pacote Python
-│   ├── leitura.py              TXT e EPUB, metadados
-│   ├── lingua.py               deteção pt / fr / en
-│   ├── indicadores.py          spaCy + pandas: todos os indicadores
-│   ├── graficos.py             gráficos por livro e de corpus
-│   ├── relatorio.py            relatórios em Markdown
-│   └── processar.py            linha de comandos, cache e exportação
-├── config/                     stopwords adicionais por língua
-├── tests/                      testes (pytest)
-├── resultados/                 gerado automaticamente; não editar
-└── .github/
-    ├── workflows/processar.yml
-    └── scripts/instalar_modelos.sh
+├── livros/                 livros, metadados.csv e dicionários de personagens
+├── livros_pln/
+│   ├── catalogo.py         definições, fórmulas, limitações e referências de todos os indicadores
+│   ├── configuracao.py     parâmetros (config/parametros.toml)
+│   ├── qualidade.py        verificações de qualidade e estados dos valores
+│   ├── indicadores.py      anotação spaCy, métricas lexicais, sintáticas e de legibilidade
+│   ├── estilometria.py     Delta de Burrows
+│   ├── personagens.py      rede de personagens (NER ou dicionário)
+│   ├── tema.py             identidade visual comum (paleta, tipografia, formato numérico)
+│   ├── graficos.py         gráficos estáticos (matplotlib, PNG e SVG)
+│   ├── interativo.py       painéis Plotly
+│   ├── relatorio.py        relatórios em Markdown
+│   ├── exportar.py         Excel
+│   ├── documentacao.py     gera docs/indicadores.md
+│   ├── fontes.py, leitura.py, lingua.py
+│   └── processar.py        linha de comandos, cache e registo do ambiente
+├── config/                 parâmetros e stopwords
+├── docs/indicadores.md     documentação gerada
+├── tests/                  testes (pytest) e listas anotadas
+└── resultados/             gerado automaticamente; não editar
 ```
-
-### Versões
-
-A versão está em `livros_pln/__init__.py` e as alterações em [`CHANGELOG.md`](CHANGELOG.md). Qualquer alteração ao código atualiza os resultados, mesmo sem mudar o número de versão; o número serve para assinalar alterações relevantes nos indicadores.
 
 ### Limitações
 
-- A legibilidade usa uma contagem aproximada de sílabas (grupos de vogais) e fórmulas pensadas para textos modernos.
-- A deteção de língua escolhe entre português, francês e inglês; livros noutras línguas são analisados com o modelo mais próximo.
-- Os modelos spaCy foram treinados com texto contemporâneo; em grafias antigas, a lematização e o NER cometem mais erros (as stopwords de `config/` atenuam o efeito nas frequências).
-- O NER confunde por vezes pessoas e lugares (por exemplo, apelidos que são também nomes de terras).
+- Só suporta português, francês e inglês; a deteção de língua escolhe entre estas três.
+- Os modelos spaCy são treinados com texto contemporâneo (notícias, web). A etiquetagem, a análise sintática e o NER erram mais em grafias e sintaxe antigas.
+- A estimativa de sílabas é heurística (ver a exatidão medida), e as fórmulas de legibilidade foram calibradas para textos escolares, não para literatura.
+- A percentagem de diálogo é uma heurística tipográfica e depende das convenções da edição.
+- A rede automática depende do NER. Para resultados fiáveis num livro concreto, use um dicionário de personagens.
+- Com poucos livros, as comparações de corpus são descritivas; a matriz de correlações e o Delta só aparecem quando há dados suficientes.
+
+### Referências
+
+Blondel, V. D., Guillaume, J.-L., Lambiotte, R., & Lefebvre, E. (2008). Fast unfolding of communities in large networks. *Journal of Statistical Mechanics: Theory and Experiment, 2008*(10), P10008. https://doi.org/10.1088/1742-5468/2008/10/P10008
+
+Brysbaert, M. (2019). How many words do we read per minute? A review and meta-analysis of reading rate. *Journal of Memory and Language, 109*, 104047. https://doi.org/10.1016/j.jml.2019.104047
+
+Burrows, J. (2002). 'Delta': A measure of stylistic difference and a guide to likely authorship. *Literary and Linguistic Computing, 17*(3), 267–287. https://doi.org/10.1093/llc/17.3.267
+
+Covington, M. A., & McFall, J. D. (2010). Cutting the Gordian knot: The moving-average type–token ratio (MATTR). *Journal of Quantitative Linguistics, 17*(2), 94–100.
+
+Evert, S., Proisl, T., Jannidis, F., Reger, I., Pielström, S., Schöch, C., & Vitt, T. (2017). Understanding and explaining Delta measures for authorship attribution. *Digital Scholarship in the Humanities, 32*(suppl. 2), ii4–ii16. https://doi.org/10.1093/llc/fqx023
+
+Flesch, R. (1948). A new readability yardstick. *Journal of Applied Psychology, 32*(3), 221–233. https://doi.org/10.1037/h0057532
+
+Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
+
+Kandel, L., & Moles, A. (1958). Application de l'indice de Flesch à la langue française. *Cahiers d'Études de Radio-Télévision, 19*.
+
+Kincaid, J. P., Fishburne, R. P., Rogers, R. L., & Chissom, B. S. (1975). *Derivation of new readability formulas (Automated Readability Index, Fog Count and Flesch Reading Ease Formula) for Navy enlisted personnel* (Research Branch Report 8-75). Naval Technical Training Command.
+
+Liu, H. (2008). Dependency distance as a metric of language comprehension difficulty. *Journal of Cognitive Science, 9*(2), 159–191. https://hdl.handle.net/10371/70907
+
+Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996). *Readability formulas applied to textbooks in Brazilian Portuguese* (Notas do ICMSC-USP, Série Computação, 28). ICMSC-USP.
+
+McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods, 42*(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
+
+Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020). Universal Dependencies v2: An evergrowing multilingual treebank collection. In *Proceedings of the 12th Language Resources and Evaluation Conference* (pp. 4034–4043). European Language Resources Association. https://aclanthology.org/2020.lrec-1.497
+
+Tweedie, F. J., & Baayen, R. H. (1998). How variable may a constant be? Measures of lexical richness in perspective. *Computers and the Humanities, 32*(5), 323–352. https://doi.org/10.1023/A:1001749303137
+
+Ure, J. (1971). Lexical density and register differentiation. In G. E. Perren & J. L. M. Trim (Eds.), *Applications of linguistics* (pp. 443–452). Cambridge University Press.
+
+Yule, G. U. (1944). *The statistical study of literary vocabulary*. Cambridge University Press.
 
 ---
 
 ## 🇬🇧 English
 
-Drop a TXT or EPUB book into `livros/` and the project returns its metadata and core NLP indicators: size, lexical variety (TTR, MATTR, hapax, Yule's K, lexical density), sentence and paragraph length, dialogue share, language-specific Flesch readability, part-of-speech distribution, punctuation rates, named entities, word frequencies and how these change across the book. Language (Portuguese, French or English) is detected automatically and the matching spaCy model is used; every indicator is computed with pandas from a token-level DataFrame. Each book gets a Markdown report, five charts and CSV/JSON data, and the corpus gets a comparison table and charts.
+Give it a book (a TXT or EPUB file, a Project Gutenberg link or a direct link) and it returns the metadata and a documented set of NLP indicators for Portuguese, French or English:
 
-A GitHub Actions workflow reprocesses the books whenever the code or configuration changes, runs the tests first, and commits the updated `resultados/` folder. Results record the package version, code fingerprint and commit that produced them. Run locally with `python -m pip install -r requirements.txt`, `bash .github/scripts/instalar_modelos.sh` and `python -m livros_pln`.
+- length-independent lexical diversity (MTLD, HD-D, MATTR);
+- the distribution of sentence length;
+- dependency-based syntactic complexity;
+- parts of speech per 1,000 words;
+- language-specific readability formulas;
+- punctuation and dialogue;
+- named entities and a character co-occurrence network;
+- Burrows's Delta across books in the same language.
+
+Every value has an explicit state (valid, not applicable, unknown or failed); missing values are never replaced by zero. Each also has a definition, limitations and an APA 7 reference.
+
+Results come as Markdown reports, Excel, CSV/JSON, PNG/SVG charts with a shared visual identity, and interactive Plotly dashboards. A GitHub Actions workflow runs the tests and reprocesses the books whenever the code changes.
 
 ---
 

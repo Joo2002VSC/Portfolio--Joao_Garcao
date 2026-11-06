@@ -1,48 +1,19 @@
-"""Relatórios em Markdown, legíveis diretamente no GitHub."""
+"""Relatórios em Markdown, legíveis diretamente no GitHub.
+
+Estrutura do relatório de cada livro: identificação; metadados e características do texto;
+resumo; diversidade lexical; extensão das frases e complexidade sintática; análise
+morfossintática; legibilidade; análise lexical e discursiva; evolução ao longo do texto;
+visualizações; interpretação; limitações; referências. As definições vêm de `catalogo.py`.
+"""
 from __future__ import annotations
 
 from pathlib import Path
 
 import pandas as pd
 
-
-def _num(v, casas=2) -> str:
-    if v is None or (isinstance(v, float) and v != v):
-        return "—"
-    if isinstance(v, int) or (isinstance(v, float) and v.is_integer() and abs(v) >= 1000):
-        return f"{int(v):,}".replace(",", " ")
-    return f"{v:.{casas}f}".replace(".", ",")
-
-
-def _tabela(linhas: list[list], cabecalho: list[str]) -> str:
-    out = ["| " + " | ".join(cabecalho) + " |", "| " + " | ".join("---" for _ in cabecalho) + " |"]
-    out += ["| " + " | ".join(str(c) for c in l) + " |" for l in linhas]
-    return "\n".join(out)
-
-
-INDICADORES = [
-    ("Dimensão", [("palavras", "Palavras", 0), ("frases", "Frases", 0), ("paragrafos", "Parágrafos", 0),
-                  ("tempo_leitura_horas", "Tempo de leitura (horas, a 230 palavras/min)", 1)]),
-    ("Léxico", [("vocabulario", "Vocabulário (formas distintas)", 0), ("lemas_distintos", "Lemas distintos", 0),
-                ("mattr_500", "Variedade lexical (MATTR, janela 500)", 3), ("ttr", "TTR (depende do tamanho)", 3),
-                ("hapax_pct", "Hapax (% do vocabulário)", 1), ("yule_k", "K de Yule", 1),
-                ("densidade_lexical_pct", "Densidade lexical (%)", 1),
-                ("palavra_media_letras", "Palavra média (letras)", 2)]),
-    ("Sintaxe e legibilidade", [("frase_media_palavras", "Frase média (palavras)", 1),
-                                ("frase_mediana_palavras", "Frase mediana (palavras)", 0),
-                                ("frase_maxima_palavras", "Frase mais longa (palavras)", 0),
-                                ("paragrafo_medio_palavras", "Parágrafo médio (palavras)", 1),
-                                ("dialogo_pct", "Parágrafos de diálogo (%)", 1),
-                                ("legibilidade", "Legibilidade (Flesch adaptado)", 1)]),
-    ("Pontuação (por 1000 palavras)", [("virgula_por_1000", "Vírgula", 1), ("ponto_por_1000", "Ponto", 1),
-                                       ("ponto_e_virgula_por_1000", "Ponto e vírgula", 1),
-                                       ("exclamacao_por_1000", "Exclamação", 1),
-                                       ("interrogacao_por_1000", "Interrogação", 1),
-                                       ("reticencias_por_1000", "Reticências", 1),
-                                       ("travessao_por_1000", "Travessão", 1)]),
-    ("Entidades (NER)", [("entidades_pessoa", "Pessoas distintas", 0), ("entidades_lugar", "Lugares distintos", 0),
-                         ("entidades_organizacao", "Organizações distintas", 0)]),
-]
+from . import catalogo, qualidade
+from .catalogo import INDICADORES
+from .tema import num
 
 CAMPOS_META = [("titulo", "Título"), ("autor", "Autor"), ("ano", "Ano"), ("data", "Data"),
                ("publicacao_original", "Publicação original"), ("tradutor", "Tradutor"), ("editora", "Editora"),
@@ -50,57 +21,272 @@ CAMPOS_META = [("titulo", "Título"), ("autor", "Autor"), ("ano", "Ano"), ("data
                ("assuntos", "Assuntos")]
 
 
-def livro(r: dict, freq: pd.DataFrame, ents: pd.DataFrame, pasta: Path):
-    i, m, p = r["indicadores"], r["metadados"], r["processamento"]
+def _tabela(linhas: list[list], cabecalho: list[str]) -> str:
+    def celula(c):
+        return str(c).replace("|", "\\|").replace("\n", " ")
+    out = ["| " + " | ".join(cabecalho) + " |", "| " + " | ".join("---" for _ in cabecalho) + " |"]
+    out += ["| " + " | ".join(celula(c) for c in l) + " |" for l in linhas]
+    return "\n".join(out)
+
+
+def _valor(r: dict, chave: str) -> str:
+    estado = r.get("estados", {}).get(chave)
+    if estado:
+        return f"*{qualidade.ROTULOS[estado['estado']]}* ({estado['motivo']})"
+    v = r["indicadores"].get(chave)
+    return num(v, INDICADORES[chave].casas) if chave in INDICADORES else str(v)
+
+
+def _bloco(r: dict, chaves: list[str]) -> str:
+    linhas = [[f"**{INDICADORES[k].nome}**", _valor(r, k), INDICADORES[k].unidade, INDICADORES[k].interpretacao]
+              for k in chaves if k in INDICADORES and (k in r["indicadores"] or k in r.get("estados", {}))]
+    return _tabela(linhas, ["Indicador", "Valor", "Unidade / escala", "Interpretação"])
+
+
+def _definicoes(chaves: list[str]) -> str:
+    itens = []
+    for k in chaves:
+        i = INDICADORES[k]
+        itens.append(f"- **{i.nome}**: {i.definicao}" + (f" Fórmula: `{i.formula}`." if i.formula else ""))
+    return "<details><summary>Definições</summary>\n\n" + "\n".join(itens) + "\n\n</details>"
+
+
+def _figura(r: dict, nome: str, alt: str) -> list[str]:
+    if f"{nome}.png" in r["graficos"]:
+        return [f"![{alt}](graficos/{nome}.png)", f"<sub>[SVG](graficos/{nome}.svg)</sub>", ""]
+    return []
+
+
+# ---------------------------------------------------------------------------
+# Comentários automáticos (descritivos, sem inferências causais)
+# ---------------------------------------------------------------------------
+
+def comentarios(r: dict, evol: pd.DataFrame) -> list[str]:
+    i, e = r["indicadores"], r.get("estados", {})
+    c = []
+    if "frase_mediana" not in e and i.get("frase_mediana") is not None:
+        c.append(f"Metade das frases tem até {num(i['frase_mediana'], 0)} palavras e a metade central das frases está entre "
+                 f"{num(i['frase_p25'], 0)} e {num(i['frase_p75'], 0)} palavras; {num(i['frases_longas_pct'], 1)} % "
+                 f"têm mais de {r['parametros']['frase_longa']} palavras.")
+        if i.get("frase_desvio_padrao") and i.get("frase_media") and i["frase_desvio_padrao"] / i["frase_media"] > 0.9:
+            c.append("A extensão das frases varia muito (desvio-padrão próximo da média): alternância marcada entre "
+                     "frases curtas e longas.")
+        if i["frase_media"] - i["frase_mediana"] > 3:
+            c.append(f"A média ({num(i['frase_media'], 1)}) é bastante superior à mediana: algumas frases muito longas "
+                     "puxam a média para cima, por isso a mediana descreve melhor a frase típica.")
+    if "mtld" not in e and i.get("mtld") is not None:
+        c.append(f"Diversidade lexical: MTLD de {num(i['mtld'], 1)} palavras por fator, ou seja, em média são "
+                 f"precisas cerca de {num(i['mtld'], 0)} palavras até o TTR descer abaixo de 0,72. Este valor só é "
+                 f"comparável com livros em {r['lingua_nome']}.")
+    if i.get("dialogo_pct") is not None:
+        c.append(f"Cerca de {num(i['dialogo_pct'], 0)} % dos parágrafos foram identificados como diálogo "
+                 "(estimativa tipográfica).")
+    if i.get("subordinadas_por_frase") is not None:
+        c.append(f"Em média, {num(i['subordinadas_por_frase'], 2)} orações subordinadas por frase e uma profundidade "
+                 f"sintática média de {num(i['profundidade_media'], 2)} níveis.")
+    if len(evol) >= 3 and evol.mtld.notna().sum() >= 3:
+        a, b = evol.mtld.dropna().iloc[0], evol.mtld.dropna().iloc[-1]
+        fa, fb = evol.frase_media.iloc[0], evol.frase_media.iloc[-1]
+        c.append(f"Do primeiro ao último segmento, o MTLD passa de {num(a, 1)} para {num(b, 1)} e a extensão média "
+                 f"das frases de {num(fa, 1)} para {num(fb, 1)} palavras (variação descritiva; segmentos isolados são "
+                 "instáveis).")
+    if i.get("personagens_na_rede"):
+        c.append(f"A rede inclui {i['personagens_na_rede']} personagens; a mais central (PageRank) é "
+                 f"{i.get('personagem_principal')}.")
+    return c
+
+
+# ---------------------------------------------------------------------------
+# Relatório de um livro
+# ---------------------------------------------------------------------------
+
+def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame, evol: pd.DataFrame,
+          pers: pd.DataFrame, pasta: Path):
+    i, m, p, amb = r["indicadores"], r["metadados"], r["processamento"], r.get("ambiente", {})
+    lg = r["lingua"]
     s = [f"# {r['titulo']}", ""]
     if r.get("autor"):
         s += [f"**{r['autor']}**" + (f" · {r['ano']}" if r.get("ano") else ""), ""]
-    s += ["[← Todos os livros](../../README.md)", "", "## Metadados", ""]
+    s += ["[← Todos os livros](../../README.md) · **[Painel interativo](painel.html)** (rede de personagens em 3D) · "
+          f"[Excel]({r['id']}.xlsx) · [JSON](indicadores.json)", ""]
+
+    # 1–2. Identificação e metadados
+    s += ["## 1. Identificação e metadados", ""]
     meta = [[rot, m[k]] for k, rot in CAMPOS_META if m.get(k)]
     meta += [["Ficheiro", f"`{r['ficheiro']}` ({r['formato'].upper()})"],
-             ["Língua detetada", f"{r['lingua_nome']} (modelo `{r['modelo_spacy']}`)"]]
+             ["Língua detetada", f"{r['lingua_nome']} · modelo `{r['modelo_spacy']}`"
+              + (f" {amb['modelo']['versao']}" if amb else "")]]
     s += [_tabela(meta, ["Campo", "Valor"]), ""]
-    s += ["## Indicadores", ""]
-    for grupo, campos in INDICADORES:
-        s += [f"**{grupo}**", "", _tabela([[rot, _num(i.get(k), c)] for k, rot, c in campos], ["Indicador", "Valor"]), ""]
-    s[-1:] = [f"Legibilidade: **{i['legibilidade_escala']}**.", ""]
-    for g in r["graficos"]:
-        s += [f"![{g}](graficos/{g})", ""]
-    s += ["## Lemas mais frequentes", "",
-          _tabela([[l.lema, l.pos, l.ocorrencias, _num(l.por_1000_palavras)] for l in freq.head(30).itertuples()],
+    s += ["## 2. Características do texto", "", _bloco(r, ["palavras", "frases", "paragrafos", "tempo_leitura_horas"]), ""]
+    if r.get("qualidade"):
+        s += ["**Avisos de qualidade dos dados**", ""] + [f"- ⚠ {a['mensagem']}" for a in r["qualidade"]] + [""]
+    else:
+        s += ["Sem avisos de qualidade: texto não vazio, sem sinais de erro de codificação nem de duplicação, "
+              "língua detetada com margem confortável e segmentação de frases sem anomalias.", ""]
+
+    # 3. Resumo
+    destaque = [("mtld", "Diversidade lexical (MTLD)"), ("frase_mediana", "Extensão mediana das frases"),
+                ("profundidade_media", "Profundidade sintática"), ("densidade_lexical_pct", "Densidade lexical"),
+                ("dialogo_pct", "Parágrafos de diálogo"), ("legibilidade", "Legibilidade (Flesch adaptado)")]
+    s += ["## 3. Resumo dos principais resultados", "",
+          _tabela([[rot, _valor(r, k), INDICADORES[k].unidade] for k, rot in destaque], ["Indicador", "Valor", "Unidade"]),
+          ""]
+
+    # 4. Diversidade lexical
+    lex = ["mtld", "hdd", "mattr", "yule_k", "ttr", "hapax_pct", "vocabulario"]
+    s += ["## 4. Diversidade lexical", "",
+          "O TTR depende da extensão do texto e não deve ser usado sozinho para comparar livros de tamanhos diferentes; "
+          "o MTLD e o HD-D são os índices de referência (McCarthy e Jarvis, 2010). Todos dependem da língua.", "",
+          _bloco(r, lex), "", _definicoes(lex), ""]
+
+    # 5. Frases e sintaxe
+    ext = ["frase_mediana", "frase_media", "frase_p25", "frase_p75", "frase_desvio_padrao", "frase_maxima",
+           "frases_longas_pct", "paragrafo_medio"]
+    sint = ["profundidade_media", "distancia_dependencia", "subordinadas_por_frase"]
+    s += ["## 5. Extensão das frases e complexidade sintática", "",
+          "A extensão mede quantas palavras tem uma frase; a complexidade sintática mede como essas palavras se "
+          "organizam (encaixamento, distância entre palavras relacionadas, subordinação). São dimensões distintas.", "",
+          "### Extensão", "", _bloco(r, ext), ""] + _figura(r, "extensao-frases", "Extensão das frases")
+    s += ["### Complexidade sintática", "",
+          f"Calculada a partir da árvore de dependências do modelo `{r['modelo_spacy']}`"
+          + (f" (exatidão declarada pelo modelo: LAS {num(amb['modelo']['exatidao'].get('dependencias_las', float('nan')), 2)})"
+             if amb and amb["modelo"].get("exatidao", {}).get("dependencias_las") is not None else "")
+          + ".", "", _bloco(r, sint), "", _definicoes(sint), ""]
+
+    # 6. Morfossintaxe
+    s += ["## 6. Análise morfossintática", "",
+          f"Etiquetas UPOS do modelo `{r['modelo_spacy']}`"
+          + (f" (exatidão declarada: {num(100 * amb['modelo']['exatidao']['pos'], 1)} %)"
+             if amb and amb["modelo"].get("exatidao", {}).get("pos") is not None else "")
+          + ". A exatidão é medida pelo próprio modelo em textos contemporâneos; em textos antigos será mais baixa.", "",
+          _tabela([[c.nome, num(c.ocorrencias, 0), num(c.por_1000_palavras, 1)] for c in
+                   classes.sort_values("por_1000_palavras", ascending=False).itertuples()],
+                  ["Classe", "Ocorrências", "Por 1000 palavras"]), "",
+          _bloco(r, ["densidade_lexical_pct", "pronomes_pessoais_por_1000", "modais_por_1000", "palavra_media_letras"]),
+          ""] + _figura(r, "classes-gramaticais", "Classes gramaticais")
+
+    # 7. Legibilidade
+    s += ["## 7. Legibilidade", "", _bloco(r, ["legibilidade", "flesch_kincaid", "silabas_por_palavra"]), ""]
+    aviso_lg = {"pt": "A fórmula usada é a adaptação de Martins et al. (1996), calibrada com manuais escolares em "
+                      "português do Brasil. Não foi validada para o português europeu nem para prosa literária: o "
+                      "valor serve para comparar livros em português entre si, não como medida absoluta.",
+                "fr": "A fórmula usada é a adaptação de Kandel e Moles (1958); não é equivalente às de outras línguas.",
+                "en": "Fórmulas originais de Flesch (1948) e Kincaid et al. (1975), calibradas para inglês."}[lg]
+    s += [f"> {aviso_lg} As sílabas são estimadas por regras ortográficas (ver a exatidão medida em "
+          "`docs/indicadores.md`).", "", _definicoes(["legibilidade", "silabas_por_palavra"]), ""]
+
+    # 8. Lexical e discursiva
+    pont = [k for k in INDICADORES if k.endswith("_por_1000") and INDICADORES[k].grupo == "Pontuação"]
+    s += ["## 8. Análise lexical e discursiva", "", "### Palavras de conteúdo mais frequentes", ""]
+    s += _figura(r, "frequencias", "Frequências")
+    s += [_tabela([[l.lema, l.pos, num(l.ocorrencias, 0), num(l.por_1000_palavras, 2)] for l in freq.head(20).itertuples()],
                   ["Lema", "Classe", "Ocorrências", "Por 1000 palavras"]), ""]
-    if not ents.empty:
-        s += ["## Entidades mais mencionadas", "",
-              _tabela([[e.tipo, e.entidade, e.ocorrencias] for e in ents.groupby("tipo").head(10).itertuples()],
-                      ["Tipo", "Entidade", "Ocorrências"]), ""]
-    s += ["## Ficheiros", "", "- [`indicadores.json`](indicadores.json) · todos os indicadores e metadados",
-          "- [`frequencias.csv`](frequencias.csv) · 200 lemas mais frequentes",
-          "- [`entidades.csv`](entidades.csv) · entidades por tipo",
-          "- [`evolucao.csv`](evolucao.csv) · indicadores por décimo do livro", "",
-          f"<sub>Processado em {p['data']} · livros_pln {p['versao']} · código `{p['versao_codigo']}`"
-          + (f" · commit `{p['commit']}`" if p.get("commit") else "") + "</sub>", ""]
+    s += ["### Pontuação e diálogo", "", _bloco(r, pont + ["dialogo_pct"]), ""]
+    s += ["### Entidades nomeadas", "", "Reconhecimento automático (NER): estimativas sujeitas a erro.", "",
+          _bloco(r, ["entidades_pessoa", "entidades_lugar", "entidades_organizacao", "entidades_por_1000"]), ""]
+    s += _figura(r, "entidades", "Entidades")
+    if not pers.empty:
+        s += ["### Rede de personagens", "", f"Identificação: {r.get('metodo_personagens')}. Duas personagens ligam-se "
+              "quando aparecem no mesmo parágrafo: é uma co-ocorrência textual, não uma relação narrativa comprovada.", ""]
+        s += _figura(r, "rede", "Rede de personagens")
+        s += [_tabela([[x.personagem, num(x.mencoes, 0), x.grau, num(x.grau_ponderado, 0), num(x.intermediacao, 3),
+                        num(x.pagerank, 3), x.comunidade] for x in pers.head(15).itertuples()],
+                      ["Personagem", "Menções", "Ligações", "Parágrafos partilhados", "Intermediação", "PageRank",
+                       "Comunidade"]), ""]
+
+    # 9. Evolução
+    s += ["## 9. Evolução ao longo do texto", ""]
+    if len(evol) >= 3:
+        s += [f"O livro foi dividido em {len(evol)} segmentos com o mesmo número de palavras.", ""]
+        s += _figura(r, "evolucao", "Evolução")
+        s += [_tabela([[int(e.segmento), num(e.palavras, 0), num(e.mtld, 1), num(e.frase_media, 1),
+                        num(e.densidade_lexical_pct, 1), num(e.dialogo_pct, 0), num(e.pessoas_por_1000, 1)]
+                       for e in evol.itertuples()],
+                      ["Segmento", "Palavras", "MTLD", "Frase média", "Densidade lexical (%)", "Diálogo (%)",
+                       "Pessoas / 1000"]), ""]
+    else:
+        s += ["*Não aplicável*: texto curto de mais para dividir em segmentos.", ""]
+
+    # 10. Visualizações
+    s += ["## 10. Visualizações", "", "- [Painel interativo](painel.html): rede de personagens em 3D, centralidade, "
+          "frequências, classes gramaticais, frases, evolução e lugares (abrir num navegador).",
+          "- Gráficos estáticos em PNG e SVG na pasta [`graficos/`](graficos/).", ""]
+
+    # 11. Interpretação
+    s += ["## 11. Interpretação", "", "Comentários gerados automaticamente a partir dos valores; descrevem o texto, "
+          "não explicam as suas causas nem substituem a leitura crítica.", ""]
+    s += [f"- {c}" for c in comentarios(r, evol)] + [""]
+
+    # 12. Limitações
+    usados = lex + ext + sint + ["legibilidade", "dialogo_pct", "entidades_pessoa", "densidade_lexical_pct"]
+    s += ["## 12. Limitações metodológicas", ""]
+    s += [f"- **{INDICADORES[k].nome}**: {INDICADORES[k].limitacoes}" for k in usados if INDICADORES[k].limitacoes]
+    s += ["- **Modelos linguísticos**: os modelos spaCy foram treinados com texto contemporâneo; grafias antigas, "
+          "diálogos e pontuação literária reduzem a exatidão da segmentação, da etiquetagem e da análise sintática.", ""]
+
+    # 13. Referências
+    s += ["## 13. Referências metodológicas", ""] + [f"- {x}" for x in catalogo.referencias_de(usados)] + \
+         [f"- {catalogo.REFERENCIAS['honnibal2020']}", ""]
+    bib = amb.get("bibliotecas", {}) if amb else {}
+    s += [f"<sub>Processado em {p['data']} · livros_pln {p['versao']} · código `{p['versao_codigo']}`"
+          + (f" · commit `{p['commit']}`" if p.get("commit") else "")
+          + (f" · Python {amb['python']} · spaCy {bib.get('spacy')} · {amb['modelo']['nome']} {amb['modelo']['versao']}"
+             if amb else "") + "</sub>", ""]
     (pasta / "README.md").write_text("\n".join(s), encoding="utf-8")
 
 
-def corpus(t: pd.DataFrame, figs: list[str], saida: Path, versao: str, codigo: str, commit: str | None):
-    # sem data nem commit atual: o ficheiro só muda quando os resultados mudam
+# ---------------------------------------------------------------------------
+# Relatório do corpus
+# ---------------------------------------------------------------------------
+
+def corpus(t: pd.DataFrame, figs: list[str], resultado_delta: dict, saida: Path, versao: str, codigo: str):
     s = ["# Resultados", "",
-         f"Gerado automaticamente por livros_pln {versao} (código `{codigo}`). Não editar à mão: estes "
-         "ficheiros são reescritos sempre que o código muda. O commit e a data de processamento de cada "
+         f"Gerado automaticamente por livros_pln {versao} (código `{codigo}`). Não editar à mão: estes ficheiros são "
+         "reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada "
          "livro estão no respetivo relatório.", ""]
     if t.empty:
         (saida / "README.md").write_text("\n".join(s + ["Ainda não há livros processados.", ""]), encoding="utf-8")
         return
-    s += [f"**{len(t)} livros · {_num(int(t.palavras.sum()), 0)} palavras** · "
-          + ", ".join(f"{n} em {lg}" for lg, n in t.lingua.map({"pt": "português", "fr": "francês",
-                                                                     "en": "inglês"}).value_counts().items()), ""]
-    linhas = [[f"[{r.titulo}](livros/{r.id}/README.md)", r.autor or "—", r.lingua, _num(r.palavras, 0),
-               _num(r.mattr_500, 3), _num(r.frase_media_palavras, 1), _num(r.densidade_lexical_pct, 1),
-               f"{_num(r.legibilidade, 0)} ({r.legibilidade_escala})"]
-              for r in t.sort_values(["autor", "titulo"], na_position="last").itertuples()]
-    s += [_tabela(linhas, ["Livro", "Autor", "Língua", "Palavras", "MATTR", "Frase média", "Densidade lexical (%)",
-                           "Legibilidade"]), ""]
+    nomes = {"pt": "português", "fr": "francês", "en": "inglês"}
+    s += [f"**{len(t)} livros · {num(int(t.palavras.sum()), 0)} palavras** · "
+          + ", ".join(f"{n} em {nomes.get(lg, lg)}" for lg, n in t.lingua.value_counts().items()), "",
+          "**[Painel interativo de comparação](painel.html)** · [`indicadores.csv`](indicadores.csv) · "
+          "[`indicadores.xlsx`](indicadores.xlsx) (uma linha por livro; o Excel inclui o dicionário de indicadores)", ""]
+    s += ["## Livros", "", "Os livros estão agrupados por língua: a maior parte dos indicadores só é comparável dentro "
+          "da mesma língua (ver a coluna «comparável entre línguas» no dicionário de indicadores).", ""]
+    for lg, sub in t.sort_values(["lingua", "titulo"]).groupby("lingua"):
+        s += [f"### {nomes.get(lg, lg).capitalize()}", ""]
+        s += [_tabela([[f"[{x.titulo}](livros/{x.id}/README.md)", x.autor or "—", x.ano or "—", num(x.palavras, 0),
+                        num(x.mtld, 1), num(x.frase_mediana, 0), num(x.profundidade_media, 2),
+                        num(x.densidade_lexical_pct, 1), num(x.legibilidade, 0)] for x in sub.itertuples()],
+                      ["Livro", "Autor", "Ano", "Palavras", "MTLD", "Frase mediana", "Profundidade",
+                       "Densidade lexical (%)", "Legibilidade"]), ""]
+        if len(sub) >= 2:
+            maior = sub.loc[sub.mtld.idxmax()] if sub.mtld.notna().any() else None
+            if maior is not None:
+                s += [f"Entre os livros em {nomes.get(lg, lg)}, o MTLD mais alto é o de *{maior.titulo}* "
+                      f"({num(maior.mtld, 1)}).", ""]
+    s += ["## Comparações", ""]
+    rotulos = {"perfil-comparativo.png": "Perfil linguístico", "classes-comparadas.png": "Classes gramaticais",
+               "frases-comparadas.png": "Extensão das frases", "evolucao-comparada.png": "Evolução",
+               "correlacoes.png": "Correlações"}
     for g in figs:
-        s += [f"![{g}](graficos/{g})", ""]
-    s += ["Tabela completa: [`indicadores.csv`](indicadores.csv) (uma linha por livro, todos os indicadores).", ""]
+        if g.startswith("delta-"):
+            continue
+        s += [f"![{rotulos.get(g, g)}](graficos/{g})", f"<sub>[SVG](graficos/{g[:-4]}.svg)</sub>", ""]
+    if "correlacoes.png" not in figs:
+        s += [f"*Matriz de correlação entre indicadores: não aplicável* ({len(t)} livros; são precisos pelo menos 5 "
+              "para que as correlações tenham algum significado).", ""]
+    s += ["## Estilometria (Delta de Burrows)", "",
+          "Distância estilística a partir da frequência das palavras mais frequentes (sobretudo palavras gramaticais), "
+          "calculada só entre livros da mesma língua. Uma distância pequena indica semelhança no uso dessas palavras; "
+          "não é prova de autoria.", ""]
+    for lg, r in resultado_delta.items():
+        if r["estado"] == "valido":
+            s += [f"### {nomes.get(lg, lg).capitalize()}", "", f"{r['motivo']}. Matriz: [`delta-{lg}.csv`](delta-{lg}.csv).",
+                  "", f"![Delta de Burrows](graficos/delta-{lg}.png)", ""]
+        else:
+            s += [f"- **{nomes.get(lg, lg).capitalize()}**: *não aplicável* ({r['motivo']}).", ""]
+    s += ["## Referências", "", f"- {catalogo.REFERENCIAS['burrows2002']}", f"- {catalogo.REFERENCIAS['evert2017']}",
+          f"- {catalogo.REFERENCIAS['mccarthy2010']}", ""]
     (saida / "README.md").write_text("\n".join(s), encoding="utf-8")

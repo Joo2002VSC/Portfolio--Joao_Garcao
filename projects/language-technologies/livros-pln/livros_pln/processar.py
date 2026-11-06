@@ -1,13 +1,14 @@
-"""Processa todos os livros de uma pasta e exporta indicadores, gráficos e relatórios.
+"""Processa livros (TXT ou EPUB, ficheiro ou link) e exporta indicadores, gráficos e painéis.
 
 Uso:
-    python -m livros_pln                     # livros/ → resultados/
-    python -m livros_pln --forcar            # reprocessa tudo, mesmo sem alterações
-    python -m livros_pln --pasta outra/ --saida outros-resultados/
+    python -m livros_pln                                   # todos os livros de livros/ → resultados/
+    python -m livros_pln --forcar                          # reprocessa tudo, mesmo sem alterações
+    python -m livros_pln analisar livros/um-livro.epub     # um livro, com resumo no terminal
+    python -m livros_pln analisar https://www.gutenberg.org/ebooks/40409 --abrir
 
-Um livro é reprocessado quando o ficheiro muda ou quando muda a versão do código
-(impressão digital dos ficheiros .py do pacote). Os resultados de cada livro guardam
-a versão e o commit que os produziram.
+Um livro é reprocessado quando muda o ficheiro, o seu dicionário de personagens, o código ou
+os parâmetros (impressão digital dos ficheiros .py do pacote e de config/). Cada resultado
+regista a versão, os parâmetros, as versões das bibliotecas e dos modelos e o commit.
 """
 from __future__ import annotations
 
@@ -15,24 +16,31 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import shutil
 import subprocess
 import sys
 import time
+import webbrowser
 from datetime import datetime, timezone
+from importlib import metadata
 from pathlib import Path
 
 import pandas as pd
 
-from . import __version__, graficos, indicadores, leitura, lingua, relatorio
+from . import (__version__, configuracao, estilometria, exportar, fontes, graficos, indicadores, interativo, leitura,
+               lingua, personagens, qualidade, relatorio)
+from .configuracao import PARAMETROS
 
 PACOTE = Path(__file__).resolve().parent
+BIBLIOTECAS = ["spacy", "pandas", "numpy", "scipy", "networkx", "matplotlib", "plotly", "ebooklib", "beautifulsoup4"]
 
 
 def versao_codigo() -> str:
     h = hashlib.sha256(__version__.encode())
-    # o código e a configuração (stopwords) determinam os resultados
-    for f in sorted(PACOTE.glob("*.py")) + sorted((PACOTE.parent / "config").glob("*.txt")):
+    # o código, os parâmetros e as stopwords determinam os resultados
+    config = PACOTE.parent / "config"
+    for f in sorted(PACOTE.glob("*.py")) + sorted(config.glob("*.txt")) + sorted(config.glob("*.toml")):
         h.update(f.name.encode())
         h.update(f.read_bytes())
     return h.hexdigest()[:12]
@@ -48,62 +56,114 @@ def commit_atual() -> str | None:
         return None
 
 
+def ambiente(lg: str) -> dict:
+    versoes = {}
+    for b in BIBLIOTECAS:
+        try:
+            versoes[b] = metadata.version(b)
+        except metadata.PackageNotFoundError:
+            versoes[b] = None
+    return {"python": platform.python_version(), "bibliotecas": versoes, "modelo": indicadores.info_modelo(lg)}
+
+
 def _json(valor):
-    if isinstance(valor, float) and valor != valor:  # NaN
+    if isinstance(valor, float) and valor != valor:
         return None
     if hasattr(valor, "item"):
         return valor.item()
     return valor
 
 
-def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, commit: str | None) -> dict:
+def dicionario_de(ficheiro: Path) -> Path:
+    return ficheiro.parent / "personagens" / f"{leitura.slug(ficheiro.stem)}.json"
+
+
+def _hash_dicionario(ficheiro: Path) -> str | None:
+    d = dicionario_de(ficheiro)
+    return leitura.impressao_digital(d) if d.exists() else None
+
+
+class ErroLivro(Exception):
+    pass
+
+
+def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, commit: str | None,
+                    offline: bool = False, p=PARAMETROS) -> dict:
     inicio = time.time()
     livro = leitura.ler(ficheiro)
     meta = {**livro.metadados, **manuais.get(ficheiro.name, {})}
     lg, pontuacao = lingua.detetar(livro.texto)
     if meta.get("lingua") in lingua.MODELOS:  # metadados.csv pode forçar a língua
         lg = meta["lingua"]
-    tokens, ents = indicadores.anotar(livro.paragrafos, lg)
-    ind = indicadores.calcular(livro.paragrafos, tokens, ents, lg)
+
+    avisos = qualidade.verificar_texto(livro.paragrafos, pontuacao, lg, meta.get("lingua_declarada"), p.minimo_texto)
+    if any(a["nivel"] == "erro" for a in avisos):
+        raise ErroLivro("; ".join(a["mensagem"] for a in avisos if a["nivel"] == "erro"))
+
+    # PLN
+    tokens, frases, ents = indicadores.anotar(livro.paragrafos, lg)
+    ind, estados = indicadores.calcular(livro.paragrafos, tokens, frases, ents, lg, p)
+    avisos += qualidade.verificar_anotacao(ind["frases"] or 0, frases.palavras[frases.palavras > 0], ind["palavras"])
     freq = indicadores.frequencias(tokens)
+    classes = indicadores.classes_gramaticais(tokens)
     tab_ents = indicadores.tabela_entidades(ents)
-    evol = indicadores.evolucao(tokens)
-    frases = indicadores.distribuicao_frases(tokens)
-    pos = tokens[tokens.alfa].pos.value_counts(normalize=True) * 100
+    evol = indicadores.evolucao(tokens, frases, ents, livro.paragrafos, p)
+
+    # rede de personagens
+    g, pers, lig, metodo = personagens.analisar(livro.paragrafos, ents, lg, dicionario_de(ficheiro),
+                                                ignorar=indicadores.stopwords_extra(lg), min_mencoes=p.rede_minimo_mencoes)
+    n_nos = g.number_of_nodes()
+    ind["personagens_na_rede"] = n_nos
+    ind["ligacoes_na_rede"] = g.number_of_edges()
+    ind["densidade_da_rede"] = round(2 * g.number_of_edges() / (n_nos * (n_nos - 1)), 4) if n_nos > 1 else None
+    if n_nos < 2:
+        estados["densidade_da_rede"] = {"estado": qualidade.NAO_APLICAVEL, "motivo": "menos de duas personagens na rede"}
+    ind["personagem_principal"] = pers.personagem.iloc[0] if len(pers) else None
 
     pasta = saida / "livros" / livro.id
     if pasta.exists():
         shutil.rmtree(pasta)
     (pasta / "graficos").mkdir(parents=True)
     titulo = meta.get("titulo") or livro.ficheiro.stem
-    figs = graficos.por_livro(titulo, freq, pos, frases, evol, tab_ents, pasta / "graficos")
+    amb = ambiente(lg)
+    figs = graficos.por_livro(titulo, amb["modelo"]["nome"], classes, freq, frases.palavras, evol, tab_ents, g, metodo,
+                              p.frase_longa, pasta / "graficos")
     freq.to_csv(pasta / "frequencias.csv", index=False)
+    classes.round(3).to_csv(pasta / "classes-gramaticais.csv", index=False)
     tab_ents.to_csv(pasta / "entidades.csv", index=False)
     evol.round(4).to_csv(pasta / "evolucao.csv", index=False)
+    frases[["palavras", "profundidade", "subordinadas"]].to_csv(pasta / "frases.csv", index=False)
+    formas = tokens[tokens.alfa].minusc.value_counts().head(2000).rename_axis("forma").rename("ocorrencias")
+    formas.to_csv(pasta / "formas.csv")
+    pers.round(4).to_csv(pasta / "personagens.csv", index=False)
+    lig.to_csv(pasta / "ligacoes.csv", index=False)
 
     registo = {
-        "id": livro.id,
-        "ficheiro": ficheiro.name,
-        "formato": livro.formato,
-        "titulo": titulo,
-        "autor": meta.get("autor"),
-        "ano": meta.get("ano") or meta.get("data"),
-        "lingua": lg,
-        "lingua_nome": lingua.NOMES[lg],
-        "modelo_spacy": lingua.MODELOS[lg],
+        "id": livro.id, "ficheiro": ficheiro.name, "formato": livro.formato, "titulo": titulo,
+        "autor": meta.get("autor"), "ano": meta.get("ano") or meta.get("data"),
+        "lingua": lg, "lingua_nome": lingua.NOMES[lg], "modelo_spacy": amb["modelo"]["nome"],
         "confianca_lingua": {k: round(v, 4) for k, v in pontuacao.items()},
+        "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
         "metadados": meta,
         "indicadores": {k: _json(round(v, 4) if isinstance(v, float) else v) for k, v in ind.items()},
+        "estados": estados,
+        "qualidade": avisos,
+        "parametros": configuracao.como_dicionario(p),
+        "ambiente": amb,
         "processamento": {
             "versao": __version__, "versao_codigo": codigo, "commit": commit,
-            "hash_ficheiro": leitura.impressao_digital(ficheiro),
+            "hash_ficheiro": leitura.impressao_digital(ficheiro), "hash_dicionario": _hash_dicionario(ficheiro),
             "data": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
             "duracao_s": round(time.time() - inicio, 1),
         },
         "graficos": figs,
     }
     (pasta / "indicadores.json").write_text(json.dumps(registo, ensure_ascii=False, indent=2), encoding="utf-8")
-    relatorio.livro(registo, freq, tab_ents, pasta)
+    relatorio.livro(registo, freq, classes, tab_ents, evol, pers, pasta)
+    interativo.painel_livro(registo, freq, classes, frases.palavras, evol, tab_ents, pers, g, pasta / "painel.html", offline)
+    exportar.livro(registo, {"Frequências": freq, "Classes gramaticais": classes.round(3), "Entidades": tab_ents,
+                             "Personagens": pers.round(4), "Ligações": lig, "Evolução": evol.round(4)},
+                   pasta / f"{livro.id}.xlsx")
     return registo
 
 
@@ -112,22 +172,123 @@ def precisa(ficheiro: Path, saida: Path, codigo: str) -> bool:
     if not destino.exists():
         return True
     anterior = json.loads(destino.read_text(encoding="utf-8"))["processamento"]
-    return anterior.get("versao_codigo") != codigo or anterior.get("hash_ficheiro") != leitura.impressao_digital(ficheiro)
+    return (anterior.get("versao_codigo") != codigo
+            or anterior.get("hash_ficheiro") != leitura.impressao_digital(ficheiro)
+            or anterior.get("hash_dicionario") != _hash_dicionario(ficheiro))
+
+
+def registos(saida: Path) -> list[dict]:
+    return [json.loads(f.read_text(encoding="utf-8")) for f in sorted((saida / "livros").glob("*/indicadores.json"))]
 
 
 def tabela_corpus(saida: Path) -> pd.DataFrame:
-    registos = [json.loads(f.read_text(encoding="utf-8")) for f in sorted((saida / "livros").glob("*/indicadores.json"))]
     linhas = [{k: r[k] for k in ("id", "ficheiro", "formato", "titulo", "autor", "ano", "lingua")}
               | r["indicadores"] | {"versao": r["processamento"]["versao"], "commit": r["processamento"]["commit"]}
-              for r in registos]
+              for r in registos(saida)]
     return pd.DataFrame(linhas)
 
 
+def atualizar_corpus(saida: Path, codigo: str, commit: str | None, offline: bool, p=PARAMETROS) -> pd.DataFrame:
+    tabela = tabela_corpus(saida)
+    saida.mkdir(parents=True, exist_ok=True)
+    tabela.round(4).to_csv(saida / "indicadores.csv", index=False)
+    pasta_graficos = saida / "graficos"
+    if pasta_graficos.exists():
+        shutil.rmtree(pasta_graficos)
+    resultado_delta = {}
+    figs = []
+    if not tabela.empty:
+        exportar.corpus(tabela.round(4), saida / "indicadores.xlsx")
+        base = saida / "livros"
+        classes = {i: pd.read_csv(base / i / "classes-gramaticais.csv") for i in tabela.id}
+        frases = {i: pd.read_csv(base / i / "frases.csv").palavras for i in tabela.id}
+        evolucoes = {i: pd.read_csv(base / i / "evolucao.csv") for i in tabela.id if (base / i / "evolucao.csv").stat().st_size > 1}
+        formas = {i: pd.read_csv(base / i / "formas.csv", index_col=0, keep_default_na=False).ocorrencias for i in tabela.id}
+        resultado_delta = estilometria.delta(formas, dict(zip(tabela.id, tabela.lingua)), p)
+        for lg, r in resultado_delta.items():
+            if r["estado"] == "valido":
+                r["matriz"].round(4).to_csv(saida / f"delta-{lg}.csv")
+        figs = graficos.corpus(tabela, classes, frases, evolucoes, resultado_delta, pasta_graficos)
+    interativo.painel_corpus(tabela, saida / "painel.html", offline)
+    relatorio.corpus(tabela, figs, resultado_delta, saida, __version__, codigo)
+    return tabela
+
+
+def resumo(r: dict, saida: Path) -> str:
+    """Resumo para o terminal."""
+    i, m, e = r["indicadores"], r["metadados"], r["estados"]
+    tema = __import__("livros_pln.tema", fromlist=["num"])
+
+    def n(chave, casas=1):
+        if chave in e:
+            return qualidade.ROTULOS[e[chave]["estado"]]
+        return tema.num(i.get(chave), casas)
+
+    linhas = [
+        "", f"  {r['titulo']}" + (f" · {r['autor']}" if r.get("autor") else "") + (f" · {r['ano']}" if r.get("ano") else ""),
+        "  " + "─" * 66,
+        f"  Língua              {r['lingua_nome']} ({r['modelo_spacy']})",
+        f"  Fonte               {m.get('fonte', r['formato'].upper())}" + (f" · {m['identificador']}" if m.get("identificador") else ""),
+        f"  Dimensão            {n('palavras', 0)} palavras · {n('frases', 0)} frases · {n('paragrafos', 0)} parágrafos",
+        f"  Diversidade lexical MTLD {n('mtld')} · MATTR {n('mattr', 3)} · HD-D {n('hdd', 3)}",
+        f"  Frases              mediana {n('frase_mediana', 0)} palavras (P25–P75: {n('frase_p25', 0)}–{n('frase_p75', 0)}) · "
+        f"longas {n('frases_longas_pct')} %",
+        f"  Sintaxe             profundidade {n('profundidade_media', 2)} · distância de dependência "
+        f"{n('distancia_dependencia', 2)} · subordinadas/frase {n('subordinadas_por_frase', 2)}",
+        f"  Legibilidade        {n('legibilidade')} ({i.get('legibilidade_escala') or '—'}; Flesch adaptado a {r['lingua']})",
+        f"  Densidade lexical   {n('densidade_lexical_pct')} %  ·  diálogo {n('dialogo_pct')} % (estimativa)",
+        f"  Personagens         {n('personagens_na_rede', 0)} na rede ({r['metodo_personagens']})",
+    ]
+    if r["personagens_principais"]:
+        linhas.append(f"                      principais: {', '.join(r['personagens_principais'][:6])}")
+    for a in r["qualidade"]:
+        linhas.append(f"  ⚠ {a['mensagem']}")
+    pasta = saida / "livros" / r["id"]
+    linhas += ["", f"  Painel interativo  {pasta / 'painel.html'}", f"  Excel              {pasta / (r['id'] + '.xlsx')}",
+               f"  Relatório          {pasta / 'README.md'}", ""]
+    return "\n".join(linhas)
+
+
+def cmd_analisar(argv: list[str]) -> int:
+    ap = argparse.ArgumentParser(prog="python -m livros_pln analisar",
+                                 description="Analisa um livro a partir de um ficheiro .txt/.epub ou de um link.")
+    ap.add_argument("fonte", help="caminho para um .txt/.epub, link do Project Gutenberg ou link direto para .txt/.epub")
+    ap.add_argument("--pasta", type=Path, default=Path("livros"), help="onde guardar livros descarregados")
+    ap.add_argument("--saida", type=Path, default=Path("resultados"))
+    ap.add_argument("--offline", action="store_true", help="embute o Plotly nos painéis (funcionam sem internet)")
+    ap.add_argument("--abrir", action="store_true", help="abre o painel no navegador no fim")
+    args = ap.parse_args(argv)
+    try:
+        if fontes.e_link(args.fonte):
+            print(f"↓ A descarregar {args.fonte}")
+        ficheiro = fontes.obter(args.fonte, args.pasta)
+    except fontes.ErroFonte as e:
+        print(f"✗ {e}", file=sys.stderr)
+        return 1
+    print(f"▶ A analisar {ficheiro.name} …")
+    codigo, commit = versao_codigo(), commit_atual()
+    try:
+        r = processar_livro(ficheiro, args.saida, leitura.metadados_manuais(ficheiro.parent), codigo, commit, args.offline)
+    except ErroLivro as e:
+        print(f"✗ {e}", file=sys.stderr)
+        return 1
+    atualizar_corpus(args.saida, codigo, commit, args.offline)
+    print(resumo(r, args.saida))
+    if args.abrir:
+        webbrowser.open((args.saida / "livros" / r["id"] / "painel.html").resolve().as_uri())
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "analisar":
+        return cmd_analisar(argv[1:])
+
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pasta", type=Path, default=Path("livros"))
     ap.add_argument("--saida", type=Path, default=Path("resultados"))
     ap.add_argument("--forcar", action="store_true", help="reprocessa todos os livros")
+    ap.add_argument("--offline", action="store_true", help="embute o Plotly nos painéis (funcionam sem internet)")
     args = ap.parse_args(argv)
 
     ficheiros = leitura.ler_pasta(args.pasta)
@@ -150,19 +311,17 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  = {f.name} (sem alterações)")
             continue
         try:
-            r = processar_livro(f, args.saida, manuais, codigo, commit)
+            r = processar_livro(f, args.saida, manuais, codigo, commit, args.offline)
             i = r["indicadores"]
             palavras = f"{i['palavras']:,}".replace(",", " ")
-            print(f"  ✓ {f.name}: {r['lingua_nome']}, {palavras} palavras, "
-                  f"MATTR {i['mattr_500']:.3f}, {r['processamento']['duracao_s']} s")
+            mtld = "n.a." if i["mtld"] is None else f"{i['mtld']:.1f}"
+            print(f"  ✓ {f.name}: {r['lingua_nome']}, {palavras} palavras, MTLD {mtld}, "
+                  f"{i['personagens_na_rede']} personagens, {r['processamento']['duracao_s']} s"
+                  + (f", {len(r['qualidade'])} aviso(s)" if r["qualidade"] else ""))
         except Exception as e:  # um livro com problemas não impede os outros
             erros += 1
             print(f"  ✗ {f.name}: {type(e).__name__}: {e}", file=sys.stderr)
 
-    tabela = tabela_corpus(args.saida)
-    args.saida.mkdir(parents=True, exist_ok=True)
-    tabela.round(4).to_csv(args.saida / "indicadores.csv", index=False)
-    figs = graficos.corpus(tabela, args.saida / "graficos")
-    relatorio.corpus(tabela, figs, args.saida, __version__, codigo, commit)
+    tabela = atualizar_corpus(args.saida, codigo, commit, args.offline)
     print(f"✓ {len(tabela)} livro(s) em {args.saida}/" + (f" · {erros} erro(s)" if erros else ""))
     return 1 if erros else 0

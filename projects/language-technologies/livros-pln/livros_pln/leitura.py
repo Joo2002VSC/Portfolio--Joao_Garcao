@@ -82,7 +82,8 @@ def ler_txt(ficheiro: Path) -> Livro:
             texto = texto[m.end():]
 
     paragrafos = [re.sub(r"\s+", " ", p).strip() for p in re.split(r"\n\s*\n", texto)]
-    paragrafos = [p.replace("_", "") for p in paragrafos if p]
+    # convenções tipográficas do texto simples: «_itálico_» e «--» como travessão (Project Gutenberg)
+    paragrafos = [re.sub(r"(?<!-)--(?!-)", "—", p.replace("_", "")) for p in paragrafos if p]
     return Livro(ficheiro, "txt", paragrafos, metadados)
 
 

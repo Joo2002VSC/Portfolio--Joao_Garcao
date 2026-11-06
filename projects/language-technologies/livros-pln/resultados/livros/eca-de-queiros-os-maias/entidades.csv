@@ -1,34 +1,34 @@
 tipo,entidade,ocorrencias
-lugar,Lisboa,181
+lugar,Lisboa,183
 lugar,Ramalhete,159
-lugar,Paris,111
+lugar,Paris,110
 lugar,Gouvarinho,97
-lugar,Guimarães,87
+lugar,Guimarães,85
 lugar,Santa Olavia,66
-lugar,Taveira,60
+lugar,Maia,59
 lugar,S. Francisco,59
-lugar,Maia,58
-lugar,Cintra,51
+lugar,Taveira,58
+lugar,Cintra,54
+lugar,Steinbroken,52
 lugar,Cruges,51
-lugar,Steinbroken,51
 lugar,Olivaes,48
 lugar,Eusebiosinho,44
 lugar,Porto,43
 lugar,Monforte,42
 lugar,Londres,40
-lugar,Portugal,39
+lugar,Portugal,40
 lugar,Aterro,37
+lugar,Villaça,37
 lugar,Italia,35
 lugar,Chiado,34
-lugar,Villaça,33
-lugar,Alencar,32
+lugar,Alencar,33
 lugar,Celorico,30
 lugar,Inglaterra,25
 organizacao,chapéo,39
 organizacao,Gremio,38
 organizacao,Niniche,25
-organizacao,Corneta,23
-organizacao,Villaça,19
+organizacao,Corneta,24
+organizacao,Villaça,21
 organizacao,D'ahi,18
 organizacao,Brown,15
 organizacao,Figaro,15
@@ -36,41 +36,41 @@ organizacao,Sequeira,13
 organizacao,Companhia,11
 organizacao,dog-cart,11
 organizacao,Cintra,9
+organizacao,Taveira,9
 organizacao,Mist,8
-organizacao,Taveira,8
-organizacao,Rappel,7
+organizacao,Rappel,6
 organizacao,sport,6
 organizacao,Egreja,5
 organizacao,Jockey-Club,5
+organizacao,Universal,5
 organizacao,Academia,4
 organizacao,Charlie,4
 organizacao,Chic,4
 organizacao,Corneta do Diabo,4
 organizacao,Gazeta Medica,4
 organizacao,Jockey Club,4
-organizacao,Royal Mail,4
 pessoa,Carlos,1642
-pessoa,Ega,965
+pessoa,Ega,958
 pessoa,Damaso,344
-pessoa,Maria,229
-pessoa,Villaça,215
-pessoa,Affonso,174
+pessoa,Maria,231
+pessoa,Villaça,210
+pessoa,Affonso,173
 pessoa,Alencar,147
 pessoa,Cruges,115
-pessoa,Maria Eduarda,112
-pessoa,Craft,107
-pessoa,Pedro,101
-pessoa,Affonso da Maia,94
+pessoa,Maria Eduarda,113
+pessoa,Craft,106
+pessoa,Pedro,103
+pessoa,Affonso da Maia,92
 pessoa,Cohen,92
-pessoa,Castro Gomes,84
-pessoa,Rosa,77
+pessoa,Castro Gomes,83
+pessoa,Rosa,78
 pessoa,Baptista,68
-pessoa,d'ahi,54
-pessoa,Cintra,41
-pessoa,Melanie,38
+pessoa,d'ahi,53
+pessoa,Cintra,40
+pessoa,Melanie,40
 pessoa,Carlos da Maia,35
 pessoa,Toca,35
-pessoa,Deus,32
+pessoa,Deus,31
 pessoa,D. Diogo,28
 pessoa,D. Maria,28
-pessoa,Domingos,27
+pessoa,Cohens,27

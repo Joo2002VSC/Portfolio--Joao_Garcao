@@ -1,0 +1,5 @@
+-r requirements.txt
+# Implementação de referência (Kyle) usada nos testes para validar o MTLD, o HD-D e o MATTR.
+lexical-diversity==0.1.1
+# O lexical-diversity importa pkg_resources, que as versões recentes do setuptools deixaram de incluir.
+setuptools<81

@@ -1,16 +1,53 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 1.0.0 (código `af27d4d9385d`). Não editar à mão: estes ficheiros são reescritos sempre que o código muda. O commit e a data de processamento de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.0.0 (código `38b29730b0bd`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
-**2 livros · 227 463 palavras** · 1 em inglês, 1 em português
+**2 livros · 230 152 palavras** · 1 em inglês, 1 em português
 
-| Livro | Autor | Língua | Palavras | MATTR | Frase média | Densidade lexical (%) | Legibilidade |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | pt | 200 969 | 0,577 | 12,0 | 49,5 | 71 (fácil) |
-| [Alice's Adventures in Wonderland](livros/carroll-alice/README.md) | Lewis Carroll | en | 26 494 | 0,445 | 17,0 | 41,9 | 78 (fácil) |
+**[Painel interativo de comparação](painel.html)** · [`indicadores.csv`](indicadores.csv) · [`indicadores.xlsx`](indicadores.xlsx) (uma linha por livro; o Excel inclui o dicionário de indicadores)
 
-![comparacao.png](graficos/comparacao.png)
+## Livros
 
-![dispersao.png](graficos/dispersao.png)
+Os livros estão agrupados por língua: a maior parte dos indicadores só é comparável dentro da mesma língua (ver a coluna «comparável entre línguas» no dicionário de indicadores).
 
-Tabela completa: [`indicadores.csv`](indicadores.csv) (uma linha por livro, todos os indicadores).
+### Inglês
+
+| Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Alice's Adventures in Wonderland](livros/carroll-alice/README.md) | Lewis Carroll | 1865 | 26 594 | 73,3 | 12 | 4,14 | 42,0 | 80 |
+
+### Português
+
+| Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | 1888 | 203 558 | 139,0 | 9 | 3,29 | 49,3 | 64 |
+
+## Comparações
+
+![Perfil linguístico](graficos/perfil-comparativo.png)
+<sub>[SVG](graficos/perfil-comparativo.svg)</sub>
+
+![Classes gramaticais](graficos/classes-comparadas.png)
+<sub>[SVG](graficos/classes-comparadas.svg)</sub>
+
+![Extensão das frases](graficos/frases-comparadas.png)
+<sub>[SVG](graficos/frases-comparadas.svg)</sub>
+
+![Evolução](graficos/evolucao-comparada.png)
+<sub>[SVG](graficos/evolucao-comparada.svg)</sub>
+
+*Matriz de correlação entre indicadores: não aplicável* (2 livros; são precisos pelo menos 5 para que as correlações tenham algum significado).
+
+## Estilometria (Delta de Burrows)
+
+Distância estilística a partir da frequência das palavras mais frequentes (sobretudo palavras gramaticais), calculada só entre livros da mesma língua. Uma distância pequena indica semelhança no uso dessas palavras; não é prova de autoria.
+
+- **Inglês**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
+
+- **Português**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
+
+## Referências
+
+- Burrows, J. (2002). 'Delta': A measure of stylistic difference and a guide to likely authorship. *Literary and Linguistic Computing, 17*(3), 267–287. https://doi.org/10.1093/llc/17.3.267
+- Evert, S., Proisl, T., Jannidis, F., Reger, I., Pielström, S., Schöch, C., & Vitt, T. (2017). Understanding and explaining Delta measures for authorship attribution. *Digital Scholarship in the Humanities, 32*(suppl. 2), ii4–ii16. https://doi.org/10.1093/llc/fqx023
+- McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods, 42*(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
