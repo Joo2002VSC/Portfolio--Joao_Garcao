@@ -38,7 +38,7 @@ O Livros-PLN vive em `projects/language-technologies/livros-pln/`, com o seu pr�
 
 Os painéis publicam-se no GitHub Pages do portefólio (https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/); não é preciso copiar nada. As instruções de uso, as pastas de trabalho locais (`config/pastas.toml`, fora do GitHub) e a publicação de obras protegidas só com os indicadores estão no [README do projeto](../projects/language-technologies/livros-pln/README.md).
 
-Até à versão 3.6.0, o projeto viveu no repositório `Joo2002VSC/livros-pln`, agora arquivado; o histórico de commits foi trazido para o portefólio.
+Até à versão 3.6.0, o projeto viveu num repositório próprio, entretanto apagado; o histórico de commits foi trazido para o portefólio.
 
 ## Acrescentar um projeto
 

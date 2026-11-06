@@ -4,7 +4,7 @@
 
 [![livros-pln](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/actions/workflows/livros-pln.yml/badge.svg)](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao/actions/workflows/livros-pln.yml)
 
-Projeto do [portefólio de João Garção](../../../README.md) (Tecnologias da Linguagem). Até à versão 3.6.0 viveu no repositório próprio `Joo2002VSC/livros-pln`, agora arquivado; o histórico de commits foi preservado.
+Projeto do [portefólio de João Garção](../../../README.md) (Tecnologias da Linguagem). Até à versão 3.6.0 viveu num repositório próprio; o histórico de commits foi trazido para aqui.
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english)
 

@@ -2,7 +2,7 @@
 
 ## 3.7.0 · 2026-11-06
 
-- **O projeto passou para o portefólio**: o código, os livros, os resultados e o histórico de commits do repositório `livros-pln` estão agora em `projects/language-technologies/livros-pln/` do repositório [Portfolio--Joao_Garcao](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao). O workflow passou para `.github/workflows/livros-pln.yml` do portefólio (corre só quando muda esta pasta) e o script dos modelos para `scripts/instalar_modelos.sh`. Os painéis publicam-se no GitHub Pages do portefólio: https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/. O repositório antigo fica arquivado.
+- **O projeto passou para o portefólio**: o código, os livros, os resultados e o histórico de commits do repositório `livros-pln` estão agora em `projects/language-technologies/livros-pln/` do repositório [Portfolio--Joao_Garcao](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao). O workflow passou para `.github/workflows/livros-pln.yml` do portefólio (corre só quando muda esta pasta) e o script dos modelos para `scripts/instalar_modelos.sh`. Os painéis publicam-se no GitHub Pages do portefólio: https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/. O repositório antigo foi apagado.
 - As ligações dos painéis para o repositório, a documentação, os relatórios e o Excel apontam para a pasta do projeto no portefólio.
 
 ## 3.6.0 · 2026-11-06
