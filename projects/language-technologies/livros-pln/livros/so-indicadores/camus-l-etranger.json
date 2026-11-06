@@ -501,14 +501,14 @@
   }
  },
  "processamento": {
-  "versao": "3.8.0",
-  "versao_codigo": "4b8e87a636ca",
-  "commit": "9116620",
+  "versao": "3.8.1",
+  "versao_codigo": "4fed474e64a6",
+  "commit": "6570faf",
   "codificacao": null,
   "hash_ficheiro": "3583d66ac498630d",
   "hash_dicionario": "11be84ccaf0547f2",
-  "data": "2026-11-06 14:47 UTC",
-  "duracao_s": 9.8
+  "data": "2026-11-06 15:06 UTC",
+  "duracao_s": 9.6
  },
  "restrito": true,
  "nota_restricao": "Obra protegida por direitos de autor: publicam-se só os indicadores, calculados localmente. O texto, o painel, os relatórios e as frases citadas não são publicados."

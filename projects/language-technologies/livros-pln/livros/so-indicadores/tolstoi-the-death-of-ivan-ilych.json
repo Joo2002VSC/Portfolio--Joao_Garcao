@@ -1,0 +1,522 @@
+{
+ "id": "tolstoi-the-death-of-ivan-ilych",
+ "ficheiro": "tolstoi-the-death-of-ivan-ilych.txt",
+ "formato": "txt",
+ "titulo": "The Death of Ivan Ilych",
+ "autor": "Leo Tolstoy",
+ "ano": "1886",
+ "lingua": "en",
+ "lingua_nome": "inglês",
+ "modelo_spacy": "en_core_web_md",
+ "confianca_lingua": {
+  "pt": 0.03,
+  "fr": 0.0012,
+  "en": 0.433
+ },
+ "forma": "prosa",
+ "metodo_sentimento": "VADER (vaderSentiment) 3.3.2",
+ "metodo_emocoes": "NRC EmoLex v0.92 (anotação humana (crowdsourcing), em inglês)",
+ "lexico_emocoes": {
+  "ficheiro": "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+  "entradas": 6453,
+  "multipalavra_ignoradas": 0,
+  "origem": "anotação humana (crowdsourcing), em inglês",
+  "versao": "NRC EmoLex v0.92"
+ },
+ "tonalidade": {
+  "tom": "misto",
+  "rotulo": "Emocionalmente misto",
+  "media": -0.020301510043209958,
+  "ic": [
+   -0.10006460599091105,
+   0.06649917772861601
+  ],
+  "segmentos": 12,
+  "fortes_positivas_pct": 14.741379310344826,
+  "fortes_negativas_pct": 17.06896551724138,
+  "intensidade": 0.3328188793103448,
+  "variabilidade": 0.15223892532906794,
+  "razoes": [
+   "14,7 % de frases fortemente positivas e 17,1 % fortemente negativas (|polaridade| ≥ 0,5): ambas acima de 10 %; intervalo de confiança a 95 % da polaridade média dos 12 segmentos: [−0,100; 0,066]"
+  ]
+ },
+ "emocoes": {
+  "estado": "valido",
+  "motivo": null,
+  "dominante": "confianca",
+  "presenca_pct": {
+   "alegria": 27.4,
+   "tristeza": 34.57,
+   "medo": 32.63,
+   "raiva": 27.96,
+   "aversao": 22.72,
+   "surpresa": 22.16,
+   "confianca": 36.58,
+   "antecipacao": 36.42
+  },
+  "mudancas": [
+   {
+    "segmento": 4,
+    "rotulo": "IV",
+    "variacao": -0.4337
+   }
+  ]
+ },
+ "divisao": {
+  "metodo": "capítulos",
+  "segmentos": 12,
+  "rotulos": [
+   "I",
+   "II",
+   "III",
+   "IV",
+   "V",
+   "VI",
+   "VII",
+   "VIII",
+   "IX",
+   "X",
+   "XI",
+   "XII"
+  ]
+ },
+ "genero": {
+  "metodo": "regras transparentes (exploratório, sem validação estatística)",
+  "formas": [
+   {
+    "chave": "prosa",
+    "nome": "Prosa narrativa",
+    "pontuacao": 1.0,
+    "criterios": [
+     {
+      "criterio": "texto em prosa (deteção pela extensão das linhas)",
+      "cumprido": true,
+      "essencial": false
+     },
+     {
+      "criterio": "poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %)",
+      "cumprido": true,
+      "essencial": false
+     }
+    ]
+   },
+   {
+    "chave": "verso",
+    "nome": "Verso",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "texto em verso (deteção pela extensão das linhas)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   },
+   {
+    "chave": "teatro",
+    "nome": "Teatro",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "parágrafos que abrem com o nome de uma personagem (0,0 % ≥ 20 %)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   },
+   {
+    "chave": "epistolar",
+    "nome": "Narrativa epistolar",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   }
+  ],
+  "generos": [
+   {
+    "chave": "novela",
+    "nome": "Novela",
+    "pontuacao": 1.0,
+    "criterios": [
+     {
+      "criterio": "prosa narrativa",
+      "cumprido": true,
+      "essencial": true
+     },
+     {
+      "criterio": "22 493 palavras entre 17 500 e 40 000 (convenção SFWA)",
+      "cumprido": true,
+      "essencial": true
+     }
+    ]
+   },
+   {
+    "chave": "ensaio",
+    "nome": "Ensaio",
+    "pontuacao": 0.3333333333333333,
+    "criterios": [
+     {
+      "criterio": "prosa",
+      "cumprido": true,
+      "essencial": true
+     },
+     {
+      "criterio": "pouco discurso direto (30,3 % < 5 %)",
+      "cumprido": false,
+      "essencial": false
+     },
+     {
+      "criterio": "poucas personagens (9 < 5 na rede)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   },
+   {
+    "chave": "romance",
+    "nome": "Romance",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "prosa narrativa",
+      "cumprido": true,
+      "essencial": true
+     },
+     {
+      "criterio": "22 493 palavras ≥ 40 000 (convenção SFWA)",
+      "cumprido": false,
+      "essencial": true
+     }
+    ]
+   },
+   {
+    "chave": "conto",
+    "nome": "Conto",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "prosa narrativa",
+      "cumprido": true,
+      "essencial": true
+     },
+     {
+      "criterio": "22 493 palavras < 17 500 (convenção SFWA)",
+      "cumprido": false,
+      "essencial": true
+     }
+    ]
+   },
+   {
+    "chave": "epopeia",
+    "nome": "Epopeia",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "verso",
+      "cumprido": false,
+      "essencial": true
+     },
+     {
+      "criterio": "poema longo (22 493 palavras ≥ 10 000)",
+      "cumprido": true,
+      "essencial": true
+     },
+     {
+      "criterio": "narração na 3.ª pessoa (1,8 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+      "cumprido": true,
+      "essencial": false
+     },
+     {
+      "criterio": "muitas personagens (9 ≥ 10 na rede)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   },
+   {
+    "chave": "poesia_lirica",
+    "nome": "Poesia lírica",
+    "pontuacao": 0.0,
+    "criterios": [
+     {
+      "criterio": "verso",
+      "cumprido": false,
+      "essencial": true
+     },
+     {
+      "criterio": "poema curto ou coletânea (22 493 palavras < 10 000)",
+      "cumprido": false,
+      "essencial": true
+     },
+     {
+      "criterio": "primeira pessoa predominante (1,8 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+      "cumprido": false,
+      "essencial": false
+     }
+    ]
+   }
+  ],
+  "forma_principal": "Prosa narrativa",
+  "principal": "Novela",
+  "alternativas": [],
+  "tracos": [
+   "Muito discurso direto (30,3 % das frases)."
+  ],
+  "nao_inferidos": [
+   "Tragédia",
+   "Comédia",
+   "Drama",
+   "Autobiografia",
+   "Biografia",
+   "Memórias",
+   "Literatura de viagem",
+   "Literatura histórica",
+   "Literatura filosófica",
+   "Literatura religiosa"
+  ],
+  "bibliografico": {
+   "genero": "Ficção",
+   "fonte": "Christian Classics Ethereal Library (assunto: «Fiction»)",
+   "estado": "proposto",
+   "concorda": true,
+   "nota": null
+  },
+  "medidas": {
+   "teatro_pct": 0.0,
+   "cartas_pct": 0.0,
+   "pronomes_1a_narracao_por_1000": 1.838047585009701,
+   "pronomes_3a_narracao_por_1000": 111.2018788930869
+  }
+ },
+ "metodo_personagens": "dicionário (tolstoi-the-death-of-ivan-ilych.json)",
+ "personagens_principais": [
+  "Ivan Ilych",
+  "Peter Ivanovich",
+  "Praskovya Fedorovna",
+  "Gerasim",
+  "Schwartz",
+  "Fedor Vasilievich",
+  "Fedor Petrovich Petrishchev",
+  "Lisa",
+  "Ivan Egorovich Shebek"
+ ],
+ "metadados": {
+  "titulo": "The Death of Ivan Ilych",
+  "autor": "Leo Tolstoy",
+  "ano": "1886",
+  "idioma": "Inglês",
+  "fonte": "Christian Classics Ethereal Library (tradução de Louise e Aylmer Maude)"
+ },
+ "indicadores": {
+  "palavras": 22493,
+  "frases": 1234,
+  "paragrafos": 375,
+  "tempo_leitura_horas": 1.5751,
+  "vocabulario": 3227,
+  "lemas_distintos": 2606,
+  "ttr": 0.1435,
+  "mattr": 0.4772,
+  "mtld": 74.84,
+  "hdd": 0.8512,
+  "yule_k": 102.4518,
+  "hapax_pct": 52.2467,
+  "densidade_lexical_pct": 43.0712,
+  "palavra_media_letras": 4.395,
+  "frase_media": 18.2277,
+  "frase_mediana": 14.0,
+  "frase_p25": 6.0,
+  "frase_p75": 25.0,
+  "frase_desvio_padrao": 15.8169,
+  "frase_maxima": 123,
+  "frases_longas_pct": 17.6661,
+  "paragrafo_medio": 59.9813,
+  "profundidade_media": 4.3598,
+  "distancia_dependencia": 2.657,
+  "subordinadas_por_frase": 1.0624,
+  "silabas_por_palavra": 1.4395,
+  "dialogo_pct": 49.0667,
+  "legibilidade": 66.5509,
+  "flesch_kincaid": 8.5051,
+  "virgula_por_1000": 65.1314,
+  "ponto_por_1000": 49.2153,
+  "ponto_e_virgula_por_1000": 1.2004,
+  "dois_pontos_por_1000": 3.2455,
+  "exclamacao_por_1000": 3.201,
+  "interrogacao_por_1000": 5.2016,
+  "reticencias_por_1000": 0.0,
+  "travessao_por_1000": 4.1346,
+  "aspas_por_1000": 23.474,
+  "parenteses_por_1000": 0.8892,
+  "pos_noun_por_1000": 157.5157,
+  "pos_verb_por_1000": 141.9553,
+  "pos_adj_por_1000": 66.2428,
+  "pos_adv_por_1000": 64.998,
+  "pos_pron_por_1000": 151.2471,
+  "pos_propn_por_1000": 38.5453,
+  "pos_det_por_1000": 81.4031,
+  "pos_adp_por_1000": 109.5897,
+  "pos_cconj_por_1000": 60.9968,
+  "pos_sconj_por_1000": 29.6981,
+  "pos_aux_por_1000": 63.931,
+  "pos_num_por_1000": 5.2905,
+  "pronomes_pessoais_por_1000": 120.7487,
+  "modais_por_1000": 14.5823,
+  "frases_interrogativas_pct": 8.2658,
+  "frases_exclamativas_pct": 5.5105,
+  "verbos_presente_pct": 14.7321,
+  "verbos_passado_pct": 85.2679,
+  "verbos_futuro_pct": null,
+  "verbos_conjuntivo_pct": null,
+  "pronomes_1a_pessoa_por_1000": 10.2699,
+  "pronomes_2a_pessoa_por_1000": 3.201,
+  "pronomes_3a_pessoa_por_1000": 106.8332,
+  "zipf_expoente": 1.0285,
+  "zipf_r2": 0.9943,
+  "heaps_beta": 0.6991,
+  "heaps_k": 3.3403,
+  "heaps_r2": 0.9985,
+  "entidades_pessoa": 61,
+  "entidades_lugar": 11,
+  "entidades_organizacao": 27,
+  "entidades_por_1000": 19.1171,
+  "legibilidade_escala": "padrão",
+  "legibilidade_leitura": "fácil",
+  "legibilidade_nivel": null,
+  "versos": null,
+  "estrofes": null,
+  "versos_por_estrofe": null,
+  "sentimento_medio": -0.0111,
+  "frases_positivas_pct": 32.1552,
+  "frases_negativas_pct": 33.5345,
+  "frases_neutras_pct": 34.3103,
+  "cobertura_lexico_pct": 7.918,
+  "emocoes_intensidade_por_1000": 204.5782,
+  "emocoes_entropia": 0.9846,
+  "emocoes_cobertura_pct": 12.883,
+  "emocoes_negadas_pct": 4.617,
+  "alegria_tristeza_razao": 0.7446,
+  "emocao_alegria_por_1000": 23.2516,
+  "emocao_tristeza_por_1000": 31.2275,
+  "emocao_medo_por_1000": 28.659,
+  "emocao_raiva_por_1000": 22.5306,
+  "emocao_aversao_por_1000": 17.9344,
+  "emocao_surpresa_por_1000": 15.6813,
+  "emocao_confianca_por_1000": 35.1929,
+  "emocao_antecipacao_por_1000": 30.1009,
+  "frases_ambivalentes_pct": 28.6701,
+  "discurso_direto_frases_pct": 30.2981,
+  "concordancia_lexicos": 0.5504,
+  "polaridade_intensidade": 0.3328,
+  "polaridade_segmentos_desvio": 0.1522,
+  "frases_fortes_positivas_pct": 14.7414,
+  "frases_fortes_negativas_pct": 17.069,
+  "tonalidade_ic_inferior": -0.1001,
+  "tonalidade_ic_superior": 0.0665,
+  "tonalidade": "misto",
+  "emocao_dominante": "confianca",
+  "capitulos": 12,
+  "personagens_na_rede": 9,
+  "ligacoes_na_rede": 21,
+  "densidade_da_rede": 0.5833,
+  "personagem_principal": "Ivan Ilych",
+  "genero_inferido": "Novela"
+ },
+ "estados": {
+  "verbos_futuro_pct": {
+   "estado": "nao_aplicavel",
+   "motivo": "o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo"
+  },
+  "verbos_conjuntivo_pct": {
+   "estado": "nao_aplicavel",
+   "motivo": "o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo"
+  },
+  "versos": {
+   "estado": "nao_aplicavel",
+   "motivo": "texto em prosa"
+  },
+  "estrofes": {
+   "estado": "nao_aplicavel",
+   "motivo": "texto em prosa"
+  },
+  "versos_por_estrofe": {
+   "estado": "nao_aplicavel",
+   "motivo": "texto em prosa"
+  }
+ },
+ "qualidade": [],
+ "parametros": {
+  "janela_mattr": 500,
+  "limiar_mtld": 0.72,
+  "minimo_fator_mtld": 10,
+  "amostra_hdd": 42,
+  "minimo_mtld": 100,
+  "minimo_texto": 1000,
+  "frase_longa": 30,
+  "segmentos": 10,
+  "palavras_por_minuto": 238,
+  "delta_palavras_frequentes": 150,
+  "delta_minimo_textos": 3,
+  "rede_minimo_mencoes": 5,
+  "rede_maximo_personagens": 40,
+  "sentimento_limiar": 0.05,
+  "sentimento_minimo_palavras": 3,
+  "zipf_frequencia_minima": 5,
+  "colocacao_frequencia_minima": 5,
+  "palavras_chave_por_segmento": 5,
+  "emocoes_janela_negacao": 3,
+  "capitulo_minimo_palavras": 300,
+  "blocos_sem_capitulos": 20,
+  "tom_limiar": 0.05,
+  "tom_forte": 0.5,
+  "tom_minimo_forte_pct": 10.0,
+  "tom_minimo_frases": 300,
+  "tom_cobertura_minima": 3.0,
+  "tom_bootstrap": 2000
+ },
+ "ambiente": {
+  "python": "3.13.5",
+  "bibliotecas": {
+   "spacy": "3.8.18",
+   "pandas": "2.2.3",
+   "numpy": "2.1.3",
+   "scipy": "1.15.3",
+   "networkx": "3.4.2",
+   "matplotlib": "3.10.0",
+   "plotly": "5.24.1",
+   "ebooklib": "0.21",
+   "beautifulsoup4": "4.12.3",
+   "vaderSentiment": "3.3.2",
+   "leia-br": "0.0.1",
+   "vaderSentiment-fr": "1.3.4"
+  },
+  "modelo": {
+   "nome": "en_core_web_md",
+   "versao": "3.8.0",
+   "spacy": ">=3.8.0,<3.9.0",
+   "exatidao": {
+    "etiquetas_finas": 0.9731,
+    "dependencias_las": 0.8998,
+    "dependencias_uas": 0.9184,
+    "frases_f": 0.9063,
+    "entidades_f": 0.8473
+   }
+  }
+ },
+ "processamento": {
+  "versao": "3.8.1",
+  "versao_codigo": "4fed474e64a6",
+  "commit": "6570faf",
+  "codificacao": "utf-8-sig",
+  "hash_ficheiro": "f5f40205c341c2ef",
+  "hash_dicionario": "61044f399de488ca",
+  "data": "2026-11-06 15:08 UTC",
+  "duracao_s": 6.3
+ },
+ "restrito": true,
+ "nota_restricao": "Obra protegida por direitos de autor: publicam-se só os indicadores, calculados localmente. O texto, o painel, os relatórios e as frases citadas não são publicados."
+}

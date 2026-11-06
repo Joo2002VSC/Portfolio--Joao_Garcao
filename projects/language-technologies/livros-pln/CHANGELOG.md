@@ -1,5 +1,10 @@
 # Alterações
 
+## 3.8.1 · 2026-11-06
+
+- Leitura de textos da Christian Classics Ethereal Library: a ficha inicial e os índices, créditos e referências finais deixam de entrar na análise.
+- *Notes from the Underground* (Dostoiévski, tradução de Constance Garnett, Project Gutenberg n.º 600) acrescentado, com dicionário de personagens. O narrador não tem nome e não entra na rede.
+
 ## 3.8.0 · 2026-11-06
 
 - **Tonalidade emocional** (experimental): positivo (feliz), negativo (triste), neutro, misto ou indeterminado. A partir da polaridade por frase do método de sentimento, por capítulo, com intervalo de confiança a 95 % por bootstrap dos capítulos. Novos indicadores: intensidade da polaridade, oscilação entre capítulos, frases fortemente positivas e negativas, limites do intervalo de confiança, frases ambivalentes, frases em discurso direto e concordância entre léxicos (Spearman).

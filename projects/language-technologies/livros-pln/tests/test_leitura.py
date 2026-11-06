@@ -116,3 +116,18 @@ def test_epub_sem_notas_finais_da_edicao_digital(tmp_path):
     l = leitura.ler(destino)
     assert l.paragrafos[-1] == "Phrase numéro 19 du roman."
     assert l.metadados["notas_da_edicao_removidas"] == 2
+
+
+def test_ccel_sem_ficha_nem_indices(tmp_path):
+    """Textos da Christian Classics Ethereal Library: a ficha inicial e os índices finais não entram na análise."""
+    from livros_pln import leitura
+    corpo = "\n\n".join(f"   Paragraph number {i} of the story, with enough words to count." for i in range(30))
+    texto = ("     ____________________\n\n           Title: A Story\n     ____________________\n\nA STORY\n\n"
+             "   Translated by Someone\n     ____________________\n\nI\n\n" + corpo + "\n     ____________________\n\n"
+             "                                    Indexes\n     ____________________\n\n"
+             "            This document is from the Christian Classics Ethereal\n               Library.\n")
+    f = tmp_path / "historia.txt"
+    f.write_text(texto, encoding="utf-8")
+    l = leitura.ler(f)
+    assert l.paragrafos[0] == "I" and "Indexes" not in l.texto and "Title:" not in l.texto
+    assert l.metadados["fonte"] == "Christian Classics Ethereal Library"

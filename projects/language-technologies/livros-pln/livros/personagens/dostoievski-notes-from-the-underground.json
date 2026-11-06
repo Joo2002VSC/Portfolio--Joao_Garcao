@@ -1,0 +1,49 @@
+{
+ "_descricao": "Dicionário de personagens de Notes from the Underground (Dostoiévski, tradução de Constance Garnett, Project Gutenberg n.º 600). A procura ignora acentos; as formas com maiúscula exigem maiúscula, e as formas mais longas têm prioridade. A coocorrência no mesmo parágrafo não prova uma relação narrativa. O narrador não tem nome e fala na 1.ª pessoa, por isso não entra na rede. «O oficial» e «o médico» não têm nome e ficam de fora.",
+ "personagens": [
+  {
+   "nome": "Zverkov",
+   "aliases": [
+    "Zverkov"
+   ]
+  },
+  {
+   "nome": "Simonov",
+   "aliases": [
+    "Simonov"
+   ]
+  },
+  {
+   "nome": "Liza",
+   "aliases": [
+    "Liza"
+   ]
+  },
+  {
+   "nome": "Ferfitchkin",
+   "aliases": [
+    "Ferfitchkin"
+   ]
+  },
+  {
+   "nome": "Trudolyubov",
+   "aliases": [
+    "Trudolyubov"
+   ]
+  },
+  {
+   "nome": "Apollon",
+   "aliases": [
+    "Apollon"
+   ]
+  },
+  {
+   "nome": "Anton Antonitch Syetotchkin",
+   "aliases": [
+    "Anton Antonitch Syetotchkin",
+    "Anton Antonitch",
+    "Syetotchkin"
+   ]
+  }
+ ]
+}

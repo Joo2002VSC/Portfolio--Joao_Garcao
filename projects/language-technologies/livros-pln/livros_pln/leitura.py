@@ -74,6 +74,15 @@ def ler_txt(ficheiro: Path) -> Livro:
         if m:
             metadados["identificador"] = f"gutenberg:{m.group(1)}"
         texto = texto[inicio.end(): fim.start() if fim else len(texto)]
+    elif re.search(r"Christian Classics\s+Ethereal|CCEL Subjects|www\.ccel\.org", texto):
+        # Christian Classics Ethereal Library: ficha no início (até ao último separador de sublinhados) e índices,
+        # créditos e referências no fim
+        metadados["fonte"] = "Christian Classics Ethereal Library"
+        fim_ccel = re.search(r"^\s*_{10,}\s*\n\s*Indexes\s*$|^\s*This document is from the Christian Classics",
+                             texto, re.M)
+        fim = fim_ccel.start() if fim_ccel else len(texto)
+        seps = [m for m in re.finditer(r"^\s*_{10,}\s*$", texto[:min(fim, 4000)], re.M)]
+        texto = texto[seps[-1].end() if seps else 0: fim]
     else:
         # cópias sem cabeçalho (ex.: corpus NLTK): «[Título by Autor Ano]» na primeira linha
         m = re.match(r"\s*\[(.+?) by (.+?)(?: (\d{4}))?\]", texto)
