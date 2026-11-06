@@ -19,6 +19,11 @@ Sou licenciado em Línguas Aplicadas e estou a concluir o mestrado em Humanidade
 Dashboard interativa sobre leitores, circulação e procura documental da Biblioteca Lúcio Craveiro da Silva, 2020–2026. É o trabalho de projeto do mestrado: auditoria e harmonização de dados institucionais, desenvolvimento da dashboard e validação com profissionais da Biblioteca.
 HTML · CSS · JavaScript (SVG) · Python · [Abrir a dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/digital-humanities/observatorio-blcs/)
 
+### [Livros-PLN](./projects/language-technologies/livros-pln)
+
+Análise computacional de livros em português, francês e inglês: diversidade lexical, sintaxe, legibilidade («fácil» ou «difícil»), sentimento, colocações, leis de Zipf e de Heaps e rede de personagens em 3D. Cada indicador tem definição, limitações e referência bibliográfica, e os resultados chegam num painel interativo, em relatórios e em Excel.
+Python · spaCy · pandas · Plotly · GitHub Actions · [Abrir o painel de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)
+
 ### Contas do Vitória SC
 
 Dois projetos ligados sobre as contas do Vitória Sport Clube, de 2012/13 a 2025/26:
@@ -38,15 +43,15 @@ Python · NumPy · JavaScript · GitHub Actions · [Abrir o simulador ↗](https
 | [Humanidades Digitais](./projects/digital-humanities) | Observatório BLCS, filologia, anotação de documentos (XML, LaTeX), OCR, ontologias |
 | [Análise de Dados](./projects/data-analysis) | Projetos em SQL e Python: contas do Vitória SC, simulador financeiro, histórico de leituras, diário de línguas |
 | [Desenvolvimento Web](./projects/web-development) | Dashboards, blog literário, jogo educativo e protótipo de interface |
-| [Tecnologias da Linguagem](./projects/language-technologies) | PLN e IA: processamento automático de livros, chatbot RAG, web scraping e análise de texto, análise de sentimento |
+| [Tecnologias da Linguagem](./projects/language-technologies) | PLN e IA: análise computacional de livros (Livros-PLN), chatbot RAG, web scraping e análise de texto, análise de sentimento |
 | [Línguas e Literatura](./projects/languages-and-literature) | Tradução, tradução automática, legendagem, terminologia e estudos literários |
 | [Negócio e Inovação](./projects/business-and-innovation) | Validação de ideias de negócio e marketing orientado por dados |
 
 ## Tecnologias
 
 - **Linguagens:** Python, SQL (SQLite), R, JavaScript, HTML, CSS, XML, LaTeX
-- **Dados e visualização:** pandas, NumPy, Matplotlib, Chart.js, SVG, Power BI, Excel
-- **PLN e IA:** spaCy, NLTK, BeautifulSoup, TF-IDF, RAG com modelos locais (Ollama), Tesseract
+- **Dados e visualização:** pandas, NumPy, SciPy, Matplotlib, Plotly, Chart.js, SVG, Power BI, Excel
+- **PLN e IA:** spaCy, NLTK, VADER, NetworkX, BeautifulSoup, TF-IDF, RAG com modelos locais (Ollama), Tesseract
 - **Ferramentas:** Git, GitHub Actions, GitHub Pages, Figma, Phaser, Subtitle Workshop
 
 ## Formação

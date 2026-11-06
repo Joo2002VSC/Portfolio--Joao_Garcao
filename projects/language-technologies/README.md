@@ -6,7 +6,7 @@ Projetos de processamento de linguagem natural (PLN) e inteligência artificial:
 
 ### Projetos pessoais
 
-- **[`livros-pln/`](./livros-pln)** — processamento automático de livros (TXT e EPUB, em português, francês e inglês): metadados, indicadores de PLN, gráficos e relatórios com spaCy e pandas, atualizados pelo GitHub Actions sempre que o código muda. [Repositório ↗](https://github.com/Joo2002VSC/livros-pln)
+- **[`livros-pln/`](./livros-pln)** — análise computacional de livros (TXT e EPUB, em português, francês e inglês): diversidade lexical, sintaxe, legibilidade, sentimento, colocações, leis de Zipf e de Heaps e rede de personagens em 3D, com painel interativo, relatórios e dados. spaCy, pandas, Plotly, VADER, GitHub Actions. [Abrir o painel de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html) · [Repositório ↗](https://github.com/Joo2002VSC/livros-pln)
 
 ### Introdução à Inteligência Artificial
 
@@ -32,7 +32,7 @@ Natural language processing (NLP) and artificial intelligence projects: personal
 
 ### Personal projects
 
-- **[`livros-pln/`](./livros-pln)** — automatic book processing (TXT and EPUB, in Portuguese, French and English): metadata, NLP indicators, charts and reports with spaCy and pandas, updated by GitHub Actions whenever the code changes. [Repository ↗](https://github.com/Joo2002VSC/livros-pln)
+- **[`livros-pln/`](./livros-pln)** — computational analysis of books (TXT and EPUB, in Portuguese, French and English): lexical diversity, syntax, readability, sentiment, collocations, Zipf's and Heaps' laws and a 3D character network, with an interactive dashboard, reports and data. spaCy, pandas, Plotly, VADER, GitHub Actions. [Open the *Os Maias* dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html) · [Repository ↗](https://github.com/Joo2002VSC/livros-pln)
 
 ### Introduction to Artificial Intelligence
 

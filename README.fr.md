@@ -19,6 +19,11 @@ Je suis titulaire d'une licence en Langues appliquées et je termine un master e
 Tableau de bord interactif sur les lecteurs, la circulation et la demande documentaire de la Bibliothèque Lúcio Craveiro da Silva, 2020–2026. C'est mon projet de master : audit et harmonisation de données institutionnelles, conception du tableau de bord et validation avec des professionnels de la bibliothèque.
 HTML · CSS · JavaScript (SVG) · Python · [Ouvrir le tableau de bord ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/digital-humanities/observatorio-blcs/)
 
+### [Livros-PLN](./projects/language-technologies/livros-pln)
+
+Analyse computationnelle de livres en portugais, français et anglais : diversité lexicale, syntaxe, lisibilité (« facile » ou « difficile »), sentiment, collocations, lois de Zipf et de Heaps et réseau de personnages en 3D. Chaque indicateur est accompagné d'une définition, de ses limites et d'une référence, et les résultats sont présentés dans un tableau de bord interactif, des rapports et des fichiers Excel.
+Python · spaCy · pandas · Plotly · GitHub Actions · [Ouvrir le tableau de bord de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)
+
 ### Comptes du Vitória SC
 
 Deux projets liés sur les comptes du Vitória Sport Clube, de 2012/13 à 2025/26 :
@@ -38,15 +43,15 @@ Python · NumPy · JavaScript · GitHub Actions · [Ouvrir le simulateur ↗](ht
 | [Humanités numériques](./projects/digital-humanities) | Observatório BLCS, philologie, annotation de documents (XML, LaTeX), OCR, ontologies |
 | [Analyse de données](./projects/data-analysis) | Projets en SQL et Python : comptes du Vitória SC, simulateur financier, historique de lectures, journal d'apprentissage des langues |
 | [Développement web](./projects/web-development) | Tableaux de bord, blog littéraire, jeu éducatif et prototype d'interface |
-| [Technologies du langage](./projects/language-technologies) | TAL et IA : traitement automatique de livres, chatbot RAG, web scraping et analyse textuelle, analyse de sentiment |
+| [Technologies du langage](./projects/language-technologies) | TAL et IA : analyse computationnelle de livres (Livros-PLN), chatbot RAG, web scraping et analyse textuelle, analyse de sentiment |
 | [Langues et littérature](./projects/languages-and-literature) | Traduction, traduction automatique, sous-titrage, terminologie et études littéraires |
 | [Entreprise et innovation](./projects/business-and-innovation) | Validation d'idées d'entreprise et marketing fondé sur les données |
 
 ## Technologies
 
 - **Langages :** Python, SQL (SQLite), R, JavaScript, HTML, CSS, XML, LaTeX
-- **Données et visualisation :** pandas, NumPy, Matplotlib, Chart.js, SVG, Power BI, Excel
-- **TAL et IA :** spaCy, NLTK, BeautifulSoup, TF-IDF, RAG avec modèles locaux (Ollama), Tesseract
+- **Données et visualisation :** pandas, NumPy, SciPy, Matplotlib, Plotly, Chart.js, SVG, Power BI, Excel
+- **TAL et IA :** spaCy, NLTK, VADER, NetworkX, BeautifulSoup, TF-IDF, RAG avec modèles locaux (Ollama), Tesseract
 - **Outils :** Git, GitHub Actions, GitHub Pages, Figma, Phaser, Subtitle Workshop
 
 ## Formation

@@ -32,6 +32,15 @@ Portfolio--Joao_Garcao/
 - **Terminologia:** «direitos de TV» (nunca «direitos TV»).
 - **Créditos e direitos:** cada projeto indica os coautores e termina com a nota de direitos que remete para `LICENSE.md`.
 
+## Painéis do Livros-PLN
+
+`projects/language-technologies/livros-pln/demo/` tem uma cópia estática dos painéis gerados pelo [livros-pln](https://github.com/Joo2002VSC/livros-pln), para os abrir diretamente no GitHub Pages do portefólio. Para a atualizar depois de uma nova versão:
+
+1. No repositório livros-pln, gerar os painéis numa pasta temporária: `python -m livros_pln --pasta livros --saida /tmp/demo --forcar`.
+2. Copiar `/tmp/demo/painel.html` para `demo/painel.html` e cada `/tmp/demo/livros/<livro>/painel.html` para `demo/livros/<livro>/painel.html` (só os painéis: os relatórios e o Excel ficam no repositório livros-pln).
+3. Nos painéis copiados, as ligações «Relatório completo» e «Dados em Excel» apontam para ficheiros locais; substituí-las pelos endereços em `https://github.com/Joo2002VSC/livros-pln/blob/main/resultados/`.
+4. Atualizar a versão e a data indicadas no README do projeto.
+
 ## Acrescentar um projeto
 
 1. Criar a pasta em `projects/<área>/<nome-do-projeto>/`.

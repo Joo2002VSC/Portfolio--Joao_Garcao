@@ -19,6 +19,11 @@ I hold a bachelor's degree in Applied Languages and am completing a master's in 
 Interactive dashboard on readers, circulation and demand at the Lúcio Craveiro da Silva Library, 2020–2026. This is my master's project work: auditing and harmonising institutional data, building the dashboard and validating it with library professionals.
 HTML · CSS · JavaScript (SVG) · Python · [Open the dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/digital-humanities/observatorio-blcs/)
 
+### [Livros-PLN](./projects/language-technologies/livros-pln)
+
+Computational analysis of books in Portuguese, French and English: lexical diversity, syntax, readability (easy or difficult), sentiment, collocations, Zipf's and Heaps' laws and a 3D character network. Every indicator comes with a definition, limitations and a reference, and the results are delivered as an interactive dashboard, reports and Excel files.
+Python · spaCy · pandas · Plotly · GitHub Actions · [Open the *Os Maias* dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)
+
 ### Vitória SC accounts
 
 Two linked projects on the accounts of Vitória Sport Clube, from 2012/13 to 2025/26:
@@ -38,15 +43,15 @@ Python · NumPy · JavaScript · GitHub Actions · [Open the simulator ↗](http
 | [Digital Humanities](./projects/digital-humanities) | Observatório BLCS, philology, document markup (XML, LaTeX), OCR, ontologies |
 | [Data Analysis](./projects/data-analysis) | SQL and Python projects: Vitória SC accounts, financial simulator, reading history, language-learning log |
 | [Web Development](./projects/web-development) | Dashboards, literary blog, educational game and interface prototype |
-| [Language Technologies](./projects/language-technologies) | NLP and AI: automatic book processing, RAG chatbot, web scraping and text analysis, sentiment analysis |
+| [Language Technologies](./projects/language-technologies) | NLP and AI: computational analysis of books (Livros-PLN), RAG chatbot, web scraping and text analysis, sentiment analysis |
 | [Languages and Literature](./projects/languages-and-literature) | Translation, machine translation, subtitling, terminology and literary studies |
 | [Business and Innovation](./projects/business-and-innovation) | Business idea validation and data-driven marketing |
 
 ## Technologies
 
 - **Languages:** Python, SQL (SQLite), R, JavaScript, HTML, CSS, XML, LaTeX
-- **Data and visualisation:** pandas, NumPy, Matplotlib, Chart.js, SVG, Power BI, Excel
-- **NLP and AI:** spaCy, NLTK, BeautifulSoup, TF-IDF, RAG with local models (Ollama), Tesseract
+- **Data and visualisation:** pandas, NumPy, SciPy, Matplotlib, Plotly, Chart.js, SVG, Power BI, Excel
+- **NLP and AI:** spaCy, NLTK, VADER, NetworkX, BeautifulSoup, TF-IDF, RAG with local models (Ollama), Tesseract
 - **Tools:** Git, GitHub Actions, GitHub Pages, Figma, Phaser, Subtitle Workshop
 
 ## Education
