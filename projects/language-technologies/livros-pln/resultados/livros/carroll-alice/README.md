@@ -18,6 +18,8 @@
 
 ## 2. Características do texto
 
+Forma: **prosa**.
+
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Palavras** | 26 594 | palavras | Base de normalização de quase todos os indicadores. |
@@ -473,4 +475,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 11:18 UTC · livros_pln 3.3.0 · código `310203e9bd19` · commit `2866fe1` · Python 3.13.5 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 11:48 UTC · livros_pln 3.4.1 · código `229159872119` · commit `4f88316` · Python 3.12.16 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>
