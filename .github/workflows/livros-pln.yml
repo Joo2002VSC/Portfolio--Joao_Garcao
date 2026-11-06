@@ -65,7 +65,8 @@ jobs:
           key: nrc-emolex-v0.92
 
       - name: Descarregar o léxico, se não estiver em cache
-        run: python -m livros_pln lexicos || echo "Sem léxico: as emoções ficam «desconhecido»."
+        run: |
+          python -m livros_pln lexicos || echo "Sem léxico NRC; as emoções ficam «desconhecido»."
 
       - name: Testes
         run: python -m pytest -q
