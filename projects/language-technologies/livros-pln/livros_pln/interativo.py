@@ -466,7 +466,7 @@ color:var(--areia)}
 .barra a{color:var(--areia);border:0}.barra a:hover{color:var(--creme)}
 .marca{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:25px;letter-spacing:.02em;
 color:var(--creme);font-weight:700}
-.marca img{width:30px;height:30px}
+.marca img{width:30px;height:30px;border-radius:50%}
 .rosto{position:relative;display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center;padding:64px 0 56px}
 .selo{width:188px;height:188px;border-radius:50%;padding:7px;background:conic-gradient(from 210deg,var(--ocre),#6b4b26,var(--ocre),#e2c58f,var(--ocre));
 box-shadow:0 18px 50px rgba(0,0,0,.45)}
@@ -720,9 +720,9 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
     rosto = "".join(f"<li>{e(r)} <b>{e(v)}</b></li>" for r, v in (dados_rosto or []))
     ficha_html = ("" if not ficha else '<aside class="ficha-topo"><h2>Ficha Técnica</h2><dl>'
                   + "".join(f"<div><dt>{e(r)}</dt><dd>{e(str(v))}</dd></div>" for r, v in ficha) + "</dl></aside>")
-    icone32, icone128 = _icone(32), _icone(128)
+    icone32, icone128, icone256 = _icone(32), _icone(128), _icone(256)
     cabeca = (f'<link rel="icon" type="image/png" sizes="32x32" href="{icone32}">'
-              f'<link rel="apple-touch-icon" href="{icone128}">') if icone32 else ""
+              f'<link rel="apple-touch-icon" href="{icone256 or icone128}">') if icone32 else ""
     voltar = f'<a href="{ligacao_corpus}">Todos os Livros</a>' if ligacao_corpus else ""
     ligacoes = "".join(f'<li><a href="{e(u)}">{e(t)}</a></li>' for t, u in rodape["ligacoes"])
     tecnico = "".join(f"<li>{e(t)} <code>{e(v)}</code></li>" for t, v in rodape["tecnico"])
@@ -735,7 +735,7 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
 <header class="cabecalho" id="topo"><div class="envolve">
  <div class="barra"><span class="marca"><img src="{icone32}" alt="">Livros-PLN</span>
   <span class="lema">Análise Computacional de Textos Literários</span>{voltar}</div>
- <div class="rosto{' com-ficha' if ficha else ''}"><div class="selo"><img src="{icone128}" alt="Ícone do Livros-PLN"></div>
+ <div class="rosto{' com-ficha' if ficha else ''}"><div class="selo"><img src="{icone256 or icone128}" alt="Ícone do Livros-PLN"></div>
   <div class="titulos"><p class="antetitulo">{e(antetitulo)}</p><h1>{e(titulo)}</h1>
   {f'<p class="autoria">{e(autoria)}</p>' if autoria else ''}
   <div class="ornamento">❦</div><ul class="dados-rosto">{rosto}</ul></div>{ficha_html}</div>

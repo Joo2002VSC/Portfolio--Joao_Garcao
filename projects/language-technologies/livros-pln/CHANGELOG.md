@@ -1,5 +1,9 @@
 # Alterações
 
+## 3.4.1 · 2026-11-06
+
+- **Novo ícone** do projeto (livro aberto com uma rede de personagens e barras de dados), recortado ao círculo e embutido nos painéis em 32, 128 e 256 píxeis (separador do navegador, cabeçalho, ícone do ecrã inicial e rodapé).
+
 ## 3.4.0 · 2026-11-06
 
 - **Pastas de trabalho locais**: `config/pastas.toml` (fora do GitHub, ver `config/pastas.exemplo.toml`) indica onde ficam os livros e os resultados no computador. Sem esse ficheiro, continuam a usar-se `livros/` e `resultados/`; o workflow do GitHub Actions não muda. O ficheiro não entra na impressão digital do código.
