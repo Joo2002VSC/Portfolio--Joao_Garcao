@@ -5,6 +5,7 @@ Uso:
     python -m livros_pln --forcar                          # reprocessa tudo, mesmo sem alterações
     python -m livros_pln analisar livros/um-livro.epub     # um livro, com resumo no terminal
     python -m livros_pln analisar https://www.gutenberg.org/ebooks/40409 --abrir
+    python -m livros_pln so-indicadores camus-l-etranger   # publica só os indicadores (obras protegidas)
 
 Um livro é reprocessado quando muda o ficheiro, o seu dicionário de personagens, o código ou
 os parâmetros (impressão digital dos ficheiros .py do pacote e de config/). Cada resultado
@@ -235,6 +236,50 @@ def registos(saida: Path) -> list[dict]:
     return [json.loads(f.read_text(encoding="utf-8")) for f in sorted((saida / "livros").glob("*/indicadores.json"))]
 
 
+# Obras protegidas por direitos de autor: o texto fica fora do repositório e publicam-se só os indicadores,
+# exportados com `python -m livros_pln so-indicadores <livro>` para <pasta dos livros>/so-indicadores/.
+SO_INDICADORES = "so-indicadores"
+NOTA_RESTRITO = ("Obra protegida por direitos de autor: publicam-se só os indicadores, calculados localmente. "
+                 "O texto, o painel, os relatórios e as frases citadas não são publicados.")
+_PRIVADOS = ("graficos",)
+
+
+def registos_restritos(pasta: Path) -> list[dict]:
+    """Indicadores publicados sem o texto (ver `so-indicadores`)."""
+    d = pasta / SO_INDICADORES
+    if not d.is_dir():
+        return []
+    out = []
+    for f in sorted(d.glob("*.json")):
+        r = json.loads(f.read_text(encoding="utf-8"))
+        if r.get("id") and isinstance(r.get("indicadores"), dict):
+            out.append(r | {"restrito": True})
+    return out
+
+
+def cmd_so_indicadores(argv: list[str]) -> int:
+    ap = argparse.ArgumentParser(prog="python -m livros_pln so-indicadores",
+                                 description="Exporta só os indicadores de um livro (sem texto, painel nem frases), "
+                                             "para publicar obras protegidas por direitos de autor.")
+    ap.add_argument("livro", help="identificador do livro (nome da pasta em resultados/livros/)")
+    _, resultados = configuracao.pastas()
+    ap.add_argument("--de", type=Path, default=resultados, help=f"pasta dos resultados (por omissão: {resultados})")
+    ap.add_argument("--para", type=Path, default=Path("livros") / SO_INDICADORES,
+                    help=f"onde escrever o JSON (por omissão: livros/{SO_INDICADORES}/, no repositório)")
+    args = ap.parse_args(argv)
+    origem = args.de / "livros" / args.livro / "indicadores.json"
+    if not origem.exists():
+        print(f"✗ Não encontrei {origem}. Analise o livro primeiro.", file=sys.stderr)
+        return 1
+    r = json.loads(origem.read_text(encoding="utf-8"))
+    r = {k: v for k, v in r.items() if k not in _PRIVADOS} | {"restrito": True, "nota_restricao": NOTA_RESTRITO}
+    args.para.mkdir(parents=True, exist_ok=True)
+    destino = args.para / f"{args.livro}.json"
+    destino.write_text(json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"✓ {destino} (só indicadores; versão {r['processamento'].get('versao')})")
+    return 0
+
+
 def tabela_corpus(saida: Path) -> pd.DataFrame:
     linhas = [{k: r[k] for k in ("id", "ficheiro", "formato", "titulo", "autor", "ano", "lingua")}
               | r["indicadores"] | {"versao": r["processamento"]["versao"], "commit": r["processamento"]["commit"]}
@@ -242,7 +287,8 @@ def tabela_corpus(saida: Path) -> pd.DataFrame:
     return pd.DataFrame(linhas)
 
 
-def atualizar_corpus(saida: Path, codigo: str, commit: str | None, offline: bool, p=PARAMETROS) -> pd.DataFrame:
+def atualizar_corpus(saida: Path, codigo: str, commit: str | None, offline: bool, p=PARAMETROS,
+                     restritos: list[dict] = ()) -> pd.DataFrame:
     tabela = tabela_corpus(saida)
     saida.mkdir(parents=True, exist_ok=True)
     tabela.round(4).to_csv(saida / "indicadores.csv", index=False)
@@ -263,7 +309,9 @@ def atualizar_corpus(saida: Path, codigo: str, commit: str | None, offline: bool
             if r["estado"] == "valido":
                 r["matriz"].round(4).to_csv(saida / f"delta-{lg}.csv")
         figs = graficos.corpus(tabela, classes, frases, evolucoes, resultado_delta, pasta_graficos)
-    pagina_livros.escrever(registos(saida), saida / "painel.html", offline)
+    completos = registos(saida)
+    ids = {r["id"] for r in completos}
+    pagina_livros.escrever(completos + [r for r in restritos if r["id"] not in ids], saida / "painel.html", offline)
     relatorio.corpus(tabela, figs, resultado_delta, saida, __version__, codigo)
     return tabela
 
@@ -329,7 +377,7 @@ def cmd_analisar(argv: list[str]) -> int:
     except ErroLivro as e:
         print(f"✗ {e}", file=sys.stderr)
         return 1
-    atualizar_corpus(args.saida, codigo, commit, args.offline)
+    atualizar_corpus(args.saida, codigo, commit, args.offline, restritos=registos_restritos(args.pasta))
     print(resumo(r, args.saida))
     if args.abrir:
         webbrowser.open((args.saida / "livros" / r["id"] / "painel.html").resolve().as_uri())
@@ -340,6 +388,8 @@ def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv and argv[0] == "analisar":
         return cmd_analisar(argv[1:])
+    if argv and argv[0] == "so-indicadores":
+        return cmd_so_indicadores(argv[1:])
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     livros, resultados = configuracao.pastas()
@@ -380,6 +430,6 @@ def main(argv: list[str] | None = None) -> int:
             erros += 1
             print(f"  ✗ {f.name}: {type(e).__name__}: {e}", file=sys.stderr)
 
-    tabela = atualizar_corpus(args.saida, codigo, commit, args.offline)
+    tabela = atualizar_corpus(args.saida, codigo, commit, args.offline, restritos=registos_restritos(args.pasta))
     print(f"✓ {len(tabela)} livro(s) em {args.saida}/" + (f" · {erros} erro(s)" if erros else ""))
     return 1 if erros else 0

@@ -59,3 +59,21 @@ def test_sem_livros_nao_escreve(tmp_path: Path):
     destino = tmp_path / "painel.html"
     pagina_livros.escrever([], destino)
     assert not destino.exists()
+
+
+def test_so_indicadores_publica_sem_texto(tmp_path: Path):
+    """Obras protegidas: exportam-se só os indicadores, que entram na página sem painel nem relatórios."""
+    _registo(tmp_path)
+    publicados = tmp_path / "livros" / processar.SO_INDICADORES
+    assert processar.main(["so-indicadores", "teste", "--de", str(tmp_path / "res"), "--para", str(publicados)]) == 0
+    r = json.loads((publicados / "teste.json").read_text(encoding="utf-8"))
+    assert r["restrito"] and "graficos" not in r and r["indicadores"]["palavras"] > 0
+    # sem o texto na pasta, o livro aparece na página só com os indicadores
+    (tmp_path / "livros" / "teste.txt").unlink()
+    saida = tmp_path / "publico"
+    (tmp_path / "livros" / "outro.txt").write_text(GUTENBERG.format(corpo=PT), encoding="utf-8")
+    processar.main(["--pasta", str(tmp_path / "livros"), "--saida", str(saida)])
+    h = (saida / "painel.html").read_text(encoding="utf-8")
+    assert h.count('class="livro"') == 2 and "Só indicadores" in h
+    assert not (saida / "livros" / "teste").exists()
+    assert 'href="livros/teste/painel.html"' not in h

@@ -104,6 +104,7 @@ def dados(registos: list[dict]) -> dict:
                         for k, v in e.items() if k in chaves},
             "classes": {c: i.get(f"pos_{c.lower()}_por_1000") for c, _ in CLASSES_COMPOSICAO},
             "avisos": [a["mensagem"] for a in r.get("qualidade", [])],
+            "restrito": bool(r.get("restrito")), "nota_restricao": r.get("nota_restricao"),
         })
     indicadores = {k: {"nome": maiusculas(catalogo.INDICADORES[k].nome), "unidade": catalogo.INDICADORES[k].unidade,
                        "casas": catalogo.INDICADORES[k].casas, "entre_linguas": catalogo.INDICADORES[k].entre_linguas,
@@ -147,17 +148,28 @@ def _cartao(l: dict) -> str:
     meta = " · ".join(x for x in [e(l["autor"] or "Autor desconhecido"), e(l["ano"] or "sem data")])
     capa_autor = e((l["autor"] or "").upper())
     url = f'livros/{e(l["id"])}/painel.html'
+    if l["restrito"]:
+        capa_tag, capa_fim, titulo = '<span class="capa capa-' + e(l["lingua"]) + '" aria-hidden="true">', "</span>", e(l["titulo"])
+        abrir = ('<p class="restrito" title="' + e(l["nota_restricao"] or "") + '">Só indicadores: obra protegida '
+                 'por direitos de autor</p>')
+        secundarias = ""
+    else:
+        capa_tag, capa_fim = f'<a class="capa capa-{e(l["lingua"])}" href="{url}" tabindex="-1" aria-hidden="true">', "</a>"
+        titulo = f'<a href="{url}">{e(l["titulo"])}</a>'
+        abrir = f'<a class="abrir" href="{url}">Abrir análise <span aria-hidden="true">→</span></a>'
+        secundarias = (f'<p class="secundarias"><a href="livros/{e(l["id"])}/README.md">Relatório</a> · '
+                       f'<a href="livros/{e(l["id"])}/{e(l["id"])}.xlsx">Excel</a></p>')
     return f"""<article class="livro" data-id="{e(l['id'])}" data-titulo="{e(l['titulo'].lower())}"
  data-autor="{e((l['autor'] or '').lower())}" data-lingua="{e(l['lingua'])}" data-seculo="{e(l['seculo'] or '')}"
  data-forma="{e(l['forma'])}" data-ano="{e(l['ano'] or '')}" data-palavras="{l['valores'].get('palavras') or 0}"
  data-mtld="{l['valores'].get('mtld') if l['valores'].get('mtld') is not None else ''}"
  data-frase="{l['valores'].get('frase_mediana') if l['valores'].get('frase_mediana') is not None else ''}">
- <a class="capa capa-{e(l['lingua'])}" href="{url}" tabindex="-1" aria-hidden="true">
+ {capa_tag}
   <span class="capa-autor">{capa_autor}</span><span class="capa-titulo">{e(l['titulo'])}</span>
-  <span class="capa-orn">❦</span><span class="capa-ano">{e(l['ano'] or '')}</span></a>
+  <span class="capa-orn">❦</span><span class="capa-ano">{e(l['ano'] or '')}</span>{capa_fim}
  <div class="corpo">
   <p class="etiquetas"><span>{e(l['idioma'])}</span><span>{e(maiusculas(l['forma']))}</span></p>
-  <h3><a href="{url}">{e(l['titulo'])}</a></h3>
+  <h3>{titulo}</h3>
   <p class="meta">{meta}</p>
   <dl class="resumo-livro">
    <div><dt>Palavras</dt><dd>{_valor(l, 'palavras')}</dd></div>
@@ -168,10 +180,10 @@ def _cartao(l: dict) -> str:
    <div><dt>Sentimento</dt><dd>{_valor(l, 'sentimento_medio') if sent is not None or 'sentimento_medio' in l['estados'] else '—'}</dd></div>
   </dl>
   <div class="acoes">
-   <a class="abrir" href="{url}">Abrir análise <span aria-hidden="true">→</span></a>
+   {abrir}
    <label class="comparar"><input type="checkbox" value="{e(l['id'])}"> Comparar</label>
   </div>
-  <p class="secundarias"><a href="livros/{e(l['id'])}/README.md">Relatório</a> · <a href="livros/{e(l['id'])}/{e(l['id'])}.xlsx">Excel</a></p>
+  {secundarias}
  </div>
 </article>"""
 
@@ -332,7 +344,7 @@ function comparar(){
   const langs=new Set(sel.map(l=>l.lingua)), formas=new Set(sel.map(l=>l.forma));
   const pal=sel.map(l=>l.valores.palavras).filter(v=>v), razao=pal.length?Math.max(...pal)/Math.min(...pal):1;
   let h=`<div class="tabela comp"><table><caption class="sr">Comparação de indicadores entre os livros selecionados</caption><thead><tr><th scope="col">Indicador</th>`+
-    sel.map(l=>`<th scope="col"><a href="livros/${l.id}/painel.html">${l.titulo}</a><small>${l.idioma} · ${l.forma}</small></th>`).join("")+"</tr></thead>";
+    sel.map(l=>`<th scope="col">${l.restrito?l.titulo:`<a href="livros/${l.id}/painel.html">${l.titulo}</a>`}<small>${l.idioma} · ${l.forma}${l.restrito?" · só indicadores":""}</small></th>`).join("")+"</tr></thead>";
   const incomparavel=k=>{const ind=I[k];
     if(!ind.entre_linguas&&langs.size>1)return "Não comparável entre línguas";
     if(ind.extensao&&razao>2)return "Depende da extensão do texto";
@@ -416,6 +428,7 @@ aplicar();
 """
 
 CSS = """
+.restrito{font-family:var(--ui);font-size:14px;color:var(--suave);margin:0;padding:8px 0;border-top:1px dashed var(--linha)}
 .temas{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 14px}
 .rotulo-temas{font-family:var(--ui);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin-right:4px}
 .tema,.tema-todos{font-family:var(--ui);font-size:14px;padding:6px 11px;border:1px solid var(--linha);background:transparent;color:var(--suave);cursor:pointer;border-radius:2px}

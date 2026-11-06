@@ -1,5 +1,10 @@
 # Alterações
 
+## 3.6.0 · 2026-11-06
+
+- **Obras protegidas por direitos de autor, só com os indicadores**: `python -m livros_pln so-indicadores <livro>` exporta os indicadores de um livro analisado localmente para `livros/so-indicadores/<livro>.json`, sem o texto, o painel, os relatórios, os gráficos nem as frases citadas. A página «Livros analisados» mostra estes livros no catálogo, na comparação e no explorador, com a indicação «Só indicadores: obra protegida por direitos de autor» e sem ligações para a análise detalhada. Os valores são os da última análise local (a versão aparece no JSON); o GitHub Actions não os pode recalcular sem o texto.
+- *L'Iliade* e *L'Odyssée* (Homero, tradução de Leconte de Lisle, Project Gutenberg n.º 14285 e 14286) acrescentadas a `livros/metadados.csv`. Sem ano: a data da composição dos poemas é incerta e o ano da tradução não é o da obra.
+
 ## 3.5.1 · 2026-11-06
 
 - **Correção dos pronomes pessoais em francês**: o modelo `fr_core_news_md` não anota `PronType=Prs` nos pronomes pessoais, que por isso não eram contados (em *L'Étranger*, 7,5 pronomes pessoais por 1000 palavras em vez de 164). Um pronome sem tipo anotado mas com pessoa gramatical passa a contar como pessoal. Os valores em português e em inglês não mudam.

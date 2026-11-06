@@ -131,6 +131,17 @@ O painel de cada livro tem a ficha técnica (autor, ano, idioma e fonte) no cabe
 
 `resultados/painel.html` (a página inicial no GitHub Pages) reúne todos os livros processados: totais do corpus, um cartão por livro com os indicadores principais, pesquisa, filtros (língua, autor, século, forma) e ordenação, comparação de dois ou mais livros com todos os indicadores da análise individual (por tema, com a opção de mostrar só os comparáveis), um explorador de dispersão e o glossário dos indicadores. A página só apresenta os valores já calculados em `indicadores.json`. Os indicadores que dependem da língua (léxicos, modelos, fórmulas de legibilidade) ou da extensão do texto (TTR, vocabulário) são assinalados e não recebem barras comparativas; os valores em falta aparecem como «n.a.», com o motivo. Não há capas: cada livro tem uma capa tipográfica com o autor, o título e o ano.
 
+### Obras protegidas por direitos de autor
+
+O texto de uma obra protegida não deve ir para o repositório público. Analise-a na pasta local (`config/pastas.toml`) e publique só os indicadores:
+
+```bash
+python -m livros_pln analisar "~/…/Análises de Livros/livros/camus-l-etranger.epub"
+python -m livros_pln so-indicadores camus-l-etranger    # escreve livros/so-indicadores/camus-l-etranger.json
+```
+
+O JSON tem só números, estados e metadados principais (nenhuma frase do livro). A página dos livros analisados inclui-o no catálogo, na comparação e no explorador, assinalado como «só indicadores» e sem painel nem relatórios. Como o GitHub Actions não tem o texto, os valores só mudam quando se repetem estes dois comandos.
+
 ### Instalação e testes
 
 ```bash
