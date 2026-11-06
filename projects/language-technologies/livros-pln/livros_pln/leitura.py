@@ -127,6 +127,10 @@ def forma_do_texto(blocos: list[str], maximo_verso: int = 55) -> dict:
 # EPUB
 # ---------------------------------------------------------------------------
 
+_COLOFAO = re.compile(r"^(À propos de cette édition électronique|About this (electronic|digital) edition|"
+                     r"Sobre esta edição (eletrónica|eletrônica|digital))\.?$", re.I)
+
+
 def ler_epub(ficheiro: Path) -> Livro:
     from bs4 import BeautifulSoup
     import ebooklib
@@ -162,6 +166,12 @@ def ler_epub(ficheiro: Path) -> Livro:
             txt = re.sub(r"\s+", " ", bloco.get_text()).strip()
             if txt:
                 paragrafos.append(txt)
+    # notas finais de algumas edições digitais (créditos, licença, contactos): não fazem parte da obra
+    for i, txt in enumerate(paragrafos):
+        if i >= len(paragrafos) * 0.8 and _COLOFAO.match(txt):
+            metadados["notas_da_edicao_removidas"] = len(paragrafos) - i
+            paragrafos = paragrafos[:i]
+            break
     return Livro(ficheiro, "epub", paragrafos, metadados)
 
 

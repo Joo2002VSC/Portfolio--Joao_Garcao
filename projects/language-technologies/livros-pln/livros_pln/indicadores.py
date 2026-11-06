@@ -117,7 +117,10 @@ def anotar(paragrafos: list[str], lingua: str) -> tuple[pd.DataFrame, pd.DataFra
             n_palavras = 0
             for t in s:
                 m = t.morph
-                pessoal = t.pos_ == "PRON" and "Prs" in m.get("PronType")
+                # pronome pessoal: PronType=Prs; o modelo francês não anota PronType nos pronomes pessoais,
+                # mas anota a pessoa (os relativos, interrogativos, etc. têm PronType próprio)
+                tipo = m.get("PronType")
+                pessoal = t.pos_ == "PRON" and ("Prs" in tipo or (not tipo and bool(m.get("Person"))))
                 linhas.append((p, f, t.text, t.lemma_.lower(), t.pos_, t.tag_, t.is_alpha, t.is_stop, pessoal,
                                _traco(m, "Tense"), _traco(m, "Mood"), _traco(m, "Person"), _traco(m, "VerbForm")))
                 n_palavras += t.is_alpha

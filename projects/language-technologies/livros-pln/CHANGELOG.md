@@ -1,5 +1,10 @@
 # Alterações
 
+## 3.5.1 · 2026-11-06
+
+- **Correção dos pronomes pessoais em francês**: o modelo `fr_core_news_md` não anota `PronType=Prs` nos pronomes pessoais, que por isso não eram contados (em *L'Étranger*, 7,5 pronomes pessoais por 1000 palavras em vez de 164). Um pronome sem tipo anotado mas com pessoa gramatical passa a contar como pessoal. Os valores em português e em inglês não mudam.
+- **EPUB**: as notas finais de algumas edições digitais («À propos de cette édition électronique», com créditos e licença) deixam de entrar na análise.
+
 ## 3.5.0 · 2026-11-06
 
 - **Página «Livros analisados» refeita** (`resultados/painel.html`, novo módulo `pagina_livros.py`), a partir dos `indicadores.json` já calculados, sem recálculo no navegador:

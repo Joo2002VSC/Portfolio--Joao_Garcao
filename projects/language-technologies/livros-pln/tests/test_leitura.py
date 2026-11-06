@@ -94,3 +94,25 @@ def test_so_metadados_principais():
 def test_metadados_manuais_fonte(tmp_path: Path):
     (tmp_path / "metadados.csv").write_text("ficheiro,fonte\nlivro.txt,Biblioteca Nacional\n", encoding="utf-8")
     assert leitura.metadados_manuais(tmp_path) == {"livro.txt": {"fonte_manual": "Biblioteca Nacional"}}
+
+
+def test_epub_sem_notas_finais_da_edicao_digital(tmp_path):
+    """As notas finais de edições digitais (créditos, licença) não entram na análise."""
+    from ebooklib import epub
+    from livros_pln import leitura
+    livro = epub.EpubBook()
+    livro.set_title("Teste")
+    livro.set_language("fr")
+    corpo = "".join(f"<p>Phrase numéro {i} du roman.</p>" for i in range(20))
+    cap = epub.EpubHtml(title="c", file_name="c.xhtml", lang="fr",
+                        content=f"<html><body>{corpo}<p>À propos de cette édition électronique</p>"
+                                "<p>Texte libre de droits.</p></body></html>")
+    livro.add_item(cap)
+    livro.spine = [cap]
+    livro.add_item(epub.EpubNcx())
+    livro.add_item(epub.EpubNav())
+    destino = tmp_path / "t.epub"
+    epub.write_epub(str(destino), livro)
+    l = leitura.ler(destino)
+    assert l.paragrafos[-1] == "Phrase numéro 19 du roman."
+    assert l.metadados["notas_da_edicao_removidas"] == 2

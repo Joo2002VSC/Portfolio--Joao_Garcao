@@ -143,3 +143,18 @@ def test_grafico_de_zipf_usa_os_mesmos_dados_do_indicador():
     palavras = rnd.choices([f"p{i}" for i in range(3000)], weights=[1 / (i + 1) for i in range(3000)], k=50000)
     c = Counter(palavras)
     assert reta_zipf(indicadores.tabela_zipf(c, 5), 5)[2] == pytest.approx(indicadores.zipf(c, 5)["zipf_expoente"])
+
+
+def test_pronomes_pessoais_sem_prontype():
+    """O modelo francês não anota PronType nos pronomes pessoais: a pessoa gramatical basta."""
+    import pytest
+    spacy = pytest.importorskip("spacy")
+    try:
+        spacy.load("fr_core_news_md")
+    except OSError:
+        pytest.skip("modelo francês não instalado")
+    from livros_pln import indicadores
+    tokens, _, _ = indicadores.anotar(["Je ne sais pas. Je lui ai dit que nous venions."], "fr")
+    pessoais = tokens[tokens.pronome_pessoal]
+    assert set(pessoais.texto.str.lower()) >= {"je", "lui", "nous"}
+    assert (pessoais.pessoa == "1").sum() >= 3
