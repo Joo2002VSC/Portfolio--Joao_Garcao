@@ -20,7 +20,7 @@ FUNCIONAIS = {
            "as", "his", "her", "at", "by", "had", "not", "but", "be", "this", "they", "you", "from", "which",
            "or", "have", "were", "an", "said", "would", "there", "been", "what", "when", "who", "all"},
 }
-MODELOS = {"pt": "pt_core_news_md", "fr": "fr_core_news_md", "en": "en_core_web_md"}
+MODELOS = {"pt": "pt_core_news_lg", "fr": "fr_core_news_md", "en": "en_core_web_md"}
 NOMES = {"pt": "português", "fr": "francês", "en": "inglês"}
 
 

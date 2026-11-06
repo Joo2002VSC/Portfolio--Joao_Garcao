@@ -32,20 +32,23 @@ def tabela_indicadores(registo: dict) -> pd.DataFrame:
 
 
 def livro(registo: dict, tabelas: dict[str, pd.DataFrame], destino: Path):
-    meta = {"Título": registo["titulo"], "Autor": registo.get("autor"), "Ano": registo.get("ano"),
-            "Língua": registo["lingua_nome"], "Ficheiro": registo["ficheiro"], "Formato": registo["formato"],
-            "Personagens (método)": registo.get("metodo_personagens")}
-    meta.update({f"Metadado: {k}": v for k, v in registo["metadados"].items() if k not in ("titulo", "autor", "ano")})
-    meta.update({f"Processamento: {k}": v for k, v in registo["processamento"].items()})
-    meta.update({f"Parâmetro: {k}": v for k, v in registo.get("parametros", {}).items()})
+    m = registo["metadados"]
+    meta = {"Título": m.get("titulo") or registo["titulo"], "Autor": m.get("autor"), "Ano": m.get("ano"),
+            "Idioma": m.get("idioma"), "Fonte": m.get("fonte")}
+    tec = {"Ficheiro": registo["ficheiro"], "Formato": registo["formato"],
+           "Personagens (método)": registo.get("metodo_personagens"),
+           "Sentimento (método)": registo.get("metodo_sentimento")}
+    tec.update({f"Processamento: {k}": v for k, v in registo["processamento"].items()})
+    tec.update({f"Parâmetro: {k}": v for k, v in registo.get("parametros", {}).items()})
     amb = registo.get("ambiente", {})
     if amb:
-        meta["Ambiente: Python"] = amb.get("python")
-        meta.update({f"Ambiente: {k}": v for k, v in amb.get("bibliotecas", {}).items()})
-        meta["Modelo spaCy"] = f"{amb['modelo']['nome']} {amb['modelo']['versao']}"
-        meta.update({f"Modelo: exatidão {k}": v for k, v in amb["modelo"].get("exatidao", {}).items()})
+        tec["Ambiente: Python"] = amb.get("python")
+        tec.update({f"Ambiente: {k}": v for k, v in amb.get("bibliotecas", {}).items()})
+        tec["Modelo spaCy"] = f"{amb['modelo']['nome']} {amb['modelo']['versao']}"
+        tec.update({f"Modelo: exatidão {k}": v for k, v in amb["modelo"].get("exatidao", {}).items()})
     with pd.ExcelWriter(destino, engine="openpyxl") as w:
         _folha(w, pd.DataFrame(list(meta.items()), columns=["campo", "valor"]), "Metadados")
+        _folha(w, pd.DataFrame(list(tec.items()), columns=["campo", "valor"]), "Processamento")
         _folha(w, tabela_indicadores(registo), "Indicadores")
         if registo.get("qualidade"):
             _folha(w, pd.DataFrame(registo["qualidade"]), "Qualidade")

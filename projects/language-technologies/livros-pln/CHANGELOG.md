@@ -1,5 +1,12 @@
 # Alterações
 
+## 3.3.0 · 2026-11-06
+
+- **Modelo português grande**: `pt_core_news_lg` 3.8.0 em vez de `pt_core_news_md`. Exatidão declarada ligeiramente superior na etiquetagem, morfologia, segmentação e entidades; dependências praticamente iguais. Os indicadores de *Os Maias* mudam pouco (por exemplo, profundidade sintática 3,29 → 3,22; nomes próprios por 1000 palavras 81 → 90; frases 16 759 → 16 527).
+- **Só os metadados principais**: título, autor, ano, idioma e fonte. O ano vem de `metadados.csv`, da publicação original indicada pelo Project Gutenberg ou da data do EPUB (nunca da data de publicação digital); a fonte inclui o número do Project Gutenberg. A coluna `fonte` passou a ser aceite em `metadados.csv`. Os dados técnicos (ficheiro, codificação, modelos) passaram para a folha «Processamento» do Excel e para o rodapé do painel.
+- Corrigida a leitura do número do Project Gutenberg nos cabeçalhos recentes («[eBook #40409]»).
+- **Painel**: cabeçalho maior e a negrito (título, autor, ficha técnica e barra superior); botão para voltar ao topo, que aparece ao fazer scroll; barra de progresso de leitura; o índice assinala a secção em leitura; estilos de impressão; respeito pela preferência de movimento reduzido. A rede de personagens em barras 3D mostra as 15 personagens principais, para que os nomes não se sobreponham.
+
 ## 3.2.0 · 2026-11-06
 
 **Novos conceitos de PLN**

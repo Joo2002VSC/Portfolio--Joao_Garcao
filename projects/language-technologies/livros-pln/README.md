@@ -81,10 +81,10 @@ ficheiro ou link ─▶ fontes ─▶ leitura ─▶ língua ─▶ qualidade �
                                metadados            do texto      em DataFrames       estados       PNG/SVG, Plotly
 ```
 
-1. **Leitura.** TXT: UTF-8, Windows-1252 ou Latin-1; o cabeçalho e a licença do Project Gutenberg são retirados e `--` é convertido em travessão. EPUB: texto pela ordem de leitura e metadados Dublin Core.
+1. **Leitura e metadados.** Guardam-se só os metadados principais: título, autor, ano, idioma e fonte. TXT: UTF-8, Windows-1252 ou Latin-1; o cabeçalho e a licença do Project Gutenberg são retirados e `--` é convertido em travessão. EPUB: texto pela ordem de leitura e metadados Dublin Core.
 2. **Língua.** Deteção pela frequência de palavras funcionais, com aviso quando a margem entre línguas é pequena ou quando diverge da língua declarada.
 3. **Qualidade dos dados.** Verifica texto vazio ou curto, sinais de codificação errada, parágrafos duplicados e segmentação de frases suspeita.
-4. **Anotação.** Modelos spaCy `pt_core_news_md`, `fr_core_news_md` e `en_core_web_md` (versão 3.8.0). O texto passa a duas tabelas pandas: uma com um token por linha e outra com uma frase por linha (extensão, profundidade, distâncias, subordinadas).
+4. **Anotação.** Modelos spaCy `pt_core_news_lg`, `fr_core_news_md` e `en_core_web_md` (versão 3.8.0). Para o português usa-se o modelo grande (`lg`), cuja exatidão declarada é ligeiramente superior à do médio na etiquetagem (97,2 % contra 97,0 %), na morfologia (96,1 % contra 95,6 %), na segmentação de frases (F 95,2 contra 94,1) e no reconhecimento de entidades (F 90,3 contra 89,6), e praticamente igual nas dependências (LAS 85,9 contra 86,0); ocupa cerca de 550 MB. O texto passa a duas tabelas pandas: uma com um token por linha e outra com uma frase por linha (extensão, profundidade, distâncias, subordinadas).
 5. **Indicadores.** Cada indicador tem um estado: *válido*, *não aplicável* (com motivo), *desconhecido* ou *falha*. **Um valor ausente nunca é substituído por zero.**
 6. **Comparação.** Os gráficos e relatórios de corpus agrupam os livros por língua e assinalam os indicadores que não são comparáveis entre línguas.
 
@@ -103,7 +103,7 @@ ficheiro ou link ─▶ fontes ─▶ leitura ─▶ língua ─▶ qualidade �
 
 ### Exemplo: os dois livros incluídos
 
-Valores do corpus de exemplo, gerados pela versão 3.2.0. Os dois livros estão em línguas diferentes, por isso os indicadores não comparáveis entre línguas não devem ser lidos lado a lado.
+Valores do corpus de exemplo, gerados pela versão 3.3.0 (português com `pt_core_news_lg`). Os dois livros estão em línguas diferentes, por isso os indicadores não comparáveis entre línguas não devem ser lidos lado a lado.
 
 | Indicador | *Os Maias* (pt, 1888) | *Alice's Adventures in Wonderland* (en, 1865) | Comparável entre línguas |
 | --- | ---: | ---: | :---: |
@@ -111,20 +111,20 @@ Valores do corpus de exemplo, gerados pela versão 3.2.0. Os dois livros estão 
 | MTLD | 139,0 | 73,3 | não |
 | HD-D | 0,884 | 0,849 | não |
 | Extensão mediana das frases (palavras) | 9 | 12 | sim, com cautela |
-| Frases com mais de 30 palavras | 7,1 % | 15,7 % | sim, com cautela |
-| Profundidade sintática média | 3,29 | 4,14 | não |
-| Distância de dependência média | 2,45 | 2,62 | não |
-| Facilidade de leitura (Flesch adaptado) | 64,0 (padrão) | 79,7 (razoavelmente fácil) | **não** |
+| Frases com mais de 30 palavras | 7,5 % | 15,7 % | sim, com cautela |
+| Profundidade sintática média | 3,22 | 4,14 | não |
+| Distância de dependência média | 2,54 | 2,62 | não |
+| Facilidade de leitura (Flesch adaptado) | 63,8 (fácil) | 79,7 (razoavelmente fácil) | **não** |
 | Parágrafos de diálogo | 52,4 % | 78,8 % | sim, com cautela |
 | Leitura | Fácil (5.º ao 8.º ano) | Fácil | **não** |
 | Sentimento médio (−1 a +1) | −0,003 | 0,034 | **não** |
 | Cobertura do léxico de sentimento | 6,2 % | 6,7 % | não |
-| Verbos no passado | 70 % | 71 % | não |
+| Verbos no passado | 72 % | 71 % | não |
 | Expoente de Zipf · expoente de Heaps | 1,04 · 0,733 | 1,06 · 0,649 | não |
 
 ### Painel interativo
 
-O painel de cada livro tem a ficha técnica no cabeçalho, os indicadores principais em destaque, uma régua com o veredicto de leitura e secções numeradas (Personagens, Vocabulário, Gramática, Frases e Evolução, Sentimento, Leis do Vocabulário, Lugares). Os gráficos são em 3D (barras em prisma, relevos e fitas) e rodam apenas quando o leitor os arrasta. Como a perspetiva dificulta a leitura exata dos valores, cada gráfico 3D tem um botão para a vista 2D com os mesmos dados, e os valores exatos aparecem ao passar o rato. As curvas de Zipf e de Heaps ficam em 2D: são as escalas logarítmicas que tornam as leis visíveis, e uma terceira dimensão não acrescentaria informação.
+O painel de cada livro tem a ficha técnica (autor, ano, idioma e fonte) no cabeçalho, um índice fixo que assinala a secção em leitura, uma barra de progresso, um botão para voltar ao topo, os indicadores principais em destaque, uma régua com o veredicto de leitura e secções numeradas (Personagens, Vocabulário, Gramática, Frases e Evolução, Sentimento, Leis do Vocabulário, Lugares). Os gráficos são em 3D (barras em prisma, relevos e fitas) e rodam apenas quando o leitor os arrasta. Como a perspetiva dificulta a leitura exata dos valores, cada gráfico 3D tem um botão para a vista 2D com os mesmos dados, e os valores exatos aparecem ao passar o rato. As curvas de Zipf e de Heaps ficam em 2D: são as escalas logarítmicas que tornam as leis visíveis, e uma terceira dimensão não acrescentaria informação.
 
 ### Instalação e testes
 

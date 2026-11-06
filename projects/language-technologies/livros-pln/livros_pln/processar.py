@@ -92,12 +92,13 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
                     offline: bool = False, p=PARAMETROS) -> dict:
     inicio = time.time()
     livro = leitura.ler(ficheiro)
-    meta = {**livro.metadados, **manuais.get(ficheiro.name, {})}
+    bruto = {**livro.metadados, "formato": livro.formato.upper(), **manuais.get(ficheiro.name, {})}
     lg, pontuacao = lingua.detetar(livro.texto)
-    if meta.get("lingua") in lingua.MODELOS:  # metadados.csv pode forçar a língua
-        lg = meta["lingua"]
+    if bruto.get("lingua") in lingua.MODELOS:  # metadados.csv pode forçar a língua
+        lg = bruto["lingua"]
+    meta = leitura.principais(bruto, lingua.NOMES[lg].capitalize())
 
-    avisos = qualidade.verificar_texto(livro.paragrafos, pontuacao, lg, meta.get("lingua_declarada"), p.minimo_texto)
+    avisos = qualidade.verificar_texto(livro.paragrafos, pontuacao, lg, bruto.get("lingua_declarada"), p.minimo_texto)
     if any(a["nivel"] == "erro" for a in avisos):
         raise ErroLivro("; ".join(a["mensagem"] for a in avisos if a["nivel"] == "erro"))
 
@@ -164,7 +165,7 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
 
     registo = {
         "id": livro.id, "ficheiro": ficheiro.name, "formato": livro.formato, "titulo": titulo,
-        "autor": meta.get("autor"), "ano": meta.get("ano") or meta.get("data"),
+        "autor": meta.get("autor"), "ano": meta.get("ano"),
         "lingua": lg, "lingua_nome": lingua.NOMES[lg], "modelo_spacy": amb["modelo"]["nome"],
         "confianca_lingua": {k: round(v, 4) for k, v in pontuacao.items()},
         "metodo_sentimento": senti["metodo"], "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
@@ -176,7 +177,7 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "ambiente": amb,
         "processamento": {
             "versao": __version__, "versao_codigo": codigo, "commit": commit,
-            "hash_ficheiro": leitura.impressao_digital(ficheiro), "hash_dicionario": _hash_dicionario(ficheiro),
+            "codificacao": bruto.get("codificacao"), "hash_ficheiro": leitura.impressao_digital(ficheiro), "hash_dicionario": _hash_dicionario(ficheiro),
             "data": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
             "duracao_s": round(time.time() - inicio, 1),
         },

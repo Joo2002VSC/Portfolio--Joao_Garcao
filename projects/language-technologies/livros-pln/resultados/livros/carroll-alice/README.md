@@ -11,8 +11,10 @@
 | Título | Alice's Adventures in Wonderland |
 | Autor | Lewis Carroll |
 | Ano | 1865 |
-| Ficheiro | `carroll-alice.txt` (TXT) |
-| Língua detetada | inglês · modelo `en_core_web_md` 3.8.0 |
+| Idioma | Inglês |
+| Fonte | Project Gutenberg, através do corpus NLTK |
+
+<sub>Ficheiro `carroll-alice.txt` · modelo linguístico `en_core_web_md` 3.8.0</sub>
 
 ## 2. Características do texto
 
@@ -471,4 +473,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 11:00 UTC · livros_pln 3.2.0 · código `b8d50a4c276d` · commit `50c27e8` · Python 3.13.5 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 11:18 UTC · livros_pln 3.3.0 · código `310203e9bd19` · commit `2866fe1` · Python 3.13.5 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>

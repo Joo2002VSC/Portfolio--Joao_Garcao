@@ -74,3 +74,22 @@ def test_detecao_de_lingua(textos):
 def test_detecao_com_grafia_antiga():
     texto = "Elle disse que ella não vinha, e que o theatro estava cheio. Ahi ficou elle, quasi só, com os amigos."
     assert lingua.detetar(texto)[0] == "pt"
+
+
+def test_so_metadados_principais():
+    bruto = {"titulo": "Os Maias", "autor": "Eça de Queirós", "fonte": "Project Gutenberg", "identificador": "gutenberg:40409",
+             "data_publicacao_digital": "2012", "lingua_declarada": "Portuguese", "codificacao": "utf-8", "creditos": "x"}
+    m = leitura.principais(bruto, "Português")
+    assert set(m) == {"titulo", "autor", "ano", "idioma", "fonte"}
+    assert m["fonte"] == "Project Gutenberg, n.º\u00a040409" and m["idioma"] == "Português"
+    assert m["ano"] is None                     # a data de publicação digital não é o ano do livro
+    assert leitura.principais({**bruto, "publicacao_original": "Porto, 1888"}, "Português")["ano"] == "1888"
+    assert leitura.principais({**bruto, "ano": "1888", "fonte_manual": "Edição Livros do Brasil"}, "Português")[
+        "fonte"] == "Edição Livros do Brasil"
+    epub = leitura.principais({"titulo": "T", "data": "1901-05-01", "editora": "Gallimard", "fonte": "EPUB"}, "Francês")
+    assert epub["ano"] == "1901" and epub["fonte"] == "Gallimard"
+
+
+def test_metadados_manuais_fonte(tmp_path: Path):
+    (tmp_path / "metadados.csv").write_text("ficheiro,fonte\nlivro.txt,Biblioteca Nacional\n", encoding="utf-8")
+    assert leitura.metadados_manuais(tmp_path) == {"livro.txt": {"fonte_manual": "Biblioteca Nacional"}}

@@ -1,6 +1,6 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.2.0 (código `b8d50a4c276d`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.3.0 (código `310203e9bd19`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
 **2 livros · 230 152 palavras** · 1 em inglês, 1 em português
 
@@ -20,7 +20,7 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 
 | Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | 1888 | 203 558 | 139,0 | 9 | 3,29 | 49,3 | 64 |
+| [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | 1888 | 203 558 | 139,0 | 9 | 3,22 | 48,5 | 64 |
 
 ## Comparações
 

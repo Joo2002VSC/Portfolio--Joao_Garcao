@@ -15,10 +15,7 @@ from . import catalogo, qualidade
 from .catalogo import INDICADORES
 from .tema import num
 
-CAMPOS_META = [("titulo", "Título"), ("autor", "Autor"), ("ano", "Ano"), ("data", "Data"),
-               ("publicacao_original", "Publicação original"), ("tradutor", "Tradutor"), ("editora", "Editora"),
-               ("lingua_declarada", "Língua declarada"), ("identificador", "Identificador"), ("fonte", "Fonte"),
-               ("assuntos", "Assuntos")]
+CAMPOS_META = [("titulo", "Título"), ("autor", "Autor"), ("ano", "Ano"), ("idioma", "Idioma"), ("fonte", "Fonte")]
 
 
 def _tabela(linhas: list[list], cabecalho: list[str]) -> str:
@@ -131,11 +128,10 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
 
     # 1–2. Identificação e metadados
     s += ["## 1. Identificação e metadados", ""]
-    meta = [[rot, m[k]] for k, rot in CAMPOS_META if m.get(k)]
-    meta += [["Ficheiro", f"`{r['ficheiro']}` ({r['formato'].upper()})"],
-             ["Língua detetada", f"{r['lingua_nome']} · modelo `{r['modelo_spacy']}`"
-              + (f" {amb['modelo']['versao']}" if amb else "")]]
-    s += [_tabela(meta, ["Campo", "Valor"]), ""]
+    meta = [[rot, m.get(k) or "*desconhecido*"] for k, rot in CAMPOS_META]
+    s += [_tabela(meta, ["Campo", "Valor"]), "",
+          f"<sub>Ficheiro `{r['ficheiro']}` · modelo linguístico `{r['modelo_spacy']}`"
+          + (f" {amb['modelo']['versao']}" if amb else "") + "</sub>", ""]
     s += ["## 2. Características do texto", "", _bloco(r, ["palavras", "frases", "paragrafos", "tempo_leitura_horas"]), ""]
     if r.get("qualidade"):
         s += ["**Avisos de qualidade dos dados**", ""] + [f"- ⚠ {a['mensagem']}" for a in r["qualidade"]] + [""]

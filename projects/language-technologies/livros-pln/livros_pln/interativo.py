@@ -183,14 +183,14 @@ def figuras_livro(freq, classes, comprimentos, evol, ents, pers, g, extra: dict 
     if f3d is not None:
         itens.append(_item("personagens", f3d))
     if not pers.empty:
-        top = pers.head(20)
+        top = pers.head(15)
         com = [f"Comunidade {c}" for c in top.comunidade]
         f3 = g3d.barras_3d(
             list(top.personagem), com, list(top.pagerank), [COMUNIDADES[(c - 1) % len(COMUNIDADES)] for c in top.comunidade],
             nomes=com, titulo_z="PageRank", ordem_y=sorted(set(com), key=lambda s: int(s.split()[-1])),
             hover=[f"<b>{x.personagem}</b><br>PageRank: {_fmt(x.pagerank, 3)}<br>Menções: {x.mencoes}<br>"
                    f"Ligações: {x.grau}<br>Comunidade {x.comunidade}" for x in top.itertuples()])
-        _layout(f3, "Personagens mais centrais<br><sup>PageRank na rede de co-ocorrência; cada fila é uma comunidade"
+        _layout(f3, "Personagens mais centrais<br><sup>As 15 personagens com maior PageRank na rede de co-ocorrência; cada fila é uma comunidade"
                     "</sup>", altura=640, nota=NOTA_3D, legend=dict(orientation="h", y=0.02, x=0))
         t2 = top.iloc[::-1]
         f2 = go.Figure(go.Bar(x=t2.pagerank, y=t2.personagem, orientation="h",
@@ -460,25 +460,27 @@ a{color:var(--castanho);text-decoration:none;border-bottom:1px solid var(--areia
 .cabecalho:before{content:"";position:absolute;inset:0;background:
 radial-gradient(900px 420px at 88% -10%,rgba(184,137,62,.20),transparent 60%),
 radial-gradient(600px 300px at -5% 110%,rgba(122,78,45,.35),transparent 60%);pointer-events:none}
-.barra{position:relative;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;
-border-bottom:1px solid rgba(243,234,219,.14);font-family:var(--ui);font-size:13px;letter-spacing:.08em;color:var(--areia)}
+.barra{position:relative;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;
+border-bottom:1px solid rgba(243,234,219,.14);font-family:var(--ui);font-size:15px;font-weight:600;letter-spacing:.06em;
+color:var(--areia)}
 .barra a{color:var(--areia);border:0}.barra a:hover{color:var(--creme)}
-.marca{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;
-color:var(--creme);font-weight:600}
-.marca img{width:26px;height:26px}
+.marca{display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:25px;letter-spacing:.02em;
+color:var(--creme);font-weight:700}
+.marca img{width:30px;height:30px}
 .rosto{position:relative;display:grid;grid-template-columns:auto 1fr;gap:44px;align-items:center;padding:64px 0 56px}
-.selo{width:168px;height:168px;border-radius:50%;padding:7px;background:conic-gradient(from 210deg,var(--ocre),#6b4b26,var(--ocre),#e2c58f,var(--ocre));
+.selo{width:188px;height:188px;border-radius:50%;padding:7px;background:conic-gradient(from 210deg,var(--ocre),#6b4b26,var(--ocre),#e2c58f,var(--ocre));
 box-shadow:0 18px 50px rgba(0,0,0,.45)}
 .selo img{width:100%;height:100%;border-radius:50%;display:block}
-.antetitulo{font-family:var(--display);font-style:italic;font-size:22px;color:var(--ocre);margin:0 0 4px}
-.rosto h1{font-family:var(--display);font-weight:600;font-size:clamp(46px,7.4vw,92px);line-height:.98;margin:0;
-letter-spacing:-.01em}
-.autoria{font-family:var(--display);font-style:italic;font-size:clamp(22px,2.6vw,30px);color:var(--areia);margin:12px 0 0}
+.antetitulo{font-family:var(--display);font-style:italic;font-weight:700;font-size:27px;color:var(--ocre);margin:0 0 6px}
+.rosto h1{font-family:var(--display);font-weight:700;font-size:clamp(54px,8.4vw,112px);line-height:.96;margin:0;
+letter-spacing:-.015em}
+.autoria{font-family:var(--display);font-style:italic;font-weight:700;font-size:clamp(27px,3.2vw,38px);color:var(--areia);
+margin:14px 0 0}
 .ornamento{display:flex;align-items:center;gap:14px;color:var(--ocre);margin:26px 0 18px;max-width:520px}
 .ornamento:before,.ornamento:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--ocre),transparent)}
-.dados-rosto{display:flex;flex-wrap:wrap;gap:6px 26px;font-family:var(--ui);font-size:14px;color:var(--areia);
-letter-spacing:.03em;margin:0;padding:0;list-style:none}
-.dados-rosto b{color:var(--creme);font-weight:600}
+.dados-rosto{display:flex;flex-wrap:wrap;gap:8px 30px;font-family:var(--ui);font-size:17px;font-weight:600;
+color:var(--areia);letter-spacing:.02em;margin:0;padding:0;list-style:none}
+.dados-rosto b{color:var(--creme);font-weight:700}
 
 /* índice */
 .indice{position:sticky;top:0;z-index:10;background:var(--papel);border-bottom:1px solid var(--linha)}
@@ -486,7 +488,19 @@ letter-spacing:.03em;margin:0;padding:0;list-style:none}
 .indice a{flex:none;border:0;padding:15px 18px 13px;font-family:var(--ui);font-size:14px;color:var(--suave);
 border-bottom:2px solid transparent}
 .indice a span{font-family:var(--display);font-style:italic;color:var(--ocre);margin-right:6px;font-size:16px}
-.indice a:hover{color:var(--tinta);border-bottom-color:var(--castanho)}
+.indice a:hover,.indice a.ativo{color:var(--tinta);border-bottom-color:var(--castanho)}
+.indice a.ativo{font-weight:600}
+.progresso{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--ocre)}
+.voltar-topo{position:fixed;right:24px;bottom:24px;z-index:20;width:54px;height:54px;border-radius:50%;
+display:grid;place-items:center;background:var(--tinta);color:var(--creme);border:2px solid var(--ocre);
+box-shadow:0 10px 26px rgba(30,25,21,.28);opacity:0;transform:translateY(14px);pointer-events:none;
+transition:opacity .25s,transform .25s,background .2s}
+.voltar-topo.visivel{opacity:1;transform:none;pointer-events:auto}
+.voltar-topo:hover{background:var(--castanho);color:#fff;border-color:var(--ocre)}
+.voltar-topo:focus-visible{outline:3px solid var(--ocre);outline-offset:3px}
+.voltar-topo svg{width:22px;height:22px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.voltar-topo{transition:none}}
+@media print{.indice,.voltar-topo,.vista{display:none}.cabecalho{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 
 /* resumo */
 main{padding:8px 0 40px}
@@ -539,13 +553,16 @@ border-top:1px solid rgba(243,234,219,.14);font-size:12.5px;color:#a8977f}
 .rodape code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--areia)}
 
 /* ficha técnica no cabeçalho */
-.rosto.com-ficha{grid-template-columns:auto 1fr minmax(260px,330px)}
-.ficha-topo{position:relative;border:1px solid rgba(243,234,219,.16);background:rgba(243,234,219,.04);padding:18px 22px 12px}
-.ficha-topo h2{font-family:var(--display);font-style:italic;font-weight:500;font-size:21px;color:var(--ocre);margin:0 0 8px}
+.rosto.com-ficha{grid-template-columns:auto 1fr minmax(280px,340px)}
+.ficha-topo{position:relative;border:1px solid rgba(243,234,219,.18);border-top:3px solid var(--ocre);
+background:rgba(243,234,219,.05);padding:20px 24px 12px}
+.ficha-topo h2{font-family:var(--display);font-style:italic;font-weight:700;font-size:28px;color:var(--ocre);margin:0 0 10px}
 .ficha-topo dl{margin:0}.ficha-topo dl div{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:6px 0;
 border-bottom:1px solid rgba(243,234,219,.10)}.ficha-topo dl div:last-child{border:0}
-.ficha-topo dt{font-family:var(--ui);font-size:12.5px;color:var(--areia);letter-spacing:.03em}
-.ficha-topo dd{margin:0;text-align:right;font-family:var(--ui);font-size:13.5px;color:var(--creme);overflow-wrap:anywhere}
+.ficha-topo dt{font-family:var(--ui);font-size:15px;font-weight:600;color:var(--areia);letter-spacing:.02em}
+.ficha-topo dd{margin:0;text-align:right;font-family:var(--ui);font-size:17px;font-weight:700;color:var(--creme);
+overflow-wrap:anywhere}
+.ficha-topo dl div{padding:9px 0}
 
 /* legibilidade */
 .leitura{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:18px 44px;align-items:center;margin:44px 0 0;
@@ -661,6 +678,14 @@ const fig=b.closest(".figura");fig.querySelectorAll(".vista button").forEach(x=>
 const v=b.dataset.vista;fig.querySelector(".v3").hidden=v!=="v3";fig.querySelector(".v2").hidden=v!=="v2";
 if(window.Plotly)fig.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)});});
 window.addEventListener("load",()=>{if(window.Plotly)document.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)})});
+(()=>{const topo=document.querySelector(".voltar-topo"),barra=document.querySelector(".progresso");
+const atualizar=()=>{const y=window.scrollY,h=document.documentElement.scrollHeight-innerHeight;
+if(topo)topo.classList.toggle("visivel",y>600);if(barra)barra.style.width=(h>0?100*y/h:0)+"%";};
+addEventListener("scroll",atualizar,{passive:true});atualizar();
+const ligacoes=[...document.querySelectorAll(".indice a")];
+if("IntersectionObserver" in window){const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+ligacoes.forEach(a=>a.classList.toggle("ativo",a.getAttribute("href")==="#"+e.target.id));}})},{rootMargin:"-45% 0px -50% 0px"});
+document.querySelectorAll("main section[id]").forEach(s=>obs.observe(s));}})();
 """
 
 
@@ -706,7 +731,7 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
 <meta name="description" content="{e(antetitulo)}: {e(titulo)}. Indicadores linguísticos, sentimento, rede de personagens e estilo.">
 {cabeca}{FONTES_WEB}<style>{CSS}</style></head>
 <body>
-<header class="cabecalho"><div class="envolve">
+<header class="cabecalho" id="topo"><div class="envolve">
  <div class="barra"><span class="marca"><img src="{icone32}" alt="">Livros-PLN</span>
   <span class="lema">Análise Computacional de Textos Literários</span>{voltar}</div>
  <div class="rosto{' com-ficha' if ficha else ''}"><div class="selo"><img src="{icone128}" alt="Ícone do Livros-PLN"></div>
@@ -714,7 +739,7 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
   {f'<p class="autoria">{e(autoria)}</p>' if autoria else ''}
   <div class="ornamento">❦</div><ul class="dados-rosto">{rosto}</ul></div>{ficha_html}</div>
 </div></header>
-<nav class="indice" aria-label="Índice"><div class="envolve">{indice}</div></nav>
+<nav class="indice" aria-label="Índice"><div class="envolve">{indice}</div><span class="progresso" aria-hidden="true"></span></nav>
 <main class="envolve"><section id="resumo"><div class="numeros">{blocos}</div>{resumo_html}</section>{''.join(corpo)}</main>
 <footer class="rodape"><div class="envolve">
  <div class="topo">
@@ -725,6 +750,7 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
  </div>
  <div class="base"><span>{e(rodape["autoria"])}</span><span>{e(rodape["aviso"])}</span></div>
 </div></footer>
+<a href="#topo" class="voltar-topo" aria-label="Voltar ao topo" title="Voltar ao topo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
 <script>{JS}</script>
 </body></html>
 """, encoding="utf-8")
@@ -784,13 +810,8 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
                (v("legibilidade", 0), maiusculas(i.get("legibilidade_leitura") or ""), "legibilidade (Flesch adaptado)"),
                (v("sentimento_medio", 3), "", "sentimento médio (−1 a +1)"),
                (v("personagens_na_rede", 0), "", "personagens na rede")]
-    ficha = [(r, m.get(k)) for k, r in [("autor", "Autor"), ("ano", "Ano"), ("data", "Data"), ("editora", "Editora"),
-                                         ("tradutor", "Tradutor"), ("identificador", "Identificador"), ("fonte", "Fonte")]
-             if m.get(k)]
-    ficha += [("Língua", maiusculas(registo["lingua_nome"])), ("Modelo Linguístico", registo["modelo_spacy"]),
-              ("Sentimento", registo.get("metodo_sentimento") or "—"),
-              ("Personagens", registo.get("metodo_personagens", "—")),
-              ("Tempo de Leitura", f"{v('tempo_leitura_horas', 1)} h")]
+    ficha = [(r, m.get(k) or "desconhecido") for k, r in [("autor", "Autor"), ("ano", "Ano"), ("idioma", "Idioma"),
+                                                           ("fonte", "Fonte")]]
     avisos = [a["mensagem"] for a in registo.get("qualidade", [])]
     notas = ("<ul>" + "".join(f"<li>{html.escape(a)}</li>" for a in avisos) + "</ul>" if avisos else
              "<p>Sem avisos: o texto passou todas as verificações automáticas de qualidade.</p>")
@@ -828,7 +849,10 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
 
     itens = figuras_livro(freq, classes, comprimentos, evol, ents, pers, g, extra, lg)
     p = registo["processamento"]
-    tecnico = [("Versão", p["versao"]), ("Código", p["versao_codigo"])]
+    tecnico = [("Modelo linguístico", registo["modelo_spacy"]),
+               ("Sentimento", registo.get("metodo_sentimento") or "—"),
+               ("Personagens", registo.get("metodo_personagens") or "—"),
+               ("Versão", p["versao"]), ("Código", p["versao_codigo"])]
     tecnico += [("Commit", p["commit"])] if p.get("commit") else []
     tecnico += [("Processado em", p["data"])]
     rodape = dict(descricao=DESCRICAO, autoria=AUTORIA,
@@ -836,9 +860,8 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
                   ligacoes=[("Relatório Completo do Livro", "README.md"), ("Todos os Livros Analisados", "../../painel.html"),
                             ("Dados em Excel", f"{destino.parent.name}.xlsx"), ("Repositório no GitHub", REPOSITORIO)],
                   tecnico=tecnico)
-    rosto = [(r, x) for r, x in [("Ano", str(registo.get("ano") or "")), ("Língua", maiusculas(registo["lingua_nome"])),
-                                  ("Palavras", v("palavras", 0)),
-                                  ("Leitura", maiusculas(i.get("legibilidade_leitura") or ""))] if x]
+    rosto = [(r, x) for r, x in [("Palavras", v("palavras", 0)), ("Leitura", maiusculas(i.get("legibilidade_leitura") or "")),
+                                  ("Tempo de leitura", f"{v('tempo_leitura_horas', 1)} h")] if x]
     pagina(registo["titulo"], registo.get("autor") or "", numeros, itens, resumo, rodape, offline, destino,
            antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES, extras=extras,
            ligacao_corpus="../../painel.html")

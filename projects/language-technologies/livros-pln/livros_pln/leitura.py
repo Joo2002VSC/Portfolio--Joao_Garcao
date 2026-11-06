@@ -67,8 +67,10 @@ def ler_txt(ficheiro: Path) -> Livro:
         for linha in cabecalho.splitlines():
             m = re.match(r"^([A-Za-z ]+):\s*(.+)$", linha.strip())
             if m and m.group(1).strip().lower() in CAMPOS_GUTENBERG:
-                metadados[CAMPOS_GUTENBERG[m.group(1).strip().lower()]] = m.group(2).strip()
-        m = re.search(r"\[E(?:Book|text) #(\d+)\]", cabecalho)
+                # «Release date: August 4, 2012 [eBook #40409]»: o número fica no identificador, não na data
+                metadados[CAMPOS_GUTENBERG[m.group(1).strip().lower()]] = re.sub(r"\s*\[e(?:book|text) #\d+\]", "",
+                                                                                m.group(2).strip(), flags=re.I)
+        m = re.search(r"\[e(?:book|text) #(\d+)\]", cabecalho, re.I)
         if m:
             metadados["identificador"] = f"gutenberg:{m.group(1)}"
         texto = texto[inicio.end(): fim.start() if fim else len(texto)]
@@ -134,13 +136,56 @@ def ler_epub(ficheiro: Path) -> Livro:
 # ---------------------------------------------------------------------------
 
 def metadados_manuais(pasta: Path) -> dict[str, dict]:
-    """Lê livros/metadados.csv (opcional), que completa ou corrige os metadados extraídos."""
+    """Lê livros/metadados.csv (opcional), que completa ou corrige os metadados extraídos.
+
+    Colunas aceites: ficheiro, titulo, autor, ano, lingua (força a língua: pt, fr ou en) e fonte."""
     ficheiro = pasta / "metadados.csv"
     if not ficheiro.exists():
         return {}
     with ficheiro.open(encoding="utf-8") as f:
-        return {linha["ficheiro"]: {k: v for k, v in linha.items() if k != "ficheiro" and v}
+        return {linha["ficheiro"]: {("fonte_manual" if k == "fonte" else k): v for k, v in linha.items()
+                                    if k != "ficheiro" and v}
                 for linha in csv.DictReader(f)}
+
+
+CAMPOS_PRINCIPAIS = ("titulo", "autor", "ano", "idioma", "fonte")
+
+
+def _ano(*valores) -> str | None:
+    for v in valores:
+        m = re.search(r"\b(1[0-9]{3}|20[0-9]{2})\b", str(v or ""))
+        if m:
+            return m.group(1)
+    return None
+
+
+def principais(bruto: dict, idioma: str) -> dict:
+    """Reduz os metadados aos principais: título, autor, ano, idioma e fonte.
+
+    - ano: o de metadados.csv; senão, o da publicação original indicada no cabeçalho do Project Gutenberg; senão,
+      a data do EPUB. A data de publicação digital do Project Gutenberg não conta (não é o ano do livro).
+    - idioma: a língua detetada no texto (ou forçada em metadados.csv).
+    - fonte: a indicada em metadados.csv; senão, Project Gutenberg (com o número do livro), a editora do EPUB ou o
+      formato do ficheiro."""
+    fonte = bruto.get("fonte_manual")
+    if not fonte:
+        if bruto.get("fonte") == "Project Gutenberg":
+            gid = str(bruto.get("identificador", "")).removeprefix("gutenberg:")
+            fonte = f"Project Gutenberg, n.º\u00a0{gid}" if gid.isdigit() else "Project Gutenberg"
+        elif bruto.get("editora"):
+            fonte = bruto["editora"]
+        else:
+            fonte = bruto.get("fonte") or bruto.get("formato")
+    autor = bruto.get("autor")
+    if autor and ";" in autor:
+        autor = "; ".join(dict.fromkeys(a.strip() for a in autor.split(";")))
+    return {
+        "titulo": bruto.get("titulo"),
+        "autor": autor,
+        "ano": _ano(bruto.get("ano"), bruto.get("publicacao_original"), bruto.get("data")),
+        "idioma": idioma,
+        "fonte": fonte,
+    }
 
 
 def ler(ficheiro: Path) -> Livro:

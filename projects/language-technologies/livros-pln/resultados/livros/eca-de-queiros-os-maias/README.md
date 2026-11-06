@@ -11,17 +11,17 @@
 | Título | Os Maias |
 | Autor | Eça de Queirós |
 | Ano | 1888 |
-| Língua declarada | Portuguese |
-| Fonte | Project Gutenberg |
-| Ficheiro | `eca-de-queiros-os-maias.txt` (TXT) |
-| Língua detetada | português · modelo `pt_core_news_md` 3.8.0 |
+| Idioma | Português |
+| Fonte | Project Gutenberg, n.º 40409 |
+
+<sub>Ficheiro `eca-de-queiros-os-maias.txt` · modelo linguístico `pt_core_news_lg` 3.8.0</sub>
 
 ## 2. Características do texto
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Palavras** | 203 558 | palavras | Base de normalização de quase todos os indicadores. |
-| **Frases** | 16 759 | frases | Base para as médias e distribuições por frase. |
+| **Frases** | 16 527 | frases | Base para as médias e distribuições por frase. |
 | **Parágrafos** | 5 759 | parágrafos | Base para a proporção de diálogo e a extensão dos parágrafos. |
 | **Tempo de leitura estimado** | 14,3 | horas | Ordem de grandeza, não uma previsão individual. |
 
@@ -33,10 +33,10 @@ Sem avisos de qualidade: texto não vazio, sem sinais de erro de codificação n
 | --- | --- | --- |
 | Diversidade lexical (MTLD) | 139,0 | palavras por fator |
 | Extensão mediana das frases | 9 | palavras |
-| Profundidade sintática | 3,29 | níveis |
-| Densidade lexical | 49,3 | % das palavras |
+| Profundidade sintática | 3,22 | níveis |
+| Densidade lexical | 48,5 | % das palavras |
 | Parágrafos de diálogo | 52,4 | % dos parágrafos |
-| Legibilidade (Flesch adaptado) | 64,0 | 0–100 (aprox.) |
+| Legibilidade (Flesch adaptado) | 63,8 | 0–100 (aprox.) |
 
 ## 4. Diversidade lexical
 
@@ -73,12 +73,12 @@ A extensão mede quantas palavras tem uma frase; a complexidade sintática mede 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Extensão mediana das frases** | 9 | palavras | Metade das frases tem esta extensão ou menos; mais robusta do que a média. |
-| **Extensão média das frases** | 12,1 | palavras | Medida de extensão, não de complexidade sintática. |
+| **Extensão média das frases** | 12,3 | palavras | Medida de extensão, não de complexidade sintática. |
 | **Percentil 25** | 5 | palavras | Com o percentil 75, delimita a metade central das frases. |
 | **Percentil 75** | 16 | palavras | Com o percentil 25, delimita a metade central das frases. |
-| **Desvio-padrão da extensão** | 11,2 | palavras | Mais alto = alternância maior entre frases curtas e longas. |
+| **Desvio-padrão da extensão** | 11,4 | palavras | Mais alto = alternância maior entre frases curtas e longas. |
 | **Frase mais longa** | 121 | palavras | Uma única frase; não descreve o estilo do livro. |
-| **Frases longas** | 7,1 | % das frases | Mais alto = mais frases extensas, que exigem mais memória de trabalho na leitura. |
+| **Frases longas** | 7,5 | % das frases | Mais alto = mais frases extensas, que exigem mais memória de trabalho na leitura. |
 | **Extensão média dos parágrafos** | 35,4 | palavras | Mais alto = blocos de texto mais extensos (narração contínua). |
 
 ![Extensão das frases](graficos/extensao-frases.png)
@@ -86,13 +86,13 @@ A extensão mede quantas palavras tem uma frase; a complexidade sintática mede 
 
 ### Complexidade sintática
 
-Calculada a partir da árvore de dependências do modelo `pt_core_news_md` (exatidão declarada pelo modelo: LAS 0,86).
+Calculada a partir da árvore de dependências do modelo `pt_core_news_lg` (exatidão declarada pelo modelo: LAS 0,86).
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Profundidade sintática** | 3,29 | níveis | Mais alto = mais encaixamento (subordinação, complementos aninhados). |
-| **Distância de dependência média (MDD)** | 2,45 | palavras | Mais alto = dependências mais longas, associadas a maior esforço de processamento. |
-| **Orações subordinadas por frase** | 0,82 | orações por frase | Mais alto = mais subordinação. |
+| **Profundidade sintática** | 3,22 | níveis | Mais alto = mais encaixamento (subordinação, complementos aninhados). |
+| **Distância de dependência média (MDD)** | 2,54 | palavras | Mais alto = dependências mais longas, associadas a maior esforço de processamento. |
+| **Orações subordinadas por frase** | 0,84 | orações por frase | Mais alto = mais subordinação. |
 
 <details><summary>Definições</summary>
 
@@ -104,28 +104,28 @@ Calculada a partir da árvore de dependências do modelo `pt_core_news_md` (exat
 
 ## 6. Análise morfossintática
 
-Etiquetas UPOS do modelo `pt_core_news_md` (exatidão declarada: 97,0 %). A exatidão é medida pelo próprio modelo em textos contemporâneos; em textos antigos será mais baixa.
+Etiquetas UPOS do modelo `pt_core_news_lg` (exatidão declarada: 97,2 %). A exatidão é medida pelo próprio modelo em textos contemporâneos; em textos antigos será mais baixa.
 
 | Classe | Ocorrências | Por 1000 palavras |
 | --- | --- | --- |
-| Substantivos | 44 135 | 216,8 |
-| Preposições | 30 235 | 148,5 |
-| Verbos | 28 524 | 140,1 |
-| Determinantes | 26 047 | 128,0 |
-| Nomes próprios | 16 508 | 81,1 |
-| Advérbios | 14 814 | 72,8 |
-| Adjetivos | 12 832 | 63,0 |
-| Pronomes | 9 858 | 48,4 |
-| Conjunções coordenativas | 7 634 | 37,5 |
-| Conjunções subordinativas | 5 759 | 28,3 |
-| Verbos auxiliares | 5 211 | 25,6 |
-| Numerais | 1 368 | 6,7 |
+| Substantivos | 43 980 | 216,1 |
+| Preposições | 30 134 | 148,0 |
+| Verbos | 27 955 | 137,3 |
+| Determinantes | 26 050 | 128,0 |
+| Nomes próprios | 18 405 | 90,4 |
+| Advérbios | 14 491 | 71,2 |
+| Adjetivos | 12 390 | 60,9 |
+| Pronomes | 9 747 | 47,9 |
+| Conjunções coordenativas | 7 660 | 37,6 |
+| Conjunções subordinativas | 5 863 | 28,8 |
+| Verbos auxiliares | 5 087 | 25,0 |
+| Numerais | 1 221 | 6,0 |
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Densidade lexical** | 49,3 | % das palavras | Mais alto = texto mais informativo e menos marcado por palavras gramaticais. |
-| **Pronomes pessoais** | 20,1 | ocorrências por 1000 palavras | Mais alto = narração mais centrada em pessoas e no diálogo. |
-| **Verbos modais** | 2,0 | ocorrências por 1000 palavras | Mais alto = mais expressão de possibilidade, obrigação ou hipótese. |
+| **Densidade lexical** | 48,5 | % das palavras | Mais alto = texto mais informativo e menos marcado por palavras gramaticais. |
+| **Pronomes pessoais** | 19,9 | ocorrências por 1000 palavras | Mais alto = narração mais centrada em pessoas e no diálogo. |
+| **Verbos modais** | 1,9 | ocorrências por 1000 palavras | Mais alto = mais expressão de possibilidade, obrigação ou hipótese. |
 | **Extensão média das palavras** | 4,61 | letras | Mais alto = palavras mais longas, em geral mais raras ou mais derivadas. |
 
 ![Classes gramaticais](graficos/classes-gramaticais.png)
@@ -133,11 +133,11 @@ Etiquetas UPOS do modelo `pt_core_news_md` (exatidão declarada: 97,0 %). A exat
 
 ## 7. Legibilidade
 
-**Leitura fácil** · índice 64,0 · faixa «fácil» · nível escolar indicativo: 5.º ao 8.º ano de escolaridade
+**Leitura fácil** · índice 63,8 · faixa «fácil» · nível escolar indicativo: 5.º ao 8.º ano de escolaridade
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Facilidade de leitura (Flesch adaptado)** | 64,0 | 0–100 (aprox.) | Mais alto = leitura mais fácil. Faixas em português (Martins et al., 1996): 75–100 muito fácil (1.º–4.º ano de escolaridade), 50–75 fácil (5.º–8.º ano), 25–50 razoavelmente difícil (ensino secundário e superior), abaixo de 25 muito difícil (textos académicos). Em inglês e francês, escala de Flesch (1948): 90 muito fácil, 80 fácil, 70 razoavelmente fácil, 60 padrão, 50 razoavelmente difícil, 30 difícil, abaixo muito difícil. O painel resume em «fácil» (pt ≥ 50; en e fr ≥ 60) ou «difícil». |
+| **Facilidade de leitura (Flesch adaptado)** | 63,8 | 0–100 (aprox.) | Mais alto = leitura mais fácil. Faixas em português (Martins et al., 1996): 75–100 muito fácil (1.º–4.º ano de escolaridade), 50–75 fácil (5.º–8.º ano), 25–50 razoavelmente difícil (ensino secundário e superior), abaixo de 25 muito difícil (textos académicos). Em inglês e francês, escala de Flesch (1948): 90 muito fácil, 80 fácil, 70 razoavelmente fácil, 60 padrão, 50 razoavelmente difícil, 30 difícil, abaixo muito difícil. O painel resume em «fácil» (pt ≥ 50; en e fr ≥ 60) ou «difícil». |
 | **Flesch-Kincaid (nível de escolaridade)** | *não aplicável* (fórmula calibrada apenas para inglês) | ano escolar (EUA) | Mais alto = texto mais exigente. |
 | **Sílabas por palavra** | 2,04 | sílabas | Mais alto = palavras mais longas; entra nas fórmulas de legibilidade. |
 
@@ -159,26 +159,26 @@ Etiquetas UPOS do modelo `pt_core_news_md` (exatidão declarada: 97,0 %). A exat
 
 | Lema | Classe | Ocorrências | Por 1000 palavras |
 | --- | --- | --- | --- |
-| dizer | VERB | 604 | 2,97 |
+| dizer | VERB | 605 | 2,97 |
 | mão | NOUN | 471 | 2,31 |
-| ter | VERB | 410 | 2,01 |
-| olho | NOUN | 388 | 1,91 |
-| casa | NOUN | 334 | 1,64 |
-| dia | NOUN | 328 | 1,61 |
-| haver | VERB | 315 | 1,55 |
-| ficar | VERB | 302 | 1,48 |
-| homem | NOUN | 284 | 1,40 |
+| ter | VERB | 411 | 2,02 |
+| olho | NOUN | 390 | 1,92 |
+| dia | NOUN | 348 | 1,71 |
+| casa | NOUN | 336 | 1,65 |
+| haver | VERB | 322 | 1,58 |
+| ficar | VERB | 297 | 1,46 |
+| homem | NOUN | 290 | 1,42 |
+| vir | VERB | 274 | 1,35 |
 | braço | NOUN | 271 | 1,33 |
-| vir | VERB | 269 | 1,32 |
-| passar | VERB | 267 | 1,31 |
-| amigo | NOUN | 262 | 1,29 |
-| dar | VERB | 259 | 1,27 |
-| senhora | NOUN | 254 | 1,25 |
-| noite | NOUN | 246 | 1,21 |
-| velho | ADJ | 236 | 1,16 |
+| passar | VERB | 266 | 1,31 |
+| amigo | NOUN | 260 | 1,28 |
+| dar | VERB | 260 | 1,28 |
+| senhora | NOUN | 260 | 1,28 |
+| noite | NOUN | 244 | 1,20 |
+| velho | ADJ | 240 | 1,18 |
 | exclamar | VERB | 228 | 1,12 |
-| ver | VERB | 219 | 1,08 |
-| mulher | NOUN | 217 | 1,07 |
+| mulher | NOUN | 223 | 1,10 |
+| sala | NOUN | 214 | 1,05 |
 
 ### Pontuação e diálogo
 
@@ -202,10 +202,10 @@ Reconhecimento automático (NER): estimativas sujeitas a erro.
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Pessoas distintas (NER)** | 1 641 | nomes | Ordem de grandeza do elenco nomeado. |
-| **Lugares distintos (NER)** | 1 315 | nomes | Ordem de grandeza dos espaços nomeados. |
-| **Organizações distintas (NER)** | 241 | nomes | Ordem de grandeza das instituições nomeadas. |
-| **Menções de entidades** | 62,5 | ocorrências por 1000 palavras | Densidade de referências nomeadas. |
+| **Pessoas distintas (NER)** | 1 826 | nomes | Ordem de grandeza do elenco nomeado. |
+| **Lugares distintos (NER)** | 1 388 | nomes | Ordem de grandeza dos espaços nomeados. |
+| **Organizações distintas (NER)** | 258 | nomes | Ordem de grandeza das instituições nomeadas. |
+| **Menções de entidades** | 64,2 | ocorrências por 1000 palavras | Densidade de referências nomeadas. |
 
 ![Entidades](graficos/entidades.png)
 <sub>[SVG](graficos/entidades.svg)</sub>
@@ -244,16 +244,16 @@ O livro foi dividido em 10 segmentos com o mesmo número de palavras.
 
 | Segmento | Palavras | MTLD | Frase média | Densidade lexical (%) | Diálogo (%) | Pessoas / 1000 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 20 356 | 146,1 | 14,8 | 49,5 | 41 | 36,7 |
-| 2 | 20 356 | 144,3 | 13,9 | 48,9 | 55 | 40,0 |
-| 3 | 20 356 | 135,4 | 12,1 | 48,7 | 53 | 44,2 |
-| 4 | 20 356 | 134,6 | 12,2 | 50,0 | 49 | 39,1 |
-| 5 | 20 355 | 136,0 | 12,5 | 50,4 | 48 | 32,6 |
-| 6 | 20 356 | 131,4 | 11,7 | 49,1 | 55 | 39,1 |
-| 7 | 20 356 | 139,0 | 11,5 | 50,0 | 50 | 35,5 |
-| 8 | 20 356 | 137,5 | 11,7 | 47,9 | 61 | 43,5 |
-| 9 | 20 356 | 139,2 | 10,9 | 48,5 | 57 | 39,8 |
-| 10 | 20 355 | 145,9 | 11,1 | 49,7 | 56 | 40,9 |
+| 1 | 20 356 | 146,1 | 15,3 | 48,4 | 41 | 39,5 |
+| 2 | 20 356 | 144,3 | 14,3 | 48,0 | 55 | 40,6 |
+| 3 | 20 356 | 135,4 | 12,4 | 47,8 | 53 | 46,5 |
+| 4 | 20 356 | 134,6 | 12,4 | 49,4 | 49 | 40,5 |
+| 5 | 20 355 | 136,0 | 12,5 | 49,4 | 48 | 34,7 |
+| 6 | 20 356 | 131,4 | 11,7 | 48,5 | 55 | 42,3 |
+| 7 | 20 356 | 139,0 | 11,6 | 49,4 | 50 | 38,9 |
+| 8 | 20 356 | 137,5 | 11,8 | 47,4 | 61 | 43,7 |
+| 9 | 20 356 | 139,2 | 11,0 | 47,9 | 57 | 41,1 |
+| 10 | 20 355 | 145,9 | 11,3 | 49,3 | 56 | 42,0 |
 
 ## 10. Sentimento
 
@@ -262,9 +262,9 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Sentimento médio** | −0,003 | −1 a +1 | Acima de 0 = vocabulário globalmente positivo; abaixo de 0 = negativo. Valores entre −0,05 e +0,05 são neutros. |
-| **Frases positivas** | 26,4 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente positivo. |
-| **Frases negativas** | 30,5 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente negativo. |
-| **Frases neutras** | 43,2 | % das frases pontuadas | Inclui frases sem nenhuma palavra do léxico. |
+| **Frases positivas** | 26,5 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente positivo. |
+| **Frases negativas** | 30,6 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente negativo. |
+| **Frases neutras** | 42,9 | % das frases pontuadas | Inclui frases sem nenhuma palavra do léxico. |
 | **Cobertura do léxico de sentimento** | 6,2 | % das palavras | Indicador de qualidade: abaixo de ~5 %, o sentimento assenta em muito poucas palavras. |
 
 ![Arco de sentimento](graficos/sentimento.png)
@@ -274,12 +274,12 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 
 | Polaridade | Compound | Frase |
 | --- | --- | --- |
+| positiva | 0,968 | Não vira Maria: mas em agradecimento da sua hospitalidade mandou-lhe um admiravel ramo, e, com uma galanteria de principe artista da Renascença, um soneto em italiano enrolado entre as flores e tão perfumado como ellas: comparava-a a uma nobre dama da Syria dando a gota de agua… |
 | positiva | 0,956 | Abriu as janellas: e a larga luz que entrava pareceu-lhe trazer uma doçura rara, e uma alegria maior que a dos outros dias, como preparada especialmente pelo bom Deus para alumiar a festa do seu coração. |
 | positiva | 0,955 | Mas, vendo que o Cohen dava um sorriso enfastiado e superior a estas controversias de litteraturas, calou-se; occupou-se só d'elle, quiz saber que tal elle achava aquelle S.^t Emilion; e, quando o viu confortavelmente servido de sole normande, lançou com grande alarde de… |
-| positiva | 0,955 | Nunca Carlos a achára tão linda, tão perfeita: os seus olhos pareciam- lhe irradiar uma ternura maior: na singela rosa que lhe ornava o peito via a superioridade do seu gosto. |
-| negativa | −0,976 | Mas narrou-lhe, detalhe a detalhe, o feio romance todo até áquella tarde em que Pedro lhe apparecera, livido, coberto de lama, a cahir-lhe nos braços, chorando a sua dôr com a fraqueza d'uma creança.—E o desfecho d'esse amor culpado, accrescentara o avô, fôra a morte da mãe em… |
-| negativa | −0,970 | —Mas era pae: ouvia, alli ao seu lado, aquelle soluçar de funda dôr; via tremer aquelle pobre corpo desgraçado que elle outr'ora emballara nos braços;—parou junto de Pedro, tomou-lhe gravemente a cabeça entre as mãos, e beijou-o na testa, uma vez, outra vez, como se elle fosse… |
 | negativa | −0,965 | Quando a mãe morreu, n'uma agonia terrivel de devota, debatendo-se dias nos pavores do inferno, Pedro teve na sua dôr os arrebatamentos d'uma loucura. |
+| negativa | −0,958 | Mas, á idéa de se separar do seu Pedro, a pobre senhora cahira de joelhos deante d'Affonso, balbuciando e tremendo: e elle, naturalmente, lá cedeu perante essas mãos supplicantes, essas lagrimas que cahiam quatro a quatro pela pobre face de cera. |
+| negativa | −0,957 | O pobre Bonifacio fugiu, obeso e lento, com a cauda fôfa a roçar o chão: mas voltou logo, e esgatanhando a porta, roçando-se pelas pernas do Ega, recomeçou a miar, n'um lamento agudo, saudoso como o d'uma dôr humana, chorando o dono perdido que o acariciava no collo e que não… |
 
 <details><summary>Definições</summary>
 
@@ -297,31 +297,31 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Frases interrogativas** | 7,3 | % das frases | Mais alto = mais perguntas, em geral associadas ao diálogo. |
-| **Frases exclamativas** | 15,2 | % das frases | Mais alto = mais exclamações, em geral associadas ao diálogo e à expressividade. |
+| **Frases interrogativas** | 7,6 | % das frases | Mais alto = mais perguntas, em geral associadas ao diálogo. |
+| **Frases exclamativas** | 16,1 | % das frases | Mais alto = mais exclamações, em geral associadas ao diálogo e à expressividade. |
 
 ### Tempos verbais e pessoa gramatical
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Verbos no passado** | 69,8 | % das formas verbais finitas com tempo anotado | Mais alto = narração no passado, típica do romance. |
-| **Verbos no presente** | 29,1 | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. |
-| **Verbos no futuro** | 1,1 | % das formas verbais finitas com tempo anotado | Mais alto = mais projeção, promessa ou hipótese. |
-| **Verbos no conjuntivo** | 6,1 | % das formas verbais finitas com modo anotado | Mais alto = mais hipótese, desejo, dúvida ou subordinação. |
-| **Pronomes de 1.ª pessoa** | 6,0 | ocorrências por 1000 palavras | Mais alto = narrador na 1.ª pessoa ou muito diálogo. |
-| **Pronomes de 2.ª pessoa** | 0,6 | ocorrências por 1000 palavras | Mais alto = mais interpelação direta, sobretudo no diálogo. |
-| **Pronomes de 3.ª pessoa** | 12,5 | ocorrências por 1000 palavras | Mais alto = narração centrada em terceiros, típica do narrador heterodiegético. |
+| **Verbos no passado** | 72,0 | % das formas verbais finitas com tempo anotado | Mais alto = narração no passado, típica do romance. |
+| **Verbos no presente** | 27,2 | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. |
+| **Verbos no futuro** | 0,9 | % das formas verbais finitas com tempo anotado | Mais alto = mais projeção, promessa ou hipótese. |
+| **Verbos no conjuntivo** | 5,9 | % das formas verbais finitas com modo anotado | Mais alto = mais hipótese, desejo, dúvida ou subordinação. |
+| **Pronomes de 1.ª pessoa** | 5,7 | ocorrências por 1000 palavras | Mais alto = narrador na 1.ª pessoa ou muito diálogo. |
+| **Pronomes de 2.ª pessoa** | 0,4 | ocorrências por 1000 palavras | Mais alto = mais interpelação direta, sobretudo no diálogo. |
+| **Pronomes de 3.ª pessoa** | 12,7 | ocorrências por 1000 palavras | Mais alto = narração centrada em terceiros, típica do narrador heterodiegético. |
 
 | Tempo | Modo | Ocorrências | % das formas finitas |
 | --- | --- | --- | --- |
-| imperfeito | indicativo | 8 142 | 34,1 |
-| passado | indicativo | 7 293 | 30,6 |
-| presente | indicativo | 6 329 | 26,5 |
-| imperfeito | conjuntivo | 764 | 3,2 |
-| presente | conjuntivo | 610 | 2,6 |
-| mais-que-perfeito | indicativo | 456 | 1,9 |
-| futuro | indicativo | 140 | 0,6 |
-| futuro | conjuntivo | 119 | 0,5 |
+| imperfeito | indicativo | 8 134 | 35,0 |
+| passado | indicativo | 7 245 | 31,1 |
+| presente | indicativo | 5 696 | 24,5 |
+| imperfeito | conjuntivo | 695 | 3,0 |
+| mais-que-perfeito | indicativo | 666 | 2,9 |
+| presente | conjuntivo | 621 | 2,7 |
+| futuro | indicativo | 114 | 0,5 |
+| futuro | conjuntivo | 91 | 0,4 |
 
 ### Leis de Zipf e de Heaps
 
@@ -354,26 +354,26 @@ Pares de palavras contíguas na mesma frase que ocorrem juntas muito mais do que
 
 | Colocação | Ocorrências | G² | PMI |
 | --- | --- | --- | --- |
-| maria eduarda | 123 | 1 551,4 | 8,85 |
-| castro gomes | 91 | 1 472,4 | 10,78 |
-| os olhos | 198 | 1 398,6 | 5,89 |
-| da maia | 175 | 1 234,5 | 5,82 |
-| as mãos | 142 | 1 148,8 | 6,50 |
-| santa olavia | 76 | 1 082,7 | 10,28 |
-| de repente | 130 | 830,4 | 4,60 |
-| na mão | 101 | 657,1 | 5,75 |
-| miss sarah | 37 | 645,1 | 11,94 |
-| com effeito | 82 | 615,2 | 5,82 |
-| o ega | 242 | 609,3 | 2,86 |
-| o marquez | 121 | 606,9 | 4,24 |
-| á porta | 79 | 592,4 | 6,42 |
-| affonso da | 105 | 587,5 | 5,08 |
-| é verdade | 73 | 585,1 | 6,56 |
-| ás vezes | 55 | 566,8 | 8,34 |
-| os hombros | 71 | 553,0 | 6,23 |
-| os braços | 82 | 530,4 | 5,62 |
+| maria eduarda | 123 | 1 551,7 | 8,85 |
+| castro gomes | 91 | 1 481,2 | 10,81 |
+| os olhos | 198 | 1 399,1 | 5,89 |
+| da maia | 175 | 1 239,3 | 5,83 |
+| as mãos | 142 | 1 149,1 | 6,50 |
+| santa olavia | 77 | 1 100,7 | 10,29 |
+| de repente | 130 | 830,7 | 4,60 |
+| na mão | 101 | 657,4 | 5,75 |
+| com effeito | 82 | 615,5 | 5,83 |
+| o ega | 242 | 610,5 | 2,87 |
+| o marquez | 121 | 607,2 | 4,24 |
+| á porta | 79 | 592,6 | 6,43 |
+| affonso da | 105 | 585,6 | 5,07 |
+| é verdade | 73 | 585,2 | 6,56 |
+| ás vezes | 55 | 566,9 | 8,34 |
+| os hombros | 71 | 553,2 | 6,23 |
+| os braços | 82 | 530,6 | 5,62 |
 | é necessario | 64 | 502,7 | 6,49 |
-| a mão | 128 | 475,0 | 3,63 |
+| miss sarah | 28 | 494,4 | 12,24 |
+| a mão | 128 | 475,2 | 3,63 |
 
 ### Palavras-chave por segmento
 
@@ -383,12 +383,12 @@ Lemas de conteúdo mais característicos de cada segmento, por comparação com 
 | --- | --- |
 | 1 | teixeira, abbade, brown, bemfica, pae |
 | 2 | cellas, cousa, pimenta, rughel, silveirinha |
-| 3 | cousa, cohen, dominó, invasão, creado |
+| 3 | cousa, cohen, dominó, invasão, cadelinha |
 | 4 | adelia, cousa, meza, lawrence, sitiaes |
 | 5 | vladimiro, clifford, tribuna, pista, minhoto |
-| 6 | netto, sousa, eduarda, vicenta, barros |
-| 7 | mentira, gomes, melanie, reter, chôro |
-| 8 | corneta, rascunho, toca, neves, bebedo |
+| 6 | netto, sousa, eduarda, vicenta, niniche |
+| 7 | mentira, gomes, castro, melanie, chôro |
+| 8 | corneta, toca, neves, rascunho, bebedo |
 | 9 | rufino, monforte, guimarães, sarau, melchior |
 | 10 | adosinda, braganza, chôro, barradas, castigo |
 
@@ -401,17 +401,17 @@ Lemas de conteúdo mais característicos de cada segmento, por comparação com 
 
 Comentários gerados automaticamente a partir dos valores; descrevem o texto, não explicam as suas causas nem substituem a leitura crítica.
 
-- Metade das frases tem até 9 palavras e a metade central das frases está entre 5 e 16 palavras; 7,1 % têm mais de 30 palavras.
+- Metade das frases tem até 9 palavras e a metade central das frases está entre 5 e 16 palavras; 7,5 % têm mais de 30 palavras.
 - A extensão das frases varia muito (desvio-padrão próximo da média): alternância marcada entre frases curtas e longas.
-- A média (12,1) é bastante superior à mediana: algumas frases muito longas puxam a média para cima, por isso a mediana descreve melhor a frase típica.
+- A média (12,3) é bastante superior à mediana: algumas frases muito longas puxam a média para cima, por isso a mediana descreve melhor a frase típica.
 - Diversidade lexical: MTLD de 139,0 palavras por fator, ou seja, em média são precisas cerca de 139 palavras até o TTR descer abaixo de 0,72. Este valor só é comparável com livros em português.
 - Cerca de 52 % dos parágrafos foram identificados como diálogo (estimativa tipográfica).
-- Em média, 0,82 orações subordinadas por frase e uma profundidade sintática média de 3,29 níveis.
-- Do primeiro ao último segmento, o MTLD passa de 146,1 para 145,9 e a extensão média das frases de 14,8 para 11,1 palavras (variação descritiva; segmentos isolados são instáveis).
+- Em média, 0,84 orações subordinadas por frase e uma profundidade sintática média de 3,22 níveis.
+- Do primeiro ao último segmento, o MTLD passa de 146,1 para 145,9 e a extensão média das frases de 15,3 para 11,3 palavras (variação descritiva; segmentos isolados são instáveis).
 - Pelo índice de Flesch adaptado (64, «fácil»), a leitura classifica-se como **fácil**, adequada ao 5.º ao 8.º ano de escolaridade segundo Martins et al. (1996). O índice só considera a extensão das frases e das palavras: vocabulário antigo, ironia ou referências culturais não entram no cálculo.
-- Sentimento: média de −0,003 (vocabulário globalmente neutro); 26 % das frases pontuadas são positivas e 30 % negativas. Só 6,2 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
-- No arco de sentimento, o segmento mais negativo é o 10 (−0,043) e o mais positivo o 6 (0,030).
-- 70 % das formas verbais finitas estão no passado e 29 % no presente.
+- Sentimento: média de −0,003 (vocabulário globalmente neutro); 27 % das frases pontuadas são positivas e 31 % negativas. Só 6,2 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
+- No arco de sentimento, o segmento mais negativo é o 10 (−0,044) e o mais positivo o 6 (0,032).
+- 72 % das formas verbais finitas estão no passado e 27 % no presente.
 - A rede inclui 35 personagens; a mais central (PageRank) é Carlos da Maia.
 
 ## 14. Limitações metodológicas
@@ -483,4 +483,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 11:01 UTC · livros_pln 3.2.0 · código `b8d50a4c276d` · commit `50c27e8` · Python 3.13.5 · spaCy 3.8.18 · pt_core_news_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 11:19 UTC · livros_pln 3.3.0 · código `310203e9bd19` · commit `2866fe1` · Python 3.13.5 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>
