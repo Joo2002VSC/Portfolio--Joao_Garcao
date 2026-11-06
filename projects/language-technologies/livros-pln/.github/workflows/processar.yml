@@ -1,7 +1,7 @@
 # Reprocessa os livros sempre que o código muda e publica os resultados no repositório.
 #
-# Corre quando há alterações no pacote (livros_pln/), na configuração (config/, incluindo parametros.toml), nas
-# dependências ou neste workflow. Os testes têm de passar antes do processamento.
+# Corre quando há alterações nos livros (livros/, incluindo metadados e dicionários de personagens), no pacote
+# (livros_pln/), na configuração (config/, incluindo parametros.toml), nas dependências ou neste workflow. Os testes têm de passar antes do processamento.
 # Os resultados (resultados/) são guardados num commit automático; esse commit não volta
 # a disparar o workflow (os commits feitos com o GITHUB_TOKEN não disparam workflows).
 # Também pode ser corrido à mão: separador Actions → «processar livros» → Run workflow.
@@ -11,6 +11,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "livros/**"
       - "livros_pln/**"
       - "config/**"
       - "tests/**"

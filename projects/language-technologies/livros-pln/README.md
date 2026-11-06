@@ -8,7 +8,7 @@
 
 ![Rede de personagens de Os Maias](resultados/livros/eca-de-queiros-os-maias/graficos/rede.png)
 
-**[Resultados](resultados/README.md)** · **[Documentação dos indicadores](docs/indicadores.md)** · **[Painel interativo de comparação](https://joo2002vsc.github.io/livros-pln/resultados/painel.html)** · **[Painel de *Os Maias*](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)**
+**[🌐 Ver os livros analisados](https://joo2002vsc.github.io/livros-pln/)** · **[Resultados](resultados/README.md)** · **[Documentação dos indicadores](docs/indicadores.md)** · **[Painel interativo de comparação](https://joo2002vsc.github.io/livros-pln/resultados/painel.html)** · **[Painel de *Os Maias*](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)**
 
 ---
 
@@ -155,7 +155,11 @@ Os testes cobrem:
 
 ### Atualização automática no GitHub
 
-O workflow [`processar.yml`](.github/workflows/processar.yml) corre quando muda o código, a configuração, os testes, as dependências ou o próprio workflow. Instala as dependências e os modelos, corre os testes, verifica que a documentação está sincronizada com o catálogo, reprocessa os livros e faz commit de `resultados/`. Acrescentar um livro não dispara o workflow: corra-o localmente ou use **Actions → processar livros → Run workflow**.
+O workflow [`processar.yml`](.github/workflows/processar.yml) corre quando muda um livro (`livros/`, incluindo `metadados.csv` e os dicionários de personagens), o código, a configuração, os testes, as dependências ou o próprio workflow. Instala as dependências e os modelos, corre os testes, verifica que a documentação está sincronizada com o catálogo, reprocessa os livros e faz commit de `resultados/`. Para publicar um livro novo basta pô-lo em `livros/` e fazer push.
+
+### Ver os painéis no GitHub
+
+O GitHub mostra o código dos ficheiros HTML, não a página. Os painéis veem-se através do GitHub Pages, em **https://joo2002vsc.github.io/livros-pln/**: a página inicial (`index.html`) abre a lista dos livros analisados, e cada livro tem o seu painel. Para ativar, uma única vez: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `(root)` → Save**. O ficheiro `.nojekyll` faz com que as páginas sejam servidas tal como estão. No GitHub Pages, as ligações dos painéis para os relatórios e para o Excel abrem esses ficheiros no GitHub.
 
 ### Pastas de trabalho no computador
 

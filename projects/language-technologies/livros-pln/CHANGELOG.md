@@ -2,6 +2,9 @@
 
 ## 3.4.1 · 2026-11-06
 
+- **Painéis no GitHub Pages**: `index.html` na raiz abre a lista dos livros analisados (`resultados/painel.html`); `.nojekyll` serve as páginas tal como estão; no GitHub Pages, as ligações para os relatórios, o Excel e os CSV abrem no GitHub.
+- O workflow passa a correr também quando muda um livro, os metadados ou um dicionário de personagens (`livros/`).
+- *Os Lusíadas* preparados: dicionário de personagens e metadados em `livros/`.
 - **Novo ícone** do projeto (livro aberto com uma rede de personagens e barras de dados), recortado ao círculo e embutido nos painéis em 32, 128 e 256 píxeis (separador do navegador, cabeçalho, ícone do ecrã inicial e rodapé).
 
 ## 3.4.0 · 2026-11-06

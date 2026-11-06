@@ -678,6 +678,12 @@ document.addEventListener("click",ev=>{const b=ev.target.closest(".vista button"
 const fig=b.closest(".figura");fig.querySelectorAll(".vista button").forEach(x=>x.classList.toggle("ativo",x===b));
 const v=b.dataset.vista;fig.querySelector(".v3").hidden=v!=="v3";fig.querySelector(".v2").hidden=v!=="v2";
 if(window.Plotly)fig.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)});});
+// No GitHub Pages, os relatórios em Markdown e os ficheiros Excel abrem-se no GitHub (onde o Markdown é formatado).
+if(location.hostname.endsWith(".github.io")){const u=location.hostname.split(".")[0],p=location.pathname.split("/").filter(Boolean);
+if(p.length){const repo=p[0];document.querySelectorAll("a[href]").forEach(a=>{const h=a.getAttribute("href");
+if(/^(https?:|#|mailto:|data:)/.test(h)||!/\\.(md|xlsx|csv|json)$/.test(h))return;
+const alvo=new URL(h,location.href).pathname.split("/").filter(Boolean).slice(1).join("/");
+a.href=`https://github.com/${u}/${repo}/blob/main/${alvo}`;});}}
 window.addEventListener("load",()=>{if(window.Plotly)document.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)})});
 (()=>{const topo=document.querySelector(".voltar-topo"),barra=document.querySelector(".progresso");
 const atualizar=()=>{const y=window.scrollY,h=document.documentElement.scrollHeight-innerHeight;
