@@ -214,28 +214,28 @@ Reconhecimento automático (NER): estimativas sujeitas a erro.
 
 ### Rede de personagens
 
-Identificação: automático (NER). Duas personagens ligam-se quando aparecem no mesmo parágrafo: é uma co-ocorrência textual, não uma relação narrativa comprovada.
+Identificação: dicionário (homere-l-odyssee.json). Duas personagens ligam-se quando aparecem no mesmo parágrafo: é uma co-ocorrência textual, não uma relação narrativa comprovada.
 
 ![Rede de personagens](graficos/rede.png)
 <sub>[SVG](graficos/rede.svg)</sub>
 
 | Personagem | Menções | Ligações | Parágrafos partilhados | Intermediação | PageRank | Comunidade |
 | --- | --- | --- | --- | --- | --- | --- |
-| Odysseus Laertiade | 663 | 39 | 481 | 0,928 | 0,189 | 2 |
-| Zeus | 212 | 34 | 245 | 0,197 | 0,096 | 1 |
-| Héros Tèlémakhos | 260 | 30 | 223 | 0,100 | 0,086 | 2 |
-| Pallas Athènè | 168 | 33 | 207 | 0,039 | 0,079 | 2 |
-| Hèlios | 85 | 30 | 105 | 0,000 | 0,044 | 1 |
-| Troiè | 31 | 20 | 62 | 0,045 | 0,028 | 1 |
-| Antinoos | 59 | 12 | 55 | 0,051 | 0,024 | 2 |
-| Eumaios | 55 | 18 | 50 | 0,000 | 0,022 | 2 |
-| Ouranos | 40 | 17 | 50 | 0,000 | 0,022 | 1 |
-| Ménélaos Atréide | 52 | 19 | 48 | 0,000 | 0,022 | 4 |
-| Aidès | 27 | 16 | 45 | 0,051 | 0,022 | 3 |
-| Roi Alkinoos | 73 | 12 | 47 | 0,000 | 0,022 | 2 |
-| Ô Poseidaôn | 44 | 18 | 44 | 0,000 | 0,020 | 1 |
-| Nestôr Nèlèiade | 32 | 11 | 40 | 0,000 | 0,019 | 4 |
-| Dieux | 24 | 16 | 40 | 0,000 | 0,019 | 1 |
+| Odysseus | 711 | 33 | 512 | 0,881 | 0,188 | 2 |
+| Zeus | 267 | 31 | 289 | 0,254 | 0,106 | 1 |
+| Tèlémakhos | 268 | 24 | 265 | 0,111 | 0,095 | 2 |
+| Athènè | 175 | 27 | 220 | 0,000 | 0,079 | 2 |
+| Hèlios | 90 | 26 | 103 | 0,161 | 0,043 | 1 |
+| Pènélopéia | 114 | 15 | 105 | 0,000 | 0,039 | 2 |
+| Ménélaos | 65 | 19 | 78 | 0,054 | 0,032 | 3 |
+| Nestôr | 42 | 12 | 55 | 0,000 | 0,023 | 3 |
+| Apollôn | 28 | 20 | 52 | 0,000 | 0,023 | 1 |
+| Antinoos | 59 | 13 | 54 | 0,000 | 0,023 | 2 |
+| Alkinoos | 73 | 10 | 51 | 0,000 | 0,023 | 4 |
+| Laertès | 34 | 15 | 52 | 0,000 | 0,022 | 2 |
+| Eumaios | 56 | 13 | 49 | 0,000 | 0,021 | 2 |
+| Poseidaôn | 47 | 18 | 45 | 0,000 | 0,020 | 1 |
+| Agamemnôn | 23 | 17 | 43 | 0,000 | 0,020 | 1 |
 
 ## 9. Evolução ao longo do texto
 
@@ -412,7 +412,7 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Sentimento: média de 0,089 (vocabulário globalmente positivo); 47 % das frases pontuadas são positivas e 25 % negativas. Só 7,1 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
 - No arco de sentimento, o segmento mais negativo é o 4 (0,035) e o mais positivo o 3 (0,148).
 - 36 % das formas verbais finitas estão no passado e 59 % no presente.
-- A rede inclui 40 personagens; a mais central (PageRank) é Odysseus Laertiade.
+- A rede inclui 36 personagens; a mais central (PageRank) é Odysseus.
 
 ## 14. Limitações metodológicas
 
@@ -483,4 +483,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 13:41 UTC · livros_pln 3.6.0 · código `ef6194c1e308` · commit `c6c9682` · Python 3.12.16 · spaCy 3.8.18 · fr_core_news_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 13:56 UTC · livros_pln 3.7.0 · código `21a51a760a9b` · commit `30adc18` · Python 3.12.16 · spaCy 3.8.18 · fr_core_news_md 3.8.0</sub>

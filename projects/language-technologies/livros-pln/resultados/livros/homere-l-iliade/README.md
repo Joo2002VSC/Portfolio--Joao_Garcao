@@ -214,28 +214,28 @@ Reconhecimento automático (NER): estimativas sujeitas a erro.
 
 ### Rede de personagens
 
-Identificação: automático (NER). Duas personagens ligam-se quando aparecem no mesmo parágrafo: é uma co-ocorrência textual, não uma relação narrativa comprovada.
+Identificação: dicionário (homere-l-iliade.json). Duas personagens ligam-se quando aparecem no mesmo parágrafo: é uma co-ocorrência textual, não uma relação narrativa comprovada.
 
 ![Rede de personagens](graficos/rede.png)
 <sub>[SVG](graficos/rede.svg)</sub>
 
 | Personagem | Menções | Ligações | Parágrafos partilhados | Intermediação | PageRank | Comunidade |
 | --- | --- | --- | --- | --- | --- | --- |
-| Zeus Kroniôn | 496 | 39 | 649 | 0,792 | 0,105 | 1 |
-| Hektôr Priamide | 313 | 38 | 432 | 0,146 | 0,072 | 2 |
-| Akhilleus Pèléide | 391 | 36 | 396 | 0,131 | 0,065 | 2 |
-| Arès Alkimos | 156 | 38 | 306 | 0,067 | 0,052 | 1 |
-| Pallas Athènè | 161 | 36 | 301 | 0,040 | 0,050 | 1 |
-| Ilios | 127 | 35 | 255 | 0,000 | 0,043 | 2 |
-| Aias Télamônien | 183 | 34 | 240 | 0,023 | 0,041 | 3 |
-| Patroklos Ménoitiade | 161 | 32 | 224 | 0,051 | 0,038 | 2 |
-| Agamemnôn Atréide | 113 | 32 | 181 | 0,000 | 0,032 | 3 |
-| Hèrè | 112 | 29 | 179 | 0,000 | 0,031 | 1 |
-| Ménélaos Atréide | 124 | 32 | 169 | 0,051 | 0,030 | 3 |
-| Danaens | 75 | 34 | 165 | 0,000 | 0,029 | 1 |
-| Subtil Odysseus | 120 | 31 | 165 | 0,049 | 0,029 | 3 |
-| Ouranos Olympien | 52 | 29 | 112 | 0,000 | 0,021 | 1 |
-| Phoibos Apollôn | 45 | 31 | 102 | 0,000 | 0,020 | 1 |
+| Zeus | 611 | 36 | 772 | 0,649 | 0,102 | 3 |
+| Hektôr | 469 | 37 | 661 | 0,286 | 0,089 | 2 |
+| Akhilleus | 558 | 36 | 564 | 0,152 | 0,075 | 2 |
+| Arès | 157 | 32 | 330 | 0,030 | 0,045 | 3 |
+| Athènè | 169 | 35 | 320 | 0,000 | 0,045 | 3 |
+| Aias | 247 | 32 | 314 | 0,123 | 0,044 | 2 |
+| Apollôn | 147 | 36 | 287 | 0,072 | 0,041 | 3 |
+| Patroklos | 209 | 29 | 289 | 0,000 | 0,040 | 2 |
+| Agamemnôn | 168 | 31 | 280 | 0,007 | 0,039 | 1 |
+| Priamos | 147 | 31 | 239 | 0,051 | 0,035 | 2 |
+| Ménélaos | 142 | 28 | 230 | 0,005 | 0,033 | 1 |
+| Odysseus | 137 | 29 | 215 | 0,016 | 0,032 | 1 |
+| Diomèdès | 165 | 29 | 199 | 0,034 | 0,030 | 1 |
+| Hèrè | 119 | 26 | 201 | 0,000 | 0,029 | 3 |
+| Nestôr | 81 | 23 | 139 | 0,000 | 0,021 | 1 |
 
 ## 9. Evolução ao longo do texto
 
@@ -412,7 +412,7 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Sentimento: média de 0,035 (vocabulário globalmente neutro); 42 % das frases pontuadas são positivas e 32 % negativas. Só 7,7 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
 - No arco de sentimento, o segmento mais negativo é o 7 (−0,013) e o mais positivo o 4 (0,078).
 - 42 % das formas verbais finitas estão no passado e 53 % no presente.
-- A rede inclui 40 personagens; a mais central (PageRank) é Zeus Kroniôn.
+- A rede inclui 40 personagens; a mais central (PageRank) é Zeus.
 
 ## 14. Limitações metodológicas
 
@@ -483,4 +483,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 13:41 UTC · livros_pln 3.6.0 · código `ef6194c1e308` · commit `c6c9682` · Python 3.12.16 · spaCy 3.8.18 · fr_core_news_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 13:55 UTC · livros_pln 3.7.0 · código `21a51a760a9b` · commit `30adc18` · Python 3.12.16 · spaCy 3.8.18 · fr_core_news_md 3.8.0</sub>

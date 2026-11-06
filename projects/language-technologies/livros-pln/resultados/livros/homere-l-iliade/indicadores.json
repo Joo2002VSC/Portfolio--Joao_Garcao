@@ -15,18 +15,18 @@
   },
   "forma": "prosa",
   "metodo_sentimento": "VADER-FR (VADER adaptado ao francês) 1.3.4",
-  "metodo_personagens": "automático (NER)",
+  "metodo_personagens": "dicionário (homere-l-iliade.json)",
   "personagens_principais": [
-    "Zeus Kroniôn",
-    "Hektôr Priamide",
-    "Akhilleus Pèléide",
-    "Arès Alkimos",
-    "Pallas Athènè",
-    "Ilios",
-    "Aias Télamônien",
-    "Patroklos Ménoitiade",
-    "Agamemnôn Atréide",
-    "Hèrè"
+    "Zeus",
+    "Hektôr",
+    "Akhilleus",
+    "Arès",
+    "Athènè",
+    "Aias",
+    "Apollôn",
+    "Patroklos",
+    "Agamemnôn",
+    "Priamos"
   ],
   "metadados": {
     "titulo": "L'Iliade",
@@ -119,9 +119,9 @@
     "frases_neutras_pct": 25.4945,
     "cobertura_lexico_pct": 7.6762,
     "personagens_na_rede": 40,
-    "ligacoes_na_rede": 518,
-    "densidade_da_rede": 0.6641,
-    "personagem_principal": "Zeus Kroniôn"
+    "ligacoes_na_rede": 456,
+    "densidade_da_rede": 0.5846,
+    "personagem_principal": "Zeus"
   },
   "estados": {
     "flesch_kincaid": {
@@ -195,14 +195,14 @@
     }
   },
   "processamento": {
-    "versao": "3.6.0",
-    "versao_codigo": "ef6194c1e308",
-    "commit": "c6c9682",
+    "versao": "3.7.0",
+    "versao_codigo": "21a51a760a9b",
+    "commit": "30adc18",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "3a108117f86b015c",
-    "hash_dicionario": null,
-    "data": "2026-11-06 13:41 UTC",
-    "duracao_s": 31.4
+    "hash_dicionario": "282b5f38a8fcaeca",
+    "data": "2026-11-06 13:55 UTC",
+    "duracao_s": 22.7
   },
   "graficos": [
     "rede.png",
