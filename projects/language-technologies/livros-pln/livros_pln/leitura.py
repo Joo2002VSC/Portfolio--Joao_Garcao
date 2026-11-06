@@ -182,7 +182,9 @@ def ler_epub(ficheiro: Path) -> Livro:
 def metadados_manuais(pasta: Path) -> dict[str, dict]:
     """Lê livros/metadados.csv (opcional), que completa ou corrige os metadados extraídos.
 
-    Colunas aceites: ficheiro, titulo, autor, ano, lingua (força a língua: pt, fr ou en) e fonte."""
+    Colunas aceites: ficheiro, titulo, autor, ano, lingua (força a língua: pt, fr ou en), fonte e, para o
+    género bibliográfico (só para comparar com o género inferido), genero_bibliografico, genero_chave,
+    fonte_genero e estado_genero («proposto» ou «confirmado»)."""
     ficheiro = pasta / "metadados.csv"
     if not ficheiro.exists():
         return {}

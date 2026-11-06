@@ -43,6 +43,27 @@ class Parametros:
     # Colocações e palavras-chave
     colocacao_frequencia_minima: int = 5    # ocorrências mínimas de um bigrama
     palavras_chave_por_segmento: int = 5
+    # Emoções (NRC EmoLex) e divisão em capítulos
+    emocoes_janela_negacao: int = 3         # palavras depois de uma negação que não contam para as emoções
+    capitulo_minimo_palavras: int = 300     # capítulos mais curtos juntam-se ao seguinte
+    blocos_sem_capitulos: int = 20          # blocos iguais quando o texto não tem capítulos detetáveis
+    # Tonalidade (classificação interpretativa; ver emocoes.tonalidade)
+    tom_limiar: float = 0.05                # limiar convencional do VADER, aplicado à média dos segmentos
+    tom_forte: float = 0.5                  # |compound| a partir do qual uma frase é fortemente polarizada
+    tom_minimo_forte_pct: float = 10.0      # % mínima de frases fortes positivas E negativas para «misto»
+    tom_minimo_frases: int = 300            # frases pontuadas mínimas
+    tom_cobertura_minima: float = 3.0       # % mínima das palavras no léxico de sentimento
+    tom_bootstrap: int = 2000               # reamostragens do intervalo de confiança
+
+
+def pasta_lexicos(ficheiro: Path | None = None) -> Path:
+    """Pasta dos léxicos descarregados (fora do repositório): `lexicos` em config/pastas.toml, ou `lexicos/`."""
+    ficheiro = ficheiro or PASTAS
+    if ficheiro.exists():
+        dados = tomllib.loads(ficheiro.read_text(encoding="utf-8"))
+        if "lexicos" in dados:
+            return Path(dados["lexicos"]).expanduser()
+    return FICHEIRO.parent.parent / "lexicos"
 
 
 def carregar(ficheiro: Path = FICHEIRO) -> Parametros:
@@ -68,7 +89,7 @@ def pastas(ficheiro: Path = PASTAS) -> tuple[Path, Path]:
     livros, resultados = Path("livros"), Path("resultados")
     if ficheiro.exists():
         dados = tomllib.loads(ficheiro.read_text(encoding="utf-8"))
-        desconhecidos = set(dados) - {"livros", "resultados"}
+        desconhecidos = set(dados) - {"livros", "resultados", "lexicos"}
         if desconhecidos:
             raise ValueError(f"Chaves desconhecidas em {ficheiro.name}: {', '.join(sorted(desconhecidos))}")
         livros = Path(dados.get("livros", livros)).expanduser()

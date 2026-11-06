@@ -144,6 +144,35 @@ python -m livros_pln so-indicadores camus-l-etranger    # escreve livros/so-indi
 
 O JSON tem só números, estados e metadados principais (nenhuma frase do livro). A página dos livros analisados inclui-o no catálogo, na comparação e no explorador, assinalado como «só indicadores» e sem painel nem relatórios. Como o GitHub Actions não tem o texto, os valores só mudam quando se repetem estes dois comandos.
 
+### Tonalidade emocional, emoções e género literário (experimental)
+
+**Tonalidade.** Cada livro recebe uma de cinco classificações: predominantemente positivo (feliz), predominantemente negativo (triste), neutro, emocionalmente misto ou indeterminado. A classificação usa a polaridade por frase do método de sentimento (VADER e adaptações), a média por capítulo e o intervalo de confiança a 95 % dessa média, calculado por bootstrap dos capítulos (Efron e Tibshirani, 1993):
+
+| Classificação | Regra (limiares em `config/parametros.toml`) |
+| --- | --- |
+| Positivo / negativo | intervalo inteiro acima de +0,05 / abaixo de −0,05 |
+| Misto | pelo menos 10 % de frases fortemente positivas **e** 10 % fortemente negativas (\|polaridade\| ≥ 0,5) |
+| Neutro | intervalo inteiro entre −0,05 e +0,05 |
+| Indeterminado | menos de 300 frases pontuadas, cobertura do léxico abaixo de 3 %, menos de 5 capítulos ou intervalo que atravessa o limiar |
+
+O painel mostra as razões, a intensidade, a oscilação entre capítulos e a concordância com o léxico de emoções; quando os dois léxicos divergem, há um aviso.
+
+**Emoções.** Léxico NRC EmoLex (Mohammad e Turney, 2013), com as oito emoções de Plutchik (1980): alegria, tristeza, medo, raiva, aversão, surpresa, confiança e antecipação.
+- Em inglês, as associações foram anotadas por pessoas; em português e francês, são traduções automáticas (Google Translate, 2022), por isso os resultados nessas línguas são **experimentais**.
+- Mede-se a intensidade (ocorrências por 1000 palavras) e a presença (% de frases), por capítulo, por fase (início, desenvolvimento, conclusão) e por canal (narração e discurso direto, este detetado pela tipografia).
+- Uma regra simples ignora palavras precedidas de negação. A ironia e as metáforas não são detetadas.
+- Nada disto mede o que o autor sentiu ou o que o leitor vai sentir.
+
+O EmoLex não pode ser redistribuído: `python -m livros_pln lexicos` descarrega-o para a pasta `lexicos/` (fora do GitHub), ou para a pasta indicada em `config/pastas.toml`. O GitHub Actions descarrega-o e guarda-o em cache. Sem o léxico, as emoções ficam «desconhecido».
+
+**Capítulos.** Os títulos do texto («Capítulo», «Chapitre», «Chapter», «Canto», «Chant», números romanos…) dividem o livro para a evolução emocional. Sem títulos, usam-se 20 blocos iguais.
+
+**Género literário.** Inferido por regras transparentes, em dois níveis:
+- **Forma:** prosa narrativa, verso, teatro ou narrativa epistolar.
+- **Género:** romance, novela ou conto pela extensão (convenção das regras dos prémios Nebula, SFWA); epopeia e poesia lírica no verso; ensaio.
+
+A pontuação é a fração dos critérios cumpridos, não uma probabilidade. O **género bibliográfico** (colunas `genero_bibliografico`, `genero_chave`, `fonte_genero` e `estado_genero` de `livros/metadados.csv`) nunca entra no cálculo: serve só para comparar, e fica «proposto» até ser confirmado. Com poucos livros não há validação estatística possível; a concordância com o género bibliográfico descreve o corpus.
+
 ### Instalação e testes
 
 ```bash

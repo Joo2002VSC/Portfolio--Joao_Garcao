@@ -6,6 +6,7 @@ Uso:
     python -m livros_pln analisar livros/um-livro.epub     # um livro, com resumo no terminal
     python -m livros_pln analisar https://www.gutenberg.org/ebooks/40409 --abrir
     python -m livros_pln so-indicadores camus-l-etranger   # publica só os indicadores (obras protegidas)
+    python -m livros_pln lexicos                           # descarrega o léxico de emoções NRC EmoLex
 
 Um livro é reprocessado quando muda o ficheiro, o seu dicionário de personagens, o código ou
 os parâmetros (impressão digital dos ficheiros .py do pacote e de config/). Cada resultado
@@ -29,7 +30,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import (__version__, catalogo, configuracao, estilometria, exportar, fontes, graficos, indicadores, interativo,
+from . import (__version__, capitulos, catalogo, configuracao, emocoes, estilometria, exportar, fontes, genero, graficos, indicadores, interativo,
                leitura, lingua, pagina_livros, personagens, qualidade, relatorio, sentimento)
 from .configuracao import PARAMETROS
 
@@ -139,6 +140,43 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         ind[k] = senti["indicadores"].get(k)
         if senti["estado"] != "valido":
             estados[k] = {"estado": senti["estado"], "motivo": senti["motivo"]}
+    # capítulos, emoções e tonalidade
+    divisao = capitulos.dividir(livro.paragrafos, p.capitulo_minimo_palavras, p.blocos_sem_capitulos)
+    emo = emocoes.analisar(tokens, frases, livro.paragrafos, divisao.segmento, divisao.rotulos, lg, p)
+    for k in [k for k, i in catalogo.INDICADORES.items() if i.grupo == "Emoções"] + ["frases_ambivalentes_pct",
+                                                                                     "discurso_direto_frases_pct",
+                                                                                     "concordancia_lexicos"]:
+        ind[k] = emo["indicadores"].get(k)
+        if emo["estado"] != "valido":
+            estados[k] = {"estado": emo["estado"], "motivo": emo["motivo"]}
+    seg_frase = frases.paragrafo.map(lambda i: divisao.segmento[i] if 0 <= i < len(divisao.segmento) else 0)
+    if senti["estado"] == "valido":
+        tom = emocoes.tonalidade(frases.sentimento.reset_index(drop=True), seg_frase.reset_index(drop=True),
+                                 ind.get("cobertura_lexico_pct"), p)
+    else:
+        tom = {**emocoes.tonalidade(pd.Series(dtype=float), pd.Series(dtype=int), None, p),
+               "razoes": [f"sem pontuação de sentimento: {senti['motivo']}"]}
+    for k, v in (("polaridade_intensidade", tom["intensidade"]), ("polaridade_segmentos_desvio", tom["variabilidade"]),
+                 ("frases_fortes_positivas_pct", tom["fortes_positivas_pct"]),
+                 ("frases_fortes_negativas_pct", tom["fortes_negativas_pct"]),
+                 ("tonalidade_ic_inferior", tom["ic"][0]), ("tonalidade_ic_superior", tom["ic"][1])):
+        ind[k] = v
+        if v is None:
+            estados[k] = {"estado": senti["estado"] if senti["estado"] != "valido" else qualidade.NAO_APLICAVEL,
+                          "motivo": "; ".join(tom["razoes"]) or senti["motivo"]}
+    razao = emo["indicadores"].get("alegria_tristeza_razao")
+    if razao is not None and razao == razao and tom["tom"] in ("positivo", "negativo"):
+        if (tom["tom"] == "positivo") != (razao > 1):
+            tom["razoes"].append(f"Atenção: no léxico de emoções NRC, a razão alegria/tristeza é {razao:.2f}".replace(".", ",")
+                                 + (", com mais vocabulário de tristeza do que de alegria" if razao < 1 else
+                                    ", com mais vocabulário de alegria do que de tristeza")
+                                 + ". Os dois léxicos divergem: a classificação deve ser lida com prudência.")
+    ind["tonalidade"] = tom["tom"]
+    ind["emocao_dominante"] = emo["emocao_dominante"]
+    ind["capitulos"] = divisao.n if divisao.metodo == "capítulos" else None
+    if divisao.metodo != "capítulos":
+        estados["capitulos"] = {"estado": qualidade.NAO_APLICAVEL,
+                                "motivo": f"sem títulos de capítulo detetáveis: {divisao.n} blocos iguais"}
     evol = indicadores.evolucao(tokens, frases, ents, livro.paragrafos, p)
     if bruto.get("forma") == "verso" and "dialogo_pct" in evol:
         evol["dialogo_pct"] = float("nan")
@@ -154,6 +192,7 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "frases": frases.assign(segmento=frases.frase.map(segmentos))[["frase", "segmento", "palavras", "tipo",
                                                                        "sentimento"]],
         "sentimento": {k: senti[k] for k in ("estado", "motivo", "metodo")},
+        "emocoes": emo, "tonalidade": tom, "divisao": divisao,
     }
 
     # rede de personagens
@@ -166,6 +205,14 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     if n_nos < 2:
         estados["densidade_da_rede"] = {"estado": qualidade.NAO_APLICAVEL, "motivo": "menos de duas personagens na rede"}
     ind["personagem_principal"] = pers.personagem.iloc[0] if len(pers) else None
+
+    # perfil de género literário (regras; o género bibliográfico só serve para comparar)
+    direto = pd.Series(emocoes.discurso_direto(frases, livro.paragrafos).to_numpy(), index=frases.frase.to_numpy())
+    biblio = {"genero": bruto.get("genero_bibliografico"), "chave": bruto.get("genero_chave"),
+              "fonte": bruto.get("fonte_genero"), "estado": bruto.get("estado_genero")}
+    perfil_genero = genero.inferir(ind, bruto.get("forma", "prosa"), livro.paragrafos, divisao.segmento,
+                                   genero.pronomes_na_narracao(tokens, direto), biblio)
+    ind["genero_inferido"] = perfil_genero["principal"]
 
     pasta = saida / "livros" / livro.id
     if pasta.exists():
@@ -188,6 +235,10 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     formas = tokens[tokens.alfa].minusc.value_counts().head(2000).rename_axis("forma").rename("ocorrencias")
     formas.to_csv(pasta / "formas.csv")
     pers.round(4).to_csv(pasta / "personagens.csv", index=False)
+    if emo["estado"] == "valido":
+        emo["segmentos"].round(4).to_csv(pasta / "emocoes-por-capitulo.csv")
+        emo["fases"].round(4).to_csv(pasta / "emocoes-por-fase.csv")
+        emo["canais"].round(4).to_csv(pasta / "emocoes-narracao-dialogo.csv")
     lig.to_csv(pasta / "ligacoes.csv", index=False)
 
     registo = {
@@ -195,7 +246,14 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "autor": meta.get("autor"), "ano": meta.get("ano"),
         "lingua": lg, "lingua_nome": lingua.NOMES[lg], "modelo_spacy": amb["modelo"]["nome"],
         "confianca_lingua": {k: round(v, 4) for k, v in pontuacao.items()},
-        "forma": bruto.get("forma", "prosa"), "metodo_sentimento": senti["metodo"], "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
+        "forma": bruto.get("forma", "prosa"), "metodo_sentimento": senti["metodo"],
+        "metodo_emocoes": emo["metodo"], "lexico_emocoes": emo["lexico"],
+        "tonalidade": {k: _json(v) if not isinstance(v, list) else [_json(x) for x in v] for k, v in tom.items()},
+        "emocoes": {"estado": emo["estado"], "motivo": emo["motivo"], "dominante": emo["emocao_dominante"],
+                    "presenca_pct": {k: round(v, 2) for k, v in emo["presenca"].items()},
+                    "mudancas": [{**m, "variacao": round(m["variacao"], 4)} for m in emo["mudancas"]]},
+        "divisao": {"metodo": divisao.metodo, "segmentos": divisao.n, "rotulos": divisao.rotulos},
+        "genero": json.loads(json.dumps(perfil_genero, default=_json), parse_constant=lambda c: None), "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
         "metadados": meta,
         "indicadores": {k: _json(round(v, 4) if isinstance(v, float) else v) for k, v in ind.items()},
         "estados": estados,
@@ -217,7 +275,16 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     exportar.livro(registo, {"Frequências": freq, "Classes gramaticais": classes.round(3), "Entidades": tab_ents,
                              "Personagens": pers.round(4), "Ligações": lig, "Evolução": evol.round(4),
                              "Colocações": extra["colocacoes"].round(3), "Palavras-chave": extra["palavras_chave"].round(4),
-                             "Tempos verbais": extra["tempos"].round(3), "Sentimento (extremos)": extra["extremos"].round(4)},
+                             "Tempos verbais": extra["tempos"].round(3), "Sentimento (extremos)": extra["extremos"].round(4),
+                             **({"Emoções por capítulo": emo["segmentos"].round(4).reset_index(),
+                                 "Emoções por fase": emo["fases"].round(4).reset_index(names="fase"),
+                                 "Narração e diálogo": emo["canais"].round(4).reset_index(names="canal")}
+                                if emo["estado"] == "valido" else {}),
+                             "Género (critérios)": pd.DataFrame(
+                                 [{"nível": n, "categoria": c["nome"], "pontuação": c["pontuacao"],
+                                   "critério": x["criterio"], "cumprido": x["cumprido"], "essencial": x["essencial"]}
+                                  for n, chave in (("forma", "formas"), ("género", "generos"))
+                                  for c in perfil_genero[chave] for x in c["criterios"]])},
                    pasta / f"{livro.id}.xlsx")
     return registo
 
@@ -390,6 +457,13 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_analisar(argv[1:])
     if argv and argv[0] == "so-indicadores":
         return cmd_so_indicadores(argv[1:])
+    if argv and argv[0] == "lexicos":
+        destino = emocoes.obter()
+        if destino is None:
+            print(f"✗ Não foi possível descarregar o léxico NRC EmoLex de {emocoes.URL}", file=sys.stderr)
+            return 1
+        print(f"✓ Léxico NRC EmoLex em {destino} (uso em investigação; não pode ser redistribuído nem ir para o GitHub)")
+        return 0
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     livros, resultados = configuracao.pastas()

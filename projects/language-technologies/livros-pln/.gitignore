@@ -6,3 +6,5 @@ venv/
 .DS_Store
 # pastas de trabalho locais (ver config/pastas.exemplo.toml)
 config/pastas.toml
+# léxicos descarregados (NRC EmoLex: não podem ser redistribuídos)
+lexicos/

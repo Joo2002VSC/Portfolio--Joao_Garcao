@@ -247,6 +247,42 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
                       ["Polaridade", "Compound", "Frase"]), ""]
     s += [_definicoes(sen), ""]
 
+    # 10.1 Tonalidade e emoções; 10.2 Género literário
+    t = r.get("tonalidade") or {}
+    tom_k = [k for k, x in INDICADORES.items() if x.grupo == "Tonalidade emocional"]
+    emo_k = [k for k, x in INDICADORES.items() if x.grupo == "Emoções"]
+    s += ["### Tonalidade emocional (experimental)", "",
+          f"**{t.get('rotulo', 'Indeterminado')}**. " + " ".join(x[:1].upper() + x[1:] + "." for x in t.get("razoes", [])), "",
+          "Classificação interpretativa: polaridade por frase do método de sentimento, média por capítulo e intervalo de "
+          "confiança a 95 % por bootstrap dos capítulos. Positivo/negativo: intervalo inteiro acima de +0,05 / abaixo de "
+          "−0,05; misto: pelo menos 10 % de frases fortemente positivas e 10 % fortemente negativas; neutro: intervalo "
+          "entre −0,05 e +0,05; indeterminado nos restantes casos. Não validada com anotação humana.", "",
+          _bloco(r, tom_k), ""]
+    em = r.get("emocoes") or {}
+    s += ["### Emoções (léxico NRC, modelo de Plutchik)", ""]
+    if em.get("estado") == "valido":
+        s += [f"Léxico: {r.get('metodo_emocoes')}. Emoção mais frequente: **{em.get('dominante') or '—'}**. Por "
+              "capítulo, por fase (início, desenvolvimento, conclusão) e por canal (narração e discurso direto): "
+              "[`emocoes-por-capitulo.csv`](emocoes-por-capitulo.csv), [`emocoes-por-fase.csv`](emocoes-por-fase.csv), "
+              "[`emocoes-narracao-dialogo.csv`](emocoes-narracao-dialogo.csv).", "", _bloco(r, emo_k), ""]
+    else:
+        s += [f"Não calculadas: {em.get('motivo') or 'sem dados'}.", ""]
+    g = r.get("genero") or {}
+    if g:
+        bib = g.get("bibliografico") or {}
+        s += ["### Género literário inferido (exploratório)", "",
+              f"Forma: **{g.get('forma_principal') or '—'}**. Género inferido: **{g.get('principal') or 'sem categoria clara'}**"
+              + (f". Género bibliográfico ({bib.get('estado')}): **{bib.get('genero')}** — fonte: {bib.get('fonte')}"
+                 if bib.get("genero") else "") + ".", ""]
+        s += [f"- {x}" for x in g.get("tracos", [])] + [""]
+        linhas = [[c["nome"], num(c["pontuacao"], 2), "; ".join(("✓ " if x["cumprido"] else "✗ " if x["cumprido"] is False
+                                                                 else "– ") + x["criterio"] for x in c["criterios"])]
+                  for c in g.get("formas", []) + g.get("generos", []) if c["pontuacao"]]
+        s += [_tabela(linhas, ["Categoria", "Pontuação de regras", "Critérios"]), "",
+              "Regras transparentes sobre indicadores do texto; a pontuação é a fração dos critérios cumpridos (0 se "
+              "falhar um critério essencial), não uma probabilidade. Limiares de extensão: regras dos prémios Nebula "
+              "(SFWA). O género bibliográfico não entra no cálculo.", ""]
+
     # 11. Outros conceitos de PLN
     s += ["## 11. Outros conceitos de PLN", "", "### Tipos de frase", "",
           _bloco(r, ["frases_interrogativas_pct", "frases_exclamativas_pct"]), ""]
@@ -286,7 +322,8 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
     s += [f"- {c}" for c in comentarios(r, evol)] + [""]
 
     # 12. Limitações
-    usados = lex + ext + sint + ["legibilidade", "dialogo_pct", "entidades_pessoa", "densidade_lexical_pct"] + sen + \
+    usados = [k for k, x in INDICADORES.items() if x.grupo in ("Tonalidade emocional", "Emoções")] + \
+        lex + ext + sint + ["legibilidade", "dialogo_pct", "entidades_pessoa", "densidade_lexical_pct"] + sen + \
         morf + zh + ["colocacoes", "palavras_chave", "arco_sentimento"]
     todos = {**INDICADORES, **catalogo.METODOS}
     s += ["## 14. Limitações metodológicas", ""]

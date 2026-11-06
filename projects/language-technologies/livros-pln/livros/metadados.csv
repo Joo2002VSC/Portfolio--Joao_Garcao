@@ -1,6 +1,6 @@
-ficheiro,titulo,autor,ano,lingua,fonte
-eca-de-queiros-os-maias.txt,Os Maias,Eça de Queirós,1888,,
-carroll-alice.txt,Alice's Adventures in Wonderland,Lewis Carroll,1865,,"Project Gutenberg, através do corpus NLTK"
-camoes-os-lusiadas.txt,Os Lusíadas,Luís de Camões,1572,,
-homere-l-iliade.txt,L'Iliade,Homère,,fr,"Project Gutenberg, n.º 14285 (tradução de Leconte de Lisle)"
-homere-l-odyssee.txt,L'Odyssée,Homère,,fr,"Project Gutenberg, n.º 14286 (tradução de Leconte de Lisle)"
+ficheiro,titulo,autor,ano,lingua,fonte,genero_bibliografico,genero_chave,fonte_genero,estado_genero
+eca-de-queiros-os-maias.txt,Os Maias,Eça de Queirós,1888,,,Romance,romance,Project Gutenberg n.º 40409 (assunto LoC: «Portugal -- Fiction»); subtítulo «Episódios da vida romântica»,proposto
+carroll-alice.txt,Alice's Adventures in Wonderland,Lewis Carroll,1865,,"Project Gutenberg, através do corpus NLTK",Ficção de fantasia infantojuvenil,narrativa,"Project Gutenberg n.º 11 (assuntos LoC: «Fantasy fiction», «Children's stories»)",proposto
+camoes-os-lusiadas.txt,Os Lusíadas,Luís de Camões,1572,,,Epopeia,epopeia,"Project Gutenberg n.º 3333 (assunto LoC: «Epic poetry, Portuguese»)",proposto
+homere-l-iliade.txt,L'Iliade,Homère,,fr,"Project Gutenberg, n.º 14285 (tradução de Leconte de Lisle)",Epopeia (tradução francesa em prosa),epopeia,"Project Gutenberg n.º 14285 (assunto LoC: «Epic poetry, Greek -- Translations into French»)",proposto
+homere-l-odyssee.txt,L'Odyssée,Homère,,fr,"Project Gutenberg, n.º 14286 (tradução de Leconte de Lisle)",Epopeia (tradução francesa em prosa),epopeia,"Project Gutenberg n.º 14286 (assunto LoC: «Epic poetry, Greek -- Translations into French»)",proposto

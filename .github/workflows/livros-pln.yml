@@ -58,6 +58,15 @@ jobs:
       - name: Instalar modelos spaCy (pt, fr, en)
         run: bash scripts/instalar_modelos.sh
 
+      - name: Léxico de emoções NRC EmoLex (descarregado; não pode ser redistribuído)
+        uses: actions/cache@v4
+        with:
+          path: projects/language-technologies/livros-pln/lexicos
+          key: nrc-emolex-v0.92
+
+      - name: Descarregar o léxico, se não estiver em cache
+        run: python -m livros_pln lexicos || echo "Sem léxico: as emoções ficam «desconhecido»."
+
       - name: Testes
         run: python -m pytest -q
 

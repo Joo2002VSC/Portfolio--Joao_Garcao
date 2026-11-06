@@ -42,6 +42,10 @@ NOTAS = {
                                   "os tempos e os modos não têm a mesma divisão em todas as línguas.",
     "Leis do vocabulário": "Ajustes em escala logarítmica; o R² indica a qualidade do ajuste, não a qualidade do "
                            "texto. O expoente de Heaps depende da extensão e da língua.",
+    "Tonalidade emocional": "Classificação experimental a partir da polaridade por frase (VADER e adaptações) e da sua "
+                            "distribuição por capítulo; não validada com anotação humana.",
+    "Emoções": "Léxico NRC EmoLex (modelo de Plutchik): anotação humana em inglês, tradução automática em português e "
+               "francês (experimental). Mede associações de palavras, não emoções vividas.",
     "Sentimento": "Polaridade do vocabulário (positivo, negativo, neutro), não emoções nem o tom narrativo; "
                   "léxicos diferentes em cada língua, pensados para textos curtos.",
 }
@@ -64,6 +68,10 @@ DEPENDEM_DA_EXTENSAO = {"ttr", "vocabulario", "lemas_distintos", "hapax_pct", "f
 EIXOS = [k for _, ks, _ in GRUPOS for k in ks]
 CLASSES_COMPOSICAO = [("NOUN", "Substantivos"), ("VERB", "Verbos"), ("ADJ", "Adjetivos"), ("ADV", "Advérbios"),
                       ("PRON", "Pronomes"), ("PROPN", "Nomes próprios")]
+TOM_CURTO = {"positivo": "Positiva", "negativo": "Negativa", "neutro": "Neutra", "misto": "Mista",
+             "indeterminado": "Indeterminada"}
+NOMES_EMOCOES = {"alegria": "Alegria", "tristeza": "Tristeza", "medo": "Medo", "raiva": "Raiva", "aversao": "Aversão",
+                 "surpresa": "Surpresa", "confianca": "Confiança", "antecipacao": "Antecipação"}
 NOMES_LINGUAS = {"pt": "Português", "fr": "Francês", "en": "Inglês"}
 
 
@@ -105,6 +113,12 @@ def dados(registos: list[dict]) -> dict:
             "classes": {c: i.get(f"pos_{c.lower()}_por_1000") for c, _ in CLASSES_COMPOSICAO},
             "avisos": [a["mensagem"] for a in r.get("qualidade", [])],
             "restrito": bool(r.get("restrito")), "nota_restricao": r.get("nota_restricao"),
+            "tom": i.get("tonalidade"), "tom_ic": (r.get("tonalidade") or {}).get("ic"),
+            "tom_media": (r.get("tonalidade") or {}).get("media"),
+            "tom_razoes": (r.get("tonalidade") or {}).get("razoes", []),
+            "emocao_dominante": i.get("emocao_dominante"),
+            "genero": (r.get("genero") or {}).get("principal"), "forma_inferida": (r.get("genero") or {}).get("forma_principal"),
+            "genero_bib": ((r.get("genero") or {}).get("bibliografico") or {}),
         })
     indicadores = {k: {"nome": maiusculas(catalogo.INDICADORES[k].nome), "unidade": catalogo.INDICADORES[k].unidade,
                        "casas": catalogo.INDICADORES[k].casas, "entre_linguas": catalogo.INDICADORES[k].entre_linguas,
@@ -161,7 +175,7 @@ def _cartao(l: dict) -> str:
                        f'<a href="livros/{e(l["id"])}/{e(l["id"])}.xlsx">Excel</a></p>')
     return f"""<article class="livro" data-id="{e(l['id'])}" data-titulo="{e(l['titulo'].lower())}"
  data-autor="{e((l['autor'] or '').lower())}" data-lingua="{e(l['lingua'])}" data-seculo="{e(l['seculo'] or '')}"
- data-forma="{e(l['forma'])}" data-ano="{e(l['ano'] or '')}" data-palavras="{l['valores'].get('palavras') or 0}"
+ data-forma="{e(l['forma'])}" data-tom="{e(l.get('tom') or '')}" data-genero="{e(l.get('genero') or '')}" data-ano="{e(l['ano'] or '')}" data-palavras="{l['valores'].get('palavras') or 0}"
  data-mtld="{l['valores'].get('mtld') if l['valores'].get('mtld') is not None else ''}"
  data-frase="{l['valores'].get('frase_mediana') if l['valores'].get('frase_mediana') is not None else ''}">
  {capa_tag}
@@ -171,6 +185,9 @@ def _cartao(l: dict) -> str:
   <p class="etiquetas"><span>{e(l['idioma'])}</span><span>{e(maiusculas(l['forma']))}</span></p>
   <h3>{titulo}</h3>
   <p class="meta">{meta}</p>
+  <p class="perfil-livro"><span title="Classificação experimental da tonalidade emocional">Tonalidade <b>{e(TOM_CURTO.get(l.get("tom") or "", "—"))}</b></span>
+   <span title="Género inferido pelo conteúdo (regras transparentes)">Género inferido <b>{e(l.get("genero") or "—")}</b></span>
+   {f'<span title="Género bibliográfico ({e(l["genero_bib"].get("estado") or "proposto")}) · fonte: {e(l["genero_bib"].get("fonte") or "")}">Bibliográfico <b>{e(l["genero_bib"]["genero"])}</b></span>' if l.get("genero_bib", {}).get("genero") else ""}</p>
   <dl class="resumo-livro">
    <div><dt>Palavras</dt><dd>{_valor(l, 'palavras')}</dd></div>
    <div><dt>Frases</dt><dd>{_valor(l, 'frases')}</dd></div>
@@ -208,6 +225,8 @@ def catalogo_html(d: dict) -> str:
  <div class="campo"><label for="f-autor">Autor</label><select id="f-autor"><option value="">Todos</option>{_opcoes([(a.lower(), a) for a in autores])}</select></div>
  <div class="campo"><label for="f-seculo">Período</label><select id="f-seculo"><option value="">Todos</option>{_opcoes([(s, s) for s in seculos])}</select></div>
  <div class="campo"><label for="f-forma">Forma</label><select id="f-forma"><option value="">Prosa e verso</option>{_opcoes([(f, maiusculas(f)) for f in formas])}</select></div>
+ <div class="campo"><label for="f-tom">Tonalidade</label><select id="f-tom"><option value="">Todas</option>{_opcoes([(t, TOM_CURTO[t]) for t in TOM_CURTO if any(l.get("tom") == t for l in livros)])}</select></div>
+ <div class="campo"><label for="f-genero">Género inferido</label><select id="f-genero"><option value="">Todos</option>{_opcoes([(g, g) for g in sorted({l["genero"] for l in livros if l.get("genero")})])}</select></div>
  <div class="campo"><label for="f-ordem">Ordenar por</label><select id="f-ordem">
   <option value="titulo">Título (A–Z)</option><option value="autor">Autor (A–Z)</option>
   <option value="ano">Ano de publicação</option><option value="palavras">Número de palavras</option>
@@ -218,6 +237,68 @@ def catalogo_html(d: dict) -> str:
 <p class="aviso-ordem" id="f-aviso" hidden></p>
 <div class="catalogo" id="lista-livros">{cartoes}</div>
 <p class="vazio" id="f-vazio" hidden>Nenhum livro corresponde aos filtros. <button type="button" class="limpar" data-limpar>Limpar filtros</button></p>
+"""
+
+
+def emocional_html(d: dict, offline: bool) -> str:
+    """Tabela da tonalidade e gráficos (intervalos de confiança e distribuição das emoções), com os dados embutidos."""
+    linhas = ""
+    for l in sorted(d["livros"], key=lambda l: (l["idioma"] or "", l["titulo"].lower())):
+        ic = l.get("tom_ic") or [None, None]
+        ic_txt = f"[{_fmt(ic[0], 3)}; {_fmt(ic[1], 3)}]" if ic and ic[0] is not None else "—"
+        razao = html.escape((l.get("tom_razoes") or [""])[0])
+        dom = NOMES_EMOCOES.get(l.get("emocao_dominante") or "", "—")
+        linhas += (f'<tr data-id="{html.escape(l["id"])}"><th scope="row">{html.escape(l["titulo"])}<small>{html.escape(l["idioma"] or "")}</small></th>'
+                   f'<td><span class="tom-etiqueta tom-{html.escape(l.get("tom") or "na")}" title="{razao}">'
+                   f'{html.escape(TOM_CURTO.get(l.get("tom") or "", "—"))}</span></td><td class="num">{ic_txt}</td>'
+                   f'<td class="num">{_valor(l, "polaridade_intensidade")}</td><td class="num">{_valor(l, "alegria_tristeza_razao")}</td>'
+                   f'<td>{html.escape(dom)}</td></tr>')
+    return f"""
+<div class="tabela"><table class="perfil-tabela"><caption class="sr">Tonalidade emocional por livro</caption>
+<thead><tr><th scope="col">Livro</th><th scope="col">Tonalidade</th><th scope="col">IC 95 % da polaridade média</th>
+<th scope="col">Intensidade</th><th scope="col">Alegria / tristeza</th><th scope="col">Emoção mais frequente</th></tr></thead>
+<tbody>{linhas}</tbody></table></div>
+<p class="nota">Passe o rato pela tonalidade para ver a razão da classificação. Positiva ou negativa: o intervalo de confiança
+inteiro fica acima de +0,05 ou abaixo de −0,05. Mista: pelo menos 10 % de frases fortemente positivas e 10 % fortemente
+negativas. Neutra: intervalo entre −0,05 e +0,05. Indeterminada: os dados não permitem concluir. Léxicos diferentes por
+língua: compare só obras da mesma língua.</p>
+<div class="par-graficos">
+<figure class="figura"><div id="grafico-tonalidade" style="height:380px" role="img"
+ aria-label="Polaridade média e intervalo de confiança a 95 % por livro"></div>
+ <p class="nota">Ponto: polaridade média dos capítulos; barra: intervalo de confiança a 95 % (bootstrap). Faixa central:
+ −0,05 a +0,05.</p></figure>
+<figure class="figura"><div id="grafico-emocoes" style="height:380px" role="img"
+ aria-label="Distribuição das oito emoções do vocabulário por livro"></div>
+ <p class="nota">Percentagem de cada emoção no total das ocorrências emocionais do livro (léxico NRC). Em português e francês,
+ léxico traduzido automaticamente: experimental.</p></figure>
+</div>
+"""
+
+
+def genero_html(d: dict) -> str:
+    linhas, concorda, comparaveis = "", 0, 0
+    for l in sorted(d["livros"], key=lambda l: l["titulo"].lower()):
+        b = l.get("genero_bib") or {}
+        c = b.get("concorda")
+        if c is not None:
+            comparaveis += 1
+            concorda += bool(c)
+        estado = "confirmado" if b.get("estado") == "confirmado" else "proposto"
+        linhas += (f'<tr><th scope="row">{html.escape(l["titulo"])}<small>{html.escape(l["idioma"] or "")}</small></th>'
+                   f'<td>{html.escape(l.get("forma_inferida") or "—")}</td><td><b>{html.escape(l.get("genero") or "—")}</b></td>'
+                   f'<td>{html.escape(b.get("genero") or "—")}<small title="{html.escape(b.get("fonte") or "")}">'
+                   f'{estado if b.get("genero") else ""}</small></td>'
+                   f'<td>{ {True: "✓ concorda", False: "≠ diverge", None: "—"}[c] }</td></tr>')
+    resumo = (f"A inferência concorda com o género bibliográfico em {concorda} de {comparaveis} livros. Com tão poucos "
+              "livros, isto descreve o corpus; não é uma validação estatística." if comparaveis else "")
+    return f"""
+<div class="tabela"><table class="perfil-tabela"><caption class="sr">Género inferido e género bibliográfico por livro</caption>
+<thead><tr><th scope="col">Livro</th><th scope="col">Forma inferida</th><th scope="col">Género inferido</th>
+<th scope="col">Género bibliográfico</th><th scope="col">Comparação</th></tr></thead><tbody>{linhas}</tbody></table></div>
+<p class="nota">{resumo} O género inferido descreve o texto analisado (a forma desta edição e a sua extensão): uma tradução em
+prosa de uma epopeia é lida como prosa narrativa, e uma obra mais curta do que a convenção de extensão (regras dos prémios
+Nebula: romance ≥ 40 000 palavras) é lida como novela. Os géneros bibliográficos estão marcados como «proposto» até serem
+confirmados manualmente em <code>livros/metadados.csv</code>. Os critérios de cada livro estão na sua análise individual.</p>
 """
 
 
@@ -302,14 +383,15 @@ const L=Object.fromEntries(D.livros.map(l=>[l.id,l])), I=D.indicadores;
 const nf=(v,c)=>{if(v==null||Number.isNaN(v))return"—";const [i,d]=Math.abs(v).toFixed(c).split(".");
   return (v<0&&Number(Math.abs(v).toFixed(c))!==0?"−":"")+i.replace(/\B(?=(\d{3})+(?!\d))/g," ")+(d?","+d:"");};
 const $=s=>document.querySelector(s), cat=$("#lista-livros"), cartoes=[...cat.querySelectorAll(".livro")];
-const f={texto:$("#f-texto"),lingua:$("#f-lingua"),autor:$("#f-autor"),seculo:$("#f-seculo"),forma:$("#f-forma"),ordem:$("#f-ordem")};
+const f={texto:$("#f-texto"),lingua:$("#f-lingua"),autor:$("#f-autor"),seculo:$("#f-seculo"),forma:$("#f-forma"),tom:$("#f-tom"),genero:$("#f-genero"),ordem:$("#f-ordem")};
 const sem=s=>(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 function visiveis(){return cartoes.filter(c=>!c.hidden).map(c=>L[c.dataset.id]);}
 function aplicar(){
   const t=sem(f.texto.value.trim());
   cartoes.forEach(c=>{const ok=(!t||sem(c.dataset.titulo).includes(t)||sem(c.dataset.autor).includes(t))
     &&(!f.lingua.value||c.dataset.lingua===f.lingua.value)&&(!f.autor.value||c.dataset.autor===f.autor.value)
-    &&(!f.seculo.value||c.dataset.seculo===f.seculo.value)&&(!f.forma.value||c.dataset.forma===f.forma.value);c.hidden=!ok;});
+    &&(!f.seculo.value||c.dataset.seculo===f.seculo.value)&&(!f.forma.value||c.dataset.forma===f.forma.value)
+    &&(!f.tom.value||c.dataset.tom===f.tom.value)&&(!f.genero.value||c.dataset.genero===f.genero.value);c.hidden=!ok;});
   const o=f.ordem.value, num=(c,k)=>c.dataset[k]===""?null:parseFloat(c.dataset[k]);
   const cmp={titulo:(a,b)=>a.dataset.titulo.localeCompare(b.dataset.titulo,"pt"),autor:(a,b)=>a.dataset.autor.localeCompare(b.dataset.autor,"pt"),
     ano:(a,b)=>(num(a,"ano")??9999)-(num(b,"ano")??9999),palavras:(a,b)=>num(b,"palavras")-num(a,"palavras"),
@@ -319,9 +401,9 @@ function aplicar(){
   $("#f-vazio").hidden=n>0;
   const langs=new Set(visiveis().map(l=>l.lingua)), av=$("#f-aviso");
   if((o==="mtld"||o==="frase")&&langs.size>1){av.hidden=false;av.textContent=o==="mtld"?"Atenção: o MTLD depende da língua; a ordenação só é comparável entre livros da mesma língua.":"Atenção: a extensão das frases depende da língua e da pontuação de cada edição; compare com cautela livros em línguas diferentes.";}else av.hidden=true;
-  comparar(); explorar();
+  comparar(); explorar(); perfis();
 }
-function limpar(){f.texto.value="";["lingua","autor","seculo","forma"].forEach(k=>f[k].value="");f.ordem.value="titulo";
+function limpar(){f.texto.value="";["lingua","autor","seculo","forma","tom","genero"].forEach(k=>f[k].value="");f.ordem.value="titulo";
   document.querySelectorAll(".comparar input").forEach(i=>i.checked=false);aplicar();}
 Object.values(f).forEach(el=>el.addEventListener(el.tagName==="INPUT"?"input":"change",aplicar));
 document.querySelectorAll("#f-limpar,[data-limpar]").forEach(b=>b.addEventListener("click",limpar));
@@ -394,6 +476,33 @@ function comparar(){
   alvo.innerHTML=h;
 }
 const CORES={pt:"#7A4E2D",en:"#B8893E",fr:"#1E1915"}, SIMB={pt:"circle",en:"diamond",fr:"square"};
+
+const EMO=[["alegria","Alegria","#B8893E"],["confianca","Confiança","#9C6B45"],["antecipacao","Antecipação","#C9A66B"],
+ ["surpresa","Surpresa","#D9C7A3"],["tristeza","Tristeza","#1E1915"],["medo","Medo","#5C4A3A"],["raiva","Raiva","#A0583A"],
+ ["aversao","Aversão","#8A8466"]];
+function perfis(){
+  if(!window.Plotly)return;
+  const vis=visiveis();
+  document.querySelectorAll(".perfil-tabela tr[data-id]").forEach(tr=>{tr.hidden=!vis.some(l=>l.id===tr.dataset.id);});
+  const base={paper_bgcolor:"#F4EEE3",plot_bgcolor:"#F4EEE3",font:{family:"Source Sans 3, Arial",color:"#1E1915",size:13},
+    hoverlabel:{bgcolor:"#1E1915",font:{color:"#F3EADB"}},separators:", "};
+  const com=vis.filter(l=>l.tom_ic&&l.tom_ic[0]!=null&&l.tom_media!=null);
+  const tit=l=>l.titulo.length>24?l.titulo.slice(0,23)+"…":l.titulo;
+  Plotly.react("grafico-tonalidade",[{type:"scatter",mode:"markers",y:com.map(tit),x:com.map(l=>l.tom_media),
+    error_x:{type:"data",symmetric:false,array:com.map(l=>l.tom_ic[1]-l.tom_media),arrayminus:com.map(l=>l.tom_media-l.tom_ic[0]),color:"#7A4E2D",thickness:2,width:6},
+    marker:{size:12,color:com.map(l=>CORES[l.lingua]||"#6E5E4E"),symbol:com.map(l=>SIMB[l.lingua]||"circle"),line:{color:"#F4EEE3",width:1.5}},
+    text:com.map(l=>`${l.titulo} · ${l.idioma}<br>${(l.tom_razoes||[""])[0]}`),hovertemplate:"%{text}<extra></extra>"}],
+    {...base,margin:{l:10,r:10,t:10,b:44},xaxis:{title:{text:"polaridade média dos capítulos (−1 a +1)",font:{color:"#6E5E4E"}},zeroline:true,zerolinecolor:"#6E5E4E",gridcolor:"#E2D6C2"},
+     yaxis:{automargin:true,gridcolor:"#E2D6C2"},shapes:[{type:"rect",xref:"x",yref:"paper",x0:-0.05,x1:0.05,y0:0,y1:1,fillcolor:"#E2D6C2",opacity:.6,line:{width:0},layer:"below"}]},
+    {displaylogo:false,responsive:true});
+  const em=vis.filter(l=>EMO.some(([k])=>l.valores["emocao_"+k+"_por_1000"]!=null));
+  const tot=l=>EMO.reduce((a,[k])=>a+(l.valores["emocao_"+k+"_por_1000"]||0),0);
+  Plotly.react("grafico-emocoes",EMO.map(([k,n,c])=>({type:"bar",orientation:"h",name:n,y:em.map(tit),
+    x:em.map(l=>{const t=tot(l);return t?100*(l.valores["emocao_"+k+"_por_1000"]||0)/t:null;}),marker:{color:c},
+    hovertemplate:`<b>%{y}</b><br>${n}: %{x:.1f} % das ocorrências emocionais<extra></extra>`})),
+    {...base,barmode:"stack",margin:{l:10,r:10,t:10,b:44},xaxis:{title:{text:"% das ocorrências emocionais",font:{color:"#6E5E4E"}},range:[0,100],gridcolor:"#E2D6C2"},
+     yaxis:{automargin:true},legend:{orientation:"h",y:-0.22,x:0}},{displaylogo:false,responsive:true});
+}
 function explorar(){
   if(!window.Plotly)return;
   const x=$("#e-x").value,y=$("#e-y").value, vis=visiveis(), langs=[...new Set(vis.map(l=>l.lingua))];
@@ -428,6 +537,18 @@ aplicar();
 """
 
 CSS = """
+
+.perfil-livro{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 0 12px;font-family:var(--ui);font-size:13px;color:#6E5E4E}
+.perfil-livro b{color:#1E1915;font-weight:600}
+.perfil-tabela{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:15px}
+.perfil-tabela th,.perfil-tabela td{padding:9px 10px;border-bottom:1px solid #E2D6C2;text-align:left;vertical-align:top}
+.perfil-tabela thead th{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:#6E5E4E;border-bottom:2px solid #1E1915}
+.perfil-tabela th small,.perfil-tabela td small{display:block;color:#6E5E4E;font-size:12.5px;font-weight:400}
+.perfil-tabela td.num{font-variant-numeric:tabular-nums}
+.tom-etiqueta{display:inline-block;padding:2px 9px;border:1px solid #D9C7A3;font-weight:600}
+.tom-positivo{background:#B8893E;color:#1E1915;border-color:#B8893E}.tom-negativo{background:#1E1915;color:#F4EEE3;border-color:#1E1915}
+.tom-misto{background:#7A4E2D;color:#F4EEE3;border-color:#7A4E2D}.tom-neutro{background:#F4EEE3}.tom-indeterminado{color:#6E5E4E;border-style:dashed}
+.par-graficos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:26px;margin-top:18px}
 .restrito{font-family:var(--ui);font-size:14px;color:var(--suave);margin:0;padding:8px 0;border-top:1px dashed var(--linha)}
 .temas{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 14px}
 .rotulo-temas{font-family:var(--ui);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--suave);margin-right:4px}
@@ -534,6 +655,12 @@ padding:12px;letter-spacing:0;text-transform:none}
 SECCOES = {
     "catalogo": ("Catálogo", "Os livros analisados, com os metadados principais e um resumo dos indicadores. Pesquise, "
                              "filtre e ordene; abra a análise detalhada de cada obra ou escolha livros para comparar."),
+    "emocional": ("Perfil emocional", "A tonalidade emocional de cada obra, com o intervalo de confiança da polaridade "
+                                      "média, e a distribuição das oito emoções do vocabulário. Classificações "
+                                      "experimentais: medem o vocabulário, não o que o autor sentiu nem o que o leitor "
+                                      "sentirá."),
+    "genero": ("Perfil de género literário", "O género inferido pelo conteúdo, com regras transparentes, ao lado do "
+                                             "género bibliográfico, que vem de catálogos e nunca entra no cálculo."),
     "comparacao": ("Comparar livros", "Todos os indicadores da análise individual de cada livro, lado a lado e "
                                       "organizados por tema. Cada linha indica a unidade e se o indicador é comparável "
                                       "entre línguas; passe o rato pelo nome para ver a definição. Escolha os temas a "
@@ -582,6 +709,8 @@ def escrever(registos: list[dict], destino: Path, offline: bool = False):
     dados_json = json.dumps(d, ensure_ascii=False).replace("</", "<\\/")
     extras = {
         "catalogo": catalogo_html(d),
+        "emocional": emocional_html(d, offline),
+        "genero": genero_html(d),
         "comparacao": comparacao_html(d),
         "explorador": explorador_html(d, offline),
         "metodo": glossario_html(d),

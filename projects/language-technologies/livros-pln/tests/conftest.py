@@ -49,3 +49,11 @@ Language: Portuguese
 
 Licença e outras informações que não fazem parte do livro.
 """
+
+
+@pytest.fixture(autouse=True)
+def _sem_descargas(monkeypatch):
+    """Os testes nunca descarregam o léxico NRC: usam-no só se já estiver na pasta local (ou um léxico sintético)."""
+    from livros_pln import emocoes
+    original = emocoes.obter
+    monkeypatch.setattr(emocoes, "obter", lambda descarregar=True, pasta=None: original(False, pasta))

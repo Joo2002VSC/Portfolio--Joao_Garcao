@@ -53,6 +53,14 @@ REFERENCIAS = {
     "hutto2014": "Hutto, C., & Gilbert, E. (2014). VADER: A parsimonious rule-based model for sentiment analysis of "
                  "social media text. *Proceedings of the International AAAI Conference on Web and Social Media, 8*(1), "
                  "216–225. https://doi.org/10.1609/icwsm.v8i1.14550",
+    "mohammad2013": "Mohammad, S. M., & Turney, P. D. (2013). Crowdsourcing a word–emotion association lexicon. "
+                    "*Computational Intelligence, 29*(3), 436–465.",
+    "plutchik1980": "Plutchik, R. (1980). *Emotion: A psychoevolutionary synthesis*. Harper & Row.",
+    "efron1993": "Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.",
+    "shannon1948": "Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal, "
+                   "27*(3), 379–423.",
+    "sfwa": "Science Fiction and Fantasy Writers Association. (s.d.). *Nebula rules*. "
+            "https://www.sfwa.org/nebula-awards/rules/",
     "leia": "rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA",
     "reagan2016": "Reagan, A. J., Mitchell, L., Kiley, D., Danforth, C. M., & Dodds, P. S. (2016). The emotional arcs of "
                   "stories are dominated by six basic shapes. *EPJ Data Science, 5*(1). "
@@ -84,7 +92,7 @@ class Indicador:
 GRUPOS = ["Dimensão", "Diversidade lexical", "Densidade e extensão das palavras", "Extensão das frases",
           "Complexidade sintática", "Classes gramaticais", "Legibilidade", "Pontuação", "Discurso e entidades",
           "Rede de personagens", "Tipos de frase", "Morfologia verbal e pessoa", "Leis do vocabulário",
-          "Sentimento"]
+          "Sentimento", "Tonalidade emocional", "Emoções"]
 
 _D = "Dimensão"
 _L = "Diversidade lexical"
@@ -100,6 +108,8 @@ _T = "Tipos de frase"
 _M = "Morfologia verbal e pessoa"
 _Z = "Leis do vocabulário"
 _SE = "Sentimento"
+_TO = "Tonalidade emocional"
+_EM = "Emoções"
 
 POR_1000 = "ocorrências por 1000 palavras"
 
@@ -398,6 +408,89 @@ INDICADORES.update({
         "% das palavras", "Indicador de qualidade: abaixo de ~5 %, o sentimento assenta em muito poucas palavras.",
         "Conta formas exatas (sem lematização), como o próprio VADER.", casas=1, entre_linguas=False),
 })
+
+# Tonalidade emocional (a partir da polaridade por frase do método de sentimento) e emoções (NRC EmoLex)
+_TOM = ("Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta "
+        "na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o "
+        "narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá.")
+_EMO = ("Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o "
+        "léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia "
+        "afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. "
+        "Léxicos diferentes por língua: compare só obras da mesma língua.")
+INDICADORES.update({
+    "polaridade_intensidade": Indicador(
+        "Intensidade da polaridade", _TO, "Média do valor absoluto da polaridade das frases pontuadas.", "0 a 1",
+        "Distingue um livro neutro por ausência de emoção (valor baixo) de um livro neutro por equilíbrio entre "
+        "frases muito positivas e muito negativas (valor alto).", _TOM, "média de |compound|",
+        ("hutto2014",), 3, False),
+    "polaridade_segmentos_desvio": Indicador(
+        "Oscilação entre capítulos", _TO, "Desvio-padrão da polaridade média dos capítulos (ou blocos) do livro.",
+        "desvio-padrão", "Valores altos indicam capítulos com tonalidades muito diferentes; baixos, uma tonalidade estável.",
+        _TOM + " Depende do número e da extensão dos capítulos.", "desvio-padrão das médias por segmento",
+        ("hutto2014",), 3, False),
+    "frases_fortes_positivas_pct": Indicador(
+        "Frases fortemente positivas", _TO, "Frases com polaridade ≥ 0,5.", "% das frases pontuadas",
+        "Momentos de vocabulário claramente positivo.", _TOM, "frases com compound ≥ 0,5 ÷ frases pontuadas × 100",
+        ("hutto2014",), 1, False),
+    "frases_fortes_negativas_pct": Indicador(
+        "Frases fortemente negativas", _TO, "Frases com polaridade ≤ −0,5.", "% das frases pontuadas",
+        "Momentos de vocabulário claramente negativo.", _TOM, "frases com compound ≤ −0,5 ÷ frases pontuadas × 100",
+        ("hutto2014",), 1, False),
+    "tonalidade_ic_inferior": Indicador(
+        "Polaridade média: limite inferior (IC 95 %)", _TO,
+        "Limite inferior do intervalo de confiança a 95 % da polaridade média dos capítulos, por bootstrap.",
+        "−1 a +1", "Com o limite superior, mostra a incerteza da tonalidade: um intervalo largo pede prudência.",
+        _TOM + " O bootstrap por capítulos supõe que os capítulos são comparáveis entre si.",
+        "percentil 2,5 de 2000 médias reamostradas", ("efron1993",), 3, False),
+    "tonalidade_ic_superior": Indicador(
+        "Polaridade média: limite superior (IC 95 %)", _TO,
+        "Limite superior do intervalo de confiança a 95 % da polaridade média dos capítulos, por bootstrap.",
+        "−1 a +1", "Ver o limite inferior.", _TOM, "percentil 97,5 de 2000 médias reamostradas", ("efron1993",), 3, False),
+    "frases_ambivalentes_pct": Indicador(
+        "Frases ambivalentes", _TO, "Frases com pelo menos uma palavra positiva e uma negativa no léxico NRC.",
+        "% das frases", "Mistura de valências na mesma frase (por exemplo, «uma alegria triste»).", _EMO,
+        "frases com positivo > 0 e negativo > 0 ÷ frases × 100", ("mohammad2013",), 1, False),
+    "concordancia_lexicos": Indicador(
+        "Concordância entre léxicos", _TO, "Correlação de Spearman, por frase, entre a polaridade do método de sentimento "
+        "e a polaridade do léxico NRC (positivo − negativo ÷ positivo + negativo), nas frases com palavras de ambos.",
+        "−1 a +1", "Verificação de convergência entre dois léxicos independentes: valores baixos pedem mais prudência "
+        "na leitura da tonalidade. Não é uma validação: nenhum dos léxicos foi comparado com anotação humana aqui.",
+        _EMO, "ρ de Spearman", ("mohammad2013", "hutto2014"), 2, False),
+    "discurso_direto_frases_pct": Indicador(
+        "Frases em discurso direto", _TO, "Frases que abrem com travessão ou aspas, ou que pertencem a um parágrafo "
+        "que abre com travessão.", "% das frases",
+        "Permite separar as emoções do discurso direto (personagens) das da narração.",
+        "Heurística tipográfica: depende das convenções da edição; as falas inseridas a meio de um parágrafo e o "
+        "discurso indireto livre não são separados.", casas=1, entre_linguas=False),
+    "emocoes_intensidade_por_1000": Indicador(
+        "Intensidade emocional", _EM, "Associações a emoções (das oito categorias) por 1000 palavras.",
+        "ocorrências por 1000 palavras", "Quanto do vocabulário está associado a alguma emoção.", _EMO,
+        "Σ ocorrências das 8 emoções ÷ palavras × 1000", ("mohammad2013", "plutchik1980"), 1, False),
+    "emocoes_entropia": Indicador(
+        "Diversidade emocional", _EM, "Entropia de Shannon normalizada da distribuição pelas oito emoções.", "0 a 1",
+        "1 = as oito emoções com o mesmo peso; perto de 0 = uma emoção domina.", _EMO,
+        "−Σ q·ln q ÷ ln 8", ("shannon1948", "mohammad2013"), 3, False),
+    "emocoes_cobertura_pct": Indicador(
+        "Cobertura do léxico de emoções", _EM, "Palavras do texto (lema ou forma) que existem no léxico NRC.",
+        "% das palavras", "Indicador de qualidade: com cobertura baixa, as emoções assentam em poucas palavras.", _EMO,
+        casas=1, entre_linguas=False),
+    "emocoes_negadas_pct": Indicador(
+        "Palavras emocionais negadas", _EM, "Palavras do léxico precedidas de negação (até 3 palavras antes) e por "
+        "isso não contadas.", "% das palavras do léxico", "Indicador do efeito da regra de negação.", _EMO,
+        casas=1, entre_linguas=False),
+    "alegria_tristeza_razao": Indicador(
+        "Razão alegria / tristeza", _EM, "Ocorrências de alegria divididas pelas de tristeza.", "razão",
+        "Acima de 1 = mais vocabulário de alegria do que de tristeza.", _EMO, "alegria ÷ tristeza",
+        ("mohammad2013",), 2, False),
+})
+_NOMES_EMO = {"alegria": "Alegria", "tristeza": "Tristeza", "medo": "Medo", "raiva": "Raiva", "aversao": "Aversão",
+              "surpresa": "Surpresa", "confianca": "Confiança", "antecipacao": "Antecipação"}
+INDICADORES.update({
+    f"emocao_{e}_por_1000": Indicador(
+        n, _EM, f"Palavras associadas a {n.lower()} no léxico NRC, por 1000 palavras.", "ocorrências por 1000 palavras",
+        f"Intensidade relativa do vocabulário de {n.lower()} (modelo de Plutchik).", _EMO,
+        f"ocorrências de {n.lower()} ÷ palavras × 1000", ("mohammad2013", "plutchik1980"), 2, False)
+    for e, n in _NOMES_EMO.items()})
 
 # Forma poética (só textos em verso)
 _VERSO = ("Deteção automática pela extensão das linhas do ficheiro TXT (não disponível para EPUB); títulos e números "

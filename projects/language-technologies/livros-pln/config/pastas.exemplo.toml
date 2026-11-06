@@ -5,3 +5,6 @@
 
 livros = "~/Desktop/Projetos Pessoais/Análises de Livros/livros"
 resultados = "~/Desktop/Projetos Pessoais/Análises de Livros/resultados"
+# Léxicos descarregados que não podem ir para o GitHub (NRC EmoLex: uso em investigação, sem redistribuição).
+# Sem esta linha, usa-se a pasta lexicos/ do projeto (fora do GitHub).
+lexicos = "~/Desktop/Projetos Pessoais/Análises de Livros/lexicos"

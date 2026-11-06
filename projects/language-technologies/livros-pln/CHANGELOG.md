@@ -1,5 +1,15 @@
 # Alterações
 
+## 3.8.0 · 2026-11-06
+
+- **Tonalidade emocional** (experimental): positivo (feliz), negativo (triste), neutro, misto ou indeterminado. A partir da polaridade por frase do método de sentimento, por capítulo, com intervalo de confiança a 95 % por bootstrap dos capítulos. Novos indicadores: intensidade da polaridade, oscilação entre capítulos, frases fortemente positivas e negativas, limites do intervalo de confiança, frases ambivalentes, frases em discurso direto e concordância entre léxicos (Spearman).
+- **Emoções** (modelo de Plutchik, léxico NRC EmoLex): oito emoções por 1000 palavras, presença por frase, intensidade e diversidade (entropia) emocional, razão alegria/tristeza, palavras negadas e cobertura do léxico. Por capítulo, por fase (início, desenvolvimento, conclusão) e por canal (narração e discurso direto). Em português e francês, o léxico é uma tradução automática: resultados experimentais. O léxico é descarregado (`python -m livros_pln lexicos`) e nunca entra no repositório.
+- **Divisão em capítulos, cantos e partes** a partir dos títulos do texto, para a evolução emocional (sem títulos: blocos iguais). Os indicadores de evolução anteriores não mudam.
+- **Género literário inferido** por regras transparentes (forma e género, com os critérios cumpridos e a pontuação de regras), comparado com o género bibliográfico proposto em `metadados.csv`, que não entra no cálculo.
+- **Painel de cada livro** reorganizado em sete blocos: visão geral, linguagem e léxico, sintaxe e legibilidade, sentimento e emoções, género literário, personagens e relações, temas e semântica. Novos gráficos em 2D: distribuição da polaridade, emoções do vocabulário, trajetória da polaridade com as mudanças expressivas, alegria e tristeza por capítulo, narração e discurso direto e perfil de género.
+- **Página dos livros analisados**: tonalidade e género nos cartões, filtros por tonalidade e por género, e duas secções novas: «Perfil emocional» (tabela, intervalos de confiança e distribuição das emoções) e «Perfil de género literário».
+- Relatório e Excel com as emoções, a tonalidade e os critérios do género. `config/pastas.toml` aceita a pasta `lexicos`.
+
 ## 3.7.0 · 2026-11-06
 
 - **O projeto passou para o portefólio**: o código, os livros, os resultados e o histórico de commits do repositório `livros-pln` estão agora em `projects/language-technologies/livros-pln/` do repositório [Portfolio--Joao_Garcao](https://github.com/Joo2002VSC/Portfolio--Joao_Garcao). O workflow passou para `.github/workflows/livros-pln.yml` do portefólio (corre só quando muda esta pasta) e o script dos modelos para `scripts/instalar_modelos.sh`. Os painéis publicam-se no GitHub Pages do portefólio: https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/. O repositório antigo foi apagado.

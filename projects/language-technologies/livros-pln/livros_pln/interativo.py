@@ -164,6 +164,27 @@ SECCOES = {
     "lugares": ("Lugares", "Espaços nomeados, identificados automaticamente pelo reconhecimento de entidades; contam "
                            "como estimativa."),
 }
+MAPA_SECCOES = {"vocabulario": "linguagem", "leis": "linguagem", "gramatica": "sintaxe", "frases": "sintaxe",
+                "sentimento": "emocoes", "lugares": "personagens"}
+SECCOES_LIVRO = {
+    "linguagem": ("Linguagem e léxico", "Que palavras dominam o livro e como cresce o vocabulário: frequências, leis de "
+                                        "Zipf e de Heaps."),
+    "sintaxe": ("Sintaxe e legibilidade", "Classes de palavras, tempos e modos verbais, pessoa gramatical, tipos de "
+                                          "frase e extensão das frases ao longo do livro, segundo o modelo spaCy."),
+    "emocoes": ("Sentimento e emoções", "Tonalidade emocional, emoções do vocabulário (modelo de Plutchik, léxico NRC) e "
+                                        "a sua evolução por capítulo. Mede-se o vocabulário, não o que o autor sentiu "
+                                        "nem o que o leitor sentirá."),
+    "genero": ("Género literário", "Género inferido pelo conteúdo, com regras transparentes, ao lado do género "
+                                   "bibliográfico. São duas coisas diferentes: a inferência descreve o texto analisado."),
+    "personagens": SECCOES["personagens"][:1] + ("Rede de co-ocorrência: duas personagens ligam-se quando surgem no "
+                                                 "mesmo parágrafo; é uma relação textual, não uma relação narrativa "
+                                                 "comprovada. No fim, os lugares mais mencionados.",),
+    "temas": ("Temas e semântica", "Pares de palavras que aparecem juntos mais do que o acaso faria prever "
+                                   "(colocações) e palavras que caracterizam cada parte do texto (TF-IDF)."),
+}
+SECCOES_LIVRO["personagens"] = ("Personagens e relações", SECCOES_LIVRO["personagens"][1])
+TONALIDADE_CURTA = {"positivo": "Positiva", "negativo": "Negativa", "neutro": "Neutra", "misto": "Mista",
+                    "indeterminado": "Indeterminada"}
 NOTA_3D = "Arraste para rodar · roda do rato para aproximar · duplo clique repõe a vista · valores exatos ao passar o rato."
 
 
@@ -862,9 +883,23 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
                                       (v("cobertura_lexico_pct", 1) + " %", "palavras cobertas pelo léxico")]) + citacoes
 
     itens = figuras_livro(freq, classes, comprimentos, evol, ents, pers, g, extra, lg)
+    # reorganização em sete blocos: visão geral, linguagem, sintaxe, emoções, género, personagens e temas
+    for it in itens:
+        titulo = ((it["fig"].layout.meta or {}).get("titulo") or "") if hasattr(it["fig"], "layout") else ""
+        if titulo.startswith(("Colocações", "Palavras-Chave")):
+            it["seccao"] = "temas"
+        else:
+            it["seccao"] = MAPA_SECCOES.get(it["seccao"], it["seccao"])
+    from . import figuras_emocoes as fe
+    itens += fe.itens_emocoes(registo, extra, _item) + fe.itens_genero(registo, _item)
+    extras["sintaxe"] = extras.pop("gramatica", "")
+    extras["linguagem"] = extras.pop("leis", "")
+    extras["emocoes"] = fe.bloco_tonalidade(registo) + extras.pop("sentimento", "") + fe.bloco_fases(extra)
+    extras["genero"] = fe.bloco_genero(registo)
     p = registo["processamento"]
     tecnico = [("Modelo linguístico", registo["modelo_spacy"]),
                ("Sentimento", registo.get("metodo_sentimento") or "—"),
+               ("Emoções", registo.get("metodo_emocoes") or "—"),
                ("Personagens", registo.get("metodo_personagens") or "—"),
                ("Versão", p["versao"]), ("Código", p["versao_codigo"])]
     tecnico += [("Commit", p["commit"])] if p.get("commit") else []
@@ -877,7 +912,9 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
     rosto = [(r, x) for r, x in [("Forma", "Verso" if registo.get("forma") == "verso" else ""),
                                   ("Versos", v("versos", 0) if registo.get("forma") == "verso" else ""),
                                   ("Palavras", v("palavras", 0)), ("Leitura", maiusculas(i.get("legibilidade_leitura") or "")),
-                                  ("Tempo de leitura", f"{v('tempo_leitura_horas', 1)} h")] if x]
+                                  ("Tempo de leitura", f"{v('tempo_leitura_horas', 1)} h"),
+                                  ("Tonalidade", TONALIDADE_CURTA.get(i.get("tonalidade") or "", "")),
+                                  ("Género inferido", i.get("genero_inferido") or "")] if x]
     pagina(registo["titulo"], registo.get("autor") or "", numeros, itens, resumo, rodape, offline, destino,
-           antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES, extras=extras,
-           ligacao_corpus="../../painel.html")
+           antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES_LIVRO, extras=extras,
+           ligacao_corpus="../../painel.html", css_extra=fe.CSS)
