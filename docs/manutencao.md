@@ -34,12 +34,9 @@ Portfolio--Joao_Garcao/
 
 ## Painéis do Livros-PLN
 
-`projects/language-technologies/livros-pln/demo/` tem uma cópia estática dos painéis gerados pelo [livros-pln](https://github.com/Joo2002VSC/livros-pln), para os abrir diretamente no GitHub Pages do portefólio. Para a atualizar depois de uma nova versão:
+As ligações do portefólio para o Livros-PLN apontam para o GitHub Pages do próprio repositório (https://joo2002vsc.github.io/livros-pln/), que o GitHub Actions do livros-pln atualiza sempre que muda o código ou um livro. Não é preciso copiar nada para o portefólio quando sai uma versão nova.
 
-1. No repositório livros-pln, gerar os painéis numa pasta temporária: `python -m livros_pln --pasta livros --saida /tmp/demo --forcar`.
-2. Copiar `/tmp/demo/painel.html` para `demo/painel.html` e cada `/tmp/demo/livros/<livro>/painel.html` para `demo/livros/<livro>/painel.html` (só os painéis: os relatórios e o Excel ficam no repositório livros-pln).
-3. Nos painéis copiados, as ligações «Relatório completo» e «Dados em Excel» apontam para ficheiros locais; substituí-las pelos endereços em `https://github.com/Joo2002VSC/livros-pln/blob/main/resultados/`.
-4. Atualizar a versão e a data indicadas no README do projeto.
+`projects/language-technologies/livros-pln/demo/` guarda uma cópia de arquivo dos painéis da versão 3.4.1 (6 de novembro de 2026); já não é atualizada nem usada nas ligações. O `index.html` da pasta do projeto reencaminha para a página dos livros analisados.
 
 ## Acrescentar um projeto
 

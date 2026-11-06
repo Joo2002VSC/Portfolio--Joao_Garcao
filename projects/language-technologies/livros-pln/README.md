@@ -2,11 +2,11 @@
 
 **Análise computacional de livros: dá-se um livro (ficheiro ou link) e devolve metadados, indicadores de processamento de linguagem natural, análise de sentimento, rede de personagens e um painel interativo.**
 
-**[Ver os livros analisados ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/)** · [Painel de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html) · [Painel de *Alice's Adventures in Wonderland* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/carroll-alice/painel.html) · [Comparação entre livros ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/painel.html) · [Repositório do projeto ↗](https://github.com/Joo2002VSC/livros-pln)
+**[Ver os livros analisados ↗](https://joo2002vsc.github.io/livros-pln/)** · [Painel de *Os Maias* ↗](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html) · [Painel de *Os Lusíadas* ↗](https://joo2002vsc.github.io/livros-pln/resultados/livros/camoes-os-lusiadas/painel.html) · [Painel de *Alice's Adventures in Wonderland* ↗](https://joo2002vsc.github.io/livros-pln/resultados/livros/carroll-alice/painel.html) · [Comparação entre livros ↗](https://joo2002vsc.github.io/livros-pln/resultados/painel.html#comparacao) · [Repositório do projeto ↗](https://github.com/Joo2002VSC/livros-pln)
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english)
 
-[![Cabeçalho do painel de Os Maias](capturas/painel-os-maias.webp)](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)
+[![Cabeçalho do painel de Os Maias](capturas/painel-os-maias.webp)](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)
 
 ---
 
@@ -14,7 +14,8 @@
 
 Projeto pessoal em Python, na interseção entre as Humanidades Digitais e o processamento de linguagem natural (PLN). Lê livros em TXT ou EPUB, em português, francês ou inglês (por exemplo, a partir de um link do Project Gutenberg), e produz para cada um:
 
-- um **painel interativo** em HTML, com ficha técnica, indicadores principais e gráficos em 3D (cada um com uma vista 2D alternativa);
+- uma **página dos livros analisados**, com catálogo, pesquisa e filtros, comparação de todos os indicadores entre livros (com avisos quando não são comparáveis entre línguas) e um explorador de indicadores;
+- um **painel interativo** em HTML para cada livro, com ficha técnica, indicadores principais e gráficos em 3D (cada um com uma vista 2D alternativa);
 - um **relatório** em Markdown com definição, unidade, interpretação, limitações e referência bibliográfica (APA 7) de cada indicador;
 - os **dados** em Excel, CSV e JSON, e gráficos estáticos em PNG e SVG.
 
@@ -44,9 +45,9 @@ Projeto pessoal em Python, na interseção entre as Humanidades Digitais e o pro
 
 ### Ficheiros nesta pasta
 
-- [`demo/`](./demo): cópia estática dos painéis de *Os Maias*, de *Alice's Adventures in Wonderland* e da comparação, gerada pela versão 3.4.1 a 6 de novembro de 2026, para abrir diretamente no portefólio. Os livros são do domínio público (Project Gutenberg).
+- [`demo/`](./demo): cópia de arquivo dos painéis de *Os Maias* e de *Alice's Adventures in Wonderland* (versão 3.4.1, 6 de novembro de 2026). As ligações desta página abrem a versão sempre atualizada, publicada pelo [repositório do projeto](https://github.com/Joo2002VSC/livros-pln) no GitHub Pages.
 - [`capturas/`](./capturas): imagens do painel usadas neste README.
-- `index.html`: abre a lista dos livros analisados (`demo/painel.html`) quando se visita a pasta do projeto no GitHub Pages.
+- `index.html`: reencaminha para a página dos livros analisados (https://joo2002vsc.github.io/livros-pln/) quando se visita a pasta do projeto no GitHub Pages.
 
 O código, os testes, a documentação dos indicadores e os resultados sempre atualizados estão no [repositório próprio](https://github.com/Joo2002VSC/livros-pln), que fica à parte porque o GitHub Actions faz commits automáticos de resultados.
 
@@ -58,7 +59,7 @@ A personal Python project at the crossroads of Digital Humanities and natural la
 
 It measures lexical diversity (MTLD, HD-D, MATTR), collocations, TF-IDF keywords, Zipf's and Heaps' laws, sentence length and dependency-based syntactic complexity, parts of speech, verb tense and mood, language-specific readability with an easy/difficult verdict, sentence-level sentiment (VADER and its Portuguese and French adaptations), a 3D character co-occurrence network, and Burrows's Delta across books in the same language. Missing values are never replaced by zero, verse texts are detected automatically, and more than 100 automated tests run on GitHub Actions.
 
-**[Open the *Os Maias* dashboard ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)** · [Book comparison ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/painel.html) · [Project repository ↗](https://github.com/Joo2002VSC/livros-pln)
+**[See the analysed books ↗](https://joo2002vsc.github.io/livros-pln/)** · [*Os Maias* dashboard ↗](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html) · [Book comparison ↗](https://joo2002vsc.github.io/livros-pln/resultados/painel.html#comparacao) · [Project repository ↗](https://github.com/Joo2002VSC/livros-pln)
 
 ---
 
