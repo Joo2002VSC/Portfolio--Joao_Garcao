@@ -29,7 +29,7 @@ from pathlib import Path
 import pandas as pd
 
 from . import (__version__, catalogo, configuracao, estilometria, exportar, fontes, graficos, indicadores, interativo,
-               leitura, lingua, personagens, qualidade, relatorio, sentimento)
+               leitura, lingua, pagina_livros, personagens, qualidade, relatorio, sentimento)
 from .configuracao import PARAMETROS
 
 PACOTE = Path(__file__).resolve().parent
@@ -263,7 +263,7 @@ def atualizar_corpus(saida: Path, codigo: str, commit: str | None, offline: bool
             if r["estado"] == "valido":
                 r["matriz"].round(4).to_csv(saida / f"delta-{lg}.csv")
         figs = graficos.corpus(tabela, classes, frases, evolucoes, resultado_delta, pasta_graficos)
-    interativo.painel_corpus(tabela, saida / "painel.html", offline)
+    pagina_livros.escrever(registos(saida), saida / "painel.html", offline)
     relatorio.corpus(tabela, figs, resultado_delta, saida, __version__, codigo)
     return tabela
 

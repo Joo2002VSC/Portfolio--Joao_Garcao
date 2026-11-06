@@ -699,7 +699,8 @@ document.querySelectorAll("main section[id]").forEach(s=>obs.observe(s));}})();
 def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens: list[dict], resumo_html: str,
            rodape: dict, offline: bool, destino: Path, antetitulo: str = "Análise do Livro",
            dados_rosto: list[tuple[str, str]] | None = None, ficha: list[tuple[str, str]] | None = None,
-           seccoes: dict | None = None, extras: dict | None = None, ligacao_corpus: str | None = None):
+           seccoes: dict | None = None, extras: dict | None = None, ligacao_corpus: str | None = None,
+           css_extra: str = ""):
     """Escreve a página. `numeros` = (valor, unidade, rótulo); `extras` = HTML a inserir no início de cada secção."""
     e = html.escape
     seccoes, extras = seccoes or {}, extras or {}
@@ -736,7 +737,7 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens
 <html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(titulo)} · Livros-PLN</title><meta name="theme-color" content="#1E1915">
 <meta name="description" content="{e(antetitulo)}: {e(titulo)}. Indicadores linguísticos, sentimento, rede de personagens e estilo.">
-{cabeca}{FONTES_WEB}<style>{CSS}</style></head>
+{cabeca}{FONTES_WEB}<style>{CSS}{css_extra}</style></head>
 <body>
 <header class="cabecalho" id="topo"><div class="envolve">
  <div class="barra"><span class="marca"><img src="{icone32}" alt="">Livros-PLN</span>
@@ -878,62 +879,3 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
     pagina(registo["titulo"], registo.get("autor") or "", numeros, itens, resumo, rodape, offline, destino,
            antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES, extras=extras,
            ligacao_corpus="../../painel.html")
-
-
-def painel_corpus(t: pd.DataFrame, destino: Path, offline: bool = False):
-    if t.empty:
-        return
-    t = t.copy()
-    t["rotulo"] = t.titulo.fillna(t.id).str.slice(0, 45)
-    validos = t.dropna(subset=["frase_mediana", "mtld", "profundidade_media"])
-    f2 = go.Figure()
-    for lg, sub in t.groupby("lingua"):
-        f2.add_scatter(x=sub.frase_mediana, y=sub.mtld, mode="markers+text", text=sub.rotulo, textposition="top center",
-                       name=tema.LINGUAS.get(lg, (0, 0, lg))[2],
-                       marker=dict(size=13 + 40 * np.sqrt(sub.palavras / t.palavras.max()), symbol=SIMBOLOS_LINGUA.get(lg),
-                                   color=CORES_LINGUA.get(lg, SUAVE), opacity=0.9, line=dict(color=PAPEL, width=1.5)),
-                       hovertemplate="<b>%{text}</b><br>Frase mediana: %{x:.0f} palavras<br>MTLD: %{y:.1f}<extra></extra>")
-    fx = max((t.frase_mediana.max() - t.frase_mediana.min()) * 0.25, 1)
-    fy = max((t.mtld.max() - t.mtld.min()) * 0.2, 5) if t.mtld.notna().any() else 5
-    f2.update_xaxes(title="extensão mediana das frases (palavras)", range=[t.frase_mediana.min() - fx, t.frase_mediana.max() + fx])
-    f2.update_yaxes(title="diversidade lexical (MTLD)", range=[(t.mtld.min() or 0) - fy, (t.mtld.max() or 0) + fy])
-    _layout(f2, "Extensão das frases e diversidade lexical", altura=560,
-            legend=dict(orientation="h", y=-0.16, x=0, yanchor="top"))
-    itens = []
-    if len(validos):
-        simb3d = {"pt": "circle", "fr": "square", "en": "diamond"}
-        f3 = g3d.dispersao(list(validos.frase_mediana), list(validos.mtld), list(validos.profundidade_media),
-                           texto=list(validos.rotulo), tamanho=list(9 + 22 * np.sqrt(validos.palavras / t.palavras.max())),
-                           cores=[CORES_LINGUA.get(l, SUAVE) for l in validos.lingua],
-                           simbolos=[simb3d.get(l, "circle") for l in validos.lingua],
-                           titulos=("frase mediana (palavras)", "MTLD", "profundidade sintática"),
-                           customdata=np.c_[validos.palavras, validos.lingua],
-                           hover="<b>%{text}</b><br>Frase mediana: %{x:.0f}<br>MTLD: %{y:.1f}<br>Profundidade: %{z:.2f}"
-                                 "<br>Palavras: %{customdata[0]}<br>Língua: %{customdata[1]}<extra></extra>")
-        _layout(f3, "Extensão das frases, diversidade lexical e profundidade sintática<br><sup>Tamanho = número de "
-                    "palavras; cor e forma = língua</sup>", altura=640,
-                nota=NOTA_3D + " Os níveis de MTLD e de profundidade não são comparáveis entre línguas.")
-        itens.append(_item("comparacao", f3, f2))
-    else:
-        itens.append(_item("comparacao", f2))
-    e = html.escape
-    linhas = "".join(
-        f'<tr><td><a href="livros/{r.id}/painel.html">{e(str(r.titulo))}</a></td><td>{e(str(r.autor or "—"))}</td>'
-        f'<td>{r.lingua}</td><td class="n">{_num(r.palavras, 0)}</td><td class="n">{_num(r.mtld)}</td>'
-        f'<td class="n">{_num(r.frase_mediana, 0)}</td><td class="n">{_num(getattr(r, "sentimento_medio", None), 3)}</td>'
-        f'<td class="n">{_num(r.legibilidade, 0)}</td><td>{e(maiusculas(str(getattr(r, "legibilidade_leitura", "") or "—")))}</td></tr>'
-        for r in t.sort_values(["lingua", "titulo"]).itertuples())
-    tabela = ('<div class="tabela"><table><tr><th>Livro</th><th>Autor</th><th>Língua</th><th class="n">Palavras</th>'
-              '<th class="n">MTLD</th><th class="n">Frase Mediana</th><th class="n">Sentimento</th>'
-              f'<th class="n">Legibilidade</th><th>Leitura</th></tr>{linhas}</table></div>')
-    numeros = [(str(len(t)), "", "livros analisados"), (_num(int(t.palavras.sum()), 0), "", "palavras no total"),
-               (str(t.lingua.nunique()), "", "línguas")]
-    seccoes = {"comparacao": ("Comparação", "Cada ponto é um livro. Compare apenas livros da mesma língua: a "
-                                            "legibilidade, o MTLD e o sentimento dependem da língua.")}
-    rodape = dict(descricao=DESCRICAO, autoria=AUTORIA,
-                  aviso="A legibilidade e o sentimento usam fórmulas e léxicos diferentes em cada língua.",
-                  ligacoes=[("Relatório do Corpus", "README.md"), ("Dados em Excel", "indicadores.xlsx"),
-                            ("Repositório no GitHub", REPOSITORIO)],
-                  tecnico=[("Livros", str(len(t))), ("Línguas", ", ".join(sorted(t.lingua.unique())))])
-    pagina("Livros Analisados", "", numeros, itens, tabela, rodape, offline, destino, antetitulo="Corpus",
-           dados_rosto=[("Livros", str(len(t))), ("Palavras", _num(int(t.palavras.sum()), 0))], seccoes=seccoes)

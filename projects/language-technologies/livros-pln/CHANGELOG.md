@@ -1,5 +1,18 @@
 # Alterações
 
+## 3.5.0 · 2026-11-06
+
+- **Página «Livros analisados» refeita** (`resultados/painel.html`, novo módulo `pagina_livros.py`), a partir dos `indicadores.json` já calculados, sem recálculo no navegador:
+  - cabeçalho com os totais (livros, autores, línguas, palavras, período e última atualização);
+  - catálogo em cartões, com uma capa tipográfica (autor, título e ano; sem imagens inventadas), idioma, forma (prosa ou verso), um resumo de seis indicadores e ligações para o painel, o relatório e o Excel;
+  - pesquisa sem acentos por título ou autor, filtros por língua, autor, século e forma, e ordenação (título, autor, ano, palavras, MTLD, frase mediana), com aviso quando se ordena por um indicador não comparável entre línguas;
+  - comparação de dois ou mais livros com **todos os indicadores da análise individual** (82, nos 14 temas do catálogo, cada tema com uma nota metodológica), botões para escolher os temas, a opção «só os indicadores comparáveis», as personagens principais e os métodos de sentimento e de personagens de cada livro; agrupada por tema, com barras proporcionais apenas onde a comparação é válida, avisos «não comparável entre línguas» e «depende da extensão do texto», composição das classes gramaticais e notas quando as línguas, as formas ou as extensões diferem muito;
+  - explorador de dispersão (2D) com a escolha dos dois eixos entre todos os indicadores e avisos de comparabilidade;
+  - glossário de todos os indicadores apresentados (definição, interpretação e limitações, do catálogo) e secção de dados abertos (CSV, Excel, documentação).
+- Os valores em falta aparecem como «n.a.» com o motivo ao passar o rato; nunca como zero.
+- **Correção**: os números das estrofes (linhas só com um número, como «1» ou «XII») deixaram de contar como versos. Em *Os Lusíadas*, versos por estrofe passa de 9 para 8, como na oitava rima.
+- Removido o antigo painel de comparação (`interativo.painel_corpus`), substituído por esta página.
+
 ## 3.4.1 · 2026-11-06
 
 - **Painéis no GitHub Pages**: `index.html` na raiz abre a lista dos livros analisados (`resultados/painel.html`); `.nojekyll` serve as páginas tal como estão; no GitHub Pages, as ligações para os relatórios, o Excel e os CSV abrem no GitHub.

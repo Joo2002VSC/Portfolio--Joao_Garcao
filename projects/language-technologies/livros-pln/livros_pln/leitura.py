@@ -85,10 +85,20 @@ def ler_txt(ficheiro: Path) -> Livro:
 
     blocos = re.split(r"\n\s*\n", texto)
     metadados.update(forma_do_texto(blocos))
+    if metadados["forma"] == "verso":   # os números das estrofes não fazem parte do texto
+        blocos = [_sem_numeros(b) for b in blocos]
     paragrafos = [re.sub(r"\s+", " ", p).strip() for p in blocos]
     # convenções tipográficas do texto simples: «_itálico_» e «--» como travessão (Project Gutenberg)
     paragrafos = [re.sub(r"(?<!-)--(?!-)", "—", p.replace("_", "")) for p in paragrafos if p]
     return Livro(ficheiro, "txt", paragrafos, metadados)
+
+
+_NUMERO = re.compile(r"^\s*(\d{1,4}|[IVXLC]{1,7})[.)]?\s*$")
+
+
+def _sem_numeros(bloco: str) -> str:
+    """Retira as linhas que só têm um número (árabe ou romano), como a numeração das estrofes."""
+    return "\n".join(l for l in bloco.splitlines() if not _NUMERO.match(l))
 
 
 def forma_do_texto(blocos: list[str], maximo_verso: int = 55) -> dict:
@@ -99,7 +109,7 @@ def forma_do_texto(blocos: list[str], maximo_verso: int = 55) -> dict:
     média até `maximo_verso` caracteres têm mais de metade das palavras do texto."""
     palavras_total, palavras_verso, versos, por_estrofe = 0, 0, 0, []
     for b in blocos:
-        linhas = [l.strip() for l in b.splitlines() if l.strip()]
+        linhas = [l.strip() for l in _sem_numeros(b).splitlines() if l.strip()]
         n = sum(len(l.split()) for l in linhas)
         palavras_total += n
         if len(linhas) >= 4 and sum(map(len, linhas)) / len(linhas) <= maximo_verso:

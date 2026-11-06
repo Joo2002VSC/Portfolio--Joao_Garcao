@@ -21,6 +21,12 @@ def _poema(estrofes: int = 40, semente: int = 1) -> str:
     return "\n\n".join(blocos)
 
 
+def test_numeros_das_estrofes_nao_contam_como_versos():
+    blocos = [f"{n}\n" + "\n".join(VERSOS[:8]) for n in range(1, 11)]
+    m = leitura.forma_do_texto(blocos)
+    assert m["versos_por_estrofe"] == 8 and m["versos"] == 80
+
+
 def test_forma_verso_e_prosa():
     m = leitura.forma_do_texto(_poema(10).split("\n\n"))
     assert m["forma"] == "verso" and m["versos_por_estrofe"] == 8 and m["estrofes"] == 10 and m["versos"] == 80

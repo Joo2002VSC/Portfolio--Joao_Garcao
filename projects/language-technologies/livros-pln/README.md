@@ -8,7 +8,7 @@
 
 ![Rede de personagens de Os Maias](resultados/livros/eca-de-queiros-os-maias/graficos/rede.png)
 
-**[🌐 Ver os livros analisados](https://joo2002vsc.github.io/livros-pln/)** · **[Resultados](resultados/README.md)** · **[Documentação dos indicadores](docs/indicadores.md)** · **[Painel interativo de comparação](https://joo2002vsc.github.io/livros-pln/resultados/painel.html)** · **[Painel de *Os Maias*](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)**
+**[🌐 Ver os livros analisados](https://joo2002vsc.github.io/livros-pln/)** · **[Resultados](resultados/README.md)** · **[Documentação dos indicadores](docs/indicadores.md)** · **[Comparação dos livros](https://joo2002vsc.github.io/livros-pln/resultados/painel.html)** · **[Painel de *Os Maias*](https://joo2002vsc.github.io/livros-pln/resultados/livros/eca-de-queiros-os-maias/painel.html)**
 
 ---
 
@@ -126,6 +126,10 @@ Valores do corpus de exemplo, gerados pela versão 3.3.0 (português com `pt_cor
 ### Painel interativo
 
 O painel de cada livro tem a ficha técnica (autor, ano, idioma e fonte) no cabeçalho, um índice fixo que assinala a secção em leitura, uma barra de progresso, um botão para voltar ao topo, os indicadores principais em destaque, uma régua com o veredicto de leitura e secções numeradas (Personagens, Vocabulário, Gramática, Frases e Evolução, Sentimento, Leis do Vocabulário, Lugares). Os gráficos são em 3D (barras em prisma, relevos e fitas) e rodam apenas quando o leitor os arrasta. Como a perspetiva dificulta a leitura exata dos valores, cada gráfico 3D tem um botão para a vista 2D com os mesmos dados, e os valores exatos aparecem ao passar o rato. As curvas de Zipf e de Heaps ficam em 2D: são as escalas logarítmicas que tornam as leis visíveis, e uma terceira dimensão não acrescentaria informação.
+
+### Página dos livros analisados
+
+`resultados/painel.html` (a página inicial no GitHub Pages) reúne todos os livros processados: totais do corpus, um cartão por livro com os indicadores principais, pesquisa, filtros (língua, autor, século, forma) e ordenação, comparação de dois ou mais livros com todos os indicadores da análise individual (por tema, com a opção de mostrar só os comparáveis), um explorador de dispersão e o glossário dos indicadores. A página só apresenta os valores já calculados em `indicadores.json`. Os indicadores que dependem da língua (léxicos, modelos, fórmulas de legibilidade) ou da extensão do texto (TTR, vocabulário) são assinalados e não recebem barras comparativas; os valores em falta aparecem como «n.a.», com o motivo. Não há capas: cada livro tem uma capa tipográfica com o autor, o título e o ano.
 
 ### Instalação e testes
 
