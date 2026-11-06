@@ -1,5 +1,14 @@
 # Alterações
 
+## 3.1.0 · 2026-11-06
+
+**Painéis interativos (HTML)**
+- Novo aspeto editorial: fundo bege, tinta quase preta e castanhos, títulos em serifa (Fraunces, com Georgia como alternativa), cabeçalho escuro e navegação fixa por secções (Resumo, Personagens, Vocabulário e gramática, Frases e evolução, Lugares).
+- Ícone do projeto no separador do navegador (favicon) e no cabeçalho, embutido no próprio HTML para funcionar no GitHub Pages e em ficheiros abertos localmente.
+- A rede de personagens em 3D deixou de rodar automaticamente e já não tem botões de animação: é o leitor que a roda, arrastando com o rato ou com o dedo.
+- Comunidades da rede distinguidas por cor e por forma; avisos de qualidade num destaque próprio; legendas por baixo dos gráficos.
+- Os gráficos estáticos (PNG/SVG) mantêm a paleta de `tema.py`.
+
 ## 3.0.0 · 2026-11-05
 
 Revisão científica, técnica e visual. Inclui também as funcionalidades da 2.0.0, que não chegou a ser publicada no repositório.

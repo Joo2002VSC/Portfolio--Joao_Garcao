@@ -138,6 +138,8 @@ def test_analisar_produz_painel_excel_e_rede(tmp_path: Path, capsys):
     pasta = saida / "livros" / "teste"
     html = (pasta / "painel.html").read_text(encoding="utf-8")
     assert "Rede de personagens em 3D" in html and "scatter3d" in html
+    assert 'rel="icon"' in html and "data:image/png;base64," in html    # ícone do projeto embutido
+    assert '"frames"' not in html and "Rodar" not in html               # a rede só roda quando o leitor a arrasta
     folhas = pd.ExcelFile(pasta / "teste.xlsx").sheet_names
     assert {"Metadados", "Indicadores", "Personagens", "Ligações", "Frequências"} <= set(folhas)
     pers = pd.read_csv(pasta / "personagens.csv")
