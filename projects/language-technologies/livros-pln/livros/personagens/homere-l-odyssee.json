@@ -1,0 +1,233 @@
+{
+ "_descricao": "Dicionário de personagens de L'Odyssée (Homero, tradução de Leconte de Lisle, Project Gutenberg n.º 14286), com as grafias desta tradução. A procura ignora acentos; as formas com maiúscula exigem maiúscula, e as formas mais longas têm prioridade. Os patronímicos só entram quando designam uma única personagem (Pèléide → Akhilleus, Laertiade → Odysseus); «Atréide» (Agamemnôn ou Ménélaos) e «Priamide» (vários filhos de Priamos) ficam de fora por serem ambíguos. A coocorrência no mesmo parágrafo não prova uma relação narrativa. Athènè aparece muitas vezes disfarçada (por exemplo, como Mentôr ou Mentès); essas menções contam para a personagem com o nome usado no texto. «Hèlios» também designa o sol, e as contagens incluem esses usos.",
+ "personagens": [
+  {
+   "nome": "Odysseus",
+   "aliases": [
+    "Odysseus",
+    "Laertiade"
+   ]
+  },
+  {
+   "nome": "Tèlémakhos",
+   "aliases": [
+    "Tèlémakhos"
+   ]
+  },
+  {
+   "nome": "Pènélopéia",
+   "aliases": [
+    "Pènélopéia"
+   ]
+  },
+  {
+   "nome": "Laertès",
+   "aliases": [
+    "Laertès"
+   ]
+  },
+  {
+   "nome": "Eumaios",
+   "aliases": [
+    "Eumaios"
+   ]
+  },
+  {
+   "nome": "Eurykléia",
+   "aliases": [
+    "Eurykléia"
+   ]
+  },
+  {
+   "nome": "Antinoos",
+   "aliases": [
+    "Antinoos"
+   ]
+  },
+  {
+   "nome": "Eurymakhos",
+   "aliases": [
+    "Eurymakhos"
+   ]
+  },
+  {
+   "nome": "Amphinomos",
+   "aliases": [
+    "Amphinomos"
+   ]
+  },
+  {
+   "nome": "Mélanthios",
+   "aliases": [
+    "Mélanthios"
+   ]
+  },
+  {
+   "nome": "Philoitios",
+   "aliases": [
+    "Philoitios"
+   ]
+  },
+  {
+   "nome": "Iros",
+   "aliases": [
+    "Iros"
+   ]
+  },
+  {
+   "nome": "Théoklyménos",
+   "aliases": [
+    "Théoklyménos"
+   ]
+  },
+  {
+   "nome": "Alkinoos",
+   "aliases": [
+    "Alkinoos"
+   ]
+  },
+  {
+   "nome": "Arètè",
+   "aliases": [
+    "Arètè"
+   ]
+  },
+  {
+   "nome": "Nausikaa",
+   "aliases": [
+    "Nausikaa"
+   ]
+  },
+  {
+   "nome": "Dèmodokos",
+   "aliases": [
+    "Dèmodokos"
+   ]
+  },
+  {
+   "nome": "Kalypsô",
+   "aliases": [
+    "Kalypsô"
+   ]
+  },
+  {
+   "nome": "Kirkè",
+   "aliases": [
+    "Kirkè"
+   ]
+  },
+  {
+   "nome": "Polyphèmos",
+   "aliases": [
+    "Polyphèmos",
+    "Kyklôps"
+   ]
+  },
+  {
+   "nome": "Teirésias",
+   "aliases": [
+    "Teirésias"
+   ]
+  },
+  {
+   "nome": "Eurylokhos",
+   "aliases": [
+    "Eurylokhos"
+   ]
+  },
+  {
+   "nome": "Nestôr",
+   "aliases": [
+    "Nestôr"
+   ]
+  },
+  {
+   "nome": "Peisistratos",
+   "aliases": [
+    "Peisistratos"
+   ]
+  },
+  {
+   "nome": "Ménélaos",
+   "aliases": [
+    "Ménélaos"
+   ]
+  },
+  {
+   "nome": "Hélénè",
+   "aliases": [
+    "Hélénè"
+   ]
+  },
+  {
+   "nome": "Agamemnôn",
+   "aliases": [
+    "Agamemnôn"
+   ]
+  },
+  {
+   "nome": "Aigisthos",
+   "aliases": [
+    "Aigisthos"
+   ]
+  },
+  {
+   "nome": "Mentôr",
+   "aliases": [
+    "Mentôr"
+   ]
+  },
+  {
+   "nome": "Akhilleus",
+   "aliases": [
+    "Akhilleus",
+    "Pèléide",
+    "Pèlèiade",
+    "Pèléiôn"
+   ]
+  },
+  {
+   "nome": "Zeus",
+   "aliases": [
+    "Zeus",
+    "Kroniôn",
+    "Kronide"
+   ]
+  },
+  {
+   "nome": "Athènè",
+   "aliases": [
+    "Pallas Athènè",
+    "Athènè",
+    "Pallas"
+   ]
+  },
+  {
+   "nome": "Poseidaôn",
+   "aliases": [
+    "Poseidaôn"
+   ]
+  },
+  {
+   "nome": "Hèlios",
+   "aliases": [
+    "Hèlios"
+   ]
+  },
+  {
+   "nome": "Herméias",
+   "aliases": [
+    "Herméias",
+    "Hermès"
+   ]
+  },
+  {
+   "nome": "Apollôn",
+   "aliases": [
+    "Phoibos Apollôn",
+    "Apollôn",
+    "Phoibos"
+   ]
+  }
+ ]
+}
