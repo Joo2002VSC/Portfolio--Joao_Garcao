@@ -1,0 +1,22 @@
+# Parâmetros metodológicos do livros-pln.
+# Os valores comentados são os valores por omissão (ver livros_pln/configuracao.py).
+# Retirar o «#» de uma linha altera o parâmetro; alterar este ficheiro obriga a reprocessar os livros.
+
+# janela_mattr = 500              # janela do MATTR, em palavras (Covington e McFall, 2010)
+# limiar_mtld = 0.72              # limiar de TTR que fecha um fator do MTLD (McCarthy e Jarvis, 2010)
+# minimo_fator_mtld = 10          # comprimento mínimo de um fator completo do MTLD
+# amostra_hdd = 42                # dimensão da amostra do HD-D
+# minimo_mtld = 100               # palavras mínimas para calcular o MTLD
+# minimo_texto = 1000             # abaixo disto, os indicadores agregados são instáveis
+# frase_longa = 30                # limiar de «frase longa», em palavras
+# segmentos = 10                  # número de segmentos na análise da evolução ao longo do livro
+# palavras_por_minuto = 238       # velocidade de leitura para estimar o tempo de leitura (Brysbaert, 2019)
+# delta_palavras_frequentes = 150 # palavras mais frequentes usadas no Delta de Burrows
+# delta_minimo_textos = 3         # textos mínimos da mesma língua para calcular o Delta
+# rede_minimo_mencoes = 5         # menções mínimas para uma personagem entrar na rede
+# rede_maximo_personagens = 40    # máximo de personagens na rede automática
+# sentimento_limiar = 0.05        # |compound| a partir do qual uma frase é positiva ou negativa (Hutto e Gilbert, 2014)
+# sentimento_minimo_palavras = 3  # frases mais curtas não recebem pontuação de sentimento
+# zipf_frequencia_minima = 5      # frequência mínima das formas usadas no ajuste da lei de Zipf
+# colocacao_frequencia_minima = 5 # ocorrências mínimas de um bigrama para ser candidato a colocação
+# palavras_chave_por_segmento = 5 # palavras-chave (TF-IDF) apresentadas por segmento

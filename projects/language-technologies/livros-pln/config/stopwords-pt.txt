@@ -1,0 +1,19 @@
+# Palavras a ignorar nas frequências e nas entidades, além das stopwords do spaCy.
+# Uma por linha, em minúsculas. Útil para grafias antigas (ex.: textos anteriores a 1911).
+elle
+ella
+elles
+ellas
+d'elle
+d'ella
+n'elle
+n'ella
+aquelle
+aquella
+alli
+ahi
+emfim
+snr
+sr
+sra
+d

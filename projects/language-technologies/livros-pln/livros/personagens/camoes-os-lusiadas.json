@@ -1,0 +1,30 @@
+{
+  "_descricao": "Dicionário de personagens de Os Lusíadas (Project Gutenberg n.º 3333, ortografia atualizada). A procura ignora acentos; as formas com maiúscula exigem maiúscula. Os nomes de deuses incluem epítetos usados por Camões. «Afonso» junta vários reis com esse nome (a obra não os distingue pelo nome).",
+  "personagens": [
+    {"nome": "Vasco da Gama", "aliases": ["Vasco da Gama", "Gama"]},
+    {"nome": "Paulo da Gama", "aliases": ["Paulo da Gama"]},
+    {"nome": "Vénus", "aliases": ["Vénus", "Vênus", "Venus", "Citereia", "Ericina"]},
+    {"nome": "Baco", "aliases": ["Baco", "Lieo", "Tioneu"]},
+    {"nome": "Júpiter", "aliases": ["Júpiter", "Jove", "Tonante"]},
+    {"nome": "Marte", "aliases": ["Marte", "Mavorte"]},
+    {"nome": "Neptuno", "aliases": ["Neptuno", "Netuno"]},
+    {"nome": "Tétis", "aliases": ["Tethys", "Tétis", "Thétis"]},
+    {"nome": "Mercúrio", "aliases": ["Mercúrio"]},
+    {"nome": "Próteo", "aliases": ["Próteo", "Proteu"]},
+    {"nome": "Calíope", "aliases": ["Calíope"]},
+    {"nome": "Adamastor", "aliases": ["Adamastor"]},
+    {"nome": "Inês de Castro", "aliases": ["Inês de Castro", "Inês"]},
+    {"nome": "Afonso (vários reis)", "aliases": ["Afonso Henriques", "Afonso"]},
+    {"nome": "Nuno Álvares Pereira", "aliases": ["Nuno Álvares", "Nuno"]},
+    {"nome": "Egas Moniz", "aliases": ["Egas Moniz", "Egas"]},
+    {"nome": "Viriato", "aliases": ["Viriato"]},
+    {"nome": "D. Sebastião", "aliases": ["Sebastião"]},
+    {"nome": "Rei de Melinde", "aliases": ["Rei de Melinde", "Rei Melindano"]},
+    {"nome": "Samorim", "aliases": ["Samorim", "Çamorim"]},
+    {"nome": "Catual", "aliases": ["Catual"]},
+    {"nome": "Monçaide", "aliases": ["Monçaide"]},
+    {"nome": "Fernão Veloso", "aliases": ["Fernão Veloso", "Veloso"]},
+    {"nome": "Leonardo", "aliases": ["Leonardo"]}
+  ],
+  "ignorar": []
+}

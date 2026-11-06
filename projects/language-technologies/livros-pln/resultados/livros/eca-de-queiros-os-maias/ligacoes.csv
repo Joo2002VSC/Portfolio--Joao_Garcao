@@ -1,0 +1,311 @@
+origem,destino,peso
+Carlos da Maia,João da Ega,325
+Carlos da Maia,Maria Eduarda,140
+Carlos da Maia,Dâmaso Salcede,124
+Carlos da Maia,Condessa de Gouvarinho,86
+Carlos da Maia,Craft,82
+Afonso da Maia,Carlos da Maia,80
+Maria Eduarda,João da Ega,68
+Vilaça,Carlos da Maia,67
+Carlos da Maia,Cruges,60
+Afonso da Maia,João da Ega,59
+João da Ega,Dâmaso Salcede,57
+João da Ega,Craft,57
+Vilaça,Afonso da Maia,57
+Carlos da Maia,Tomás de Alencar,50
+Vilaça,João da Ega,49
+Carlos da Maia,Baptista,41
+Tomás de Alencar,João da Ega,37
+João da Ega,Guimarães,37
+João da Ega,Jacob Cohen,37
+Carlos da Maia,Rosa,33
+Pedro da Maia,Maria Monforte,33
+João da Ega,Cruges,29
+Carlos da Maia,Castro Gomes,29
+Carlos da Maia,Eusebiozinho,28
+Carlos da Maia,Conde de Gouvarinho,27
+Condessa de Gouvarinho,João da Ega,26
+Afonso da Maia,Pedro da Maia,26
+Carlos da Maia,Taveira,26
+Condessa de Gouvarinho,Conde de Gouvarinho,25
+João da Ega,Conde de Gouvarinho,24
+Carlos da Maia,Jacob Cohen,23
+João da Ega,Raquel Cohen,23
+Taveira,João da Ega,22
+Maria Eduarda,Rosa,22
+D. Maria da Cunha,Carlos da Maia,20
+João da Ega,Baptista,20
+Maria Eduarda,Dâmaso Salcede,19
+Afonso da Maia,Maria Eduarda,19
+Carlos da Maia,Miss Sara,18
+Afonso da Maia,Craft,18
+Carlos da Maia,Steinbroken,17
+Maria Monforte,João da Ega,17
+Dâmaso Salcede,Castro Gomes,17
+Vilaça,Maria Monforte,17
+Craft,Dâmaso Salcede,17
+Carlos da Maia,Guimarães,16
+Taveira,Craft,15
+Carlos da Maia,Raquel Cohen,14
+Carlos da Maia,Domingos,14
+Afonso da Maia,Sequeira,14
+Carlos da Maia,Palma Cavalão,14
+Carlos da Maia,Sequeira,14
+João da Ega,Steinbroken,14
+Taveira,Cruges,14
+Tomás de Alencar,Maria Monforte,13
+D. Maria da Cunha,Condessa de Gouvarinho,13
+Afonso da Maia,Steinbroken,13
+Pedro da Maia,Tomás de Alencar,13
+Jacob Cohen,Dâmaso Salcede,13
+Sequeira,D. Diogo,13
+Miss Sara,Rosa,12
+Afonso da Maia,Dâmaso Salcede,12
+Carlos da Maia,Melanie,12
+Carlos da Maia,D. Diogo,12
+Tomás de Alencar,Dâmaso Salcede,12
+Eusebiozinho,Palma Cavalão,12
+João da Ega,Rufino,12
+Maria Eduarda,Domingos,12
+D. Maria da Cunha,João da Ega,12
+Carlos da Maia,Pedro da Maia,12
+Maria Monforte,Guimarães,11
+Vilaça,Maria Eduarda,11
+Afonso da Maia,Maria Monforte,11
+Sequeira,João da Ega,11
+Condessa de Gouvarinho,Dâmaso Salcede,11
+João da Ega,D. Diogo,11
+Dâmaso Salcede,Guimarães,11
+Maria Eduarda,Cruges,11
+Afonso da Maia,D. Diogo,10
+Jacob Cohen,Raquel Cohen,10
+Cruges,Steinbroken,10
+Cruges,Dâmaso Salcede,10
+Carlos da Maia,Maria Monforte,10
+Maria Eduarda,Miss Sara,10
+João da Ega,Palma Cavalão,10
+Maria Eduarda,Craft,10
+Tomás de Alencar,Cruges,10
+Tomás de Alencar,Jacob Cohen,10
+Vilaça,Pedro da Maia,10
+Vilaça,D. Diogo,9
+Carlos da Maia,Brown,9
+Jacob Cohen,Craft,9
+Taveira,Dâmaso Salcede,9
+Raquel Cohen,Dâmaso Salcede,9
+Vilaça,Brown,9
+Sequeira,Craft,9
+Conde de Gouvarinho,Dâmaso Salcede,9
+Eusebiozinho,Cruges,8
+João da Ega,Sousa Neto,8
+Dâmaso Salcede,Palma Cavalão,8
+Maria Eduarda,Castro Gomes,8
+Carlos da Maia,Sousa Neto,8
+Melanie,Miss Sara,8
+Cruges,Craft,8
+João da Ega,Castro Gomes,8
+Maria Eduarda,Tomás de Alencar,7
+Pedro da Maia,João da Ega,7
+Maria Eduarda,Guimarães,7
+D. Diogo,Steinbroken,7
+Tomás de Alencar,Guimarães,7
+Craft,Castro Gomes,7
+Maria Eduarda,Melanie,6
+Afonso da Maia,Taveira,6
+Sequeira,Steinbroken,6
+Condessa de Gouvarinho,Sousa Neto,6
+Vilaça,Sequeira,6
+Vilaça,Tomás de Alencar,6
+Craft,Conde de Gouvarinho,6
+João da Ega,Eusebiozinho,6
+João da Ega,Domingos,6
+Taveira,Steinbroken,6
+Maria Eduarda,Maria Monforte,6
+Carlos da Maia,Teles da Gama,6
+Steinbroken,Craft,6
+Tomás de Alencar,Craft,6
+Vilaça,Baptista,5
+Carlos da Maia,Rufino,5
+Afonso da Maia,Brown,5
+Condessa de Gouvarinho,Teles da Gama,5
+Vilaça,Cruges,5
+Maria Eduarda,Baptista,5
+Afonso da Maia,Baptista,5
+Jacob Cohen,Conde de Gouvarinho,5
+Domingos,Rosa,5
+D. Diogo,Craft,5
+Maria Monforte,Tancredo,5
+Afonso da Maia,Cruges,5
+Carlos da Maia,Clifford,5
+Vilaça,Guimarães,4
+Vilaça,Taveira,4
+D. Maria da Cunha,Dâmaso Salcede,4
+Afonso da Maia,Eusebiozinho,4
+Cruges,Conde de Gouvarinho,4
+Domingos,Miss Sara,4
+Vilaça,Eusebiozinho,4
+Taveira,Conde de Gouvarinho,4
+Taveira,Clifford,4
+João da Ega,Rosa,4
+João da Ega,Miss Sara,4
+Eusebiozinho,Dâmaso Salcede,4
+Eusebiozinho,Steinbroken,4
+Craft,Clifford,4
+Pedro da Maia,Guimarães,4
+Domingos,Melanie,4
+Tomás de Alencar,Rufino,4
+Taveira,Raquel Cohen,4
+Pedro da Maia,Sequeira,4
+Sequeira,Cruges,4
+Sequeira,Maria Monforte,4
+Sequeira,Taveira,4
+Afonso da Maia,Conde de Gouvarinho,4
+Condessa de Gouvarinho,Taveira,4
+Afonso da Maia,Tomás de Alencar,4
+Maria Eduarda,Pedro da Maia,4
+Condessa de Gouvarinho,Steinbroken,4
+D. Maria da Cunha,Maria Monforte,3
+D. Maria da Cunha,Conde de Gouvarinho,3
+D. Maria da Cunha,Maria Eduarda,3
+Melanie,Rosa,3
+Steinbroken,Conde de Gouvarinho,3
+Eusebiozinho,Craft,3
+Afonso da Maia,Condessa de Gouvarinho,3
+Tomás de Alencar,Taveira,3
+Conde de Gouvarinho,Teles da Gama,3
+Castro Gomes,Rosa,3
+Dâmaso Salcede,Melanie,3
+Castro Gomes,Melanie,3
+Maria Monforte,Castro Gomes,3
+Conde de Gouvarinho,Rufino,3
+Vilaça,Steinbroken,3
+Conde de Gouvarinho,Raquel Cohen,3
+Pedro da Maia,Tancredo,3
+Tomás de Alencar,Raquel Cohen,3
+Sequeira,Conde de Gouvarinho,3
+Condessa de Gouvarinho,Baptista,3
+Condessa de Gouvarinho,Craft,3
+Condessa de Gouvarinho,Jacob Cohen,3
+Condessa de Gouvarinho,Raquel Cohen,3
+Baptista,Dâmaso Salcede,3
+Baptista,Castro Gomes,3
+Cruges,Palma Cavalão,3
+D. Maria da Cunha,Tomás de Alencar,3
+Tomás de Alencar,Conde de Gouvarinho,3
+Condessa de Gouvarinho,Cruges,3
+Condessa de Gouvarinho,Maria Eduarda,3
+Tomás de Alencar,Baptista,3
+Pedro da Maia,Dâmaso Salcede,3
+D. Maria da Cunha,Teles da Gama,2
+Steinbroken,Teles da Gama,2
+Cruges,Guimarães,2
+D. Maria da Cunha,Cruges,2
+Jacob Cohen,Steinbroken,2
+Baptista,Conde de Gouvarinho,2
+Teles da Gama,Sousa Neto,2
+Maria Eduarda,Palma Cavalão,2
+Maria Eduarda,Rufino,2
+Afonso da Maia,Rufino,2
+Steinbroken,Rufino,2
+Cruges,Raquel Cohen,2
+Taveira,Castro Gomes,2
+Sequeira,Tomás de Alencar,2
+Sequeira,Eusebiozinho,2
+Condessa de Gouvarinho,Rufino,2
+João da Ega,Melanie,2
+D. Diogo,Cruges,2
+João da Ega,Teles da Gama,2
+Condessa de Gouvarinho,Sequeira,2
+Sequeira,Baptista,2
+Tomás de Alencar,D. Diogo,2
+Taveira,Baptista,2
+Dâmaso Salcede,Rosa,2
+Dâmaso Salcede,Clifford,2
+Dâmaso Salcede,Domingos,2
+Dâmaso Salcede,Miss Sara,2
+Castro Gomes,Guimarães,2
+Tomás de Alencar,Teles da Gama,2
+Guimarães,Rufino,2
+Tomás de Alencar,Eusebiozinho,2
+Taveira,Jacob Cohen,2
+Taveira,Eusebiozinho,2
+Craft,Raquel Cohen,2
+Conde de Gouvarinho,Sousa Neto,2
+Vilaça,Domingos,2
+Vilaça,Melanie,2
+Vilaça,Craft,2
+D. Maria da Cunha,Vilaça,2
+D. Maria da Cunha,Afonso da Maia,1
+D. Maria da Cunha,D. Diogo,1
+D. Maria da Cunha,Sequeira,1
+Vilaça,Tancredo,1
+Vilaça,Dâmaso Salcede,1
+Vilaça,Condessa de Gouvarinho,1
+Vilaça,Palma Cavalão,1
+Vilaça,Miss Sara,1
+Vilaça,Rosa,1
+Vilaça,Conde de Gouvarinho,1
+Vilaça,Teles da Gama,1
+Craft,Domingos,1
+Craft,Rosa,1
+Craft,Rufino,1
+Craft,Teles da Gama,1
+Conde de Gouvarinho,Guimarães,1
+Dâmaso Salcede,Rufino,1
+Castro Gomes,Miss Sara,1
+D. Maria da Cunha,Pedro da Maia,1
+Tomás de Alencar,Palma Cavalão,1
+Tomás de Alencar,Rosa,1
+Maria Monforte,Taveira,1
+Maria Monforte,D. Diogo,1
+Maria Monforte,Rosa,1
+Maria Monforte,Domingos,1
+Taveira,D. Diogo,1
+Taveira,Teles da Gama,1
+D. Diogo,Jacob Cohen,1
+D. Diogo,Eusebiozinho,1
+D. Diogo,Baptista,1
+Brown,Eusebiozinho,1
+Brown,Baptista,1
+Eusebiozinho,Baptista,1
+Pedro da Maia,D. Diogo,1
+Pedro da Maia,Cruges,1
+Pedro da Maia,Conde de Gouvarinho,1
+Pedro da Maia,Clifford,1
+Pedro da Maia,Castro Gomes,1
+Sequeira,Rufino,1
+Sequeira,Teles da Gama,1
+Tomás de Alencar,Tancredo,1
+Condessa de Gouvarinho,Guimarães,1
+Condessa de Gouvarinho,Castro Gomes,1
+Condessa de Gouvarinho,Palma Cavalão,1
+Condessa de Gouvarinho,Tomás de Alencar,1
+Maria Eduarda,Raquel Cohen,1
+Maria Eduarda,Sequeira,1
+Maria Eduarda,Eusebiozinho,1
+Maria Eduarda,Conde de Gouvarinho,1
+Maria Eduarda,Teles da Gama,1
+Condessa de Gouvarinho,Pedro da Maia,1
+Afonso da Maia,Clifford,1
+Afonso da Maia,Jacob Cohen,1
+Afonso da Maia,Domingos,1
+Afonso da Maia,Castro Gomes,1
+Afonso da Maia,Melanie,1
+Baptista,Craft,1
+Baptista,Teles da Gama,1
+Baptista,Cruges,1
+Cruges,Jacob Cohen,1
+Cruges,Castro Gomes,1
+Cruges,Rufino,1
+Cruges,Teles da Gama,1
+Jacob Cohen,Domingos,1
+Jacob Cohen,Palma Cavalão,1
+Jacob Cohen,Sousa Neto,1
+Steinbroken,Clifford,1
+Steinbroken,Sousa Neto,1
+D. Maria da Cunha,Taveira,1
+D. Maria da Cunha,Craft,1
+D. Maria da Cunha,Palma Cavalão,1
+D. Maria da Cunha,Jacob Cohen,1
+D. Maria da Cunha,Rosa,1
+Teles da Gama,Rufino,1

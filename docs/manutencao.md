@@ -34,9 +34,11 @@ Portfolio--Joao_Garcao/
 
 ## Painéis do Livros-PLN
 
-As ligações do portefólio para o Livros-PLN apontam para o GitHub Pages do próprio repositório (https://joo2002vsc.github.io/livros-pln/), que o GitHub Actions do livros-pln atualiza sempre que muda o código ou um livro. Não é preciso copiar nada para o portefólio quando sai uma versão nova.
+O Livros-PLN vive em `projects/language-technologies/livros-pln/`, com o seu próprio workflow (`.github/workflows/livros-pln.yml`). Quando muda um livro, o código, a configuração ou os testes dessa pasta, o workflow corre os testes, reprocessa os livros e faz um commit automático de `resultados/`. Por isso, antes de cada push, fazer `git pull --rebase`.
 
-`projects/language-technologies/livros-pln/demo/` guarda uma cópia de arquivo dos painéis da versão 3.4.1 (6 de novembro de 2026); já não é atualizada nem usada nas ligações. O `index.html` da pasta do projeto reencaminha para a página dos livros analisados.
+Os painéis publicam-se no GitHub Pages do portefólio (https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/); não é preciso copiar nada. As instruções de uso, as pastas de trabalho locais (`config/pastas.toml`, fora do GitHub) e a publicação de obras protegidas só com os indicadores estão no [README do projeto](../projects/language-technologies/livros-pln/README.md).
+
+Até à versão 3.6.0, o projeto viveu no repositório `Joo2002VSC/livros-pln`, agora arquivado; o histórico de commits foi trazido para o portefólio.
 
 ## Acrescentar um projeto
 

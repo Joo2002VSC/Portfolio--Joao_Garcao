@@ -1,0 +1,36 @@
+personagem,mencoes,grau,grau_ponderado,intermediacao,pagerank,comunidade
+Carlos da Maia,1816,33,1427,0.9127,0.1888,1
+João da Ega,1125,31,1004,0.3066,0.1317,1
+Maria Eduarda,321,26,380,0.0,0.0521,1
+Afonso da Maia,320,26,363,0.0553,0.0506,2
+Dâmaso Salcede,415,26,365,0.0,0.05,1
+Vilaça,309,28,282,0.0036,0.041,2
+Craft,239,25,275,0.0,0.0387,1
+Condessa de Gouvarinho,181,24,211,0.0,0.0315,3
+Tomás de Alencar,204,26,206,0.0,0.0309,2
+Cruges,177,25,198,0.0,0.029,4
+Maria Monforte,116,16,137,0.0588,0.024,2
+Taveira,83,22,137,0.0,0.022,4
+Conde de Gouvarinho,89,22,137,0.0,0.0219,3
+Pedro da Maia,129,18,126,0.0036,0.0219,2
+Jacob Cohen,95,17,121,0.0,0.0191,1
+Sequeira,34,20,104,0.0,0.0179,2
+Steinbroken,62,17,101,0.0,0.0176,4
+Guimarães,94,13,105,0.0,0.0171,2
+Baptista,87,18,100,0.0,0.0163,1
+Rosa,86,13,89,0.0,0.016,1
+Castro Gomes,89,16,90,0.0,0.0154,1
+Eusebiozinho,82,16,83,0.0,0.015,4
+D. Diogo,30,16,78,0.0,0.0142,2
+D. Maria da Cunha,67,20,76,0.0,0.0138,3
+Raquel Cohen,45,11,74,0.0,0.0131,1
+Miss Sara,44,9,60,0.0,0.0126,1
+Domingos,45,12,53,0.0,0.0112,1
+Palma Cavalão,61,11,54,0.0,0.011,4
+Melanie,41,10,44,0.0,0.0103,1
+Rufino,29,14,39,0.0,0.0091,3
+Teles da Gama,23,16,32,0.0,0.0087,3
+Sousa Neto,24,7,28,0.0,0.0079,3
+Brown,21,5,25,0.0,0.0073,2
+Clifford,19,7,18,0.0,0.0065,4
+Tancredo,6,4,10,0.0,0.0057,2

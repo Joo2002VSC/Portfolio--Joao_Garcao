@@ -1,0 +1,302 @@
+{
+  "_descricao": "Dicionário de personagens de Os Maias (vem do projeto rede-personagens-os-maias). Cada personagem tem as formas por que é referida no texto; a procura ignora acentos, e as formas com maiúscula exigem maiúscula. 'paragrafos' limita uma forma a um intervalo de parágrafos (para desambiguar). 'ignorar' lista formas que não são personagens.",
+  "personagens": [
+    {
+      "nome": "Afonso da Maia",
+      "aliases": [
+        "Afonso da Maia",
+        "Affonso da Maia",
+        "Afonso",
+        "Affonso"
+      ]
+    },
+    {
+      "nome": "Pedro da Maia",
+      "aliases": [
+        "Pedro da Maia",
+        "Pedro"
+      ]
+    },
+    {
+      "nome": "Maria Monforte",
+      "aliases": [
+        "Maria Monforte",
+        "a Monforte",
+        "da Monforte",
+        "Monforte",
+        {
+          "forma": "Maria",
+          "paragrafos": [
+            0,
+            325
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Carlos da Maia",
+      "aliases": [
+        "Carlos Eduardo da Maia",
+        "Carlos da Maia",
+        "Carlos Eduardo",
+        "Carlos",
+        "Carlinhos"
+      ]
+    },
+    {
+      "nome": "Maria Eduarda",
+      "aliases": [
+        "Maria Eduarda",
+        "Madame Gomes",
+        "Madame Castro Gomes",
+        "Mme. Gomes",
+        "Mme Gomes",
+        {
+          "forma": "Maria",
+          "paragrafos": [
+            326,
+            5759
+          ]
+        }
+      ]
+    },
+    {
+      "nome": "Rosa",
+      "aliases": [
+        "Rosa",
+        "Rosinha"
+      ]
+    },
+    {
+      "nome": "João da Ega",
+      "aliases": [
+        "João da Ega",
+        "Joao da Ega",
+        "Ega"
+      ]
+    },
+    {
+      "nome": "Tomás de Alencar",
+      "aliases": [
+        "Tomás de Alencar",
+        "Thomaz de Alencar",
+        "Tomaz de Alencar",
+        "Alencar"
+      ]
+    },
+    {
+      "nome": "Dâmaso Salcede",
+      "aliases": [
+        "Dâmaso Salcede",
+        "Damaso Salcede",
+        "Dâmaso",
+        "Damaso",
+        "Salcede"
+      ]
+    },
+    {
+      "nome": "Craft",
+      "aliases": [
+        "Craft"
+      ]
+    },
+    {
+      "nome": "Cruges",
+      "aliases": [
+        "Cruges"
+      ]
+    },
+    {
+      "nome": "Eusebiozinho",
+      "aliases": [
+        "Eusebiozinho",
+        "Eusebiosinho",
+        "Eusébio",
+        "Eusebio",
+        "Silveirinha"
+      ]
+    },
+    {
+      "nome": "Vilaça",
+      "aliases": [
+        "Vilaça",
+        "Villaça"
+      ]
+    },
+    {
+      "nome": "Condessa de Gouvarinho",
+      "aliases": [
+        "Condessa de Gouvarinho",
+        "condessa",
+        "a Gouvarinho",
+        "da Gouvarinho",
+        "à Gouvarinho",
+        "pela Gouvarinho",
+        "na Gouvarinho"
+      ]
+    },
+    {
+      "nome": "Conde de Gouvarinho",
+      "aliases": [
+        "Conde de Gouvarinho",
+        "o Gouvarinho",
+        "do Gouvarinho",
+        "ao Gouvarinho",
+        "pelo Gouvarinho",
+        "no Gouvarinho",
+        "Gouvarinho"
+      ]
+    },
+    {
+      "nome": "Raquel Cohen",
+      "aliases": [
+        "Raquel Cohen",
+        "Rachel Cohen",
+        "Raquel",
+        "Rachel",
+        "a Cohen",
+        "da Cohen"
+      ]
+    },
+    {
+      "nome": "Jacob Cohen",
+      "aliases": [
+        "Jacob Cohen",
+        "o Cohen",
+        "do Cohen",
+        "ao Cohen",
+        "Cohen"
+      ]
+    },
+    {
+      "nome": "D. Maria da Cunha",
+      "aliases": [
+        "D. Maria da Cunha",
+        "Maria da Cunha",
+        "D. Maria"
+      ]
+    },
+    {
+      "nome": "Steinbroken",
+      "aliases": [
+        "Steinbroken"
+      ]
+    },
+    {
+      "nome": "Palma Cavalão",
+      "aliases": [
+        "Palma Cavalão",
+        "Palma Cavallão",
+        "Palma"
+      ]
+    },
+    {
+      "nome": "Guimarães",
+      "aliases": [
+        "Guimarães",
+        "Guimaraens"
+      ]
+    },
+    {
+      "nome": "Castro Gomes",
+      "aliases": [
+        "Castro Gomes",
+        "o Gomes",
+        "do Gomes"
+      ]
+    },
+    {
+      "nome": "Tancredo",
+      "aliases": [
+        "Tancredo"
+      ]
+    },
+    {
+      "nome": "Sousa Neto",
+      "aliases": [
+        "Sousa Neto",
+        "Souza Netto",
+        "Sousa Netto",
+        "Souza Neto"
+      ]
+    },
+    {
+      "nome": "Taveira",
+      "aliases": [
+        "Taveira"
+      ]
+    },
+    {
+      "nome": "Teles da Gama",
+      "aliases": [
+        "Teles da Gama",
+        "Telles da Gama"
+      ]
+    },
+    {
+      "nome": "Brown",
+      "aliases": [
+        "Brown"
+      ]
+    },
+    {
+      "nome": "Miss Sara",
+      "aliases": [
+        "Miss Sara",
+        "Miss Sarah",
+        "Sarah"
+      ]
+    },
+    {
+      "nome": "Baptista",
+      "aliases": [
+        "Baptista",
+        "Batista"
+      ]
+    },
+    {
+      "nome": "Melanie",
+      "aliases": [
+        "Melanie"
+      ]
+    },
+    {
+      "nome": "Rufino",
+      "aliases": [
+        "Rufino"
+      ]
+    },
+    {
+      "nome": "D. Diogo",
+      "aliases": [
+        "D. Diogo"
+      ]
+    },
+    {
+      "nome": "Domingos",
+      "aliases": [
+        "Domingos"
+      ]
+    },
+    {
+      "nome": "Clifford",
+      "aliases": [
+        "Clifford"
+      ]
+    },
+    {
+      "nome": "Sequeira",
+      "aliases": [
+        "Sequeira"
+      ]
+    }
+  ],
+  "ignorar": [
+    "D. Maria Lima",
+    "Maria Lima",
+    "Ave Maria",
+    "Ave-Maria",
+    "Santa Maria",
+    "Virgem Maria"
+  ]
+}

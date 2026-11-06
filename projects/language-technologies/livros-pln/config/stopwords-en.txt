@@ -1,0 +1,4 @@
+# Palavras a ignorar nas frequências e nas entidades, além das stopwords do spaCy.
+# Uma por linha, em minúsculas.
+mr
+mrs

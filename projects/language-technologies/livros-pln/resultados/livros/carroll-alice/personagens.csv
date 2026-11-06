@@ -1,0 +1,10 @@
+personagem,mencoes,grau,grau_ponderado,intermediacao,pagerank,comunidade
+Alice,394,8,47,0.9286,0.3854,1
+Queen,27,4,17,0.0,0.1377,1
+Mouse,23,3,13,0.0,0.1146,1
+Hatter,52,3,13,0.0,0.1096,2
+Dormouse,21,3,9,0.0,0.0801,2
+Dinah,6,2,5,0.0,0.052,1
+Bill,14,2,5,0.0,0.0514,1
+William,6,2,4,0.0,0.0456,1
+Knave,5,1,1,0.0,0.0236,1

@@ -22,7 +22,7 @@ HTML · CSS · JavaScript (SVG) · Python · [Open the dashboard ↗](https://jo
 ### [Livros-PLN](./projects/language-technologies/livros-pln)
 
 Computational analysis of books in Portuguese, French and English: lexical diversity, syntax, readability (easy or difficult), sentiment, collocations, Zipf's and Heaps' laws and a 3D character network. Every indicator comes with a definition, limitations and a reference, and the results are delivered as an interactive dashboard, reports and Excel files.
-Python · spaCy · pandas · Plotly · GitHub Actions · [See the analysed books ↗](https://joo2002vsc.github.io/livros-pln/)
+Python · spaCy · pandas · Plotly · GitHub Actions · [See the analysed books ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/)
 
 ### Vitória SC accounts
 
