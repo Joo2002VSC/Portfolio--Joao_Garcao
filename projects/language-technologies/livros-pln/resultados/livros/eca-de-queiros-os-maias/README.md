@@ -311,4 +311,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Yule, G. U. (1944). *The statistical study of literary vocabulary*. Cambridge University Press.
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 10:21 UTC · livros_pln 3.1.0 · código `67ad47c7d770` · commit `fb8460f` · Python 3.13.5 · spaCy 3.8.18 · pt_core_news_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 10:32 UTC · livros_pln 3.1.0 · código `872cc50466db` · commit `725f504` · Python 3.13.5 · spaCy 3.8.18 · pt_core_news_md 3.8.0</sub>

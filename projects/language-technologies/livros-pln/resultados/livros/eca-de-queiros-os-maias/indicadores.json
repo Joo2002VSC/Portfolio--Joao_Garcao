@@ -153,11 +153,11 @@
   },
   "processamento": {
     "versao": "3.1.0",
-    "versao_codigo": "67ad47c7d770",
-    "commit": "fb8460f",
+    "versao_codigo": "872cc50466db",
+    "commit": "725f504",
     "hash_ficheiro": "843d9f5f2fdf6fb8",
     "hash_dicionario": "66c19fc9e56d37ab",
-    "data": "2026-11-06 10:21 UTC",
+    "data": "2026-11-06 10:32 UTC",
     "duracao_s": 19.1
   },
   "graficos": [

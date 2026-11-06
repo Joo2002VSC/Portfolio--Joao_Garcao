@@ -137,9 +137,11 @@ def test_analisar_produz_painel_excel_e_rede(tmp_path: Path, capsys):
     assert processar.main(["analisar", str(f), "--saida", str(saida)]) == 0
     pasta = saida / "livros" / "teste"
     html = (pasta / "painel.html").read_text(encoding="utf-8")
-    assert "Rede de personagens em 3D" in html and "scatter3d" in html
+    assert "scatter3d" in html
     assert 'rel="icon"' in html and "data:image/png;base64," in html    # ícone do projeto embutido
     assert '"frames"' not in html and "Rodar" not in html               # a rede só roda quando o leitor a arrasta
+    assert '<footer class="rodape">' in html and "Rede de Personagens em 3D" in html
+
     folhas = pd.ExcelFile(pasta / "teste.xlsx").sheet_names
     assert {"Metadados", "Indicadores", "Personagens", "Ligações", "Frequências"} <= set(folhas)
     pers = pd.read_csv(pasta / "personagens.csv")
@@ -159,3 +161,10 @@ def test_analisar_produz_painel_excel_e_rede(tmp_path: Path, capsys):
 def test_analisar_link_invalido(capsys):
     assert processar.main(["analisar", "https://exemplo.org/pagina.html"]) == 1
     assert "tem de apontar" in capsys.readouterr().err
+
+
+def test_maiusculas_nos_titulos():
+    from livros_pln.interativo import maiusculas
+    assert maiusculas("extensão das frases e diversidade lexical") == "Extensão das Frases e Diversidade Lexical"
+    assert maiusculas("PageRank na rede de co-ocorrência") == "PageRank na Rede de Co-ocorrência"
+    assert maiusculas("de onde vem; a rede") == "De Onde Vem; A Rede"

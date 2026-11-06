@@ -3,10 +3,12 @@
 ## 3.1.0 · 2026-11-06
 
 **Painéis interativos (HTML)**
-- Novo aspeto editorial: fundo bege, tinta quase preta e castanhos, títulos em serifa (Fraunces, com Georgia como alternativa), cabeçalho escuro e navegação fixa por secções (Resumo, Personagens, Vocabulário e gramática, Frases e evolução, Lugares).
+- Aspeto editorial com a paleta bege, preto e castanho: cabeçalho com o ícone num selo dourado, título em Cormorant Garamond, autoria em itálico e dados principais do livro; índice fixo com secções numeradas em romano.
+- Indicadores principais em números grandes, numa grelha com filetes, sem cartões; ficha técnica com linhas pontilhadas e notas sobre a qualidade dos dados.
+- Gráficos sem caixas, sobre o fundo da página, com título e subtítulo escritos no HTML; títulos e subtítulos com maiúscula inicial em cada palavra (exceto artigos, preposições e conjunções curtas).
+- Rodapé com descrição do projeto, ligações (relatório, todos os livros, Excel, repositório) e dados técnicos da análise.
 - Ícone do projeto no separador do navegador (favicon) e no cabeçalho, embutido no próprio HTML para funcionar no GitHub Pages e em ficheiros abertos localmente.
-- A rede de personagens em 3D deixou de rodar automaticamente e já não tem botões de animação: é o leitor que a roda, arrastando com o rato ou com o dedo.
-- Comunidades da rede distinguidas por cor e por forma; avisos de qualidade num destaque próprio; legendas por baixo dos gráficos.
+- A rede de personagens em 3D deixou de rodar automaticamente e já não tem botões de animação: é o leitor que a roda, arrastando com o rato ou com o dedo. Nós e nomes maiores; comunidades distinguidas por cor e por forma.
 - Os gráficos estáticos (PNG/SVG) mantêm a paleta de `tema.py`.
 
 ## 3.0.0 · 2026-11-05
