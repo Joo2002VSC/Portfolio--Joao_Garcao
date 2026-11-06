@@ -1,8 +1,8 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.5.1 (código `7af9206d774a`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.6.0 (código `ef6194c1e308`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
-**3 livros · 284 846 palavras** · 2 em português, 1 em inglês
+**5 livros · 535 697 palavras** · 2 em português, 2 em francês, 1 em inglês
 
 **[Painel interativo de comparação](painel.html)** · [`indicadores.csv`](indicadores.csv) · [`indicadores.xlsx`](indicadores.xlsx) (uma linha por livro; o Excel inclui o dicionário de indicadores)
 
@@ -15,6 +15,15 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 | Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Alice's Adventures in Wonderland](livros/carroll-alice/README.md) | Lewis Carroll | 1865 | 26 594 | 73,3 | 12 | 4,14 | 42,0 | 80 |
+
+### Francês
+
+| Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [L'Iliade](livros/homere-l-iliade/README.md) | Homère | nan | 138 883 | 99,1 | 15 | 3,87 | 45,8 | 83 |
+| [L'Odyssée](livros/homere-l-odyssee/README.md) | Homère | nan | 111 968 | 100,5 | 16 | 3,87 | 45,8 | 83 |
+
+Entre os livros em francês, o MTLD mais alto é o de *L'Odyssée* (100,5).
 
 ### Português
 
@@ -39,13 +48,16 @@ Entre os livros em português, o MTLD mais alto é o de *Os Lusíadas* (151,2).
 ![Evolução](graficos/evolucao-comparada.png)
 <sub>[SVG](graficos/evolucao-comparada.svg)</sub>
 
-*Matriz de correlação entre indicadores: não aplicável* (3 livros; são precisos pelo menos 5 para que as correlações tenham algum significado).
+![Correlações](graficos/correlacoes.png)
+<sub>[SVG](graficos/correlacoes.svg)</sub>
 
 ## Estilometria (Delta de Burrows)
 
 Distância estilística a partir da frequência das palavras mais frequentes (sobretudo palavras gramaticais), calculada só entre livros da mesma língua. Uma distância pequena indica semelhança no uso dessas palavras; não é prova de autoria.
 
 - **Inglês**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
+
+- **Francês**: *não aplicável* (2 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 
 - **Português**: *não aplicável* (2 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 

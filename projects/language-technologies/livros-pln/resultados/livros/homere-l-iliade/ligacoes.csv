@@ -1,0 +1,519 @@
+origem,destino,peso
+Zeus Kroniôn,Hektôr Priamide,56
+Akhilleus Pèléide,Zeus Kroniôn,52
+Pallas Athènè,Zeus Kroniôn,50
+Zeus Kroniôn,Arès Alkimos,43
+Akhilleus Pèléide,Hektôr Priamide,42
+Patroklos Ménoitiade,Akhilleus Pèléide,39
+Zeus Kroniôn,Hèrè,39
+Zeus Kroniôn,Ilios,35
+Patroklos Ménoitiade,Hektôr Priamide,32
+Hektôr Priamide,Aias Télamônien,30
+Pallas Athènè,Arès Alkimos,29
+Zeus Kroniôn,Aias Télamônien,28
+Akhilleus Pèléide,Ilios,27
+Ilios,Hektôr Priamide,25
+Zeus Kroniôn,Danaens,25
+Pallas Athènè,Hèrè,23
+Patroklos Ménoitiade,Zeus Kroniôn,22
+Ouranos Olympien,Zeus Kroniôn,22
+Zeus Kroniôn,Agamemnôn Atréide,21
+Pallas Athènè,Hektôr Priamide,20
+Pallas Athènè,Akhilleus Pèléide,20
+Ménélaos Atréide,Zeus Kroniôn,19
+Zeus Kroniôn,Subtil Odysseus,19
+Patroklos Ménoitiade,Aias Télamônien,19
+Hektôr Priamide,Arès Alkimos,19
+Pallas Athènè,Subtil Odysseus,18
+Zeus Kroniôn,Hélios,18
+Akhilleus Pèléide,Subtil Odysseus,17
+Akhilleus Pèléide,Aias Télamônien,17
+Aias Télamônien,Subtil Odysseus,17
+Akhilleus Pèléide,Arès Alkimos,16
+Zeus Kroniôn,Poseidaôn,16
+Ménélaos Atréide,Arès Alkimos,16
+Apollôn Lykien,Zeus Kroniôn,16
+Akhilleus Pèléide,Agamemnôn Atréide,16
+Troiè,Zeus Kroniôn,16
+Ménélaos Atréide,Aias Télamônien,15
+Aias Télamônien,Arès Alkimos,15
+Hektôr Priamide,Danaens,15
+Ménélaos Atréide,Alexandros,15
+Zeus Kroniôn,Aphroditè,15
+Aidès,Zeus Kroniôn,14
+Patroklos Ménoitiade,Ilios,13
+Akhilleus Pèléide,Déesse Thétis,13
+Agamemnôn Atréide,Arès Alkimos,13
+Zeus Kroniôn,Déesse Thétis,13
+Akhilleus Pèléide,Hèrè,13
+Apollôn Lykien,Hektôr Priamide,12
+Idoméneus Deukalide,Aias Télamônien,12
+Hektôr Priamide,Agamemnôn Atréide,12
+Idoméneus Deukalide,Arès Alkimos,11
+Hektôr Priamide,Hèrè,11
+Ilios,Agamemnôn Atréide,11
+Ménélaos Atréide,Agamemnôn Atréide,11
+Apollôn Lykien,Ilios,11
+Pallas Athènè,Ilios,11
+Ouranos Olympien,Pallas Athènè,11
+Ilios,Arès Alkimos,11
+Agamemnôn Atréide,Subtil Odysseus,11
+Troiè,Hektôr Priamide,11
+Hektôr Priamide,Polydamas Panthoide,11
+Arès Alkimos,Aphroditè,11
+Arès Alkimos,Hèrè,11
+Agamemnôn Atréide,Danaens,10
+Zeus Kroniôn,Nestôr Nèlèiade,10
+Akhilleus Pèléide,Poseidaôn,10
+Sarpèdôn,Hektôr Priamide,10
+Phoibos Apollôn,Hektôr Priamide,10
+Sarpèdôn,Zeus Kroniôn,10
+Aidès,Hektôr Priamide,10
+Diomèdès Tydéide,Tydeus Oinéide,10
+Akhilleus Pèléide,Danaens,10
+Aidès,Akhilleus Pèléide,10
+Idoméneus Deukalide,Mèrionès,9
+Patroklos Ménoitiade,Ménélaos Atréide,9
+Hektôr Priamide,Subtil Odysseus,9
+Patroklos Ménoitiade,Sarpèdôn,9
+Akhilleus Pèléide,Myrmidones,9
+Ouranos Olympien,Hèrè,9
+Phoibos Apollôn,Zeus Kroniôn,9
+Ménélaos Atréide,Hektôr Priamide,9
+Déesse Iris,Zeus Kroniôn,8
+Agamemnôn Atréide,Aias Télamônien,8
+Zeus Kroniôn,Tydeus Oinéide,8
+Subtil Odysseus,Nestôr Nèlèiade,8
+Ilios,Danaens,8
+Pallas Athènè,Aphroditè,8
+Ménélaos Atréide,Ilios,8
+Ainéias Ankhisiade,Akhilleus Pèléide,8
+Arès Alkimos,Subtil Odysseus,8
+Phoibos Apollôn,Arès Alkimos,8
+Zeus Kroniôn,Kronos,8
+Pallas Athènè,Danaens,8
+Pallas Athènè,Phoibos Apollôn,8
+Ouranos Olympien,Akhilleus Pèléide,8
+Ainéias Ankhisiade,Hektôr Priamide,8
+Pallas Athènè,Poseidaôn,7
+Kronos,Hèrè,7
+Aidès,Ilios,7
+Ouranos Olympien,Hélios,7
+Pallas Athènè,Apollôn Lykien,7
+Pallas Athènè,Diomèdès Tydéide,7
+Patroklos Ménoitiade,Agamemnôn Atréide,7
+Alexandros,Arès Alkimos,7
+Akhilleus Pèléide,Hélios,7
+Subtil Odysseus,Danaens,7
+Pallas Athènè,Hélios,7
+Pallas Athènè,Tydeus Oinéide,7
+Aias Télamônien,Danaens,7
+Troiè,Akhilleus Pèléide,7
+Diomèdès Tydéide,Subtil Odysseus,7
+Sarpèdôn,Glaukos,7
+Patroklos Ménoitiade,Ménoitios,6
+Arès Alkimos,Danaens,6
+Agamemnôn Atréide,Nestôr Nèlèiade,6
+Troiè,Arès Alkimos,6
+Zeus Kroniôn,Idoméneus Deukalide,6
+Ilios,Hélios,6
+Ouranos Olympien,Arès Alkimos,6
+Poseidaôn,Arès Alkimos,6
+Akhilleus Pèléide,Nestôr Nèlèiade,6
+Ilios,Hèrè,6
+Alexandros,Hektôr Priamide,6
+Aias Télamônien,Nestôr Nèlèiade,6
+Patroklos Ménoitiade,Pallas Athènè,6
+Déesse Iris,Hèrè,6
+Alexandros,Zeus Kroniôn,6
+Akhilleus Pèléide,Apollôn Lykien,6
+Diomèdès Tydéide,Agamemnôn Atréide,6
+Hektôr Priamide,Tydeus Oinéide,6
+Patroklos Ménoitiade,Myrmidones,6
+Patroklos Ménoitiade,Danaens,6
+Ainéias Ankhisiade,Zeus Kroniôn,6
+Ilios,Aias Télamônien,6
+Hektôr Priamide,Hélios,6
+Ainéias Ankhisiade,Ilios,6
+Aidès,Pallas Athènè,6
+Ménélaos Atréide,Pallas Athènè,6
+Phoibos Apollôn,Ilios,6
+Diomèdès Tydéide,Arès Alkimos,6
+Phoibos Apollôn,Danaens,6
+Ilios,Déesse Thétis,6
+Zeus Kroniôn,Père Zeus,6
+Phoibos Apollôn,Akhilleus Pèléide,6
+Idoméneus Deukalide,Nestôr Nèlèiade,6
+Idoméneus Deukalide,Hektôr Priamide,6
+Poseidaôn,Hèrè,6
+Ménélaos Atréide,Nestôr Nèlèiade,6
+Gérennien Nestôr,Subtil Odysseus,6
+Gérennien Nestôr,Nestôr Nèlèiade,6
+Ménélaos Atréide,Idoméneus Deukalide,6
+Patroklos Ménoitiade,Hèrè,6
+Hélios,Agamemnôn Atréide,6
+Aias Télamônien,Mèrionès,5
+Akhilleus Pèléide,Idoméneus Deukalide,5
+Ilios,Poseidaôn,5
+Déesse Iris,Arès Alkimos,5
+Arès Alkimos,Mèrionès,5
+Arès Alkimos,Nestôr Nèlèiade,5
+Ménélaos Atréide,Mèrionès,5
+Hektôr Priamide,Nestôr Nèlèiade,5
+Hektôr Priamide,Déesse Thétis,5
+Idoméneus Deukalide,Agamemnôn Atréide,5
+Zeus Kroniôn,Polydamas Panthoide,5
+Zeus Kroniôn,Myrmidones,5
+Phoibos Apollôn,Poseidaôn,5
+Diomèdès Tydéide,Nestôr Nèlèiade,5
+Sarpèdôn,Aias Télamônien,5
+Aidès,Arès Alkimos,5
+Ainéias Ankhisiade,Arès Alkimos,5
+Ménélaos Atréide,Subtil Odysseus,5
+Pallas Athènè,Déesse Iris,5
+Pallas Athènè,Kronos,5
+Viens,Zeus Kroniôn,5
+Danaens,Hèrè,5
+Patroklos Ménoitiade,Déesse Thétis,5
+Poseidaôn,Danaens,5
+Hélios,Arès Alkimos,5
+Troiè,Alexandros,4
+Troiè,Danaens,4
+Troiè,Ilios,4
+Agamemnôn Atréide,Hèrè,4
+Aidès,Ainéias Ankhisiade,4
+Aphroditè,Hèrè,4
+Mèrionès,Nestôr Nèlèiade,4
+Danaens,Déesse Thétis,4
+Apollôn Lykien,Agamemnôn Atréide,4
+Apollôn Lykien,Aias Télamônien,4
+Ouranos Olympien,Ilios,4
+Ouranos Olympien,Danaens,4
+Pallas Athènè,Aias Télamônien,4
+Ainéias Ankhisiade,Polydamas Panthoide,4
+Pallas Athènè,Agamemnôn Atréide,4
+Viens,Arès Alkimos,4
+Hektôr Priamide,Glaukos,4
+Diomèdès Tydéide,Zeus Kroniôn,4
+Akhilleus Pèléide,Ménoitios,4
+Hektôr Priamide,Père Zeus,4
+Patroklos Ménoitiade,Subtil Odysseus,4
+Aias Télamônien,Polydamas Panthoide,4
+Déesse Thétis,Hèrè,4
+Patroklos Ménoitiade,Arès Alkimos,4
+Déesse Iris,Hektôr Priamide,4
+Déesse Iris,Ilios,4
+Patroklos Ménoitiade,Phoibos Apollôn,4
+Dèiphobos,Hektôr Priamide,4
+Ilios,Polydamas Panthoide,4
+Ainéias Ankhisiade,Danaens,4
+Ainéias Ankhisiade,Tydeus Oinéide,4
+Aidès,Tydeus Oinéide,4
+Ménélaos Atréide,Akhilleus Pèléide,4
+Ouranos Olympien,Hektôr Priamide,4
+Ménélaos Atréide,Danaens,4
+Diomèdès Tydéide,Ilios,4
+Phoibos Apollôn,Hèrè,4
+Phoibos Apollôn,Aphroditè,4
+Diomèdès Tydéide,Aias Télamônien,4
+Diomèdès Tydéide,Hektôr Priamide,4
+Akhilleus Pèléide,Déesse Iris,4
+Idoméneus Deukalide,Subtil Odysseus,4
+Ilios,Kronos,4
+Ainéias Ankhisiade,Aias Télamônien,4
+Hektôr Priamide,Poseidaôn,4
+Hektôr Priamide,Mèrionès,4
+Ouranos Olympien,Déesse Thétis,4
+Ouranos Olympien,Aidès,4
+Ainéias Ankhisiade,Glaukos,3
+Ainéias Ankhisiade,Pallas Athènè,3
+Gérennien Nestôr,Zeus Kroniôn,3
+Ménélaos Atréide,Diomèdès Tydéide,3
+Patroklos Ménoitiade,Aidès,3
+Viens,Alexandros,3
+Patroklos Ménoitiade,Apollôn Lykien,3
+Viens,Ménélaos Atréide,3
+Pallas Athènè,Nestôr Nèlèiade,3
+Pallas Athènè,Alexandros,3
+Patroklos Ménoitiade,Déesse Iris,3
+Pallas Athènè,Déesse Thétis,3
+Apollôn Lykien,Arès Alkimos,3
+Apollôn Lykien,Diomèdès Tydéide,3
+Akhilleus Pèléide,Mèrionès,3
+Polydamas Panthoide,Glaukos,3
+Père Zeus,Aphroditè,3
+Hélios,Subtil Odysseus,3
+Hélios,Ménoitios,3
+Ouranos Olympien,Déesse Iris,3
+Poseidaôn,Aias Télamônien,3
+Troiè,Hèrè,3
+Agamemnôn Atréide,Mèrionès,3
+Troiè,Ménélaos Atréide,3
+Danaens,Aphroditè,3
+Danaens,Père Zeus,3
+Tydeus Oinéide,Aphroditè,3
+Subtil Odysseus,Tydeus Oinéide,3
+Ouranos Olympien,Phoibos Apollôn,3
+Ainéias Ankhisiade,Poseidaôn,3
+Aidès,Phoibos Apollôn,3
+Ménélaos Atréide,Apollôn Lykien,3
+Ainéias Ankhisiade,Diomèdès Tydéide,3
+Ilios,Aphroditè,3
+Ainéias Ankhisiade,Ménélaos Atréide,3
+Ainéias Ankhisiade,Apollôn Lykien,3
+Ilios,Nestôr Nèlèiade,3
+Gérennien Nestôr,Aias Télamônien,3
+Zeus Kroniôn,Mèrionès,3
+Zeus Kroniôn,Glaukos,3
+Ainéias Ankhisiade,Sarpèdôn,3
+Zeus Kroniôn,Ménoitios,3
+Sarpèdôn,Polydamas Panthoide,3
+Akhilleus Pèléide,Kronos,3
+Alexandros,Ilios,3
+Alexandros,Agamemnôn Atréide,3
+Gérennien Nestôr,Hektôr Priamide,3
+Ilios,Tydeus Oinéide,3
+Hektôr Priamide,Aphroditè,3
+Hektôr Priamide,Myrmidones,3
+Hektôr Priamide,Ménoitios,3
+Hélios,Hèrè,3
+Aias Télamônien,Père Zeus,3
+Alexandros,Père Zeus,3
+Alexandros,Aphroditè,3
+Déesse Iris,Danaens,3
+Aias Télamônien,Tydeus Oinéide,3
+Patroklos Ménoitiade,Hélios,3
+Aias Télamônien,Glaukos,3
+Aias Télamônien,Hèrè,3
+Patroklos Ménoitiade,Nestôr Nèlèiade,2
+Patroklos Ménoitiade,Ouranos Olympien,2
+Patroklos Ménoitiade,Mèrionès,2
+Tydeus Oinéide,Père Zeus,2
+Tydeus Oinéide,Nestôr Nèlèiade,2
+Subtil Odysseus,Déesse Thétis,2
+Subtil Odysseus,Hèrè,2
+Patroklos Ménoitiade,Troiè,2
+Apollôn Lykien,Hélios,2
+Apollôn Lykien,Poseidaôn,2
+Aphroditè,Déesse Thétis,2
+Kronos,Déesse Thétis,2
+Danaens,Nestôr Nèlèiade,2
+Akhilleus Pèléide,Diomèdès Tydéide,2
+Akhilleus Pèléide,Tydeus Oinéide,2
+Diomèdès Tydéide,Danaens,2
+Sarpèdôn,Danaens,2
+Diomèdès Tydéide,Idoméneus Deukalide,2
+Diomèdès Tydéide,Mèrionès,2
+Phoibos Apollôn,Diomèdès Tydéide,2
+Pallas Athènè,Dèiphobos,2
+Sarpèdôn,Ménoitios,2
+Sarpèdôn,Ilios,2
+Sarpèdôn,Arès Alkimos,2
+Phoibos Apollôn,Déesse Thétis,2
+Phoibos Apollôn,Tydeus Oinéide,2
+Akhilleus Pèléide,Polydamas Panthoide,2
+Akhilleus Pèléide,Sarpèdôn,2
+Akhilleus Pèléide,Père Zeus,2
+Akhilleus Pèléide,Alexandros,2
+Diomèdès Tydéide,Hèrè,2
+Diomèdès Tydéide,Aphroditè,2
+Alexandros,Hélios,2
+Alexandros,Diomèdès Tydéide,2
+Dèiphobos,Zeus Kroniôn,2
+Dèiphobos,Idoméneus Deukalide,2
+Dèiphobos,Mèrionès,2
+Dèiphobos,Arès Alkimos,2
+Déesse Iris,Aphroditè,2
+Déesse Iris,Déesse Thétis,2
+Ouranos Olympien,Ménélaos Atréide,2
+Hélios,Danaens,2
+Hélios,Aphroditè,2
+Hélios,Nestôr Nèlèiade,2
+Hélios,Aias Télamônien,2
+Poseidaôn,Agamemnôn Atréide,2
+Agamemnôn Atréide,Ménoitios,2
+Poseidaôn,Déesse Thétis,2
+Ouranos Olympien,Kronos,2
+Ouranos Olympien,Diomèdès Tydéide,2
+Ainéias Ankhisiade,Phoibos Apollôn,2
+Ouranos Olympien,Apollôn Lykien,2
+Ilios,Myrmidones,2
+Ilios,Ménoitios,2
+Ainéias Ankhisiade,Agamemnôn Atréide,2
+Ouranos Olympien,Aias Télamônien,2
+Ainéias Ankhisiade,Aphroditè,2
+Agamemnôn Atréide,Myrmidones,2
+Ménoitios,Subtil Odysseus,2
+Ménoitios,Arès Alkimos,2
+Arès Alkimos,Père Zeus,2
+Arès Alkimos,Déesse Thétis,2
+Arès Alkimos,Tydeus Oinéide,2
+Ménoitios,Danaens,2
+Viens,Phoibos Apollôn,2
+Agamemnôn Atréide,Tydeus Oinéide,2
+Viens,Hektôr Priamide,2
+Troiè,Aias Télamônien,2
+Troiè,Pallas Athènè,2
+Troiè,Poseidaôn,2
+Troiè,Agamemnôn Atréide,2
+Troiè,Sarpèdôn,2
+Pallas Athènè,Sarpèdôn,2
+Aidès,Déesse Thétis,2
+Ouranos Olympien,Nestôr Nèlèiade,2
+Ilios,Subtil Odysseus,2
+Ménélaos Atréide,Hélios,2
+Ménélaos Atréide,Aphroditè,2
+Ainéias Ankhisiade,Mèrionès,2
+Ainéias Ankhisiade,Idoméneus Deukalide,2
+Gérennien Nestôr,Agamemnôn Atréide,2
+Idoméneus Deukalide,Tydeus Oinéide,2
+Gérennien Nestôr,Diomèdès Tydéide,2
+Ménélaos Atréide,Phoibos Apollôn,2
+Phoibos Apollôn,Sarpèdôn,2
+Gérennien Nestôr,Arès Alkimos,2
+Phoibos Apollôn,Apollôn Lykien,2
+Apollôn Lykien,Myrmidones,1
+Patroklos Ménoitiade,Aphroditè,1
+Apollôn Lykien,Danaens,1
+Apollôn Lykien,Polydamas Panthoide,1
+Apollôn Lykien,Père Zeus,1
+Apollôn Lykien,Subtil Odysseus,1
+Apollôn Lykien,Aphroditè,1
+Apollôn Lykien,Hèrè,1
+Apollôn Lykien,Alexandros,1
+Danaens,Myrmidones,1
+Kronos,Polydamas Panthoide,1
+Glaukos,Myrmidones,1
+Père Zeus,Hèrè,1
+Tydeus Oinéide,Danaens,1
+Mèrionès,Danaens,1
+Tydeus Oinéide,Hèrè,1
+Tydeus Oinéide,Glaukos,1
+Phoibos Apollôn,Père Zeus,1
+Pallas Athènè,Polydamas Panthoide,1
+Phoibos Apollôn,Myrmidones,1
+Phoibos Apollôn,Agamemnôn Atréide,1
+Sarpèdôn,Hèrè,1
+Sarpèdôn,Déesse Thétis,1
+Sarpèdôn,Poseidaôn,1
+Sarpèdôn,Myrmidones,1
+Sarpèdôn,Subtil Odysseus,1
+Akhilleus Pèléide,Dèiphobos,1
+Diomèdès Tydéide,Glaukos,1
+Gérennien Nestôr,Mèrionès,1
+Gérennien Nestôr,Akhilleus Pèléide,1
+Diomèdès Tydéide,Hélios,1
+Apollôn Lykien,Ménoitios,1
+Apollôn Lykien,Dèiphobos,1
+Dèiphobos,Ilios,1
+Déesse Iris,Poseidaôn,1
+Déesse Iris,Sarpèdôn,1
+Alexandros,Hèrè,1
+Alexandros,Mèrionès,1
+Alexandros,Glaukos,1
+Alexandros,Aias Télamônien,1
+Dèiphobos,Danaens,1
+Alexandros,Subtil Odysseus,1
+Alexandros,Idoméneus Deukalide,1
+Alexandros,Polydamas Panthoide,1
+Alexandros,Nestôr Nèlèiade,1
+Alexandros,Poseidaôn,1
+Gérennien Nestôr,Idoméneus Deukalide,1
+Gérennien Nestôr,Alexandros,1
+Gérennien Nestôr,Tydeus Oinéide,1
+Apollôn Lykien,Idoméneus Deukalide,1
+Apollôn Lykien,Nestôr Nèlèiade,1
+Apollôn Lykien,Mèrionès,1
+Déesse Iris,Hélios,1
+Déesse Iris,Agamemnôn Atréide,1
+Patroklos Ménoitiade,Poseidaôn,1
+Patroklos Ménoitiade,Glaukos,1
+Patroklos Ménoitiade,Kronos,1
+Patroklos Ménoitiade,Viens,1
+Patroklos Ménoitiade,Père Zeus,1
+Patroklos Ménoitiade,Idoméneus Deukalide,1
+Subtil Odysseus,Père Zeus,1
+Subtil Odysseus,Mèrionès,1
+Subtil Odysseus,Aphroditè,1
+Viens,Pallas Athènè,1
+Pallas Athènè,Mèrionès,1
+Ménélaos Atréide,Père Zeus,1
+Ménélaos Atréide,Tydeus Oinéide,1
+Ainéias Ankhisiade,Dèiphobos,1
+Ainéias Ankhisiade,Hélios,1
+Pallas Athènè,Myrmidones,1
+Pallas Athènè,Ménoitios,1
+Idoméneus Deukalide,Danaens,1
+Idoméneus Deukalide,Poseidaôn,1
+Pallas Athènè,Père Zeus,1
+Ménélaos Atréide,Poseidaôn,1
+Ménélaos Atréide,Déesse Iris,1
+Ménélaos Atréide,Sarpèdôn,1
+Phoibos Apollôn,Glaukos,1
+Phoibos Apollôn,Hélios,1
+Phoibos Apollôn,Subtil Odysseus,1
+Phoibos Apollôn,Déesse Iris,1
+Ouranos Olympien,Gérennien Nestôr,1
+Ouranos Olympien,Aphroditè,1
+Ouranos Olympien,Glaukos,1
+Ouranos Olympien,Alexandros,1
+Ilios,Mèrionès,1
+Ainéias Ankhisiade,Nestôr Nèlèiade,1
+Hélios,Père Zeus,1
+Aidès,Diomèdès Tydéide,1
+Aidès,Apollôn Lykien,1
+Aidès,Idoméneus Deukalide,1
+Aidès,Danaens,1
+Aidès,Aphroditè,1
+Aidès,Subtil Odysseus,1
+Aidès,Agamemnôn Atréide,1
+Aidès,Kronos,1
+Aidès,Ménoitios,1
+Ménélaos Atréide,Polydamas Panthoide,1
+Ménélaos Atréide,Ménoitios,1
+Aidès,Aias Télamônien,1
+Aidès,Hèrè,1
+Ménélaos Atréide,Hèrè,1
+Phoibos Apollôn,Polydamas Panthoide,1
+Phoibos Apollôn,Aias Télamônien,1
+Hélios,Polydamas Panthoide,1
+Poseidaôn,Nestôr Nèlèiade,1
+Poseidaôn,Ménoitios,1
+Hélios,Poseidaôn,1
+Ouranos Olympien,Poseidaôn,1
+Aidès,Père Zeus,1
+Ouranos Olympien,Ainéias Ankhisiade,1
+Ouranos Olympien,Subtil Odysseus,1
+Ouranos Olympien,Père Zeus,1
+Viens,Déesse Thétis,1
+Viens,Danaens,1
+Viens,Aias Télamônien,1
+Viens,Aidès,1
+Viens,Ilios,1
+Viens,Hèrè,1
+Agamemnôn Atréide,Père Zeus,1
+Poseidaôn,Aphroditè,1
+Poseidaôn,Subtil Odysseus,1
+Poseidaôn,Mèrionès,1
+Poseidaôn,Kronos,1
+Ouranos Olympien,Agamemnôn Atréide,1
+Troiè,Ainéias Ankhisiade,1
+Troiè,Subtil Odysseus,1
+Troiè,Apollôn Lykien,1
+Troiè,Idoméneus Deukalide,1
+Agamemnôn Atréide,Déesse Thétis,1
+Troiè,Myrmidones,1
+Troiè,Déesse Thétis,1
+Troiè,Déesse Iris,1
+Troiè,Aidès,1
+Troiè,Polydamas Panthoide,1
+Troiè,Phoibos Apollôn,1
+Aias Télamônien,Myrmidones,1
+Ménoitios,Myrmidones,1
+Ménoitios,Nestôr Nèlèiade,1
+Aias Télamônien,Déesse Thétis,1
+Ménoitios,Déesse Thétis,1
+Arès Alkimos,Myrmidones,1
+Arès Alkimos,Kronos,1
+Arès Alkimos,Polydamas Panthoide,1
+Déesse Thétis,Myrmidones,1
