@@ -58,6 +58,23 @@ def carregar(ficheiro: Path = FICHEIRO) -> Parametros:
 
 PARAMETROS = carregar()
 
+# Pastas de trabalho (opcional e local): config/pastas.toml, que não vai para o GitHub (.gitignore), permite guardar os
+# livros e os resultados noutra pasta do computador. Sem esse ficheiro, usam-se livros/ e resultados/ do repositório.
+PASTAS = FICHEIRO.parent / "pastas.toml"
+
+
+def pastas(ficheiro: Path = PASTAS) -> tuple[Path, Path]:
+    """Devolve (pasta dos livros, pasta dos resultados)."""
+    livros, resultados = Path("livros"), Path("resultados")
+    if ficheiro.exists():
+        dados = tomllib.loads(ficheiro.read_text(encoding="utf-8"))
+        desconhecidos = set(dados) - {"livros", "resultados"}
+        if desconhecidos:
+            raise ValueError(f"Chaves desconhecidas em {ficheiro.name}: {', '.join(sorted(desconhecidos))}")
+        livros = Path(dados.get("livros", livros)).expanduser()
+        resultados = Path(dados.get("resultados", resultados)).expanduser()
+    return livros, resultados
+
 
 def como_dicionario(p: Parametros = PARAMETROS) -> dict:
     return asdict(p)

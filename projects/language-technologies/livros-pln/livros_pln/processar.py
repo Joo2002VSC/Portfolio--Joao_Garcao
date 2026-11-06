@@ -41,7 +41,8 @@ def versao_codigo() -> str:
     h = hashlib.sha256(__version__.encode())
     # o código, os parâmetros e as stopwords determinam os resultados
     config = PACOTE.parent / "config"
-    for f in sorted(PACOTE.glob("*.py")) + sorted(config.glob("*.txt")) + sorted(config.glob("*.toml")):
+    tomls = [f for f in sorted(config.glob("*.toml")) if f.name not in ("pastas.toml", "pastas.exemplo.toml")]
+    for f in sorted(PACOTE.glob("*.py")) + sorted(config.glob("*.txt")) + tomls:
         h.update(f.name.encode())
         h.update(f.read_bytes())
     return h.hexdigest()[:12]
@@ -109,12 +110,37 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     freq = indicadores.frequencias(tokens)
     classes = indicadores.classes_gramaticais(tokens)
     tab_ents = indicadores.tabela_entidades(ents)
+    # forma poética: em verso, a legibilidade e a heurística de diálogo não se aplicam
+    if bruto.get("forma") == "verso":
+        for k in ("versos", "estrofes", "versos_por_estrofe"):
+            ind[k] = bruto.get(k)
+        motivo = "texto em verso: as fórmulas de legibilidade foram calibradas com prosa"
+        for k in ("legibilidade", "flesch_kincaid", "silabas_por_palavra"):
+            estados[k] = {"estado": qualidade.NAO_APLICAVEL, "motivo": motivo}
+            ind[k] = None
+        estados["dialogo_pct"] = {"estado": qualidade.NAO_APLICAVEL,
+                                  "motivo": "texto em verso: a deteção do diálogo assume a tipografia da prosa"}
+        ind["dialogo_pct"] = None
+        for k in ("legibilidade_escala", "legibilidade_leitura", "legibilidade_nivel"):
+            ind[k] = None
+        avisos.append(qualidade.aviso(
+            "aviso", "verso", f"Texto em verso ({bruto.get('versos')} versos em {bruto.get('estrofes')} estrofes, "
+            f"{bruto.get('versos_por_estrofe')} versos por estrofe). A legibilidade e o diálogo ficam «não aplicável»; "
+            "os modelos linguísticos e os léxicos de sentimento foram treinados com prosa contemporânea, por isso a "
+            "segmentação, a etiquetagem e o sentimento são menos fiáveis do que num romance."))
+    else:
+        for k in ("versos", "estrofes", "versos_por_estrofe"):
+            ind[k] = None
+            estados[k] = {"estado": qualidade.NAO_APLICAVEL, "motivo": "texto em prosa"}
+
     senti = sentimento.analisar(frases, tokens, lg, p)
     for k in [k for k, i in catalogo.INDICADORES.items() if i.grupo == "Sentimento"]:
         ind[k] = senti["indicadores"].get(k)
         if senti["estado"] != "valido":
             estados[k] = {"estado": senti["estado"], "motivo": senti["motivo"]}
     evol = indicadores.evolucao(tokens, frases, ents, livro.paragrafos, p)
+    if bruto.get("forma") == "verso" and "dialogo_pct" in evol:
+        evol["dialogo_pct"] = float("nan")
     segmentos = indicadores.segmentos_das_frases(tokens, p.segmentos)
     contagem = tokens[tokens.alfa].minusc.value_counts()
     extra = {
@@ -168,7 +194,7 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "autor": meta.get("autor"), "ano": meta.get("ano"),
         "lingua": lg, "lingua_nome": lingua.NOMES[lg], "modelo_spacy": amb["modelo"]["nome"],
         "confianca_lingua": {k: round(v, 4) for k, v in pontuacao.items()},
-        "metodo_sentimento": senti["metodo"], "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
+        "forma": bruto.get("forma", "prosa"), "metodo_sentimento": senti["metodo"], "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
         "metadados": meta,
         "indicadores": {k: _json(round(v, 4) if isinstance(v, float) else v) for k, v in ind.items()},
         "estados": estados,
@@ -281,15 +307,18 @@ def cmd_analisar(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(prog="python -m livros_pln analisar",
                                  description="Analisa um livro a partir de um ficheiro .txt/.epub ou de um link.")
     ap.add_argument("fonte", help="caminho para um .txt/.epub, link do Project Gutenberg ou link direto para .txt/.epub")
-    ap.add_argument("--pasta", type=Path, default=Path("livros"), help="onde guardar livros descarregados")
-    ap.add_argument("--saida", type=Path, default=Path("resultados"))
+    livros, resultados = configuracao.pastas()
+    ap.add_argument("--pasta", type=Path, default=livros,
+                    help=f"onde guardar livros descarregados (por omissão: {livros})")
+    ap.add_argument("--saida", type=Path, default=resultados, help=f"pasta dos resultados (por omissão: {resultados})")
+    ap.add_argument("--nome", help="nome do ficheiro guardado, sem extensão (ex.: camoes-os-lusiadas)")
     ap.add_argument("--offline", action="store_true", help="embute o Plotly nos painéis (funcionam sem internet)")
     ap.add_argument("--abrir", action="store_true", help="abre o painel no navegador no fim")
     args = ap.parse_args(argv)
     try:
         if fontes.e_link(args.fonte):
             print(f"↓ A descarregar {args.fonte}")
-        ficheiro = fontes.obter(args.fonte, args.pasta)
+        ficheiro = fontes.obter(args.fonte, args.pasta, args.nome)
     except fontes.ErroFonte as e:
         print(f"✗ {e}", file=sys.stderr)
         return 1
@@ -313,8 +342,9 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_analisar(argv[1:])
 
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--pasta", type=Path, default=Path("livros"))
-    ap.add_argument("--saida", type=Path, default=Path("resultados"))
+    livros, resultados = configuracao.pastas()
+    ap.add_argument("--pasta", type=Path, default=livros, help=f"pasta dos livros (por omissão: {livros})")
+    ap.add_argument("--saida", type=Path, default=resultados, help=f"pasta dos resultados (por omissão: {resultados})")
     ap.add_argument("--forcar", action="store_true", help="reprocessa todos os livros")
     ap.add_argument("--offline", action="store_true", help="embute o Plotly nos painéis (funcionam sem internet)")
     args = ap.parse_args(argv)

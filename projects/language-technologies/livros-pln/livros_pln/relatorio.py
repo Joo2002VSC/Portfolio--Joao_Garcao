@@ -132,7 +132,10 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
     s += [_tabela(meta, ["Campo", "Valor"]), "",
           f"<sub>Ficheiro `{r['ficheiro']}` · modelo linguístico `{r['modelo_spacy']}`"
           + (f" {amb['modelo']['versao']}" if amb else "") + "</sub>", ""]
-    s += ["## 2. Características do texto", "", _bloco(r, ["palavras", "frases", "paragrafos", "tempo_leitura_horas"]), ""]
+    dim = ["palavras", "frases", "paragrafos", "tempo_leitura_horas"]
+    if r.get("forma") == "verso":
+        dim += ["versos", "estrofes", "versos_por_estrofe"]
+    s += ["## 2. Características do texto", "", f"Forma: **{r.get('forma', 'prosa')}**.", "", _bloco(r, dim), ""]
     if r.get("qualidade"):
         s += ["**Avisos de qualidade dos dados**", ""] + [f"- ⚠ {a['mensagem']}" for a in r["qualidade"]] + [""]
     else:

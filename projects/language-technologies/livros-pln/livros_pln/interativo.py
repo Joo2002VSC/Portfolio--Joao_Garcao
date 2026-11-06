@@ -608,6 +608,7 @@ blockquote cite{display:block;margin-top:4px;font-family:var(--ui);font-style:no
 .chaves li{display:grid;grid-template-columns:42px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--linha);break-inside:avoid}
 .chaves b{font-family:var(--display);font-size:22px;color:var(--ocre);font-weight:600}
 .aviso-estado{border-left:3px solid var(--ocre);padding-left:16px;color:var(--suave)}
+.leitura-na{margin:40px 0 0;font-size:17px}
 
 @media(max-width:1080px){.rosto.com-ficha{grid-template-columns:auto 1fr}.ficha-topo{grid-column:1/-1}}
 @media(max-width:860px){.leitura,.citacoes{grid-template-columns:1fr}.chaves{columns:1}
@@ -815,7 +816,11 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
     avisos = [a["mensagem"] for a in registo.get("qualidade", [])]
     notas = ("<ul>" + "".join(f"<li>{html.escape(a)}</li>" for a in avisos) + "</ul>" if avisos else
              "<p>Sem avisos: o texto passou todas as verificações automáticas de qualidade.</p>")
-    resumo = (_escala_leitura(i, lg) + '<div class="notas-bloco"><h3>Notas sobre os Dados</h3><div class="notas">'
+    leitura_html = _escala_leitura(i, lg)
+    if not leitura_html and "legibilidade" in e:
+        leitura_html = (f'<p class="aviso-estado leitura-na">Legibilidade não aplicável: '
+                        f'{html.escape(e["legibilidade"]["motivo"])}.</p>')
+    resumo = (leitura_html + '<div class="notas-bloco"><h3>Notas sobre os Dados</h3><div class="notas">'
               f'{notas}<p>Cada indicador tem definição, unidade e limitações no <a href="README.md">relatório '
               "completo</a>.</p></div></div>")
 
@@ -860,7 +865,9 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
                   ligacoes=[("Relatório Completo do Livro", "README.md"), ("Todos os Livros Analisados", "../../painel.html"),
                             ("Dados em Excel", f"{destino.parent.name}.xlsx"), ("Repositório no GitHub", REPOSITORIO)],
                   tecnico=tecnico)
-    rosto = [(r, x) for r, x in [("Palavras", v("palavras", 0)), ("Leitura", maiusculas(i.get("legibilidade_leitura") or "")),
+    rosto = [(r, x) for r, x in [("Forma", "Verso" if registo.get("forma") == "verso" else ""),
+                                  ("Versos", v("versos", 0) if registo.get("forma") == "verso" else ""),
+                                  ("Palavras", v("palavras", 0)), ("Leitura", maiusculas(i.get("legibilidade_leitura") or "")),
                                   ("Tempo de leitura", f"{v('tempo_leitura_horas', 1)} h")] if x]
     pagina(registo["titulo"], registo.get("autor") or "", numeros, itens, resumo, rodape, offline, destino,
            antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES, extras=extras,

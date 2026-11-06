@@ -1,5 +1,11 @@
 # Alterações
 
+## 3.4.0 · 2026-11-06
+
+- **Pastas de trabalho locais**: `config/pastas.toml` (fora do GitHub, ver `config/pastas.exemplo.toml`) indica onde ficam os livros e os resultados no computador. Sem esse ficheiro, continuam a usar-se `livros/` e `resultados/`; o workflow do GitHub Actions não muda. O ficheiro não entra na impressão digital do código.
+- **`analisar --nome`**: escolhe o nome do ficheiro descarregado (por exemplo, `camoes-os-lusiadas` em vez de `gutenberg-3333`), que é também o nome do dicionário de personagens e da pasta de resultados.
+- **Textos em verso**: deteção automática (pela extensão das linhas do TXT), com os indicadores versos, estrofes e versos por estrofe. Em verso, a legibilidade de Flesch e a heurística de diálogo ficam «não aplicável» (foram pensadas para prosa) e há um aviso de qualidade sobre a fiabilidade dos modelos e dos léxicos.
+
 ## 3.3.0 · 2026-11-06
 
 - **Modelo português grande**: `pt_core_news_lg` 3.8.0 em vez de `pt_core_news_md`. Exatidão declarada ligeiramente superior na etiquetagem, morfologia, segmentação e entidades; dependências praticamente iguais. Os indicadores de *Os Maias* mudam pouco (por exemplo, profundidade sintática 3,29 → 3,22; nomes próprios por 1000 palavras 81 → 90; frases 16 759 → 16 527).

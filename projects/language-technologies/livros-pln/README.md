@@ -37,6 +37,7 @@ O projeto descreve textos; não os avalia. Os indicadores servem para formular p
 python -m livros_pln analisar https://www.gutenberg.org/ebooks/40409      # link do Project Gutenberg
 python -m livros_pln analisar https://exemplo.org/um-livro.epub           # link direto para .txt ou .epub
 python -m livros_pln analisar livros/um-livro.txt --abrir                 # ficheiro local; abre o painel no fim
+python -m livros_pln analisar https://www.gutenberg.org/ebooks/3333 --nome camoes-os-lusiadas   # escolhe o nome
 python -m livros_pln                                                      # todos os livros de livros/ (só o que mudou)
 python -m livros_pln --forcar                                             # reprocessa tudo
 ```
@@ -155,6 +156,21 @@ Os testes cobrem:
 ### Atualização automática no GitHub
 
 O workflow [`processar.yml`](.github/workflows/processar.yml) corre quando muda o código, a configuração, os testes, as dependências ou o próprio workflow. Instala as dependências e os modelos, corre os testes, verifica que a documentação está sincronizada com o catálogo, reprocessa os livros e faz commit de `resultados/`. Acrescentar um livro não dispara o workflow: corra-o localmente ou use **Actions → processar livros → Run workflow**.
+
+### Pastas de trabalho no computador
+
+Para guardar os livros e os resultados fora do repositório, copiar `config/pastas.exemplo.toml` para `config/pastas.toml` e indicar as pastas:
+
+```toml
+livros = "~/Desktop/Projetos Pessoais/Análises de Livros/livros"
+resultados = "~/Desktop/Projetos Pessoais/Análises de Livros/resultados"
+```
+
+`config/pastas.toml` não vai para o GitHub. Os comandos `python -m livros_pln` e `python -m livros_pln analisar` passam a usar essas pastas; `--pasta` e `--saida` continuam a sobrepor-se. O workflow do GitHub Actions usa sempre `livros/` e `resultados/` do repositório.
+
+### Textos em verso
+
+Os textos em verso (por exemplo, *Os Lusíadas*) são detetados pela extensão das linhas do ficheiro TXT. Nesse caso, o relatório indica o número de versos, de estrofes e de versos por estrofe; a legibilidade de Flesch e a percentagem de diálogo ficam «não aplicável», porque foram pensadas para prosa; e um aviso lembra que os modelos linguísticos e os léxicos de sentimento foram treinados com prosa contemporânea.
 
 ### Configuração
 

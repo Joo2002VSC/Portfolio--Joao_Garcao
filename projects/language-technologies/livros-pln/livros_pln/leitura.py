@@ -83,10 +83,34 @@ def ler_txt(ficheiro: Path) -> Livro:
                 metadados["ano"] = m.group(3)
             texto = texto[m.end():]
 
-    paragrafos = [re.sub(r"\s+", " ", p).strip() for p in re.split(r"\n\s*\n", texto)]
+    blocos = re.split(r"\n\s*\n", texto)
+    metadados.update(forma_do_texto(blocos))
+    paragrafos = [re.sub(r"\s+", " ", p).strip() for p in blocos]
     # convenções tipográficas do texto simples: «_itálico_» e «--» como travessão (Project Gutenberg)
     paragrafos = [re.sub(r"(?<!-)--(?!-)", "—", p.replace("_", "")) for p in paragrafos if p]
     return Livro(ficheiro, "txt", paragrafos, metadados)
+
+
+def forma_do_texto(blocos: list[str], maximo_verso: int = 55) -> dict:
+    """Distingue prosa de verso pela extensão das linhas dentro dos blocos com 4 ou mais linhas.
+
+    No Project Gutenberg, a prosa vem quebrada em linhas de cerca de 70 caracteres; os versos são linhas curtas
+    (um decassílabo tem cerca de 35 a 45 caracteres). Considera-se verso quando os blocos com linhas de extensão
+    média até `maximo_verso` caracteres têm mais de metade das palavras do texto."""
+    palavras_total, palavras_verso, versos, por_estrofe = 0, 0, 0, []
+    for b in blocos:
+        linhas = [l.strip() for l in b.splitlines() if l.strip()]
+        n = sum(len(l.split()) for l in linhas)
+        palavras_total += n
+        if len(linhas) >= 4 and sum(map(len, linhas)) / len(linhas) <= maximo_verso:
+            palavras_verso += n
+            versos += len(linhas)
+            por_estrofe.append(len(linhas))
+    if palavras_total and palavras_verso / palavras_total > 0.5:
+        por_estrofe.sort()
+        return {"forma": "verso", "versos": versos, "estrofes": len(por_estrofe),
+                "versos_por_estrofe": por_estrofe[len(por_estrofe) // 2]}
+    return {"forma": "prosa"}
 
 
 # ---------------------------------------------------------------------------

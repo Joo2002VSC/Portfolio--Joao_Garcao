@@ -1,0 +1,7 @@
+# Pastas de trabalho locais (opcional).
+# Copiar este ficheiro para config/pastas.toml e indicar as pastas. O config/pastas.toml não vai para o GitHub,
+# por isso cada computador pode ter as suas pastas; o workflow do GitHub Actions usa sempre livros/ e resultados/.
+# Sem config/pastas.toml, o livros-pln usa livros/ e resultados/ dentro do repositório.
+
+livros = "~/Desktop/Projetos Pessoais/Análises de Livros/livros"
+resultados = "~/Desktop/Projetos Pessoais/Análises de Livros/resultados"

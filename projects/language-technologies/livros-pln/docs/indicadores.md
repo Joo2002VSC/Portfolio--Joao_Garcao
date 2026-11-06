@@ -50,6 +50,9 @@ Alteráveis em `config/parametros.toml`; os valores usados ficam registados em c
 | **Frases** <br>`frases` | Frases segmentadas pelo analisador sintático do spaCy. | — | frases | Base para as médias e distribuições por frase. | A segmentação erra com abreviaturas, diálogos e pontuação pouco convencional. | sim | — |
 | **Parágrafos** <br>`paragrafos` | Blocos de texto separados por linha em branco (TXT) ou por elementos de bloco (EPUB). | — | parágrafos | Base para a proporção de diálogo e a extensão dos parágrafos. | Inclui títulos de capítulos. | sim | — |
 | **Tempo de leitura estimado** <br>`tempo_leitura_horas` | Palavras ÷ velocidade de leitura. | palavras / (238 × 60) | horas | Ordem de grandeza, não uma previsão individual. | Velocidade de referência de leitura silenciosa de adultos em inglês; varia com a língua, o leitor e o texto. | sim | Brysbaert, M. (2019) |
+| **Versos** <br>`versos` | Linhas dos blocos identificados como estrofes. | — | versos | Dimensão do poema. | Deteção automática pela extensão das linhas do ficheiro TXT (não disponível para EPUB); títulos e números de estrofe com 4 ou mais linhas curtas podem ser contados como versos. | sim | — |
+| **Estrofes** <br>`estrofes` | Blocos de 4 ou mais linhas curtas, separados por linhas em branco. | — | estrofes | Dimensão do poema. | Deteção automática pela extensão das linhas do ficheiro TXT (não disponível para EPUB); títulos e números de estrofe com 4 ou mais linhas curtas podem ser contados como versos. | sim | — |
+| **Versos por estrofe (mediana)** <br>`versos_por_estrofe` | Número de versos da estrofe típica. | — | versos | 8 = oitava (a estrofe de Os Lusíadas); 14 em blocos = soneto; 4 = quadra. | Deteção automática pela extensão das linhas do ficheiro TXT (não disponível para EPUB); títulos e números de estrofe com 4 ou mais linhas curtas podem ser contados como versos. | sim | — |
 
 ## Diversidade lexical
 

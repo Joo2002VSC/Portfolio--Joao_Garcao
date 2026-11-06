@@ -57,7 +57,7 @@ def _parece_html(conteudo: bytes) -> bool:
     return inicio.startswith((b"<!doctype html", b"<html"))
 
 
-def descarregar(url: str, pasta: Path, sessao=None) -> Path:
+def descarregar(url: str, pasta: Path, sessao=None, nome_final: str | None = None) -> Path:
     import requests
 
     sessao = sessao or requests.Session()
@@ -80,7 +80,7 @@ def descarregar(url: str, pasta: Path, sessao=None) -> Path:
                 erros.append(f"{alvo}: não é um EPUB válido")
                 continue
             pasta.mkdir(parents=True, exist_ok=True)
-            destino = pasta / nome
+            destino = pasta / (f"{slug_nome(nome_final)}{Path(nome).suffix}" if nome_final else nome)
             destino.write_bytes(conteudo)
             return destino
         except requests.RequestException as e:
@@ -88,10 +88,18 @@ def descarregar(url: str, pasta: Path, sessao=None) -> Path:
     raise ErroFonte("Não foi possível descarregar o livro:\n  " + "\n  ".join(erros))
 
 
-def obter(fonte: str, pasta: Path) -> Path:
-    """Devolve o caminho local do livro, descarregando-o se `fonte` for um link."""
+def slug_nome(nome: str) -> str:
+    from .leitura import slug
+    s = slug(Path(nome).stem if Path(nome).suffix.lower() in (".txt", ".epub") else nome)
+    if not s:
+        raise ErroFonte(f"Nome de ficheiro inválido: {nome!r}")
+    return s
+
+
+def obter(fonte: str, pasta: Path, nome: str | None = None) -> Path:
+    """Devolve o caminho local do livro, descarregando-o se `fonte` for um link (com o nome `nome`, se indicado)."""
     if e_link(fonte):
-        return descarregar(fonte, pasta)
+        return descarregar(fonte, pasta, nome_final=nome)
     caminho = Path(fonte).expanduser()
     if not caminho.exists():
         raise ErroFonte(f"Ficheiro não encontrado: {caminho}")

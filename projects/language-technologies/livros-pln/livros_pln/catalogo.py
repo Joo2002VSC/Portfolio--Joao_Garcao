@@ -399,6 +399,19 @@ INDICADORES.update({
         "Conta formas exatas (sem lematização), como o próprio VADER.", casas=1, entre_linguas=False),
 })
 
+# Forma poética (só textos em verso)
+_VERSO = ("Deteção automática pela extensão das linhas do ficheiro TXT (não disponível para EPUB); títulos e números "
+          "de estrofe com 4 ou mais linhas curtas podem ser contados como versos.")
+INDICADORES.update({
+    "versos": Indicador("Versos", _D, "Linhas dos blocos identificados como estrofes.", "versos",
+                        "Dimensão do poema.", _VERSO, casas=0),
+    "estrofes": Indicador("Estrofes", _D, "Blocos de 4 ou mais linhas curtas, separados por linhas em branco.",
+                          "estrofes", "Dimensão do poema.", _VERSO, casas=0),
+    "versos_por_estrofe": Indicador("Versos por estrofe (mediana)", _D, "Número de versos da estrofe típica.",
+                                    "versos", "8 = oitava (a estrofe de Os Lusíadas); 14 em blocos = soneto; 4 = quadra.",
+                                    _VERSO, casas=0),
+})
+
 # Métodos que produzem tabelas ou gráficos em vez de um único valor
 METODOS = {
     "arco_sentimento": Indicador(

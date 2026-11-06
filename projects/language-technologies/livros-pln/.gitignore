@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+# pastas de trabalho locais (ver config/pastas.exemplo.toml)
+config/pastas.toml

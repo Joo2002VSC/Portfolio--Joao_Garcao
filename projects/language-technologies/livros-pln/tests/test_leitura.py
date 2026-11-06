@@ -21,7 +21,8 @@ def test_txt_sem_cabecalho_com_linha_de_titulo(tmp_path: Path):
     f = tmp_path / "nltk.txt"
     f.write_text("[A Short Test by Jane Doe 1900]\n\nFirst paragraph.\n\nSecond one.", encoding="utf-8")
     livro = leitura.ler(f)
-    assert livro.metadados == {"codificacao": "utf-8-sig", "titulo": "A Short Test", "autor": "Jane Doe", "ano": "1900"}
+    assert livro.metadados == {"codificacao": "utf-8-sig", "titulo": "A Short Test", "autor": "Jane Doe", "ano": "1900",
+                               "forma": "prosa"}
     assert livro.paragrafos == ["First paragraph.", "Second one."]
 
 
