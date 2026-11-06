@@ -196,13 +196,13 @@
   },
   "processamento": {
     "versao": "3.4.1",
-    "versao_codigo": "229159872119",
-    "commit": "4f88316",
+    "versao_codigo": "1bfacfa5c0fa",
+    "commit": "f490e31",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "5ce9042c0d8536b0",
     "hash_dicionario": null,
-    "data": "2026-11-06 11:48 UTC",
-    "duracao_s": 12.3
+    "data": "2026-11-06 11:56 UTC",
+    "duracao_s": 11.2
   },
   "graficos": [
     "rede.png",

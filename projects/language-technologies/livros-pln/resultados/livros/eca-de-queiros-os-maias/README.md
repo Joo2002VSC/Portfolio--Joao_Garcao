@@ -485,4 +485,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 11:49 UTC · livros_pln 3.4.1 · código `229159872119` · commit `4f88316` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>
+<sub>Processado em 2026-11-06 11:56 UTC · livros_pln 3.4.1 · código `1bfacfa5c0fa` · commit `f490e31` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>

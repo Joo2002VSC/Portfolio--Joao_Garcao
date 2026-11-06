@@ -1,0 +1,15 @@
+personagem,mencoes,grau,grau_ponderado,intermediacao,pagerank,comunidade
+Vasco da Gama,47,8,14,0.4957,0.1859,3
+Marte,28,5,8,0.1838,0.1084,2
+Catual,11,3,8,0.0,0.1051,3
+Júpiter,17,4,7,0.1303,0.0951,2
+Neptuno,20,4,6,0.2265,0.09,1
+Mercúrio,5,3,5,0.0,0.0685,2
+Vénus,19,4,5,0.1603,0.0683,2
+Nuno Álvares Pereira,9,3,4,0.1474,0.0625,1
+Monçaide,8,2,3,0.0,0.0445,3
+Egas Moniz,6,2,2,0.0,0.0353,1
+Baco,20,2,2,0.0,0.035,1
+Tétis,10,2,2,0.0,0.0347,1
+Afonso (vários reis),27,2,2,0.0128,0.0335,2
+Samorim,10,2,2,0.0,0.0332,3

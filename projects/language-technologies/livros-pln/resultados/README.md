@@ -1,8 +1,8 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.4.1 (código `229159872119`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.4.1 (código `1bfacfa5c0fa`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
-**2 livros · 230 152 palavras** · 1 em inglês, 1 em português
+**3 livros · 284 846 palavras** · 2 em português, 1 em inglês
 
 **[Painel interativo de comparação](painel.html)** · [`indicadores.csv`](indicadores.csv) · [`indicadores.xlsx`](indicadores.xlsx) (uma linha por livro; o Excel inclui o dicionário de indicadores)
 
@@ -20,7 +20,10 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 
 | Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Os Lusíadas](livros/camoes-os-lusiadas/README.md) | Luís de Camões | 1572 | 54 694 | 151,2 | 12 | 3,49 | 48,9 | — |
 | [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | 1888 | 203 558 | 139,0 | 9 | 3,22 | 48,5 | 64 |
+
+Entre os livros em português, o MTLD mais alto é o de *Os Lusíadas* (151,2).
 
 ## Comparações
 
@@ -36,7 +39,7 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 ![Evolução](graficos/evolucao-comparada.png)
 <sub>[SVG](graficos/evolucao-comparada.svg)</sub>
 
-*Matriz de correlação entre indicadores: não aplicável* (2 livros; são precisos pelo menos 5 para que as correlações tenham algum significado).
+*Matriz de correlação entre indicadores: não aplicável* (3 livros; são precisos pelo menos 5 para que as correlações tenham algum significado).
 
 ## Estilometria (Delta de Burrows)
 
@@ -44,7 +47,7 @@ Distância estilística a partir da frequência das palavras mais frequentes (so
 
 - **Inglês**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 
-- **Português**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
+- **Português**: *não aplicável* (2 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 
 ## Referências
 

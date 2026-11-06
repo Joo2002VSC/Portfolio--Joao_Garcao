@@ -3,13 +3,13 @@ Queen,Alice,14
 Mouse,Alice,10
 Hatter,Alice,8
 Dinah,Alice,4
-Dormouse,Hatter,4
+Hatter,Dormouse,4
 Dormouse,Alice,4
 Bill,Alice,4
 William,Alice,2
 William,Mouse,2
-Knave,Alice,1
+Mouse,Dinah,1
+Bill,Queen,1
 Hatter,Queen,1
 Dormouse,Queen,1
-Queen,Bill,1
-Mouse,Dinah,1
+Alice,Knave,1
