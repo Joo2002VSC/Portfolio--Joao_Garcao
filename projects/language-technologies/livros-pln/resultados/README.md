@@ -1,6 +1,6 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.4.1 (código `1bfacfa5c0fa`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.5.0 (código `60720aed5964`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
 **3 livros · 284 846 palavras** · 2 em português, 1 em inglês
 
@@ -20,7 +20,7 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 
 | Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Os Lusíadas](livros/camoes-os-lusiadas/README.md) | Luís de Camões | 1572 | 54 694 | 151,2 | 12 | 3,49 | 48,9 | — |
+| [Os Lusíadas](livros/camoes-os-lusiadas/README.md) | Luís de Camões | 1572 | 54 694 | 151,2 | 12 | 3,50 | 48,9 | — |
 | [Os Maias](livros/eca-de-queiros-os-maias/README.md) | Eça de Queirós | 1888 | 203 558 | 139,0 | 9 | 3,22 | 48,5 | 64 |
 
 Entre os livros em português, o MTLD mais alto é o de *Os Lusíadas* (151,2).

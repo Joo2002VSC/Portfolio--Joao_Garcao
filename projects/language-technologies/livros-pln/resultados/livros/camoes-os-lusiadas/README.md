@@ -23,16 +23,16 @@ Forma: **verso**.
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Palavras** | 54 694 | palavras | Base de normalização de quase todos os indicadores. |
-| **Frases** | 3 990 | frases | Base para as médias e distribuições por frase. |
+| **Frases** | 3 928 | frases | Base para as médias e distribuições por frase. |
 | **Parágrafos** | 1 115 | parágrafos | Base para a proporção de diálogo e a extensão dos parágrafos. |
 | **Tempo de leitura estimado** | 3,8 | horas | Ordem de grandeza, não uma previsão individual. |
-| **Versos** | 9 920 | versos | Dimensão do poema. |
+| **Versos** | 8 818 | versos | Dimensão do poema. |
 | **Estrofes** | 1 102 | estrofes | Dimensão do poema. |
-| **Versos por estrofe (mediana)** | 9 | versos | 8 = oitava (a estrofe de Os Lusíadas); 14 em blocos = soneto; 4 = quadra. |
+| **Versos por estrofe (mediana)** | 8 | versos | 8 = oitava (a estrofe de Os Lusíadas); 14 em blocos = soneto; 4 = quadra. |
 
 **Avisos de qualidade dos dados**
 
-- ⚠ Texto em verso (9920 versos em 1102 estrofes, 9 versos por estrofe). A legibilidade e o diálogo ficam «não aplicável»; os modelos linguísticos e os léxicos de sentimento foram treinados com prosa contemporânea, por isso a segmentação, a etiquetagem e o sentimento são menos fiáveis do que num romance.
+- ⚠ Texto em verso (8818 versos em 1102 estrofes, 8 versos por estrofe). A legibilidade e o diálogo ficam «não aplicável»; os modelos linguísticos e os léxicos de sentimento foram treinados com prosa contemporânea, por isso a segmentação, a etiquetagem e o sentimento são menos fiáveis do que num romance.
 
 ## 3. Resumo dos principais resultados
 
@@ -40,7 +40,7 @@ Forma: **verso**.
 | --- | --- | --- |
 | Diversidade lexical (MTLD) | 151,2 | palavras por fator |
 | Extensão mediana das frases | 12 | palavras |
-| Profundidade sintática | 3,49 | níveis |
+| Profundidade sintática | 3,50 | níveis |
 | Densidade lexical | 48,9 | % das palavras |
 | Parágrafos de diálogo | *não aplicável* (texto em verso: a deteção do diálogo assume a tipografia da prosa) | % dos parágrafos |
 | Legibilidade (Flesch adaptado) | *não aplicável* (texto em verso: as fórmulas de legibilidade foram calibradas com prosa) | 0–100 (aprox.) |
@@ -80,12 +80,12 @@ A extensão mede quantas palavras tem uma frase; a complexidade sintática mede 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Extensão mediana das frases** | 12 | palavras | Metade das frases tem esta extensão ou menos; mais robusta do que a média. |
-| **Extensão média das frases** | 13,7 | palavras | Medida de extensão, não de complexidade sintática. |
+| **Extensão média das frases** | 13,9 | palavras | Medida de extensão, não de complexidade sintática. |
 | **Percentil 25** | 7 | palavras | Com o percentil 75, delimita a metade central das frases. |
 | **Percentil 75** | 19 | palavras | Com o percentil 25, delimita a metade central das frases. |
-| **Desvio-padrão da extensão** | 8,6 | palavras | Mais alto = alternância maior entre frases curtas e longas. |
+| **Desvio-padrão da extensão** | 8,8 | palavras | Mais alto = alternância maior entre frases curtas e longas. |
 | **Frase mais longa** | 59 | palavras | Uma única frase; não descreve o estilo do livro. |
-| **Frases longas** | 3,1 | % das frases | Mais alto = mais frases extensas, que exigem mais memória de trabalho na leitura. |
+| **Frases longas** | 3,3 | % das frases | Mais alto = mais frases extensas, que exigem mais memória de trabalho na leitura. |
 | **Extensão média dos parágrafos** | 49,1 | palavras | Mais alto = blocos de texto mais extensos (narração contínua). |
 
 ![Extensão das frases](graficos/extensao-frases.png)
@@ -97,9 +97,9 @@ Calculada a partir da árvore de dependências do modelo `pt_core_news_lg` (exat
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Profundidade sintática** | 3,49 | níveis | Mais alto = mais encaixamento (subordinação, complementos aninhados). |
-| **Distância de dependência média (MDD)** | 2,57 | palavras | Mais alto = dependências mais longas, associadas a maior esforço de processamento. |
-| **Orações subordinadas por frase** | 1,09 | orações por frase | Mais alto = mais subordinação. |
+| **Profundidade sintática** | 3,50 | níveis | Mais alto = mais encaixamento (subordinação, complementos aninhados). |
+| **Distância de dependência média (MDD)** | 2,59 | palavras | Mais alto = dependências mais longas, associadas a maior esforço de processamento. |
+| **Orações subordinadas por frase** | 1,11 | orações por frase | Mais alto = mais subordinação. |
 
 <details><summary>Definições</summary>
 
@@ -115,18 +115,18 @@ Etiquetas UPOS do modelo `pt_core_news_lg` (exatidão declarada: 97,2 %). A exat
 
 | Classe | Ocorrências | Por 1000 palavras |
 | --- | --- | --- |
-| Substantivos | 10 662 | 194,9 |
-| Verbos | 8 030 | 146,8 |
-| Preposições | 6 851 | 125,3 |
-| Determinantes | 6 028 | 110,2 |
-| Nomes próprios | 4 579 | 83,7 |
+| Substantivos | 10 669 | 195,1 |
+| Verbos | 8 033 | 146,9 |
+| Preposições | 6 836 | 125,0 |
+| Determinantes | 6 030 | 110,2 |
+| Nomes próprios | 4 561 | 83,4 |
 | Pronomes | 4 529 | 82,8 |
 | Adjetivos | 4 343 | 79,4 |
-| Advérbios | 3 715 | 67,9 |
-| Conjunções coordenativas | 2 714 | 49,6 |
-| Conjunções subordinativas | 1 930 | 35,3 |
-| Verbos auxiliares | 1 035 | 18,9 |
-| Numerais | 207 | 3,8 |
+| Advérbios | 3 714 | 67,9 |
+| Conjunções coordenativas | 2 715 | 49,6 |
+| Conjunções subordinativas | 1 944 | 35,5 |
+| Verbos auxiliares | 1 032 | 18,9 |
+| Numerais | 206 | 3,8 |
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
@@ -207,10 +207,10 @@ Reconhecimento automático (NER): estimativas sujeitas a erro.
 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Pessoas distintas (NER)** | 950 | nomes | Ordem de grandeza do elenco nomeado. |
-| **Lugares distintos (NER)** | 1 111 | nomes | Ordem de grandeza dos espaços nomeados. |
+| **Pessoas distintas (NER)** | 949 | nomes | Ordem de grandeza do elenco nomeado. |
+| **Lugares distintos (NER)** | 1 098 | nomes | Ordem de grandeza dos espaços nomeados. |
 | **Organizações distintas (NER)** | 103 | nomes | Ordem de grandeza das instituições nomeadas. |
-| **Menções de entidades** | 67,6 | ocorrências por 1000 palavras | Densidade de referências nomeadas. |
+| **Menções de entidades** | 67,4 | ocorrências por 1000 palavras | Densidade de referências nomeadas. |
 
 ![Entidades](graficos/entidades.png)
 <sub>[SVG](graficos/entidades.svg)</sub>
@@ -248,16 +248,16 @@ O livro foi dividido em 10 segmentos com o mesmo número de palavras.
 
 | Segmento | Palavras | MTLD | Frase média | Densidade lexical (%) | Diálogo (%) | Pessoas / 1000 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | 5 470 | 143,1 | 14,1 | 48,9 | — | 26,7 |
-| 2 | 5 469 | 145,1 | 13,5 | 49,7 | — | 27,6 |
-| 3 | 5 470 | 155,1 | 15,1 | 47,0 | — | 36,0 |
-| 4 | 5 469 | 167,9 | 12,8 | 48,5 | — | 41,0 |
-| 5 | 5 469 | 154,1 | 14,4 | 51,1 | — | 20,8 |
-| 6 | 5 470 | 142,4 | 13,5 | 49,7 | — | 27,1 |
-| 7 | 5 469 | 140,4 | 13,0 | 47,7 | — | 28,7 |
-| 8 | 5 470 | 139,7 | 14,0 | 49,0 | — | 28,7 |
-| 9 | 5 469 | 170,3 | 14,0 | 49,9 | — | 27,2 |
-| 10 | 5 469 | 154,7 | 12,9 | 47,6 | — | 34,6 |
+| 1 | 5 470 | 143,1 | 14,2 | 49,0 | — | 26,7 |
+| 2 | 5 469 | 145,1 | 13,9 | 49,7 | — | 27,4 |
+| 3 | 5 470 | 155,1 | 14,9 | 47,0 | — | 36,2 |
+| 4 | 5 469 | 167,9 | 13,0 | 48,5 | — | 41,1 |
+| 5 | 5 469 | 154,1 | 15,0 | 51,1 | — | 20,8 |
+| 6 | 5 470 | 142,4 | 13,5 | 49,7 | — | 27,2 |
+| 7 | 5 469 | 140,4 | 13,2 | 47,7 | — | 28,9 |
+| 8 | 5 470 | 139,7 | 14,4 | 49,0 | — | 28,7 |
+| 9 | 5 469 | 170,3 | 14,3 | 49,9 | — | 27,2 |
+| 10 | 5 469 | 154,7 | 13,1 | 47,6 | — | 34,4 |
 
 ## 10. Sentimento
 
@@ -278,12 +278,12 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 
 | Polaridade | Compound | Frase |
 | --- | --- | --- |
-| positiva | 0,971 | 49 Mas, vendo o ilustre Persa que vencido Fora de Amor, que, enfim, não tem defensa, Levemente o perdoa, e foi servido Dele num caso grande, em recompensa. |
+| positiva | 0,971 | Mas, vendo o ilustre Persa que vencido Fora de Amor, que, enfim, não tem defensa, Levemente o perdoa, e foi servido Dele num caso grande, em recompensa. |
+| positiva | 0,970 | "Mas porque nenhum grande bem se alcança Sem grandes opressões, e em todo o feito Segue o temor os passos da esperança, Que em suor vive sempre de seu peito, Me mostras tu tão pouca confiança Desta minha verdade, sem respeito |
 | positiva | 0,966 | Despois que a corporal necessidade Se satisfez do mantimento nobre, E na harmonia e doce suavidade Viram os altos feitos que descobre, Tétis, de graça ornada e gravidade, Pera que com mais alta glória dobre As festas deste alegre e claro dia, Pera o felice Gama assi dizia: |
-| positiva | 0,960 | Volvendo o rosto já sereno e santo, Toda banhada em riso e alegria, Cair se deixa aos pés do vencedor, Que todo se desfaz em puro amor. |
-| negativa | −0,954 | 97 Mas o Mouro, instruído nos enganos Que o malévolo Baco lhe ensinara, De morte ou cativeiro novos danos, Antes que à Índia chegue, lhe prepara: |
-| negativa | −0,951 | Qual o membrudo e bárbaro Gigante, Do rei Saul, com causa, tão temido, Vendo o pastor inerme estar diante, Só de pedras e esforço apercebido, Com palavras soberbas o arrogante Despreza o fraco moço mal vestido, Que, rodeando a funda, o desengana |
-| negativa | −0,951 | 98 —"Mas ó tu, geração daquele insano, Cujo pecado e desobediência, Não somente do reino soberano Te pôs neste desterro e triste ausência, Mas inda doutro estado mais que humano Da quieta e da simples inocência, Idade d'ouro, tanto te privou, Que na de ferro e d'armas te deitou: |
+| negativa | −0,967 | —"Mas ó tu, geração daquele insano, Cujo pecado e desobediência, Não somente do reino soberano Te pôs neste desterro e triste ausência, Mas inda doutro estado mais que humano |
+| negativa | −0,954 | Mas o Mouro, instruído nos enganos Que o malévolo Baco lhe ensinara, De morte ou cativeiro novos danos, Antes que à Índia chegue, lhe prepara: |
+| negativa | −0,951 | "Qual o membrudo e bárbaro Gigante, Do rei Saul, com causa, tão temido, Vendo o pastor inerme estar diante, Só de pedras e esforço apercebido, Com palavras soberbas o arrogante Despreza o fraco moço mal vestido, Que, rodeando a funda, o desengana |
 
 <details><summary>Definições</summary>
 
@@ -309,7 +309,7 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
 | **Verbos no passado** | 34,3 | % das formas verbais finitas com tempo anotado | Mais alto = narração no passado, típica do romance. |
-| **Verbos no presente** | 61,3 | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. |
+| **Verbos no presente** | 61,2 | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. |
 | **Verbos no futuro** | 4,5 | % das formas verbais finitas com tempo anotado | Mais alto = mais projeção, promessa ou hipótese. |
 | **Verbos no conjuntivo** | 9,4 | % das formas verbais finitas com modo anotado | Mais alto = mais hipótese, desejo, dúvida ou subordinação. |
 | **Pronomes de 1.ª pessoa** | 4,7 | ocorrências por 1000 palavras | Mais alto = narrador na 1.ª pessoa ou muito diálogo. |
@@ -318,11 +318,11 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 
 | Tempo | Modo | Ocorrências | % das formas finitas |
 | --- | --- | --- | --- |
-| presente | indicativo | 3 389 | 55,1 |
-| passado | indicativo | 939 | 15,3 |
-| imperfeito | indicativo | 932 | 15,2 |
-| presente | conjuntivo | 380 | 6,2 |
-| futuro | indicativo | 220 | 3,6 |
+| presente | indicativo | 3 386 | 55,0 |
+| passado | indicativo | 940 | 15,3 |
+| imperfeito | indicativo | 933 | 15,2 |
+| presente | conjuntivo | 381 | 6,2 |
+| futuro | indicativo | 222 | 3,6 |
 | imperfeito | conjuntivo | 155 | 2,5 |
 | mais-que-perfeito | indicativo | 81 | 1,3 |
 | futuro | conjuntivo | 55 | 0,9 |
@@ -358,25 +358,25 @@ Pares de palavras contíguas na mesma frase que ocorrem juntas muito mais do que
 
 | Colocação | Ocorrências | G² | PMI |
 | --- | --- | --- | --- |
-| a terra | 78 | 248,6 | 3,33 |
-| a gente | 73 | 216,6 | 3,19 |
-| o mar | 65 | 197,9 | 3,23 |
-| o rei | 62 | 175,1 | 3,09 |
-| os olhos | 27 | 167,4 | 5,34 |
-| o céu | 42 | 165,7 | 3,77 |
-| do mar | 39 | 159,4 | 4,12 |
-| desta arte | 14 | 149,1 | 8,58 |
-| o mouro | 32 | 147,4 | 4,11 |
-| as ondas | 22 | 146,1 | 5,72 |
-| no mundo | 25 | 144,6 | 5,33 |
-| da terra | 34 | 132,2 | 4,01 |
-| da índia | 17 | 119,4 | 5,93 |
-| da gente | 32 | 118,3 | 3,88 |
+| a terra | 78 | 248,8 | 3,33 |
+| a gente | 73 | 216,8 | 3,19 |
+| o mar | 65 | 198,1 | 3,23 |
+| o rei | 62 | 174,6 | 3,08 |
+| os olhos | 27 | 167,5 | 5,35 |
+| o céu | 42 | 165,8 | 3,77 |
+| do mar | 39 | 159,5 | 4,12 |
+| desta arte | 14 | 149,1 | 8,59 |
+| o mouro | 32 | 147,5 | 4,11 |
+| as ondas | 22 | 146,2 | 5,72 |
+| no mundo | 25 | 144,6 | 5,34 |
+| da terra | 34 | 132,3 | 4,01 |
+| da índia | 17 | 119,5 | 5,93 |
+| da gente | 32 | 118,4 | 3,88 |
 | em si | 18 | 113,4 | 5,53 |
-| o gama | 27 | 112,5 | 3,89 |
+| o gama | 27 | 112,6 | 3,90 |
 | no mar | 25 | 111,5 | 4,45 |
-| o nome | 31 | 109,4 | 3,54 |
-| o capitão | 28 | 109,4 | 3,75 |
+| o nome | 31 | 109,5 | 3,54 |
+| o capitão | 28 | 109,5 | 3,76 |
 | as naus | 18 | 108,7 | 5,40 |
 
 ### Palavras-chave por segmento
@@ -394,7 +394,7 @@ Lemas de conteúdo mais característicos de cada segmento, por comparação com 
 | 7 | monçaide, divisa, catual, bandeira, curioso |
 | 8 | feitor, catual, crédito, maumetanos, fazenda |
 | 9 | floresta, cos, pera, perar, ardor |
-| 10 | olha, pera, perar, tomé, assi |
+| 10 | pera, olha, perar, tomé, assi |
 
 ## 12. Visualizações
 
@@ -405,12 +405,12 @@ Lemas de conteúdo mais característicos de cada segmento, por comparação com 
 
 Comentários gerados automaticamente a partir dos valores; descrevem o texto, não explicam as suas causas nem substituem a leitura crítica.
 
-- Metade das frases tem até 12 palavras e a metade central das frases está entre 7 e 19 palavras; 3,1 % têm mais de 30 palavras.
+- Metade das frases tem até 12 palavras e a metade central das frases está entre 7 e 19 palavras; 3,3 % têm mais de 30 palavras.
 - Diversidade lexical: MTLD de 151,2 palavras por fator, ou seja, em média são precisas cerca de 151 palavras até o TTR descer abaixo de 0,72. Este valor só é comparável com livros em português.
-- Em média, 1,09 orações subordinadas por frase e uma profundidade sintática média de 3,49 níveis.
-- Do primeiro ao último segmento, o MTLD passa de 143,1 para 154,7 e a extensão média das frases de 14,1 para 12,9 palavras (variação descritiva; segmentos isolados são instáveis).
+- Em média, 1,11 orações subordinadas por frase e uma profundidade sintática média de 3,50 níveis.
+- Do primeiro ao último segmento, o MTLD passa de 143,1 para 154,7 e a extensão média das frases de 14,2 para 13,1 palavras (variação descritiva; segmentos isolados são instáveis).
 - Sentimento: média de 0,019 (vocabulário globalmente neutro); 32 % das frases pontuadas são positivas e 30 % negativas. Só 6,4 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
-- No arco de sentimento, o segmento mais negativo é o 4 (−0,017) e o mais positivo o 2 (0,045).
+- No arco de sentimento, o segmento mais negativo é o 4 (−0,017) e o mais positivo o 2 (0,049).
 - 34 % das formas verbais finitas estão no passado e 61 % no presente.
 - A rede inclui 14 personagens; a mais central (PageRank) é Vasco da Gama.
 
@@ -483,4 +483,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 11:55 UTC · livros_pln 3.4.1 · código `1bfacfa5c0fa` · commit `f490e31` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>
+<sub>Processado em 2026-11-06 13:03 UTC · livros_pln 3.5.0 · código `60720aed5964` · commit `43724ba` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>
