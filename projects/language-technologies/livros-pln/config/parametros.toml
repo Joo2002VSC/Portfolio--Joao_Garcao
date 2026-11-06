@@ -15,3 +15,8 @@
 # delta_minimo_textos = 3         # textos mínimos da mesma língua para calcular o Delta
 # rede_minimo_mencoes = 5         # menções mínimas para uma personagem entrar na rede
 # rede_maximo_personagens = 40    # máximo de personagens na rede automática
+# sentimento_limiar = 0.05        # |compound| a partir do qual uma frase é positiva ou negativa (Hutto e Gilbert, 2014)
+# sentimento_minimo_palavras = 3  # frases mais curtas não recebem pontuação de sentimento
+# zipf_frequencia_minima = 5      # frequência mínima das formas usadas no ajuste da lei de Zipf
+# colocacao_frequencia_minima = 5 # ocorrências mínimas de um bigrama para ser candidato a colocação
+# palavras_chave_por_segmento = 5 # palavras-chave (TF-IDF) apresentadas por segmento

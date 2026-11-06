@@ -13,6 +13,7 @@
     "fr": 0.0666,
     "en": 0.0433
   },
+  "metodo_sentimento": "LeIA (VADER adaptado ao português) 0.0.1",
   "metodo_personagens": "dicionário (eca-de-queiros-os-maias.json)",
   "personagens_principais": [
     "Carlos da Maia",
@@ -90,11 +91,32 @@
     "pos_num_por_1000": 6.7204,
     "pronomes_pessoais_por_1000": 20.1319,
     "modais_por_1000": 1.9749,
+    "frases_interrogativas_pct": 7.3274,
+    "frases_exclamativas_pct": 15.1918,
+    "verbos_presente_pct": 29.0907,
+    "verbos_passado_pct": 69.8235,
+    "verbos_futuro_pct": 1.0858,
+    "verbos_conjuntivo_pct": 6.0864,
+    "pronomes_1a_pessoa_por_1000": 5.9639,
+    "pronomes_2a_pessoa_por_1000": 0.5944,
+    "pronomes_3a_pessoa_por_1000": 12.4535,
+    "zipf_expoente": 1.0433,
+    "zipf_r2": 0.9975,
+    "heaps_beta": 0.7333,
+    "heaps_k": 3.1918,
+    "heaps_r2": 0.9951,
     "entidades_pessoa": 1641,
     "entidades_lugar": 1315,
     "entidades_organizacao": 241,
     "entidades_por_1000": 62.5129,
-    "legibilidade_escala": "padrão",
+    "legibilidade_escala": "fácil",
+    "legibilidade_leitura": "fácil",
+    "legibilidade_nivel": "5.º ao 8.º ano de escolaridade",
+    "sentimento_medio": -0.0034,
+    "frases_positivas_pct": 26.3671,
+    "frases_negativas_pct": 30.4501,
+    "frases_neutras_pct": 43.1829,
+    "cobertura_lexico_pct": 6.1997,
     "personagens_na_rede": 35,
     "ligacoes_na_rede": 310,
     "densidade_da_rede": 0.521,
@@ -120,7 +142,12 @@
     "delta_palavras_frequentes": 150,
     "delta_minimo_textos": 3,
     "rede_minimo_mencoes": 5,
-    "rede_maximo_personagens": 40
+    "rede_maximo_personagens": 40,
+    "sentimento_limiar": 0.05,
+    "sentimento_minimo_palavras": 3,
+    "zipf_frequencia_minima": 5,
+    "colocacao_frequencia_minima": 5,
+    "palavras_chave_por_segmento": 5
   },
   "ambiente": {
     "python": "3.13.5",
@@ -133,7 +160,10 @@
       "matplotlib": "3.10.0",
       "plotly": "5.24.1",
       "ebooklib": "0.21",
-      "beautifulsoup4": "4.12.3"
+      "beautifulsoup4": "4.12.3",
+      "vaderSentiment": "3.3.2",
+      "leia-br": "0.0.1",
+      "vaderSentiment-fr": "1.3.4"
     },
     "modelo": {
       "nome": "pt_core_news_md",
@@ -152,13 +182,13 @@
     }
   },
   "processamento": {
-    "versao": "3.1.0",
-    "versao_codigo": "872cc50466db",
-    "commit": "725f504",
+    "versao": "3.2.0",
+    "versao_codigo": "b8d50a4c276d",
+    "commit": "50c27e8",
     "hash_ficheiro": "843d9f5f2fdf6fb8",
     "hash_dicionario": "66c19fc9e56d37ab",
-    "data": "2026-11-06 10:32 UTC",
-    "duracao_s": 19.1
+    "data": "2026-11-06 11:01 UTC",
+    "duracao_s": 24.1
   },
   "graficos": [
     "rede.png",
@@ -166,6 +196,8 @@
     "frequencias.png",
     "extensao-frases.png",
     "evolucao.png",
-    "entidades.png"
+    "entidades.png",
+    "sentimento.png",
+    "zipf-heaps.png"
   ]
 }

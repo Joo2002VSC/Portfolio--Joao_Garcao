@@ -13,6 +13,7 @@ import plotly.io as pio
 
 from .catalogo import CLASSES, NOMES_CLASSES
 
+from . import graficos3d as g3d
 from . import tema
 
 # Paleta dos painéis HTML: papel bege, tinta quase preta e castanhos (os gráficos estáticos usam tema.py).
@@ -52,8 +53,9 @@ def maiusculas(texto: str) -> str:
     saida = []
     for k, p in enumerate(palavras):
         inicio = k == 0 or (saida and saida[-1].endswith((":", "·", "—", ";")))
-        if p.lower() in MENORES and not inicio:
-            saida.append(p.lower())
+        letras = [ch for ch in p if ch.isalpha()]
+        if not inicio and (p.lower() in MENORES or len(letras) == 1):
+            saida.append(p if len(letras) == 1 else p.lower())
             continue
         for j, ch in enumerate(p):
             if ch.isalpha():
@@ -142,68 +144,190 @@ def rede_3d(g: nx.Graph, titulo: str = "Rede de personagens em 3D") -> go.Figure
 # ---------------------------------------------------------------------------
 
 SECCOES = {
-    "personagens": ("Personagens", "Quem aparece com quem. Uma ligação significa que as duas personagens surgem no mesmo "
-                                   "parágrafo; não prova uma relação narrativa."),
-    "vocabulario": ("Vocabulário e gramática", "As palavras de conteúdo mais frequentes e o peso de cada classe "
-                                               "gramatical, por 1000 palavras."),
-    "frases": ("Frases e evolução", "Como se distribui a extensão das frases e como alguns indicadores variam do "
-                                    "início ao fim do livro."),
-    "lugares": ("Lugares", "Espaços nomeados, identificados automaticamente; contam como estimativa."),
+    "personagens": ("Personagens", "Rede de co-ocorrência: duas personagens ligam-se quando surgem no mesmo parágrafo. "
+                                   "É uma relação textual, não uma relação narrativa comprovada."),
+    "vocabulario": ("Vocabulário", "Que palavras dominam o livro, que pares de palavras aparecem juntos mais do que o "
+                                   "acaso faria prever (colocações) e que palavras caracterizam cada parte do texto "
+                                   "(palavras-chave por TF-IDF)."),
+    "gramatica": ("Gramática", "Etiquetagem morfossintática: classes de palavras, tempos e modos verbais, pessoa "
+                               "gramatical e tipos de frase, segundo o modelo linguístico spaCy."),
+    "frases": ("Frases e evolução", "Como se distribui a extensão das frases em cada parte do livro e como vários "
+                                    "indicadores variam do início ao fim."),
+    "sentimento": ("Sentimento", "Análise de sentimento por frase com léxico e regras (VADER e adaptações): cada frase "
+                                 "recebe uma pontuação entre −1 (negativa) e +1 (positiva). Mede a polaridade do "
+                                 "vocabulário, não o tom narrativo nem a ironia."),
+    "leis": ("Leis do vocabulário", "Duas regularidades estatísticas de quase todos os textos: poucas palavras são "
+                                    "muito frequentes e muitas são raras (lei de Zipf), e o vocabulário cresce cada vez "
+                                    "mais devagar à medida que se lê (lei de Heaps)."),
+    "lugares": ("Lugares", "Espaços nomeados, identificados automaticamente pelo reconhecimento de entidades; contam "
+                           "como estimativa."),
 }
+NOTA_3D = "Arraste para rodar · roda do rato para aproximar · duplo clique repõe a vista · valores exatos ao passar o rato."
 
 
-def figuras_livro(freq, classes, comprimentos, evol, ents, pers, g) -> list[tuple[str, go.Figure]]:
-    figs: list[tuple[str, go.Figure]] = []
+def _item(seccao: str, fig, alt=None, largo: bool = True) -> dict:
+    return {"seccao": seccao, "fig": fig, "alt": alt, "largo": largo}
+
+
+def _fmt(v, casas=1) -> str:
+    return tema.num(v, casas)
+
+
+def figuras_livro(freq, classes, comprimentos, evol, ents, pers, g, extra: dict | None = None,
+                  lingua: str = "pt") -> list[dict]:
+    extra = extra or {}
+    itens: list[dict] = []
+
+    # Personagens ---------------------------------------------------------------------------------------------------
     f3d = rede_3d(g)
     if f3d is not None:
-        figs.append(("personagens", f3d))
+        itens.append(_item("personagens", f3d))
     if not pers.empty:
-        top = pers.head(20).iloc[::-1]
-        fig = go.Figure(go.Bar(x=top.pagerank, y=top.personagem, orientation="h",
-                               marker=dict(color=[COMUNIDADES[(c - 1) % len(COMUNIDADES)] for c in top.comunidade],
-                                           line=dict(width=0)),
-                               text=[f"C{c}" for c in top.comunidade], textposition="inside",
-                               insidetextfont=dict(color=FUNDO, size=10),
-                               customdata=top[["mencoes", "grau", "intermediacao", "comunidade"]],
-                               hovertemplate="<b>%{y}</b><br>PageRank: %{x:.3f}<br>Menções: %{customdata[0]}"
-                                             "<br>Ligações: %{customdata[1]}<br>Intermediação: %{customdata[2]:.3f}"
-                                             "<br>Comunidade: %{customdata[3]}<extra></extra>"))
-        figs.append(("personagens", _layout(fig, "Personagens mais centrais<br><sup>PageRank na rede de co-ocorrência; "
-                                                 "C1, C2… = comunidade</sup>", altura=560)))
+        top = pers.head(20)
+        com = [f"Comunidade {c}" for c in top.comunidade]
+        f3 = g3d.barras_3d(
+            list(top.personagem), com, list(top.pagerank), [COMUNIDADES[(c - 1) % len(COMUNIDADES)] for c in top.comunidade],
+            nomes=com, titulo_z="PageRank", ordem_y=sorted(set(com), key=lambda s: int(s.split()[-1])),
+            hover=[f"<b>{x.personagem}</b><br>PageRank: {_fmt(x.pagerank, 3)}<br>Menções: {x.mencoes}<br>"
+                   f"Ligações: {x.grau}<br>Comunidade {x.comunidade}" for x in top.itertuples()])
+        _layout(f3, "Personagens mais centrais<br><sup>PageRank na rede de co-ocorrência; cada fila é uma comunidade"
+                    "</sup>", altura=640, nota=NOTA_3D, legend=dict(orientation="h", y=0.02, x=0))
+        t2 = top.iloc[::-1]
+        f2 = go.Figure(go.Bar(x=t2.pagerank, y=t2.personagem, orientation="h",
+                              marker=dict(color=[COMUNIDADES[(c - 1) % len(COMUNIDADES)] for c in t2.comunidade]),
+                              text=[f"C{c}" for c in t2.comunidade], textposition="inside",
+                              insidetextfont=dict(color=FUNDO, size=10),
+                              hovertemplate="<b>%{y}</b><br>PageRank: %{x:.3f}<extra></extra>"))
+        _layout(f2, "Personagens mais centrais", altura=560)
+        itens.append(_item("personagens", f3, f2))
 
-    top = freq.head(30).iloc[::-1]
-    fig = go.Figure()
-    for classe, sub in top.groupby("pos", observed=True, sort=False):
-        fig.add_bar(x=sub.por_1000_palavras, y=sub.lema, orientation="h", name=NOMES_CLASSES.get(classe, classe),
-                    marker=dict(color=CORES_CLASSES.get(classe, SUAVE), line=dict(width=0)),
-                    hovertemplate="<b>%{y}</b>: %{x:.2f} por 1000 palavras<extra></extra>")
-    fig.update_yaxes(categoryorder="array", categoryarray=list(top.lema))
-    fig.update_xaxes(title="ocorrências por 1000 palavras")
-    figs.append(("vocabulario", _layout(fig, "Palavras de conteúdo mais frequentes<br><sup>Lemas de substantivos, "
-                                             "verbos, adjetivos e advérbios</sup>", altura=680, barmode="stack",
-                                        legend=dict(orientation="h", y=-0.08, x=0, yanchor="top"))))
+    # Vocabulário ---------------------------------------------------------------------------------------------------
+    top = freq.head(20)
+    nomes_classes = [NOMES_CLASSES.get(c, c) for c in top.pos]
+    f3 = g3d.barras_3d(
+        list(top.lema), nomes_classes, list(top.por_1000_palavras), [CORES_CLASSES.get(c, SUAVE) for c in top.pos],
+        nomes=nomes_classes, titulo_z="por 1000 palavras",
+        hover=[f"<b>{x.lema}</b> ({NOMES_CLASSES.get(x.pos, x.pos).lower()})<br>{_fmt(x.por_1000_palavras, 2)} por "
+               f"1000 palavras<br>{x.ocorrencias} ocorrências" for x in top.itertuples()])
+    _layout(f3, "Palavras de conteúdo mais frequentes<br><sup>Os 20 lemas mais frequentes; cada fila é uma classe "
+                "gramatical</sup>", altura=640, nota=NOTA_3D, legend=dict(orientation="h", y=0.02, x=0))
+    t2 = freq.head(30).iloc[::-1]
+    f2 = go.Figure()
+    for classe, sub in t2.groupby("pos", observed=True, sort=False):
+        f2.add_bar(x=sub.por_1000_palavras, y=sub.lema, orientation="h", name=NOMES_CLASSES.get(classe, classe),
+                   marker=dict(color=CORES_CLASSES.get(classe, SUAVE)),
+                   hovertemplate="<b>%{y}</b>: %{x:.2f} por 1000 palavras<extra></extra>")
+    f2.update_yaxes(categoryorder="array", categoryarray=list(t2.lema))
+    f2.update_xaxes(title="ocorrências por 1000 palavras")
+    _layout(f2, "Palavras de conteúdo mais frequentes", altura=680, barmode="stack",
+            legend=dict(orientation="h", y=-0.08, x=0, yanchor="top"))
+    itens.append(_item("vocabulario", f3, f2))
 
-    c = classes.sort_values("por_1000_palavras")
-    fig = go.Figure(go.Bar(x=c.por_1000_palavras, y=c.nome, orientation="h", marker=dict(color=CASTANHO, line=dict(width=0)),
-                           customdata=c.ocorrencias, hovertemplate="<b>%{y}</b><br>%{x:.1f} por 1000 palavras"
-                                                                  "<br>%{customdata:,} ocorrências<extra></extra>"))
-    fig.update_xaxes(title="ocorrências por 1000 palavras")
-    figs.append(("vocabulario", _layout(fig, "Classes gramaticais<br><sup>Etiquetas UPOS por 1000 palavras</sup>",
-                                        altura=480)))
+    col = extra.get("colocacoes")
+    if col is not None and len(col) >= 3:
+        c = col.head(25)
+        f3 = g3d.dispersao(
+            list(c.pmi), list(np.log10(c.g2)), list(c.ocorrencias), texto=list(c.colocacao),
+            tamanho=list(6 + 14 * np.sqrt(c.ocorrencias / c.ocorrencias.max())), cores=OCRE,
+            titulos=("PMI (exclusividade)", "log₁₀ G² (força)", "ocorrências"),
+            customdata=np.c_[c.g2, c.pmi, c.ocorrencias],
+            hover="<b>%{text}</b><br>G²: %{customdata[0]:.1f}<br>PMI: %{customdata[1]:.2f}<br>"
+                  "Ocorrências: %{customdata[2]}<extra></extra>")
+        _layout(f3, "Colocações<br><sup>Pares de palavras com associação mais forte (razão de verosimilhança G² de "
+                    "Dunning e informação mútua pontual)</sup>", altura=640, nota=NOTA_3D)
+        c2 = col.head(20).iloc[::-1]
+        f2 = go.Figure(go.Bar(x=c2.g2, y=c2.colocacao, orientation="h", marker=dict(color=OCRE),
+                              customdata=np.c_[c2.pmi, c2.ocorrencias],
+                              hovertemplate="<b>%{y}</b><br>G²: %{x:.1f}<br>PMI: %{customdata[0]:.2f}<br>"
+                                            "Ocorrências: %{customdata[1]}<extra></extra>"))
+        f2.update_xaxes(title="G² (razão de verosimilhança)")
+        _layout(f2, "Colocações", altura=600)
+        itens.append(_item("vocabulario", f3, f2))
 
+    chave = extra.get("palavras_chave")
+    if chave is not None and len(chave):
+        k3 = chave.groupby("segmento").head(3).copy()
+        k3["posicao"] = k3.groupby("segmento").cumcount() + 1
+        segs = sorted(k3.segmento.unique())
+        f3 = g3d.barras_3d(
+            [f"{s}" for s in k3.segmento], [f"{p}.ª" for p in k3.posicao], list(k3.tfidf),
+            [{1: CASTANHO, 2: OCRE, 3: AREIA}[p] for p in k3.posicao], titulo_x="segmento", titulo_y="posição",
+            titulo_z="TF-IDF", ordem_x=[f"{s}" for s in segs], ordem_y=["1.ª", "2.ª", "3.ª"], rotulos=list(k3.lema),
+            hover=[f"<b>{x.lema}</b><br>segmento {x.segmento}<br>TF-IDF: {_fmt(x.tfidf, 2)}<br>{x.ocorrencias} "
+                   "ocorrências no segmento" for x in k3.itertuples()], largura=0.55, profundidade=0.55)
+        _layout(f3, "Palavras-chave por segmento<br><sup>As três palavras mais características de cada parte do livro "
+                    "(TF-IDF, com os segmentos como documentos)</sup>", altura=640, nota=NOTA_3D)
+        tabela = "".join(f'<li><b>{s}</b><span>{html.escape(", ".join(g.lema))}</span></li>'
+                         for s, g in chave.groupby("segmento"))
+        itens.append(_item("vocabulario", f3, f'<ol class="chaves">{tabela}</ol>'))
+
+    # Gramática -----------------------------------------------------------------------------------------------------
+    c = classes.sort_values("por_1000_palavras", ascending=False)
+    f3 = g3d.barras_3d(list(c.nome), [""] * len(c), list(c.por_1000_palavras), [CASTANHO] * len(c),
+                       titulo_z="por 1000 palavras", rotulos=[_fmt(v, 0) for v in c.por_1000_palavras],
+                       hover=[f"<b>{x.nome}</b><br>{_fmt(x.por_1000_palavras, 1)} por 1000 palavras<br>"
+                              f"{x.ocorrencias} ocorrências" for x in c.itertuples()], profundidade=0.7)
+    f3.update_layout(scene_aspectratio=dict(x=2.1, y=0.45, z=0.8), scene_camera=dict(eye=dict(x=0.3, y=-1.85, z=0.7)))
+    _layout(f3, "Classes gramaticais<br><sup>Etiquetas UPOS por 1000 palavras</sup>", altura=560, nota=NOTA_3D)
+    c2 = c.iloc[::-1]
+    f2 = go.Figure(go.Bar(x=c2.por_1000_palavras, y=c2.nome, orientation="h", marker=dict(color=CASTANHO),
+                          hovertemplate="<b>%{y}</b>: %{x:.1f} por 1000 palavras<extra></extra>"))
+    f2.update_xaxes(title="ocorrências por 1000 palavras")
+    _layout(f2, "Classes gramaticais", altura=480)
+    itens.append(_item("gramatica", f3, f2))
+
+    tempos = extra.get("tempos")
+    if tempos is not None and len(tempos):
+        t = tempos[tempos.pct >= 0.5]
+        modos = list(dict.fromkeys(t.modo))
+        cores_modo = {m: [CASTANHO, TINTA, OCRE, CAQUI, FERRUGEM, AREIA][k % 6] for k, m in enumerate(modos)}
+        f3 = g3d.barras_3d(
+            [maiusculas(x) for x in t.tempo], [maiusculas(m) for m in t.modo], list(t.pct),
+            [cores_modo[m] for m in t.modo], nomes=[maiusculas(m) for m in t.modo], titulo_z="% das formas finitas",
+            rotulos=[_fmt(v, 0) + " %" for v in t.pct],
+            hover=[f"<b>{x.tempo} do {x.modo}</b><br>{_fmt(x.pct, 1)} % das formas finitas<br>{x.ocorrencias} "
+                   "ocorrências" for x in t.itertuples()])
+        _layout(f3, "Tempos e modos verbais<br><sup>Formas verbais finitas por tempo (largura) e modo (profundidade)"
+                    "</sup>", altura=600, nota=NOTA_3D, legend=dict(orientation="h", y=0.02, x=0))
+        f2 = go.Figure()
+        for m in modos:
+            sub = t[t.modo == m]
+            f2.add_bar(x=[maiusculas(x) for x in sub.tempo], y=sub.pct, name=maiusculas(m), marker=dict(color=cores_modo[m]),
+                       hovertemplate="%{x}: %{y:.1f} %<extra></extra>")
+        f2.update_yaxes(title="% das formas finitas")
+        _layout(f2, "Tempos e modos verbais", altura=480, barmode="group",
+                legend=dict(orientation="h", y=-0.15, x=0, yanchor="top"))
+        itens.append(_item("gramatica", f3, f2))
+
+    # Frases e evolução ---------------------------------------------------------------------------------------------
+    fr = extra.get("frases")
     c = comprimentos[comprimentos > 0]
     if len(c):
-        limite = max(int(c.quantile(0.99)), 1)
-        fig = go.Figure(go.Histogram(x=c.clip(upper=limite), xbins=dict(start=0.5, end=limite + 0.5, size=1),
-                                     marker=dict(color="#B08B68", line=dict(color=PAPEL, width=0.6)),
-                                     hovertemplate="%{x} palavras: %{y} frases<extra></extra>"))
-        fig.add_vline(x=c.median(), line=dict(color=TINTA, width=2, dash="dot"),
-                      annotation_text=f"mediana {c.median():.0f}", annotation_position="top right",
-                      annotation_font=dict(color=TINTA))
-        fig.update_xaxes(title="palavras por frase (até ao percentil 99)")
-        fig.update_yaxes(title="frases")
-        figs.append(("frases", _layout(fig, "Extensão das frases<br><sup>Distribuição; extensão não equivale a "
-                                            "complexidade sintática</sup>", altura=480, bargap=0.04)))
+        limite = max(int(c.quantile(0.95)), 5)
+        f2 = go.Figure(go.Histogram(x=c.clip(upper=int(c.quantile(0.99))), xbins=dict(start=0.5, size=1),
+                                    marker=dict(color="#B08B68", line=dict(color=PAPEL, width=0.6)),
+                                    hovertemplate="%{x} palavras: %{y} frases<extra></extra>"))
+        f2.add_vline(x=c.median(), line=dict(color=TINTA, width=2, dash="dot"),
+                     annotation_text=f"mediana {c.median():.0f}", annotation_position="top right")
+        f2.update_xaxes(title="palavras por frase (até ao percentil 99)")
+        f2.update_yaxes(title="frases")
+        _layout(f2, "Extensão das frases", altura=480, bargap=0.04)
+        if fr is not None and fr.segmento.notna().any() and fr.segmento.nunique() >= 3:
+            f = fr[(fr.palavras > 0) & fr.segmento.notna()]
+            segs = sorted(f.segmento.unique().astype(int))
+            xs = list(range(1, limite + 1))
+            z = np.array([[100 * (sub.palavras == L).mean() for L in xs] for _, sub in f.groupby("segmento")])
+            fora = 100 * (f.palavras > limite).mean()
+            f3 = g3d.superficie(xs, segs, z, cores=[[0, PAPEL], [0.25, AREIA], [0.6, "#B08B68"], [1, CASTANHO]],
+                                titulo_x="palavras por frase", titulo_y="segmento", titulo_z="% das frases",
+                                hover="Segmento %{y}<br>%{x} palavras: %{z:.1f} % das frases<extra></extra>")
+            _layout(f3, f"Extensão das frases ao longo do livro<br><sup>Distribuição em cada segmento, até {limite} "
+                        f"palavras (percentil 95); a mediana do livro é {c.median():.0f}</sup>", altura=640,
+                    nota=NOTA_3D + f" Frases com mais de {limite} palavras ({tema.num(fora, 1)} %) não aparecem no relevo; "
+                    "estão na vista 2D.")
+            itens.append(_item("frases", f3, f2))
+        else:
+            itens.append(_item("frases", f2))
 
     if len(evol) >= 3:
         from plotly.subplots import make_subplots
@@ -211,30 +335,101 @@ def figuras_livro(freq, classes, comprimentos, evol, ents, pers, g) -> list[tupl
         series = [("mtld", "Diversidade lexical (MTLD)", ".1f", CASTANHO),
                   ("frase_media", "Extensão média das frases", ".1f", TINTA),
                   ("dialogo_pct", "Parágrafos de diálogo (%)", ".0f", OCRE)]
-        fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1,
-                            subplot_titles=[maiusculas(rot) for _, rot, _, _ in series])
-        for k, (col, rot, fmt, cor) in enumerate(series, start=1):
-            fig.add_scatter(x=evol.segmento, y=evol[col], mode="lines+markers", name=rot, showlegend=False,
-                            line=dict(color=cor, width=2.5), marker=dict(size=7, color=cor, line=dict(color=FUNDO, width=1)),
-                            row=k, col=1, hovertemplate=f"{rot}<br>segmento %{{x}}: %{{y:{fmt}}}<extra></extra>")
-        fig.update_xaxes(dtick=1)
-        fig.update_xaxes(title="segmento do livro (início → fim)", row=3, col=1)
-        _layout(fig, "Evolução ao longo do livro<br><sup>O livro é dividido em segmentos com o mesmo número de "
-                     "palavras</sup>", altura=600)
-        fig.update_layout(margin=dict(t=34))
-        for a in fig.layout.annotations:
+        if "sentimento" in evol and evol.sentimento.notna().sum() >= 3:
+            series.append(("sentimento", "Sentimento médio", ".3f", CAQUI))
+        series = [s for s in series if evol[s[0]].notna().sum() >= 3]
+        fitas = []
+        for col_, rot, fmt, cor in series:
+            v = evol[col_].astype(float)
+            dp = v.std()
+            fitas.append((maiusculas(rot), list(((v - v.mean()) / dp).fillna(0) if dp else v * 0), list(v), cor, fmt))
+        f3 = g3d.fitas(list(evol.segmento), fitas, titulo_x="segmento (início → fim)",
+                       titulo_z="desvio face à média (desvios-padrão)")
+        _layout(f3, "Evolução ao longo do livro<br><sup>Cada fita é um indicador, normalizado para a mesma escala; "
+                    "acima de 0 = acima da média do livro</sup>", altura=640, nota=NOTA_3D + " A vista 2D mostra os "
+                    "valores originais.")
+        f2 = make_subplots(rows=len(series), cols=1, shared_xaxes=True, vertical_spacing=0.08,
+                           subplot_titles=[maiusculas(rot) for _, rot, _, _ in series])
+        for k, (col_, rot, fmt, cor) in enumerate(series, start=1):
+            f2.add_scatter(x=evol.segmento, y=evol[col_], mode="lines+markers", showlegend=False,
+                           line=dict(color=cor, width=2.5), marker=dict(size=7, color=cor), row=k, col=1,
+                           hovertemplate=f"{rot}<br>segmento %{{x}}: %{{y:{fmt}}}<extra></extra>")
+        f2.update_xaxes(dtick=1)
+        _layout(f2, "Evolução ao longo do livro", altura=170 * len(series) + 120)
+        f2.update_layout(margin=dict(t=34))
+        for a in f2.layout.annotations:
             a.update(x=0, xanchor="left", font=dict(size=12, color=SUAVE))
-        figs.append(("frases", fig))
+        itens.append(_item("frases", f3, f2))
 
-    lugares = ents[ents.tipo == "lugar"].head(15).iloc[::-1] if not ents.empty else ents
+    # Sentimento ----------------------------------------------------------------------------------------------------
+    if len(evol) >= 3 and "frases_positivas_pct" in evol and evol.frases_positivas_pct.notna().sum() >= 3:
+        neutras = 100 - evol.frases_positivas_pct - evol.frases_negativas_pct
+        cats = [("Positivas", evol.frases_positivas_pct, CASTANHO), ("Neutras", neutras, AREIA),
+                ("Negativas", evol.frases_negativas_pct, TINTA)]
+        xs, ys, zs, cs, hv = [], [], [], [], []
+        for nome, vals, cor in cats:
+            for sgm, v in zip(evol.segmento, vals):
+                xs.append(str(sgm)); ys.append(nome); zs.append(v); cs.append(cor)
+                hv.append(f"<b>Segmento {sgm}</b><br>Frases {nome.lower()}: {_fmt(v, 1)} %")
+        f3 = g3d.barras_3d(xs, ys, zs, cs, nomes=ys, hover=hv, titulo_x="segmento", titulo_z="% das frases",
+                           ordem_y=["Negativas", "Positivas", "Neutras"])
+        f3.update_layout(scene_camera=dict(eye=dict(x=0.45, y=-1.55, z=1.35), center=dict(x=0, y=0, z=-0.15)))
+        _layout(f3, "Sentimento ao longo do livro<br><sup>Proporção de frases positivas, neutras e negativas em cada "
+                    "segmento</sup>", altura=620, nota=NOTA_3D, legend=dict(orientation="h", y=0.02, x=0))
+        f2 = go.Figure()
+        f2.add_hrect(y0=-0.05, y1=0.05, fillcolor=GRELHA, opacity=0.6, line_width=0)
+        f2.add_scatter(x=evol.segmento, y=evol.sentimento, mode="lines+markers", line=dict(color=CASTANHO, width=3),
+                       marker=dict(size=8, color=CASTANHO), name="sentimento médio",
+                       hovertemplate="Segmento %{x}: %{y:.3f}<extra></extra>")
+        f2.update_xaxes(title="segmento (início → fim)", dtick=1)
+        f2.update_yaxes(title="sentimento médio (−1 a +1)", zeroline=True, zerolinecolor=SUAVE)
+        _layout(f2, "Arco de sentimento", altura=460)
+        itens.append(_item("sentimento", f3, f2))
+
+    # Leis do vocabulário (2D: escalas logarítmicas) ----------------------------------------------------------------
+    zipf_t, heaps_t = extra.get("zipf"), extra.get("heaps")
+    if zipf_t is not None and len(zipf_t) > 10:
+        f2 = go.Figure(go.Scatter(x=zipf_t.posicao, y=zipf_t.frequencia, mode="markers",
+                                  marker=dict(size=4, color=CASTANHO, opacity=0.6), text=zipf_t.forma,
+                                  hovertemplate="<b>%{text}</b><br>posição %{x}: %{y} ocorrências<extra></extra>"))
+        from .graficos import reta_zipf
+        ajuste = reta_zipf(zipf_t)
+        if ajuste is not None:
+            r, f, s_ = ajuste
+            f2.add_scatter(x=r, y=f, mode="lines", line=dict(color=TINTA, width=2, dash="dash"), hoverinfo="skip",
+                           name=f"ajuste: s = {tema.num(s_, 2)}")
+            f2.update_layout(legend=dict(x=0.02, y=0.05))
+        f2.update_xaxes(type="log", title="posição (1 = forma mais frequente)")
+        f2.update_yaxes(type="log", title="ocorrências")
+        _layout(f2, "Lei de Zipf<br><sup>Frequência em função da posição, escala log-log; só formas com pelo menos "
+                    f"{int(zipf_t.frequencia.min())} ocorrências</sup>", altura=460,
+                nota="Gráfico em 2D: as escalas logarítmicas são o que torna a lei visível, e uma terceira dimensão "
+                     "não acrescentaria informação.")
+        itens.append(_item("leis", f2, largo=False))
+    if heaps_t is not None and len(heaps_t) > 5:
+        f2 = go.Figure(go.Scatter(x=heaps_t.palavras, y=heaps_t.vocabulario, mode="lines", line=dict(color=TINTA, width=3),
+                                  hovertemplate="%{x} palavras lidas: %{y} formas distintas<extra></extra>"))
+        f2.update_xaxes(type="log", title="palavras lidas (N)")
+        f2.update_yaxes(type="log", title="formas distintas (V)")
+        _layout(f2, "Lei de Heaps<br><sup>Crescimento do vocabulário, escala log-log</sup>", altura=460)
+        itens.append(_item("leis", f2, largo=False))
+
+    # Lugares -------------------------------------------------------------------------------------------------------
+    lugares = ents[ents.tipo == "lugar"].head(12) if not ents.empty else ents
     if len(lugares):
-        fig = go.Figure(go.Bar(x=lugares.ocorrencias, y=lugares.entidade, orientation="h",
-                               marker=dict(color=CAQUI, line=dict(width=0)),
-                               hovertemplate="<b>%{y}</b>: %{x} menções<extra></extra>"))
-        fig.update_xaxes(title="menções")
-        figs.append(("lugares", _layout(fig, "Lugares mais mencionados<br><sup>Estimativa do reconhecimento de "
-                                             "entidades (NER)</sup>", altura=500)))
-    return figs
+        f3 = g3d.barras_3d(list(lugares.entidade), [""] * len(lugares), list(lugares.ocorrencias), [CAQUI] * len(lugares),
+                           titulo_z="menções", rotulos=[str(v) for v in lugares.ocorrencias], profundidade=0.7,
+                           hover=[f"<b>{x.entidade}</b><br>{x.ocorrencias} menções" for x in lugares.itertuples()])
+        f3.update_layout(scene_aspectratio=dict(x=2.1, y=0.45, z=0.8), scene_camera=dict(eye=dict(x=0.3, y=-1.85, z=0.7)))
+        _layout(f3, "Lugares mais mencionados<br><sup>Estimativa do reconhecimento de entidades (NER)</sup>",
+                altura=540, nota=NOTA_3D)
+        l2 = lugares.iloc[::-1]
+        f2 = go.Figure(go.Bar(x=l2.ocorrencias, y=l2.entidade, orientation="h", marker=dict(color=CAQUI),
+                              hovertemplate="<b>%{y}</b>: %{x} menções<extra></extra>"))
+        f2.update_xaxes(title="menções")
+        _layout(f2, "Lugares mais mencionados", altura=460)
+        itens.append(_item("lugares", f3, f2))
+    return itens
 
 
 # ---------------------------------------------------------------------------
@@ -343,6 +538,63 @@ td a{font-family:var(--display);font-size:20px;font-weight:600}
 border-top:1px solid rgba(243,234,219,.14);font-size:12.5px;color:#a8977f}
 .rodape code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--areia)}
 
+/* ficha técnica no cabeçalho */
+.rosto.com-ficha{grid-template-columns:auto 1fr minmax(260px,330px)}
+.ficha-topo{position:relative;border:1px solid rgba(243,234,219,.16);background:rgba(243,234,219,.04);padding:18px 22px 12px}
+.ficha-topo h2{font-family:var(--display);font-style:italic;font-weight:500;font-size:21px;color:var(--ocre);margin:0 0 8px}
+.ficha-topo dl{margin:0}.ficha-topo dl div{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:6px 0;
+border-bottom:1px solid rgba(243,234,219,.10)}.ficha-topo dl div:last-child{border:0}
+.ficha-topo dt{font-family:var(--ui);font-size:12.5px;color:var(--areia);letter-spacing:.03em}
+.ficha-topo dd{margin:0;text-align:right;font-family:var(--ui);font-size:13.5px;color:var(--creme);overflow-wrap:anywhere}
+
+/* legibilidade */
+.leitura{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:18px 44px;align-items:center;margin:44px 0 0;
+padding:28px 0;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.veredicto span{display:block;font-family:var(--display);font-style:italic;font-size:22px;color:var(--castanho)}
+.veredicto b{display:block;font-family:var(--display);font-weight:700;font-size:clamp(54px,7vw,84px);line-height:.95}
+.veredicto small{display:block;font-family:var(--ui);font-size:13px;color:var(--suave);margin-top:8px}
+.regua{position:relative;padding-top:6px}
+.faixas{position:relative;height:46px;border:1px solid var(--tinta)}
+.faixas span{position:absolute;top:0;bottom:0;display:flex;align-items:center;justify-content:center;overflow:hidden;
+border-right:1px solid rgba(244,238,227,.6)}
+.faixas em{font-style:normal;font-family:var(--ui);font-size:11.5px;color:#fff;white-space:nowrap;padding:0 4px;
+text-shadow:0 1px 1px rgba(0,0,0,.35)}
+.regua i{position:absolute;top:-4px;width:4px;height:60px;margin-left:-2px;background:var(--tinta);
+box-shadow:0 0 0 2px var(--papel)}
+.regua i:after{content:"";position:absolute;top:-9px;left:-6px;border:8px solid transparent;border-top-color:var(--tinta)}
+.marcas{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;color:var(--suave);margin-top:8px}
+.leitura .nota{grid-column:1/-1;font-family:var(--ui);font-size:13px;color:var(--suave);margin:0}
+.notas-bloco{margin:36px 0 0;max-width:860px}.notas-bloco h3{font-family:var(--display);font-weight:600;font-size:26px;margin:0 0 10px}
+
+/* cabeçalho das figuras e alternador 3D/2D */
+.cab-fig{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.vista{flex:none;display:inline-flex;border:1px solid var(--tinta);margin-top:4px}
+.vista button{font-family:var(--ui);font-size:13px;font-weight:600;letter-spacing:.06em;padding:6px 14px;border:0;
+background:transparent;color:var(--tinta);cursor:pointer}
+.vista button.ativo{background:var(--tinta);color:var(--creme)}
+.vista button:focus-visible{outline:2px solid var(--ocre);outline-offset:2px}
+.v2[hidden],.v3[hidden]{display:none}
+
+/* pequenos indicadores, citações e listas */
+.mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:26px 0 0;border-top:1px solid var(--tinta)}
+.mini div{padding:16px 18px 14px;border-bottom:1px solid var(--linha)}
+.mini div+div{border-left:1px solid var(--linha)}
+.mini b{display:block;font-family:var(--display);font-weight:600;font-size:36px;line-height:1.05;font-variant-numeric:lining-nums}
+.mini span{display:block;font-family:var(--ui);font-size:13px;color:var(--suave);margin-top:4px}
+.citacoes{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin:36px 0 0}
+.citacoes h3{font-family:var(--display);font-weight:600;font-size:24px;margin:0 0 6px}
+blockquote{margin:14px 0 0;padding:4px 0 4px 18px;border-left:3px solid var(--castanho)}
+blockquote.negativa{border-left-color:var(--tinta)}
+blockquote p{margin:0;font-family:var(--texto);font-style:italic;font-size:16.5px;line-height:1.55}
+blockquote cite{display:block;margin-top:4px;font-family:var(--ui);font-style:normal;font-size:12.5px;color:var(--suave)}
+.chaves{list-style:none;margin:8px 0 0;padding:0;columns:2;column-gap:48px}
+.chaves li{display:grid;grid-template-columns:42px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--linha);break-inside:avoid}
+.chaves b{font-family:var(--display);font-size:22px;color:var(--ocre);font-weight:600}
+.aviso-estado{border-left:3px solid var(--ocre);padding-left:16px;color:var(--suave)}
+
+@media(max-width:1080px){.rosto.com-ficha{grid-template-columns:auto 1fr}.ficha-topo{grid-column:1/-1}}
+@media(max-width:860px){.leitura,.citacoes{grid-template-columns:1fr}.chaves{columns:1}
+.rosto.com-ficha{grid-template-columns:1fr}.mini div+div{border-left:0}.faixas em{font-size:0}}
 @media(max-width:860px){.envolve{padding:0 18px}.rosto{grid-template-columns:1fr;gap:24px;padding:40px 0}
 .selo{width:112px;height:112px}.numeros{grid-template-columns:1fr 1fr}
 .numero:not(:nth-child(3n+1)){border-left:0}.numero:nth-child(even){border-left:1px solid var(--linha)}
@@ -365,7 +617,8 @@ def _num(v, casas=1):
         return "—"
     if isinstance(v, (int, np.integer)) or float(v).is_integer() and abs(v) >= 100:
         return f"{int(v):,}".replace(",", " ")
-    return f"{v:.{casas}f}".replace(".", ",")
+    texto = f"{v:.{casas}f}".replace(".", ",")
+    return "−" + texto[1:] if texto.startswith("-") else texto
 
 
 def _div(fig: go.Figure, primeira: bool, offline: bool) -> str:
@@ -375,36 +628,61 @@ def _div(fig: go.Figure, primeira: bool, offline: bool) -> str:
                                "toImageButtonOptions": {"format": "png", "scale": 2}})
 
 
-def _figura(fig: go.Figure, primeira: bool, offline: bool) -> str:
+def _figura(item: dict, primeira: bool, offline: bool) -> tuple[str, bool]:
+    """Devolve (html, primeira). Com alternativa, mostra a vista 3D e um botão para a vista 2D."""
+    fig, alt = item["fig"], item.get("alt")
     meta = fig.layout.meta or {}
     e = html.escape
-    return (f'<figure class="figura"><h3>{e(meta.get("titulo", ""))}</h3>'
-            + (f'<p class="sub">{e(meta["subtitulo"])}</p>' if meta.get("subtitulo") else "")
-            + _div(fig, primeira, offline)
-            + (f'<p class="nota">{e(meta["nota"])}</p>' if meta.get("nota") else "") + "</figure>")
+    principal = _div(fig, primeira, offline)
+    primeira = False
+    cabeca = (f'<div class="cab-fig"><div><h3>{e(meta.get("titulo", ""))}</h3>'
+              + (f'<p class="sub">{e(meta["subtitulo"])}</p>' if meta.get("subtitulo") else "") + "</div>")
+    if alt is None:
+        corpo = cabeca + "</div>" + principal
+    else:
+        segunda = alt if isinstance(alt, str) else _div(alt, primeira, offline)
+        corpo = (cabeca + '<div class="vista" role="group" aria-label="Vista do gráfico">'
+                 '<button type="button" class="ativo" data-vista="v3">3D</button>'
+                 '<button type="button" data-vista="v2">2D</button></div></div>'
+                 f'<div class="v3">{principal}</div><div class="v2" hidden>{segunda}</div>')
+    nota = f'<p class="nota">{e(meta["nota"])}</p>' if meta.get("nota") else ""
+    return f'<figure class="figura">{corpo}{nota}</figure>', primeira
 
 
-def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], figs: list[tuple[str, go.Figure]],
-           ficha_html: str, rodape: dict, offline: bool, destino: Path, antetitulo: str = "Análise do Livro",
-           dados_rosto: list[tuple[str, str]] | None = None, seccoes: dict | None = None,
-           ligacao_corpus: str | None = None):
-    """Escreve a página. `numeros` = (valor, unidade, rótulo); `rodape` = ligações e dados técnicos."""
+def _mini(valores: list[tuple[str, str]]) -> str:
+    """Fila de pequenos indicadores (valor, rótulo)."""
+    return '<div class="mini">' + "".join(
+        f'<div><b>{html.escape(v)}</b><span>{html.escape(maiusculas(r))}</span></div>' for v, r in valores) + "</div>"
+
+
+JS = """
+document.addEventListener("click",ev=>{const b=ev.target.closest(".vista button");if(!b)return;
+const fig=b.closest(".figura");fig.querySelectorAll(".vista button").forEach(x=>x.classList.toggle("ativo",x===b));
+const v=b.dataset.vista;fig.querySelector(".v3").hidden=v!=="v3";fig.querySelector(".v2").hidden=v!=="v2";
+if(window.Plotly)fig.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)});});
+window.addEventListener("load",()=>{if(window.Plotly)document.querySelectorAll(".js-plotly-plot").forEach(g=>{if(g.offsetParent)Plotly.Plots.resize(g)})});
+"""
+
+
+def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], itens: list[dict], resumo_html: str,
+           rodape: dict, offline: bool, destino: Path, antetitulo: str = "Análise do Livro",
+           dados_rosto: list[tuple[str, str]] | None = None, ficha: list[tuple[str, str]] | None = None,
+           seccoes: dict | None = None, extras: dict | None = None, ligacao_corpus: str | None = None):
+    """Escreve a página. `numeros` = (valor, unidade, rótulo); `extras` = HTML a inserir no início de cada secção."""
     e = html.escape
-    seccoes = seccoes or {}
-    ordem = list(dict.fromkeys(chave for chave, _ in figs))
+    seccoes, extras = seccoes or {}, extras or {}
+    ordem = [k for k in seccoes if any(i["seccao"] == k for i in itens) or k in extras]
+    ordem += [k for k in dict.fromkeys(i["seccao"] for i in itens) if k not in ordem]
     corpo, primeira = [], True
     for n, chave in enumerate(ordem, start=2):
         nome, lede = seccoes.get(chave, (chave.capitalize(), ""))
-        largos, pares = [], []
-        for k, f in figs:
-            if k != chave:
-                continue
-            bloco = _figura(f, primeira, offline)
-            primeira = False
-            (largos if (f.layout.height or 0) >= 560 else pares).append(bloco)
+        blocos, pares = [], []
+        for it in (i for i in itens if i["seccao"] == chave):
+            bloco, primeira = _figura(it, primeira, offline)
+            (blocos if it["largo"] else pares).append(bloco)
         if len(pares) == 1:          # um gráfico pequeno sozinho ocupa a largura toda
-            largos, pares = largos + pares, []
-        miolo = "".join(largos) + (f'<div class="par">{"".join(pares)}</div>' if pares else "")
+            blocos, pares = blocos + pares, []
+        miolo = extras.get(chave, "") + "".join(blocos) + (f'<div class="par">{"".join(pares)}</div>' if pares else "")
         corpo.append(f'<section class="seccao" id="{chave}"><div class="cab-seccao"><span class="num">'
                      f'{ROMANOS[(n - 1) % 10]}</span><h2>{e(maiusculas(nome))}</h2></div>'
                      + (f'<p class="lede">{e(lede)}</p>' if lede else "") + miolo + "</section>")
@@ -414,6 +692,8 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], figs:
     blocos = "".join(f'<div class="numero"><b>{e(v)}{f"<small>{e(u)}</small>" if u else ""}</b>'
                      f'<span>{e(maiusculas(r))}</span></div>' for v, u, r in numeros)
     rosto = "".join(f"<li>{e(r)} <b>{e(v)}</b></li>" for r, v in (dados_rosto or []))
+    ficha_html = ("" if not ficha else '<aside class="ficha-topo"><h2>Ficha Técnica</h2><dl>'
+                  + "".join(f"<div><dt>{e(r)}</dt><dd>{e(str(v))}</dd></div>" for r, v in ficha) + "</dl></aside>")
     icone32, icone128 = _icone(32), _icone(128)
     cabeca = (f'<link rel="icon" type="image/png" sizes="32x32" href="{icone32}">'
               f'<link rel="apple-touch-icon" href="{icone128}">') if icone32 else ""
@@ -423,19 +703,19 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], figs:
     destino.write_text(f"""<!doctype html>
 <html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(titulo)} · Livros-PLN</title><meta name="theme-color" content="#1E1915">
-<meta name="description" content="{e(antetitulo)}: {e(titulo)}. Indicadores linguísticos, rede de personagens e estilo.">
+<meta name="description" content="{e(antetitulo)}: {e(titulo)}. Indicadores linguísticos, sentimento, rede de personagens e estilo.">
 {cabeca}{FONTES_WEB}<style>{CSS}</style></head>
 <body>
 <header class="cabecalho"><div class="envolve">
  <div class="barra"><span class="marca"><img src="{icone32}" alt="">Livros-PLN</span>
   <span class="lema">Análise Computacional de Textos Literários</span>{voltar}</div>
- <div class="rosto"><div class="selo"><img src="{icone128}" alt="Ícone do Livros-PLN"></div>
-  <div><p class="antetitulo">{e(antetitulo)}</p><h1>{e(titulo)}</h1>
+ <div class="rosto{' com-ficha' if ficha else ''}"><div class="selo"><img src="{icone128}" alt="Ícone do Livros-PLN"></div>
+  <div class="titulos"><p class="antetitulo">{e(antetitulo)}</p><h1>{e(titulo)}</h1>
   {f'<p class="autoria">{e(autoria)}</p>' if autoria else ''}
-  <div class="ornamento">❦</div><ul class="dados-rosto">{rosto}</ul></div></div>
+  <div class="ornamento">❦</div><ul class="dados-rosto">{rosto}</ul></div>{ficha_html}</div>
 </div></header>
 <nav class="indice" aria-label="Índice"><div class="envolve">{indice}</div></nav>
-<main class="envolve"><section id="resumo"><div class="numeros">{blocos}</div>{ficha_html}</section>{''.join(corpo)}</main>
+<main class="envolve"><section id="resumo"><div class="numeros">{blocos}</div>{resumo_html}</section>{''.join(corpo)}</main>
 <footer class="rodape"><div class="envolve">
  <div class="topo">
   <div><span class="marca"><img src="{icone128}" alt="">Livros-PLN</span>
@@ -445,43 +725,108 @@ def pagina(titulo: str, autoria: str, numeros: list[tuple[str, str, str]], figs:
  </div>
  <div class="base"><span>{e(rodape["autoria"])}</span><span>{e(rodape["aviso"])}</span></div>
 </div></footer>
-<script>window.addEventListener("load",()=>{{if(window.Plotly)document.querySelectorAll(".js-plotly-plot").forEach(g=>Plotly.Plots.resize(g))}});</script>
+<script>{JS}</script>
 </body></html>
 """, encoding="utf-8")
 
 
-DESCRICAO = ("Indicadores linguísticos, estilométricos e de rede de personagens para livros em português, francês e "
-             "inglês, com definição, limitações e referência para cada valor.")
+DESCRICAO = ("Indicadores linguísticos, estilométricos, de sentimento e de rede de personagens para livros em "
+             "português, francês e inglês, com definição, limitações e referência para cada valor.")
 AUTORIA = "© João Garção · Código com todos os direitos reservados"
 
 
-def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g, destino: Path, offline: bool = False):
+def _escala_leitura(i: dict, lingua: str) -> str:
+    """Régua da legibilidade com as faixas da língua e o marcador do livro."""
+    from .indicadores import FAIXAS_FLESCH, FAIXAS_MARTINS, FRONTEIRA_LEITURA
+
+    v = i.get("legibilidade")
+    if v is None or not i.get("legibilidade_leitura"):
+        return ""
+    if lingua == "pt":
+        limites = [(lim, rot) for lim, rot, _ in FAIXAS_MARTINS]
+        fonte = "Faixas de Martins et al. (1996), calibradas com manuais escolares em português do Brasil"
+    else:
+        limites = FAIXAS_FLESCH
+        fonte = "Faixas de Flesch (1948)" + (" mantidas por Kandel e Moles (1958)" if lingua == "fr" else "")
+    pontos = sorted({0, 100, *[max(0, min(100, l)) for l, _ in limites]})
+    faixas = []
+    for lim, rot in sorted(limites, key=lambda x: x[0]):
+        ini = max(0, lim)
+        fim = min([l for l, _ in limites if l > lim] + [100])
+        if fim > ini:
+            faixas.append((ini, fim, rot))
+    tons = ["#5C4A3A", "#7A4E2D", "#9C6B45", "#B08B68", "#C9A66B", "#D9C7A3", "#E8DCC2"]
+    barras = "".join(f'<span style="left:{a}%;width:{b - a}%;background:{tons[k % len(tons)]}" title="{html.escape(r)}">'
+                     f'<em>{html.escape(maiusculas(r))}</em></span>' for k, (a, b, r) in enumerate(faixas))
+    pos = max(0, min(100, v))
+    nivel = f' Nível escolar indicativo: {html.escape(i["legibilidade_nivel"])}.' if i.get("legibilidade_nivel") else ""
+    return (f'<div class="leitura"><div class="veredicto"><span>Leitura</span><b>{html.escape(maiusculas(i["legibilidade_leitura"]))}</b>'
+            f'<small>Índice de Flesch adaptado: {_num(v, 1)} · faixa «{html.escape(i["legibilidade_escala"])}»</small></div>'
+            f'<div class="regua"><div class="faixas">{barras}</div><i style="left:{pos}%"></i>'
+            f'<div class="marcas"><span>0 · difícil</span><span>fronteira fácil/difícil: {FRONTEIRA_LEITURA.get(lingua, 60)}</span>'
+            f'<span>100 · fácil</span></div></div>'
+            f'<p class="nota">{fonte}.{nivel} O índice só mede a extensão das frases e das palavras: ignora o vocabulário '
+            "raro, a sintaxe, a ironia e o conhecimento que o texto pressupõe.</p></div>")
+
+
+def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g, destino: Path, offline: bool = False,
+                 extra: dict | None = None):
+    extra = extra or {}
     i, m, e = registo["indicadores"], registo["metadados"], registo["estados"]
+    lg = registo["lingua"]
 
     def v(chave, casas=1):
         return "n.a." if chave in e else tema.num(i.get(chave), casas)
 
-    escala = i.get("legibilidade_escala")
     numeros = [(v("palavras", 0), "", "palavras"),
                (v("mtld"), "", "diversidade lexical (MTLD)"),
                (v("frase_mediana", 0), "palavras", "extensão mediana das frases"),
-               (v("profundidade_media", 2), "", "profundidade sintática média"),
-               (v("legibilidade", 0), escala or "", "legibilidade (Flesch adaptado)"),
+               (v("legibilidade", 0), maiusculas(i.get("legibilidade_leitura") or ""), "legibilidade (Flesch adaptado)"),
+               (v("sentimento_medio", 3), "", "sentimento médio (−1 a +1)"),
                (v("personagens_na_rede", 0), "", "personagens na rede")]
     ficha = [(r, m.get(k)) for k, r in [("autor", "Autor"), ("ano", "Ano"), ("data", "Data"), ("editora", "Editora"),
                                          ("tradutor", "Tradutor"), ("identificador", "Identificador"), ("fonte", "Fonte")]
              if m.get(k)]
-    ficha += [("Língua", maiusculas(registo["lingua_nome"])), ("Modelo linguístico", registo["modelo_spacy"]),
-              ("Personagens", registo.get("metodo_personagens", "—"))]
+    ficha += [("Língua", maiusculas(registo["lingua_nome"])), ("Modelo Linguístico", registo["modelo_spacy"]),
+              ("Sentimento", registo.get("metodo_sentimento") or "—"),
+              ("Personagens", registo.get("metodo_personagens", "—")),
+              ("Tempo de Leitura", f"{v('tempo_leitura_horas', 1)} h")]
     avisos = [a["mensagem"] for a in registo.get("qualidade", [])]
     notas = ("<ul>" + "".join(f"<li>{html.escape(a)}</li>" for a in avisos) + "</ul>" if avisos else
              "<p>Sem avisos: o texto passou todas as verificações automáticas de qualidade.</p>")
-    ficha_html = ('<div class="ficha"><div><h3>Ficha Técnica</h3><dl>'
-                  + "".join(f"<div><dt>{html.escape(r)}</dt><dd>{html.escape(str(x))}</dd></div>" for r, x in ficha)
-                  + f'</dl></div><div><h3>Notas sobre os Dados</h3><div class="notas">{notas}'
-                  '<p>Cada indicador tem definição, unidade e limitações no <a href="README.md">relatório completo</a>.'
-                  "</p></div></div></div>")
-    figs = figuras_livro(freq, classes, comprimentos, evol, ents, pers, g)
+    resumo = (_escala_leitura(i, lg) + '<div class="notas-bloco"><h3>Notas sobre os Dados</h3><div class="notas">'
+              f'{notas}<p>Cada indicador tem definição, unidade e limitações no <a href="README.md">relatório '
+              "completo</a>.</p></div></div>")
+
+    extras = {}
+    extras["gramatica"] = _mini([(v("frases_interrogativas_pct", 1) + " %", "frases interrogativas"),
+                                 (v("frases_exclamativas_pct", 1) + " %", "frases exclamativas"),
+                                 (v("verbos_passado_pct", 0) + " %", "verbos no passado"),
+                                 (v("verbos_presente_pct", 0) + " %", "verbos no presente"),
+                                 (v("pronomes_1a_pessoa_por_1000", 1), "pronomes de 1.ª pessoa / 1000"),
+                                 (v("pronomes_3a_pessoa_por_1000", 1), "pronomes de 3.ª pessoa / 1000")])
+    extras["leis"] = _mini([(v("zipf_expoente", 2), "expoente de Zipf (s)"), (v("zipf_r2", 3), "ajuste de Zipf (R²)"),
+                            (v("heaps_beta", 3), "expoente de Heaps (β)"), (v("heaps_r2", 3), "ajuste de Heaps (R²)")])
+    if "sentimento_medio" in e:
+        extras["sentimento"] = (f'<p class="aviso-estado">Sentimento não calculado: '
+                                f'{html.escape(e["sentimento_medio"]["motivo"])}.</p>')
+    else:
+        citacoes = ""
+        ext = extra.get("extremos")
+        if ext is not None and len(ext):
+            for pol, rot in [("positiva", "Frases Mais Positivas"), ("negativa", "Frases Mais Negativas")]:
+                sub = ext[ext.polaridade == pol]
+                if len(sub):
+                    citacoes += (f'<div><h3>{rot}</h3>' + "".join(
+                        f'<blockquote class="{pol}"><p>{html.escape(x.texto)}</p><cite>{_num(x.sentimento, 3)}</cite>'
+                        "</blockquote>" for x in sub.itertuples()) + "</div>")
+            citacoes = f'<div class="citacoes">{citacoes}</div>'
+        extras["sentimento"] = _mini([(v("sentimento_medio", 3), "sentimento médio"),
+                                      (v("frases_positivas_pct", 1) + " %", "frases positivas"),
+                                      (v("frases_negativas_pct", 1) + " %", "frases negativas"),
+                                      (v("cobertura_lexico_pct", 1) + " %", "palavras cobertas pelo léxico")]) + citacoes
+
+    itens = figuras_livro(freq, classes, comprimentos, evol, ents, pers, g, extra, lg)
     p = registo["processamento"]
     tecnico = [("Versão", p["versao"]), ("Código", p["versao_codigo"])]
     tecnico += [("Commit", p["commit"])] if p.get("commit") else []
@@ -492,9 +837,11 @@ def painel_livro(registo: dict, freq, classes, comprimentos, evol, ents, pers, g
                             ("Dados em Excel", f"{destino.parent.name}.xlsx"), ("Repositório no GitHub", REPOSITORIO)],
                   tecnico=tecnico)
     rosto = [(r, x) for r, x in [("Ano", str(registo.get("ano") or "")), ("Língua", maiusculas(registo["lingua_nome"])),
-                                  ("Palavras", v("palavras", 0)), ("Fonte", m.get("fonte") or "")] if x]
-    pagina(registo["titulo"], registo.get("autor") or "", numeros, figs, ficha_html, rodape, offline, destino,
-           antetitulo="Análise do Livro", dados_rosto=rosto, seccoes=SECCOES, ligacao_corpus="../../painel.html")
+                                  ("Palavras", v("palavras", 0)),
+                                  ("Leitura", maiusculas(i.get("legibilidade_leitura") or ""))] if x]
+    pagina(registo["titulo"], registo.get("autor") or "", numeros, itens, resumo, rodape, offline, destino,
+           antetitulo="Análise do Livro", dados_rosto=rosto, ficha=ficha, seccoes=SECCOES, extras=extras,
+           ligacao_corpus="../../painel.html")
 
 
 def painel_corpus(t: pd.DataFrame, destino: Path, offline: bool = False):
@@ -502,41 +849,55 @@ def painel_corpus(t: pd.DataFrame, destino: Path, offline: bool = False):
         return
     t = t.copy()
     t["rotulo"] = t.titulo.fillna(t.id).str.slice(0, 45)
-    fig = go.Figure()
+    validos = t.dropna(subset=["frase_mediana", "mtld", "profundidade_media"])
+    f2 = go.Figure()
     for lg, sub in t.groupby("lingua"):
-        fig.add_scatter(x=sub.frase_mediana, y=sub.mtld, mode="markers+text", text=sub.rotulo, textposition="top center",
-                        name=tema.LINGUAS.get(lg, (0, 0, lg))[2],
-                        marker=dict(size=13 + 40 * np.sqrt(sub.palavras / t.palavras.max()), symbol=SIMBOLOS_LINGUA.get(lg),
-                                    color=CORES_LINGUA.get(lg, SUAVE), opacity=0.9, line=dict(color=PAPEL, width=1.5)),
-                        customdata=sub[["palavras", "profundidade_media"]],
-                        hovertemplate="<b>%{text}</b><br>Frase mediana: %{x:.0f} palavras<br>MTLD: %{y:.1f}"
-                                      "<br>Palavras: %{customdata[0]:,}<br>Profundidade: %{customdata[1]:.2f}<extra></extra>")
+        f2.add_scatter(x=sub.frase_mediana, y=sub.mtld, mode="markers+text", text=sub.rotulo, textposition="top center",
+                       name=tema.LINGUAS.get(lg, (0, 0, lg))[2],
+                       marker=dict(size=13 + 40 * np.sqrt(sub.palavras / t.palavras.max()), symbol=SIMBOLOS_LINGUA.get(lg),
+                                   color=CORES_LINGUA.get(lg, SUAVE), opacity=0.9, line=dict(color=PAPEL, width=1.5)),
+                       hovertemplate="<b>%{text}</b><br>Frase mediana: %{x:.0f} palavras<br>MTLD: %{y:.1f}<extra></extra>")
     fx = max((t.frase_mediana.max() - t.frase_mediana.min()) * 0.25, 1)
     fy = max((t.mtld.max() - t.mtld.min()) * 0.2, 5) if t.mtld.notna().any() else 5
-    fig.update_xaxes(title="extensão mediana das frases (palavras)", range=[t.frase_mediana.min() - fx, t.frase_mediana.max() + fx])
-    fig.update_yaxes(title="diversidade lexical (MTLD)", range=[(t.mtld.min() or 0) - fy, (t.mtld.max() or 0) + fy])
-    figs = [("comparacao", _layout(fig, "Extensão das frases e diversidade lexical<br><sup>Tamanho = número de "
-                                         "palavras; forma = língua</sup>", altura=600,
-                                    nota="Os níveis de MTLD não são comparáveis entre línguas.",
-                                    legend=dict(orientation="h", y=-0.16, x=0, yanchor="top")))]
+    f2.update_xaxes(title="extensão mediana das frases (palavras)", range=[t.frase_mediana.min() - fx, t.frase_mediana.max() + fx])
+    f2.update_yaxes(title="diversidade lexical (MTLD)", range=[(t.mtld.min() or 0) - fy, (t.mtld.max() or 0) + fy])
+    _layout(f2, "Extensão das frases e diversidade lexical", altura=560,
+            legend=dict(orientation="h", y=-0.16, x=0, yanchor="top"))
+    itens = []
+    if len(validos):
+        simb3d = {"pt": "circle", "fr": "square", "en": "diamond"}
+        f3 = g3d.dispersao(list(validos.frase_mediana), list(validos.mtld), list(validos.profundidade_media),
+                           texto=list(validos.rotulo), tamanho=list(9 + 22 * np.sqrt(validos.palavras / t.palavras.max())),
+                           cores=[CORES_LINGUA.get(l, SUAVE) for l in validos.lingua],
+                           simbolos=[simb3d.get(l, "circle") for l in validos.lingua],
+                           titulos=("frase mediana (palavras)", "MTLD", "profundidade sintática"),
+                           customdata=np.c_[validos.palavras, validos.lingua],
+                           hover="<b>%{text}</b><br>Frase mediana: %{x:.0f}<br>MTLD: %{y:.1f}<br>Profundidade: %{z:.2f}"
+                                 "<br>Palavras: %{customdata[0]}<br>Língua: %{customdata[1]}<extra></extra>")
+        _layout(f3, "Extensão das frases, diversidade lexical e profundidade sintática<br><sup>Tamanho = número de "
+                    "palavras; cor e forma = língua</sup>", altura=640,
+                nota=NOTA_3D + " Os níveis de MTLD e de profundidade não são comparáveis entre línguas.")
+        itens.append(_item("comparacao", f3, f2))
+    else:
+        itens.append(_item("comparacao", f2))
     e = html.escape
     linhas = "".join(
         f'<tr><td><a href="livros/{r.id}/painel.html">{e(str(r.titulo))}</a></td><td>{e(str(r.autor or "—"))}</td>'
         f'<td>{r.lingua}</td><td class="n">{_num(r.palavras, 0)}</td><td class="n">{_num(r.mtld)}</td>'
-        f'<td class="n">{_num(r.frase_mediana, 0)}</td><td class="n">{_num(r.profundidade_media, 2)}</td>'
-        f'<td class="n">{_num(r.legibilidade, 0)}</td></tr>'
+        f'<td class="n">{_num(r.frase_mediana, 0)}</td><td class="n">{_num(getattr(r, "sentimento_medio", None), 3)}</td>'
+        f'<td class="n">{_num(r.legibilidade, 0)}</td><td>{e(maiusculas(str(getattr(r, "legibilidade_leitura", "") or "—")))}</td></tr>'
         for r in t.sort_values(["lingua", "titulo"]).itertuples())
     tabela = ('<div class="tabela"><table><tr><th>Livro</th><th>Autor</th><th>Língua</th><th class="n">Palavras</th>'
-              '<th class="n">MTLD</th><th class="n">Frase Mediana</th><th class="n">Profundidade</th>'
-              f'<th class="n">Legibilidade</th></tr>{linhas}</table></div>')
+              '<th class="n">MTLD</th><th class="n">Frase Mediana</th><th class="n">Sentimento</th>'
+              f'<th class="n">Legibilidade</th><th>Leitura</th></tr>{linhas}</table></div>')
     numeros = [(str(len(t)), "", "livros analisados"), (_num(int(t.palavras.sum()), 0), "", "palavras no total"),
                (str(t.lingua.nunique()), "", "línguas")]
     seccoes = {"comparacao": ("Comparação", "Cada ponto é um livro. Compare apenas livros da mesma língua: a "
-                                            "legibilidade e o MTLD dependem da língua.")}
+                                            "legibilidade, o MTLD e o sentimento dependem da língua.")}
     rodape = dict(descricao=DESCRICAO, autoria=AUTORIA,
-                  aviso="A legibilidade usa fórmulas diferentes em cada língua.",
+                  aviso="A legibilidade e o sentimento usam fórmulas e léxicos diferentes em cada língua.",
                   ligacoes=[("Relatório do Corpus", "README.md"), ("Dados em Excel", "indicadores.xlsx"),
                             ("Repositório no GitHub", REPOSITORIO)],
                   tecnico=[("Livros", str(len(t))), ("Línguas", ", ".join(sorted(t.lingua.unique())))])
-    pagina("Livros Analisados", "", numeros, figs, tabela, rodape, offline, destino, antetitulo="Corpus",
+    pagina("Livros Analisados", "", numeros, itens, tabela, rodape, offline, destino, antetitulo="Corpus",
            dados_rosto=[("Livros", str(len(t))), ("Palavras", _num(int(t.palavras.sum()), 0))], seccoes=seccoes)

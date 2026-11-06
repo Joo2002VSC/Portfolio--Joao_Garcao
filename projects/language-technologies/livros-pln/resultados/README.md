@@ -1,6 +1,6 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.1.0 (código `872cc50466db`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.2.0 (código `b8d50a4c276d`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
 **2 livros · 230 152 palavras** · 1 em inglês, 1 em português
 

@@ -28,12 +28,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import (__version__, configuracao, estilometria, exportar, fontes, graficos, indicadores, interativo, leitura,
-               lingua, personagens, qualidade, relatorio)
+from . import (__version__, catalogo, configuracao, estilometria, exportar, fontes, graficos, indicadores, interativo,
+               leitura, lingua, personagens, qualidade, relatorio, sentimento)
 from .configuracao import PARAMETROS
 
 PACOTE = Path(__file__).resolve().parent
-BIBLIOTECAS = ["spacy", "pandas", "numpy", "scipy", "networkx", "matplotlib", "plotly", "ebooklib", "beautifulsoup4"]
+BIBLIOTECAS = ["spacy", "pandas", "numpy", "scipy", "networkx", "matplotlib", "plotly", "ebooklib", "beautifulsoup4",
+               "vaderSentiment", "leia-br", "vaderSentiment-fr"]
 
 
 def versao_codigo() -> str:
@@ -107,7 +108,25 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     freq = indicadores.frequencias(tokens)
     classes = indicadores.classes_gramaticais(tokens)
     tab_ents = indicadores.tabela_entidades(ents)
+    senti = sentimento.analisar(frases, tokens, lg, p)
+    for k in [k for k, i in catalogo.INDICADORES.items() if i.grupo == "Sentimento"]:
+        ind[k] = senti["indicadores"].get(k)
+        if senti["estado"] != "valido":
+            estados[k] = {"estado": senti["estado"], "motivo": senti["motivo"]}
     evol = indicadores.evolucao(tokens, frases, ents, livro.paragrafos, p)
+    segmentos = indicadores.segmentos_das_frases(tokens, p.segmentos)
+    contagem = tokens[tokens.alfa].minusc.value_counts()
+    extra = {
+        "colocacoes": indicadores.colocacoes(tokens, p.colocacao_frequencia_minima),
+        "palavras_chave": indicadores.palavras_chave(tokens, segmentos, p.palavras_chave_por_segmento),
+        "tempos": indicadores.tempos_verbais(tokens),
+        "heaps": indicadores.curva_heaps(tokens[tokens.alfa].minusc.tolist()),
+        "zipf": indicadores.tabela_zipf(dict(contagem), p.zipf_frequencia_minima),
+        "extremos": senti["extremos"],
+        "frases": frases.assign(segmento=frases.frase.map(segmentos))[["frase", "segmento", "palavras", "tipo",
+                                                                       "sentimento"]],
+        "sentimento": {k: senti[k] for k in ("estado", "motivo", "metodo")},
+    }
 
     # rede de personagens
     g, pers, lig, metodo = personagens.analisar(livro.paragrafos, ents, lg, dicionario_de(ficheiro),
@@ -127,12 +146,17 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
     titulo = meta.get("titulo") or livro.ficheiro.stem
     amb = ambiente(lg)
     figs = graficos.por_livro(titulo, amb["modelo"]["nome"], classes, freq, frases.palavras, evol, tab_ents, g, metodo,
-                              p.frase_longa, pasta / "graficos")
+                              p.frase_longa, pasta / "graficos", extra=extra, p=p, ind=ind)
     freq.to_csv(pasta / "frequencias.csv", index=False)
     classes.round(3).to_csv(pasta / "classes-gramaticais.csv", index=False)
     tab_ents.to_csv(pasta / "entidades.csv", index=False)
     evol.round(4).to_csv(pasta / "evolucao.csv", index=False)
-    frases[["palavras", "profundidade", "subordinadas"]].to_csv(pasta / "frases.csv", index=False)
+    frases[["palavras", "profundidade", "subordinadas", "tipo", "sentimento"]].round(4).to_csv(pasta / "frases.csv",
+                                                                                          index=False)
+    extra["colocacoes"].round(3).to_csv(pasta / "colocacoes.csv", index=False)
+    extra["palavras_chave"].round(4).to_csv(pasta / "palavras-chave.csv", index=False)
+    extra["tempos"].round(3).to_csv(pasta / "tempos-verbais.csv", index=False)
+    extra["extremos"].round(4).to_csv(pasta / "sentimento-frases-extremas.csv", index=False)
     formas = tokens[tokens.alfa].minusc.value_counts().head(2000).rename_axis("forma").rename("ocorrencias")
     formas.to_csv(pasta / "formas.csv")
     pers.round(4).to_csv(pasta / "personagens.csv", index=False)
@@ -143,7 +167,7 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "autor": meta.get("autor"), "ano": meta.get("ano") or meta.get("data"),
         "lingua": lg, "lingua_nome": lingua.NOMES[lg], "modelo_spacy": amb["modelo"]["nome"],
         "confianca_lingua": {k: round(v, 4) for k, v in pontuacao.items()},
-        "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
+        "metodo_sentimento": senti["metodo"], "metodo_personagens": metodo, "personagens_principais": pers.personagem.head(10).tolist(),
         "metadados": meta,
         "indicadores": {k: _json(round(v, 4) if isinstance(v, float) else v) for k, v in ind.items()},
         "estados": estados,
@@ -159,10 +183,13 @@ def processar_livro(ficheiro: Path, saida: Path, manuais: dict, codigo: str, com
         "graficos": figs,
     }
     (pasta / "indicadores.json").write_text(json.dumps(registo, ensure_ascii=False, indent=2), encoding="utf-8")
-    relatorio.livro(registo, freq, classes, tab_ents, evol, pers, pasta)
-    interativo.painel_livro(registo, freq, classes, frases.palavras, evol, tab_ents, pers, g, pasta / "painel.html", offline)
+    relatorio.livro(registo, freq, classes, tab_ents, evol, pers, pasta, extra=extra)
+    interativo.painel_livro(registo, freq, classes, frases.palavras, evol, tab_ents, pers, g, pasta / "painel.html", offline,
+                            extra=extra)
     exportar.livro(registo, {"Frequências": freq, "Classes gramaticais": classes.round(3), "Entidades": tab_ents,
-                             "Personagens": pers.round(4), "Ligações": lig, "Evolução": evol.round(4)},
+                             "Personagens": pers.round(4), "Ligações": lig, "Evolução": evol.round(4),
+                             "Colocações": extra["colocacoes"].round(3), "Palavras-chave": extra["palavras_chave"].round(4),
+                             "Tempos verbais": extra["tempos"].round(3), "Sentimento (extremos)": extra["extremos"].round(4)},
                    pasta / f"{livro.id}.xlsx")
     return registo
 

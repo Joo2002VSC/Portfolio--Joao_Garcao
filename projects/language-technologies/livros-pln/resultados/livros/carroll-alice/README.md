@@ -131,9 +131,11 @@ Etiquetas UPOS do modelo `en_core_web_md`. A exatidão é medida pelo próprio m
 
 ## 7. Legibilidade
 
+**Leitura fácil** · índice 79,7 · faixa «razoavelmente fácil»
+
 | Indicador | Valor | Unidade / escala | Interpretação |
 | --- | --- | --- | --- |
-| **Facilidade de leitura (Flesch adaptado)** | 79,7 | 0–100 (aprox.) | Mais alto = leitura mais fácil. |
+| **Facilidade de leitura (Flesch adaptado)** | 79,7 | 0–100 (aprox.) | Mais alto = leitura mais fácil. Faixas em português (Martins et al., 1996): 75–100 muito fácil (1.º–4.º ano de escolaridade), 50–75 fácil (5.º–8.º ano), 25–50 razoavelmente difícil (ensino secundário e superior), abaixo de 25 muito difícil (textos académicos). Em inglês e francês, escala de Flesch (1948): 90 muito fácil, 80 fácil, 70 razoavelmente fácil, 60 padrão, 50 razoavelmente difícil, 30 difícil, abaixo muito difícil. O painel resume em «fácil» (pt ≥ 50; en e fr ≥ 60) ou «difícil». |
 | **Flesch-Kincaid (nível de escolaridade)** | 6,4 | ano escolar (EUA) | Mais alto = texto mais exigente. |
 | **Sílabas por palavra** | 1,30 | sílabas | Mais alto = palavras mais longas; entra nas fórmulas de legibilidade. |
 
@@ -245,12 +247,145 @@ O livro foi dividido em 10 segmentos com o mesmo número de palavras.
 | 9 | 2 659 | 60,5 | 14,5 | 40,8 | 86 | 24,4 |
 | 10 | 2 659 | 71,7 | 18,3 | 41,7 | 77 | 18,8 |
 
-## 10. Visualizações
+## 10. Sentimento
 
-- [Painel interativo](painel.html): rede de personagens em 3D, centralidade, frequências, classes gramaticais, frases, evolução e lugares (abrir num navegador).
+Método: VADER (vaderSentiment) 3.3.2, com léxico e regras (Hutto e Gilbert, 2014). Cada frase com pelo menos 3 palavras recebe uma pontuação entre −1 e +1. Os léxicos foram criados para mensagens curtas das redes sociais: os valores descrevem a polaridade do vocabulário, não o tom da narrativa, e não foram validados com anotação humana neste projeto.
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Sentimento médio** | 0,034 | −1 a +1 | Acima de 0 = vocabulário globalmente positivo; abaixo de 0 = negativo. Valores entre −0,05 e +0,05 são neutros. |
+| **Frases positivas** | 33,2 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente positivo. |
+| **Frases negativas** | 27,0 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente negativo. |
+| **Frases neutras** | 39,8 | % das frases pontuadas | Inclui frases sem nenhuma palavra do léxico. |
+| **Cobertura do léxico de sentimento** | 6,7 | % das palavras | Indicador de qualidade: abaixo de ~5 %, o sentimento assenta em muito poucas palavras. |
+
+![Arco de sentimento](graficos/sentimento.png)
+<sub>[SVG](graficos/sentimento.svg)</sub>
+
+**Frases com pontuação mais extrema** (entre 8 e 60 palavras)
+
+| Polaridade | Compound | Frase |
+| --- | --- | --- |
+| positiva | 0,951 | 'How cheerfully he seems to grin, How neatly spread his claws, And welcome little fishes in With gently smiling jaws!' |
+| positiva | 0,949 | After these came the royal children; there were ten of them, and the little dears came jumping merrily along hand in hand, in couples: they were all ornamented with hearts. |
+| positiva | 0,937 | 'Thank you, it's a very interesting dance to watch,' said Alice, feeling very glad that it was over at last: 'and I do so like that curious song about the whiting!' |
+| negativa | −0,951 | 'Poor little thing!' said Alice, in a coaxing tone, and she tried hard to whistle to it; but she was terribly frightened all the time at the thought that it might be hungry, in which case it would be very likely to eat her up in spite of all her coaxing. |
+| negativa | −0,916 | She took down a jar from one of the shelves as she passed; it was labelled 'ORANGE MARMALADE', but to her great disappointment it was empty: she did not like to drop the jar for fear of killing somebody, so managed to put it into one of the cupboards as she fell past it. |
+| negativa | −0,899 | She did not get hold of anything, but she heard a little shriek and a fall, and a crash of broken glass, from which she concluded that it was just possible it had fallen into a cucumber-frame, or something of the sort. |
+
+<details><summary>Definições</summary>
+
+- **Sentimento médio**: Média da pontuação «compound» do VADER nas frases com pelo menos 3 palavras. Fórmula: `média das pontuações compound por frase`.
+- **Frases positivas**: Frases com compound ≥ 0,05. Fórmula: `frases com compound ≥ 0,05 ÷ frases pontuadas × 100`.
+- **Frases negativas**: Frases com compound ≤ −0,05. Fórmula: `frases com compound ≤ −0,05 ÷ frases pontuadas × 100`.
+- **Frases neutras**: Frases com compound entre −0,05 e 0,05.
+- **Cobertura do léxico de sentimento**: Palavras do texto que existem no léxico de sentimento usado.
+
+</details>
+
+## 11. Outros conceitos de PLN
+
+### Tipos de frase
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Frases interrogativas** | 8,6 | % das frases | Mais alto = mais perguntas, em geral associadas ao diálogo. |
+| **Frases exclamativas** | 23,2 | % das frases | Mais alto = mais exclamações, em geral associadas ao diálogo e à expressividade. |
+
+### Tempos verbais e pessoa gramatical
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Verbos no passado** | 71,0 | % das formas verbais finitas com tempo anotado | Mais alto = narração no passado, típica do romance. |
+| **Verbos no presente** | 29,0 | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. |
+| **Verbos no futuro** | *não aplicável* (o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo) | % das formas verbais finitas com tempo anotado | Mais alto = mais projeção, promessa ou hipótese. |
+| **Verbos no conjuntivo** | *não aplicável* (o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo) | % das formas verbais finitas com modo anotado | Mais alto = mais hipótese, desejo, dúvida ou subordinação. |
+| **Pronomes de 1.ª pessoa** | 27,3 | ocorrências por 1000 palavras | Mais alto = narrador na 1.ª pessoa ou muito diálogo. |
+| **Pronomes de 2.ª pessoa** | 18,2 | ocorrências por 1000 palavras | Mais alto = mais interpelação direta, sobretudo no diálogo. |
+| **Pronomes de 3.ª pessoa** | 79,3 | ocorrências por 1000 palavras | Mais alto = narração centrada em terceiros, típica do narrador heterodiegético. |
+
+| Tempo | Modo | Ocorrências | % das formas finitas |
+| --- | --- | --- | --- |
+| passado | não anotado | 1 951 | 57,6 |
+| presente | indicativo | 610 | 18,0 |
+| passado | indicativo | 457 | 13,5 |
+| presente | não anotado | 372 | 11,0 |
+
+### Leis de Zipf e de Heaps
+
+Duas regularidades estatísticas do vocabulário: poucas palavras são muito frequentes e muitas são raras (Zipf); o vocabulário cresce cada vez mais devagar à medida que o texto avança (Heaps).
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Expoente de Zipf** | 1,06 | adimensional | Próximo de 1 na maior parte dos textos; mais alto = vocabulário mais concentrado nas palavras mais frequentes. |
+| **Ajuste da lei de Zipf (R²)** | 0,988 | 0–1 | Mais perto de 1 = a distribuição segue bem uma lei de potência. |
+| **Expoente de Heaps (β)** | 0,649 | adimensional | Entre 0 e 1; mais alto = o livro continua a introduzir palavras novas. |
+| **Constante de Heaps (K)** | 3,8 | adimensional | Interpreta-se em conjunto com β; sozinho tem pouco significado. |
+| **Ajuste da lei de Heaps (R²)** | 0,998 | 0–1 | Mais perto de 1 = o crescimento do vocabulário segue bem uma lei de potência. |
+
+![Leis de Zipf e de Heaps](graficos/zipf-heaps.png)
+<sub>[SVG](graficos/zipf-heaps.svg)</sub>
+
+<details><summary>Definições</summary>
+
+- **Expoente de Zipf**: Declive (com sinal trocado) da reta ajustada à frequência das formas em função da sua posição, em escala log-log. Fórmula: `f(r) ≈ C · r^−s; s = −declive de log f em log r`.
+- **Ajuste da lei de Zipf (R²)**: Coeficiente de determinação da reta de Zipf em escala log-log.
+- **Expoente de Heaps (β)**: Ritmo de crescimento do vocabulário à medida que o texto avança. Fórmula: `V(N) ≈ K · N^β, ajustado em escala log-log`.
+- **Constante de Heaps (K)**: Fator de escala da lei de Heaps. Fórmula: `V(N) ≈ K · N^β`.
+- **Ajuste da lei de Heaps (R²)**: Coeficiente de determinação do ajuste de Heaps.
+
+</details>
+
+### Colocações
+
+Pares de palavras contíguas na mesma frase que ocorrem juntas muito mais do que o acaso faria prever; excluem-se os pares formados só por palavras gramaticais. Ordenadas pela razão de verosimilhança G² (Dunning, 1993); o PMI (Church e Hanks, 1990) mede a exclusividade da associação.
+
+| Colocação | Ocorrências | G² | PMI |
+| --- | --- | --- | --- |
+| mock turtle | 56 | 771,7 | 8,73 |
+| said the | 209 | 598,7 | 2,92 |
+| said alice | 114 | 544,6 | 4,35 |
+| march hare | 31 | 461,9 | 9,57 |
+| went on | 48 | 373,9 | 6,30 |
+| the queen | 72 | 370,8 | 3,87 |
+| the king | 62 | 330,2 | 3,91 |
+| the gryphon | 53 | 273,7 | 3,88 |
+| the mock | 53 | 267,6 | 3,85 |
+| a little | 59 | 266,5 | 4,19 |
+| you know | 45 | 258,2 | 5,02 |
+| the hatter | 52 | 256,8 | 3,83 |
+| white rabbit | 22 | 250,3 | 8,52 |
+| the duchess | 41 | 215,2 | 3,90 |
+| the dormouse | 35 | 162,1 | 3,74 |
+| of course | 22 | 154,0 | 5,43 |
+| your majesty | 12 | 146,5 | 8,66 |
+| the march | 30 | 140,0 | 3,75 |
+| thought alice | 25 | 130,9 | 4,84 |
+| soo oop | 7 | 128,6 | 11,80 |
+
+### Palavras-chave por segmento
+
+Lemas de conteúdo mais característicos de cada segmento, por comparação com os outros segmentos do mesmo livro. Medida: TF-IDF (Spärck Jones, 1972), com os segmentos como documentos.
+
+| Segmento | Palavras-chave |
+| --- | --- |
+| 1 | bat, telescope, hall, key, fall |
+| 2 | dodo, mouse, prize, race, mabel |
+| 3 | window, bill, mouse, bottle, ann |
+| 4 | caterpillar, pigeon, serpent, puppy, egg |
+| 5 | footman, baby, cat, mad, sneeze |
+| 6 | dormouse, hatter, hare, march, twinkle |
+| 7 | hedgehog, queen, executioner, procession, king |
+| 8 | turtle, gryphon, mock, dance, lobster |
+| 9 | gryphon, oop, soo, hatter, king |
+| 10 | king, jury, court, dream, suppress |
+
+## 12. Visualizações
+
+- [Painel interativo](painel.html): gráficos em 3D (com alternativa em 2D) da rede de personagens, centralidade, vocabulário, classes gramaticais, frases, sentimento, evolução, colocações, palavras-chave, tempos verbais e lugares (abrir num navegador).
 - Gráficos estáticos em PNG e SVG na pasta [`graficos/`](graficos/).
 
-## 11. Interpretação
+## 13. Interpretação
 
 Comentários gerados automaticamente a partir dos valores; descrevem o texto, não explicam as suas causas nem substituem a leitura crítica.
 
@@ -261,9 +396,13 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Cerca de 79 % dos parágrafos foram identificados como diálogo (estimativa tipográfica).
 - Em média, 1,47 orações subordinadas por frase e uma profundidade sintática média de 4,14 níveis.
 - Do primeiro ao último segmento, o MTLD passa de 82,4 para 71,7 e a extensão média das frases de 24,9 para 18,3 palavras (variação descritiva; segmentos isolados são instáveis).
+- Pelo índice de Flesch adaptado (80, «razoavelmente fácil»), a leitura classifica-se como **fácil**. O índice só considera a extensão das frases e das palavras: vocabulário antigo, ironia ou referências culturais não entram no cálculo.
+- Sentimento: média de 0,034 (vocabulário globalmente neutro); 33 % das frases pontuadas são positivas e 27 % negativas. Só 6,7 % das palavras existem no léxico, por isso estes valores devem ser lidos com cautela.
+- No arco de sentimento, o segmento mais negativo é o 8 (−0,035) e o mais positivo o 1 (0,084).
+- 71 % das formas verbais finitas estão no passado e 29 % no presente.
 - A rede inclui 9 personagens; a mais central (PageRank) é Alice.
 
-## 12. Limitações metodológicas
+## 14. Limitações metodológicas
 
 - **MTLD**: Pouco fiável abaixo de cerca de 100 palavras; valores de línguas diferentes não são comparáveis (a morfologia altera o número de formas).
 - **HD-D**: Não aplicável a textos com menos de 42 palavras; não comparável entre línguas.
@@ -283,24 +422,53 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - **Profundidade sintática**: Depende da qualidade do analisador sintático e das convenções de anotação de cada modelo; correlaciona-se com a extensão das frases.
 - **Distância de dependência média (MDD)**: Depende do analisador e da ordem das palavras de cada língua.
 - **Orações subordinadas por frase**: Estimativa a partir da anotação Universal Dependencies (modelos pt e fr) ou ClearNLP (modelo en); xcomp não conta.
-- **Facilidade de leitura (Flesch adaptado)**: As adaptações não são equivalentes entre si: não comparar valores de línguas diferentes. A adaptação portuguesa foi calibrada com manuais escolares em português do Brasil e não foi validada para português europeu nem para prosa literária.
+- **Facilidade de leitura (Flesch adaptado)**: As adaptações não são equivalentes entre si: não comparar valores de línguas diferentes. A adaptação portuguesa foi calibrada com manuais escolares em português do Brasil e não foi validada para português europeu nem para prosa literária; os níveis escolares são os do sistema brasileiro de 1996. O índice só mede a extensão das frases e das palavras: ignora o vocabulário raro, a sintaxe, a ironia e o conhecimento que o texto pressupõe.
 - **Parágrafos de diálogo (estimativa)**: Heurística tipográfica: falha com convenções invulgares e conta citações como diálogo.
 - **Pessoas distintas (NER)**: Sobrestimado por variantes do mesmo nome e por erros do reconhecimento de entidades.
 - **Densidade lexical**: Depende da etiquetagem morfossintática; os verbos auxiliares não contam como conteúdo.
+- **Sentimento médio**: Método de léxico e regras criado para redes sociais, não para literatura; não deteta ironia nem distingue a voz do narrador da das personagens; o léxico português foi criado para português do Brasil e cobre mal a ortografia antiga. Não validado com anotação humana neste projeto. Léxicos diferentes por língua.
+- **Frases positivas**: Ver «Sentimento médio».
+- **Frases negativas**: Ver «Sentimento médio».
+- **Frases neutras**: Uma cobertura baixa do léxico aumenta esta percentagem.
+- **Cobertura do léxico de sentimento**: Conta formas exatas (sem lematização), como o próprio VADER.
+- **Verbos no passado**: Cada língua divide os tempos de forma diferente (o inglês não tem imperfeito morfológico).
+- **Verbos no presente**: Depende do analisador morfológico; o presente histórico e o diálogo contam como presente.
+- **Verbos no futuro**: Não aplicável ao inglês (futuro com o auxiliar will). O futuro perifrástico (vou fazer) não conta.
+- **Verbos no conjuntivo**: Não aplicável ao inglês (sem conjuntivo morfológico distinto no modelo).
+- **Pronomes de 1.ª pessoa**: Nas línguas de sujeito nulo (português) o sujeito fica muitas vezes implícito no verbo.
+- **Pronomes de 2.ª pessoa**: As formas de tratamento (você, o senhor) são gramaticalmente de 3.ª pessoa em português.
+- **Pronomes de 3.ª pessoa**: Inclui pronomes reflexos e clíticos conforme a anotação do modelo.
+- **Expoente de Zipf**: Depende do intervalo de frequências usado no ajuste (só formas com frequência mínima configurável) e da extensão do texto.
+- **Ajuste da lei de Zipf (R²)**: Um R² alto em escala log-log não prova uma lei de potência; serve só para descrever o ajuste.
+- **Expoente de Heaps (β)**: Depende da extensão do texto e da morfologia da língua (línguas com mais flexão têm β maior).
+- **Constante de Heaps (K)**: Muito sensível a β.
+- **Ajuste da lei de Heaps (R²)**: Descreve só a qualidade do ajuste.
+- **Colocações**: Formas, não lemas; não distingue expressões fixas de repetições de nomes («Carlos da Maia»).
+- **Palavras-chave por segmento**: Lemas presentes em todos os segmentos nunca aparecem (idf = 0); depende do número de segmentos.
+- **Arco de sentimento**: Herda as limitações do léxico; com poucos segmentos, as oscilações podem dever-se a episódios isolados.
 - **Modelos linguísticos**: os modelos spaCy foram treinados com texto contemporâneo; grafias antigas, diálogos e pontuação literária reduzem a exatidão da segmentação, da etiquetagem e da análise sintática.
 
-## 13. Referências metodológicas
+## 15. Referências metodológicas
 
+- Church, K. W., & Hanks, P. (1990). Word association norms, mutual information, and lexicography. *Computational Linguistics, 16*(1), 22–29. https://aclanthology.org/J90-1003
 - Covington, M. A., & McFall, J. D. (2010). Cutting the Gordian knot: The moving-average type–token ratio (MATTR). *Journal of Quantitative Linguistics, 17*(2), 94–100.
+- Deprez, O., & Ek, T. (2021). *vaderSentiment-fr* (Versão 1.3.4) [Software]. PyPI. https://pypi.org/project/vaderSentiment-fr/
+- Dunning, T. (1993). Accurate methods for the statistics of surprise and coincidence. *Computational Linguistics, 19*(1), 61–74. https://aclanthology.org/J93-1003
 - Flesch, R. (1948). A new readability yardstick. *Journal of Applied Psychology, 32*(3), 221–233. https://doi.org/10.1037/h0057532
+- Heaps, H. S. (1978). *Information retrieval: Computational and theoretical aspects*. Academic Press.
+- Hutto, C., & Gilbert, E. (2014). VADER: A parsimonious rule-based model for sentiment analysis of social media text. *Proceedings of the International AAAI Conference on Web and Social Media, 8*(1), 216–225. https://doi.org/10.1609/icwsm.v8i1.14550
 - Kandel, L., & Moles, A. (1958). Application de l'indice de Flesch à la langue française. *Cahiers d'Études de Radio-Télévision, 19*.
 - Liu, H. (2008). Dependency distance as a metric of language comprehension difficulty. *Journal of Cognitive Science, 9*(2), 159–191. https://hdl.handle.net/10371/70907
 - Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996). *Readability formulas applied to textbooks in Brazilian Portuguese* (Notas do ICMSC-USP, Série Computação, 28). ICMSC-USP.
 - McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods, 42*(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
 - Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020). Universal Dependencies v2: An evergrowing multilingual treebank collection. In *Proceedings of the 12th Language Resources and Evaluation Conference* (pp. 4034–4043). European Language Resources Association. https://aclanthology.org/2020.lrec-1.497
+- Reagan, A. J., Mitchell, L., Kiley, D., Danforth, C. M., & Dodds, P. S. (2016). The emotional arcs of stories are dominated by six basic shapes. *EPJ Data Science, 5*(1). https://doi.org/10.1140/epjds/s13688-016-0093-1
+- Spärck Jones, K. (1972). A statistical interpretation of term specificity and its application in retrieval. *Journal of Documentation, 28*(1), 11–21. https://doi.org/10.1108/eb026526
 - Tweedie, F. J., & Baayen, R. H. (1998). How variable may a constant be? Measures of lexical richness in perspective. *Computers and the Humanities, 32*(5), 323–352. https://doi.org/10.1023/A:1001749303137
 - Ure, J. (1971). Lexical density and register differentiation. In G. E. Perren & J. L. M. Trim (Eds.), *Applications of linguistics* (pp. 443–452). Cambridge University Press.
 - Yule, G. U. (1944). *The statistical study of literary vocabulary*. Cambridge University Press.
+- Zipf, G. K. (1949). *Human behavior and the principle of least effort*. Addison-Wesley.
+- rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 10:32 UTC · livros_pln 3.1.0 · código `872cc50466db` · commit `725f504` · Python 3.13.5 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>
+<sub>Processado em 2026-11-06 11:00 UTC · livros_pln 3.2.0 · código `b8d50a4c276d` · commit `50c27e8` · Python 3.13.5 · spaCy 3.8.18 · en_core_web_md 3.8.0</sub>

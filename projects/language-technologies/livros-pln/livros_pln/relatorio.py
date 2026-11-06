@@ -3,7 +3,7 @@
 Estrutura do relatório de cada livro: identificação; metadados e características do texto;
 resumo; diversidade lexical; extensão das frases e complexidade sintática; análise
 morfossintática; legibilidade; análise lexical e discursiva; evolução ao longo do texto;
-visualizações; interpretação; limitações; referências. As definições vêm de `catalogo.py`.
+sentimento; outros conceitos de PLN; visualizações; interpretação; limitações; referências. As definições vêm de `catalogo.py`.
 """
 from __future__ import annotations
 
@@ -90,6 +90,24 @@ def comentarios(r: dict, evol: pd.DataFrame) -> list[str]:
         c.append(f"Do primeiro ao último segmento, o MTLD passa de {num(a, 1)} para {num(b, 1)} e a extensão média "
                  f"das frases de {num(fa, 1)} para {num(fb, 1)} palavras (variação descritiva; segmentos isolados são "
                  "instáveis).")
+    if i.get("legibilidade_leitura") and "legibilidade" not in e:
+        nivel = f", adequada ao {i['legibilidade_nivel']} segundo Martins et al. (1996)" if i.get("legibilidade_nivel") else ""
+        c.append(f"Pelo índice de Flesch adaptado ({num(i['legibilidade'], 0)}, «{i['legibilidade_escala']}»), a leitura "
+                 f"classifica-se como **{i['legibilidade_leitura']}**{nivel}. O índice só considera a extensão das "
+                 "frases e das palavras: vocabulário antigo, ironia ou referências culturais não entram no cálculo.")
+    if i.get("sentimento_medio") is not None and "sentimento_medio" not in e:
+        tom = "positivo" if i["sentimento_medio"] >= 0.05 else "negativo" if i["sentimento_medio"] <= -0.05 else "neutro"
+        c.append(f"Sentimento: média de {num(i['sentimento_medio'], 3)} (vocabulário globalmente {tom}); "
+                 f"{num(i['frases_positivas_pct'], 0)} % das frases pontuadas são positivas e "
+                 f"{num(i['frases_negativas_pct'], 0)} % negativas. Só {num(i['cobertura_lexico_pct'], 1)} % das "
+                 "palavras existem no léxico, por isso estes valores devem ser lidos com cautela.")
+        if len(evol) >= 3 and "sentimento" in evol and evol.sentimento.notna().sum() >= 3:
+            baixo, alto = evol.loc[evol.sentimento.idxmin()], evol.loc[evol.sentimento.idxmax()]
+            c.append(f"No arco de sentimento, o segmento mais negativo é o {int(baixo.segmento)} "
+                     f"({num(baixo.sentimento, 3)}) e o mais positivo o {int(alto.segmento)} ({num(alto.sentimento, 3)}).")
+    if i.get("verbos_passado_pct") is not None and "verbos_passado_pct" not in e:
+        c.append(f"{num(i['verbos_passado_pct'], 0)} % das formas verbais finitas estão no passado e "
+                 f"{num(i['verbos_presente_pct'], 0)} % no presente.")
     if i.get("personagens_na_rede"):
         c.append(f"A rede inclui {i['personagens_na_rede']} personagens; a mais central (PageRank) é "
                  f"{i.get('personagem_principal')}.")
@@ -101,7 +119,8 @@ def comentarios(r: dict, evol: pd.DataFrame) -> list[str]:
 # ---------------------------------------------------------------------------
 
 def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame, evol: pd.DataFrame,
-          pers: pd.DataFrame, pasta: Path):
+          pers: pd.DataFrame, pasta: Path, extra: dict | None = None):
+    extra = extra or {}
     i, m, p, amb = r["indicadores"], r["metadados"], r["processamento"], r.get("ambiente", {})
     lg = r["lingua"]
     s = [f"# {r['titulo']}", ""]
@@ -166,7 +185,12 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
           ""] + _figura(r, "classes-gramaticais", "Classes gramaticais")
 
     # 7. Legibilidade
-    s += ["## 7. Legibilidade", "", _bloco(r, ["legibilidade", "flesch_kincaid", "silabas_por_palavra"]), ""]
+    s += ["## 7. Legibilidade", ""]
+    if i.get("legibilidade_leitura") and "legibilidade" not in r.get("estados", {}):
+        nivel = f" · nível escolar indicativo: {i['legibilidade_nivel']}" if i.get("legibilidade_nivel") else ""
+        s += [f"**Leitura {i['legibilidade_leitura']}** · índice {num(i['legibilidade'], 1)} · faixa "
+              f"«{i['legibilidade_escala']}»{nivel}", ""]
+    s += [_bloco(r, ["legibilidade", "flesch_kincaid", "silabas_por_palavra"]), ""]
     aviso_lg = {"pt": "A fórmula usada é a adaptação de Martins et al. (1996), calibrada com manuais escolares em "
                       "português do Brasil. Não foi validada para o português europeu nem para prosa literária: o "
                       "valor serve para comparar livros em português entre si, não como medida absoluta.",
@@ -207,25 +231,72 @@ def livro(r: dict, freq: pd.DataFrame, classes: pd.DataFrame, ents: pd.DataFrame
     else:
         s += ["*Não aplicável*: texto curto de mais para dividir em segmentos.", ""]
 
-    # 10. Visualizações
-    s += ["## 10. Visualizações", "", "- [Painel interativo](painel.html): rede de personagens em 3D, centralidade, "
-          "frequências, classes gramaticais, frases, evolução e lugares (abrir num navegador).",
+    # 10. Sentimento
+    sen = ["sentimento_medio", "frases_positivas_pct", "frases_negativas_pct", "frases_neutras_pct",
+           "cobertura_lexico_pct"]
+    s += ["## 10. Sentimento", ""]
+    if r.get("metodo_sentimento"):
+        s += [f"Método: {r['metodo_sentimento']}, com léxico e regras (Hutto e Gilbert, 2014). Cada frase com pelo menos "
+              f"{r['parametros']['sentimento_minimo_palavras']} palavras recebe uma pontuação entre −1 e +1. Os léxicos "
+              "foram criados para mensagens curtas das redes sociais: os valores descrevem a polaridade do vocabulário, "
+              "não o tom da narrativa, e não foram validados com anotação humana neste projeto.", ""]
+    s += [_bloco(r, sen), ""] + _figura(r, "sentimento", "Arco de sentimento")
+    ext_s = extra.get("extremos")
+    if ext_s is not None and len(ext_s):
+        s += ["**Frases com pontuação mais extrema** (entre 8 e 60 palavras)", "",
+              _tabela([[x.polaridade, num(x.sentimento, 3), x.texto] for x in ext_s.itertuples()],
+                      ["Polaridade", "Compound", "Frase"]), ""]
+    s += [_definicoes(sen), ""]
+
+    # 11. Outros conceitos de PLN
+    s += ["## 11. Outros conceitos de PLN", "", "### Tipos de frase", "",
+          _bloco(r, ["frases_interrogativas_pct", "frases_exclamativas_pct"]), ""]
+    morf = ["verbos_passado_pct", "verbos_presente_pct", "verbos_futuro_pct", "verbos_conjuntivo_pct",
+            "pronomes_1a_pessoa_por_1000", "pronomes_2a_pessoa_por_1000", "pronomes_3a_pessoa_por_1000"]
+    s += ["### Tempos verbais e pessoa gramatical", "", _bloco(r, morf), ""]
+    tempos = extra.get("tempos")
+    if tempos is not None and len(tempos):
+        s += [_tabela([[t.tempo, t.modo, num(t.ocorrencias, 0), num(t.pct, 1)] for t in tempos.head(12).itertuples()],
+                      ["Tempo", "Modo", "Ocorrências", "% das formas finitas"]), ""]
+    zh = ["zipf_expoente", "zipf_r2", "heaps_beta", "heaps_k", "heaps_r2"]
+    s += ["### Leis de Zipf e de Heaps", "", "Duas regularidades estatísticas do vocabulário: poucas palavras são muito "
+          "frequentes e muitas são raras (Zipf); o vocabulário cresce cada vez mais devagar à medida que o texto avança "
+          "(Heaps).", "", _bloco(r, zh), ""] + _figura(r, "zipf-heaps", "Leis de Zipf e de Heaps") + [_definicoes(zh), ""]
+    col = extra.get("colocacoes")
+    if col is not None and len(col):
+        s += ["### Colocações", "", f"{catalogo.METODOS['colocacoes'].definicao} Ordenadas pela razão de verosimilhança "
+              "G² (Dunning, 1993); o PMI (Church e Hanks, 1990) mede a exclusividade da associação.", "",
+              _tabela([[c.colocacao, num(c.ocorrencias, 0), num(c.g2, 1), num(c.pmi, 2)] for c in col.head(20).itertuples()],
+                      ["Colocação", "Ocorrências", "G²", "PMI"]), ""]
+    chave = extra.get("palavras_chave")
+    if chave is not None and len(chave):
+        s += ["### Palavras-chave por segmento", "", f"{catalogo.METODOS['palavras_chave'].definicao} Medida: TF-IDF "
+              "(Spärck Jones, 1972), com os segmentos como documentos.", "",
+              _tabela([[seg, ", ".join(g.lema)] for seg, g in chave.groupby("segmento")], ["Segmento", "Palavras-chave"]),
+              ""]
+
+    # 12. Visualizações
+    s += ["## 12. Visualizações", "", "- [Painel interativo](painel.html): gráficos em 3D (com alternativa em 2D) da rede de "
+          "personagens, centralidade, vocabulário, classes gramaticais, frases, sentimento, evolução, colocações, "
+          "palavras-chave, tempos verbais e lugares (abrir num navegador).",
           "- Gráficos estáticos em PNG e SVG na pasta [`graficos/`](graficos/).", ""]
 
     # 11. Interpretação
-    s += ["## 11. Interpretação", "", "Comentários gerados automaticamente a partir dos valores; descrevem o texto, "
+    s += ["## 13. Interpretação", "", "Comentários gerados automaticamente a partir dos valores; descrevem o texto, "
           "não explicam as suas causas nem substituem a leitura crítica.", ""]
     s += [f"- {c}" for c in comentarios(r, evol)] + [""]
 
     # 12. Limitações
-    usados = lex + ext + sint + ["legibilidade", "dialogo_pct", "entidades_pessoa", "densidade_lexical_pct"]
-    s += ["## 12. Limitações metodológicas", ""]
-    s += [f"- **{INDICADORES[k].nome}**: {INDICADORES[k].limitacoes}" for k in usados if INDICADORES[k].limitacoes]
+    usados = lex + ext + sint + ["legibilidade", "dialogo_pct", "entidades_pessoa", "densidade_lexical_pct"] + sen + \
+        morf + zh + ["colocacoes", "palavras_chave", "arco_sentimento"]
+    todos = {**INDICADORES, **catalogo.METODOS}
+    s += ["## 14. Limitações metodológicas", ""]
+    s += [f"- **{todos[k].nome}**: {todos[k].limitacoes}" for k in dict.fromkeys(usados) if todos[k].limitacoes]
     s += ["- **Modelos linguísticos**: os modelos spaCy foram treinados com texto contemporâneo; grafias antigas, "
           "diálogos e pontuação literária reduzem a exatidão da segmentação, da etiquetagem e da análise sintática.", ""]
 
     # 13. Referências
-    s += ["## 13. Referências metodológicas", ""] + [f"- {x}" for x in catalogo.referencias_de(usados)] + \
+    s += ["## 15. Referências metodológicas", ""] + [f"- {x}" for x in catalogo.referencias_de(usados)] + \
          [f"- {catalogo.REFERENCIAS['honnibal2020']}", ""]
     bib = amb.get("bibliotecas", {}) if amb else {}
     s += [f"<sub>Processado em {p['data']} · livros_pln {p['versao']} · código `{p['versao_codigo']}`"

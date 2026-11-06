@@ -10,3 +10,6 @@ requests>=2.31
 ebooklib>=0.18
 beautifulsoup4>=4.12
 pytest>=8
+vaderSentiment==3.3.2
+leia-br==0.0.1
+vaderSentiment-fr==1.3.4

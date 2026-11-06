@@ -1,5 +1,24 @@
 # Alterações
 
+## 3.2.0 · 2026-11-06
+
+**Novos conceitos de PLN**
+- Análise de sentimento por frase com o método VADER (léxico e regras): vaderSentiment (inglês), LeIA (português) e VADER-FR (francês). Indicadores: sentimento médio, % de frases positivas, negativas e neutras, cobertura do léxico; arco de sentimento por segmento; frases mais positivas e mais negativas. Sem o pacote instalado, o estado fica «desconhecido», nunca zero.
+- Legibilidade com faixas por língua: Martins et al. (1996) para português (com nível escolar, verificado na fonte primária) e Flesch (1948) para inglês e francês; veredicto «fácil» ou «difícil».
+- Tipos de frase (interrogativas, exclamativas), tempos e modos verbais, pronomes de 1.ª, 2.ª e 3.ª pessoa.
+- Leis de Zipf e de Heaps (expoentes e qualidade do ajuste), colocações (G² de Dunning e PMI) e palavras-chave por segmento (TF-IDF).
+- Catálogo com 79 indicadores e 5 métodos de tabela ou gráfico; novas referências verificadas (APA 7).
+
+**Painel HTML**
+- Ficha técnica (metadados) no cabeçalho; régua de legibilidade com o veredicto de leitura.
+- Gráficos em 3D (barras em prisma, relevo da extensão das frases, fitas da evolução, dispersão das colocações), sem rotação automática; cada um tem uma vista 2D com os mesmos dados. Zipf e Heaps ficam em 2D (escalas logarítmicas).
+- Novas secções: Vocabulário, Gramática, Sentimento e Leis do Vocabulário; citações das frases mais extremas.
+
+**Relatórios e dados**
+- Relatório com 15 secções (novas: Sentimento e Outros conceitos de PLN); gráficos estáticos do arco de sentimento e das leis de Zipf e Heaps.
+- Novos ficheiros: `colocacoes.csv`, `palavras-chave.csv`, `tempos-verbais.csv`, `sentimento-frases-extremas.csv`; o Excel inclui as novas tabelas.
+- Novas dependências: `vaderSentiment`, `leia-br`, `vaderSentiment-fr`.
+
 ## 3.1.0 · 2026-11-06
 
 **Painéis interativos (HTML)**

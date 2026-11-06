@@ -169,10 +169,90 @@ def rede(g, titulo: str, metodo: str, pasta: Path) -> str | None:
     return tema.guardar(fig, pasta, "rede")
 
 
-def por_livro(titulo, modelo, classes, freq, comprimentos, evol, ents, g, metodo, limiar_longa, pasta: Path) -> list[str]:
+def sentimento(evol: pd.DataFrame, extremos: pd.DataFrame, titulo: str, metodo: str | None, limiar: float,
+               pasta: Path) -> str | None:
+    """Arco de sentimento: média por segmento (linha) e proporção de frases positivas e negativas (barras)."""
+    if evol.empty or len(evol) < 3 or "sentimento" not in evol or evol.sentimento.isna().all():
+        return None
+    fig, (ax1, ax2) = tema.figura(2, 1, largura=10, altura=6.6, sharex=True, height_ratios=[1.1, 1])
+    x = evol.segmento
+    ax1.axhspan(-limiar, limiar, color=tema.GRELHA, alpha=0.7, lw=0)
+    ax1.axhline(0, color=tema.CINZA, lw=1)
+    ax1.plot(x, evol.sentimento, color=tema.PETROLEO, lw=2.2, marker="o", ms=5)
+    ax1.set_title("Sentimento médio por segmento (compound, −1 a +1)", fontsize=10)
+    ax1.yaxis.set_major_formatter(tema.formatador(2))
+    ax1.text(x.iloc[-1] + 0.15, 0, "zona neutra", va="center", ha="left", fontsize=8, color=tema.SUAVE)
+    s = evol.sentimento.dropna()
+    ax1.set_ylim(min(-0.12, s.min() * 1.25), max(0.12, s.max() * 1.25))   # a zona neutra fica sempre visível
+    largura = 0.38
+    ax2.bar(x - largura / 2, evol.frases_positivas_pct, largura, color=tema.PETROLEO, label="frases positivas")
+    ax2.bar(x + largura / 2, evol.frases_negativas_pct, largura, color=tema.DESTAQUE, label="frases negativas",
+            hatch="//", edgecolor="white", lw=0)
+    ax2.set_title("Frases positivas e negativas por segmento (%)", fontsize=10)
+    ax2.yaxis.set_major_formatter(tema.formatador(0))
+    ax2.legend(loc="upper left", ncol=2)
+    ax2.set_xticks(x)
+    ax2.set_xlabel("segmento do livro (início → fim)")
+    tema.cabecalho(fig, "Arco de sentimento", f"{titulo} · {metodo or 'método de léxico'}; zona cinzenta = neutro "
+                   f"(|compound| < {tema.num(limiar, 2)})",
+                   "Mede a polaridade do vocabulário, não o tom narrativo nem a ironia. Léxicos criados para redes "
+                   "sociais; não validado em prosa literária.")
+    return tema.guardar(fig, pasta, "sentimento")
+
+
+def reta_zipf(zipf: pd.DataFrame, frequencia_minima: int = 5):
+    """Reta ajustada (posições, frequências previstas, expoente), com as mesmas formas do indicador."""
+    from .indicadores import _regressao_log
+
+    sub = zipf[zipf.frequencia >= frequencia_minima]
+    if len(sub) < 10:
+        return None
+    declive, origem, _ = _regressao_log(sub.posicao, sub.frequencia)
+    r = np.array([1, sub.posicao.max()], float)
+    return r, 10 ** origem * r ** declive, -declive
+
+
+def zipf_heaps(zipf: pd.DataFrame, heaps: pd.DataFrame, ind: dict, titulo: str, pasta: Path,
+               frequencia_minima: int = 5) -> str | None:
+    """Lei de Zipf (frequência × posição) e lei de Heaps (vocabulário × extensão), em escala log-log."""
+    if zipf.empty or heaps.empty:
+        return None
+    fig, (ax1, ax2) = tema.figura(1, 2, largura=11, altura=5)
+    ax1.loglog(zipf.posicao, zipf.frequencia, color=tema.PETROLEO, lw=0, marker="o", ms=2.6, alpha=0.7)
+    ajuste = reta_zipf(zipf, frequencia_minima)
+    if ajuste is not None:
+        r, f, s = ajuste
+        ax1.loglog(r, f, color=tema.DESTAQUE, lw=1.6, ls="--", label=f"ajuste: declive {tema.num(-s, 2)}")
+        ax1.legend(loc="lower left")
+    ax1.set_title("Lei de Zipf", fontsize=10)
+    ax1.set_xlabel("posição da forma (1 = mais frequente)")
+    ax1.set_ylabel("ocorrências")
+    ax2.loglog(heaps.palavras, heaps.vocabulario, color=tema.PETROLEO, lw=2)
+    b, k = ind.get("heaps_beta"), ind.get("heaps_k")
+    if b == b and b is not None and k:
+        n = heaps.palavras.to_numpy(float)
+        ax2.loglog(n, k * n ** b, color=tema.DESTAQUE, lw=1.6, ls="--", label=f"β = {tema.num(b, 3)}")
+        ax2.legend(loc="lower right")
+    ax2.set_title("Lei de Heaps", fontsize=10)
+    ax2.set_xlabel("palavras lidas (N)")
+    ax2.set_ylabel("formas distintas (V)")
+    for ax in (ax1, ax2):
+        ax.grid(True, which="major")
+    tema.cabecalho(fig, "Leis do vocabulário", f"{titulo} · escalas logarítmicas; tracejado = lei de potência ajustada",
+                   "Zipf (1949): f ≈ C·r^−s, ajustada só com formas frequentes; Heaps (1978): V ≈ K·N^β.")
+    return tema.guardar(fig, pasta, "zipf-heaps")
+
+
+def por_livro(titulo, modelo, classes, freq, comprimentos, evol, ents, g, metodo, limiar_longa, pasta: Path,
+              extra: dict | None = None, p=None, ind: dict | None = None) -> list[str]:
     figs = [rede(g, titulo, metodo, pasta), classes_gramaticais(classes, titulo, modelo, pasta),
             frequencias(freq, titulo, pasta), frases(comprimentos, titulo, limiar_longa, pasta),
             evolucao(evol, titulo, pasta), entidades(ents, titulo, pasta)]
+    if extra:
+        figs.append(sentimento(evol, extra["extremos"], titulo, extra["sentimento"]["metodo"],
+                               p.sentimento_limiar if p else 0.05, pasta))
+        figs.append(zipf_heaps(extra["zipf"], extra["heaps"], ind or {}, titulo, pasta,
+                               p.zipf_frequencia_minima if p else 5))
     return [f for f in figs if f]
 
 

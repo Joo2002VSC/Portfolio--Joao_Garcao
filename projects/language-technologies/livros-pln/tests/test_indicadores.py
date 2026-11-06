@@ -58,7 +58,7 @@ def test_anotacao_e_indicadores(textos, lingua):
     total = sum(ind[f"pos_{c.lower()}_por_1000"] or 0 for c in catalogo.CLASSES)
     assert 0 < total <= 1000.01
     # todas as chaves calculadas estão definidas no catálogo
-    extra = set(ind) - set(catalogo.INDICADORES) - {"legibilidade_escala"}   # rótulo textual do índice
+    extra = set(ind) - set(catalogo.INDICADORES) - {"legibilidade_escala", "legibilidade_leitura", "legibilidade_nivel"}
     assert not extra, extra
 
 

@@ -89,6 +89,24 @@ def _sintaxe(frase) -> tuple[int, int, int, int]:
     return maxima, sum(distancias), len(distancias), subordinadas
 
 
+def _traco(morph, nome: str) -> str:
+    v = morph.get(nome)
+    return v[0] if v else ""
+
+
+_FECHO = "\"'»”’)]—–- \u00a0"
+
+
+def tipo_frase(texto: str) -> str:
+    """Declarativa, interrogativa ou exclamativa, pela pontuação final (ignorando aspas e travessões de fecho)."""
+    fim = texto.rstrip(_FECHO)
+    if fim.endswith("?") or fim.endswith("?!") or fim.endswith("!?"):
+        return "interrogativa"
+    if fim.endswith("!"):
+        return "exclamativa"
+    return "declarativa"
+
+
 def anotar(paragrafos: list[str], lingua: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Devolve (tokens, frases, entidades) como DataFrames."""
     nlp = modelo(lingua)
@@ -98,23 +116,27 @@ def anotar(paragrafos: list[str], lingua: str) -> tuple[pd.DataFrame, pd.DataFra
         for s in doc.sents:
             n_palavras = 0
             for t in s:
-                pessoal = t.pos_ == "PRON" and "Prs" in t.morph.get("PronType")
-                linhas.append((p, f, t.text, t.lemma_.lower(), t.pos_, t.tag_, t.is_alpha, t.is_stop, pessoal))
+                m = t.morph
+                pessoal = t.pos_ == "PRON" and "Prs" in m.get("PronType")
+                linhas.append((p, f, t.text, t.lemma_.lower(), t.pos_, t.tag_, t.is_alpha, t.is_stop, pessoal,
+                               _traco(m, "Tense"), _traco(m, "Mood"), _traco(m, "Person"), _traco(m, "VerbForm")))
                 n_palavras += t.is_alpha
             prof, soma, n_dep, sub = _sintaxe(s)
-            frases.append((f, p, n_palavras, prof, soma, n_dep, sub))
+            frases.append((f, p, n_palavras, prof, soma, n_dep, sub, tipo_frase(s.text), s.text.strip()))
             f += 1
         for e in doc.ents:
             ents.append((p, e.text.strip(), e.label_))
     tokens = pd.DataFrame(linhas, columns=["paragrafo", "frase", "texto", "lema", "pos", "tag", "alfa", "stop",
-                                           "pronome_pessoal"])
+                                           "pronome_pessoal", "tempo", "modo", "pessoa", "forma_verbal"])
+    for c in ("tempo", "modo", "pessoa", "forma_verbal"):
+        tokens[c] = tokens[c].astype("category")
     tokens["minusc"] = tokens.texto.str.lower()
     extra = stopwords_extra(lingua)
     if extra:
         tokens["stop"] = tokens.stop | tokens.minusc.isin(extra) | tokens.lema.isin(extra)
     tokens["pos"] = tokens.pos.astype("category")
     frases_df = pd.DataFrame(frases, columns=["frase", "paragrafo", "palavras", "profundidade", "soma_distancias",
-                                              "dependencias", "subordinadas"])
+                                              "dependencias", "subordinadas", "tipo", "texto"])
     entidades = pd.DataFrame(ents, columns=["paragrafo", "entidade", "rotulo"])
     if extra:
         entidades = entidades[~entidades.entidade.str.lower().isin(extra)]
@@ -251,14 +273,41 @@ def flesch_kincaid(palavras_por_frase: float, silabas_por_palavra: float) -> flo
     return 0.39 * palavras_por_frase + 11.8 * silabas_por_palavra - 15.59
 
 
-def escala_legibilidade(indice: float | None) -> str | None:
-    if indice is None or (isinstance(indice, float) and math.isnan(indice)):
+# Faixas de interpretação. Português: Martins et al. (1996), que indicam também o nível escolar (sistema escolar
+# brasileiro). Inglês e francês: escala de Flesch (1948), que Kandel e Moles (1958) mantiveram para o francês.
+FAIXAS_FLESCH = [(90, "muito fácil"), (80, "fácil"), (70, "razoavelmente fácil"), (60, "padrão"),
+                 (50, "razoavelmente difícil"), (30, "difícil"), (-math.inf, "muito difícil")]
+FAIXAS_MARTINS = [(75, "muito fácil", "1.º ao 4.º ano de escolaridade"), (50, "fácil", "5.º ao 8.º ano de escolaridade"),
+                  (25, "razoavelmente difícil", "ensino secundário e superior"),
+                  (-math.inf, "muito difícil", "textos académicos")]
+# Fronteira entre leitura «fácil» e «difícil»: pt 50 (Martins et al., 1996: fácil ≥ 50); en e fr 60 (Flesch, 1948:
+# a partir de 60, «padrão» ou mais fácil).
+FRONTEIRA_LEITURA = {"pt": 50, "fr": 60, "en": 60}
+
+
+def _vazio(indice) -> bool:
+    return indice is None or (isinstance(indice, float) and math.isnan(indice))
+
+
+def escala_legibilidade(indice: float | None, lingua: str = "en") -> str | None:
+    if _vazio(indice):
         return None
-    for limite, rotulo in [(90, "muito fácil"), (80, "fácil"), (70, "razoavelmente fácil"), (60, "padrão"),
-                           (50, "razoavelmente difícil"), (30, "difícil")]:
-        if indice >= limite:
-            return rotulo
-    return "muito difícil"
+    faixas = [(lim, rot) for lim, rot, _ in FAIXAS_MARTINS] if lingua == "pt" else FAIXAS_FLESCH
+    return next(rot for lim, rot in faixas if indice >= lim)
+
+
+def nivel_escolar(indice: float | None, lingua: str) -> str | None:
+    """Nível escolar correspondente (só português, segundo Martins et al., 1996)."""
+    if _vazio(indice) or lingua != "pt":
+        return None
+    return next(nivel for lim, _, nivel in FAIXAS_MARTINS if indice >= lim)
+
+
+def leitura(indice: float | None, lingua: str) -> str | None:
+    """Classificação simplificada da leitura: «fácil» ou «difícil»."""
+    if _vazio(indice):
+        return None
+    return "fácil" if indice >= FRONTEIRA_LEITURA.get(lingua, 60) else "difícil"
 
 
 # ---------------------------------------------------------------------------
@@ -333,19 +382,196 @@ def calcular(paragrafos: list[str], tokens: pd.DataFrame, frases: pd.DataFrame, 
     else:
         modais = int((tokens.pos.isin(["VERB", "AUX"]) & tokens.lema.isin(MODAIS[lingua])).sum())
     ind["modais_por_1000"] = 1000 * d(modais, n)
+    # tipos de frase
+    if len(frases_validas):
+        tipos = frases_validas.tipo.value_counts()
+        ind["frases_interrogativas_pct"] = 100 * d(int(tipos.get("interrogativa", 0)), len(frases_validas))
+        ind["frases_exclamativas_pct"] = 100 * d(int(tipos.get("exclamativa", 0)), len(frases_validas))
+    # morfologia verbal (só formas finitas com o traço anotado)
+    finitos = tokens[tokens.pos.isin(["VERB", "AUX"]) & (tokens.forma_verbal == "Fin")]
+    com_tempo = finitos[finitos.tempo != ""]
+    com_modo = finitos[finitos.modo != ""]
+    ind["verbos_presente_pct"] = 100 * d(int((com_tempo.tempo == "Pres").sum()), len(com_tempo))
+    ind["verbos_passado_pct"] = 100 * d(int(com_tempo.tempo.isin(["Past", "Imp", "Pqp"]).sum()), len(com_tempo))
+    ind["verbos_futuro_pct"] = 100 * d(int(com_tempo.tempo.isin(["Fut"]).sum()), len(com_tempo))
+    ind["verbos_conjuntivo_pct"] = 100 * d(int((com_modo.modo == "Sub").sum()), len(com_modo))
+    pronomes = tokens[tokens.pronome_pessoal]
+    for pessoa in ("1", "2", "3"):
+        ind[f"pronomes_{pessoa}a_pessoa_por_1000"] = 1000 * d(int((pronomes.pessoa == pessoa).sum()), n)
+    # leis do vocabulário
+    ind.update(zipf(contagem, p.zipf_frequencia_minima))
+    ind.update(heaps(palavras))
     for tipo, rotulos in ENTIDADES.items():
         ind[f"entidades_{tipo}"] = int(entidades[entidades.rotulo.isin(rotulos)].entidade.nunique())
     todas = set().union(*ENTIDADES.values())
     ind["entidades_por_1000"] = 1000 * d(int(entidades.rotulo.isin(todas).sum()), n)
 
     estados = qualidade.aplicabilidade(n, lingua, p)
+    if lingua == "en":
+        motivo = ("o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço "
+                  "morfológico próprio no modelo")
+        for k in ("verbos_futuro_pct", "verbos_conjuntivo_pct"):
+            estados[k] = {"estado": qualidade.NAO_APLICAVEL, "motivo": motivo}
+    if len(com_tempo) < 50:
+        for k in ("verbos_presente_pct", "verbos_passado_pct", "verbos_futuro_pct", "verbos_conjuntivo_pct"):
+            estados.setdefault(k, {"estado": qualidade.NAO_APLICAVEL,
+                                   "motivo": "menos de 50 formas verbais finitas com tempo anotado"})
     if not len(ext):
         for k in [k for k in ind if k.startswith(("frase_", "profundidade", "distancia", "subordinadas", "legibilidade",
                                                    "flesch"))]:
             estados.setdefault(k, {"estado": qualidade.DESCONHECIDO, "motivo": "nenhuma frase segmentada"})
     ind, estados = qualidade.sanear(ind, estados)
-    ind["legibilidade_escala"] = escala_legibilidade(ind["legibilidade"])
+    ind["legibilidade_escala"] = escala_legibilidade(ind["legibilidade"], lingua)
+    ind["legibilidade_leitura"] = leitura(ind["legibilidade"], lingua)
+    ind["legibilidade_nivel"] = nivel_escolar(ind["legibilidade"], lingua)
     return ind, estados
+
+
+# ---------------------------------------------------------------------------
+# Leis do vocabulário: Zipf e Heaps
+# ---------------------------------------------------------------------------
+
+def _regressao_log(x, y) -> tuple[float, float, float]:
+    """Regressão linear de log10(y) em log10(x). Devolve (declive, ordenada na origem, R²)."""
+    lx, ly = np.log10(np.asarray(x, float)), np.log10(np.asarray(y, float))
+    declive, origem = np.polyfit(lx, ly, 1)
+    previsto = declive * lx + origem
+    soma_total = ((ly - ly.mean()) ** 2).sum()
+    r2 = 1 - ((ly - previsto) ** 2).sum() / soma_total if soma_total else float("nan")
+    return float(declive), float(origem), float(r2)
+
+
+def zipf(contagem: Counter, frequencia_minima: int = 5) -> dict:
+    """Lei de Zipf (1949): f(r) ∝ r^−s. Ajuste por mínimos quadrados em escala log-log, só com as formas que
+    ocorrem pelo menos `frequencia_minima` vezes (o patamar dos hapax distorce o declive)."""
+    freqs = sorted((f for f in contagem.values() if f >= frequencia_minima), reverse=True)
+    if len(freqs) < 10:
+        return {"zipf_expoente": float("nan"), "zipf_r2": float("nan")}
+    declive, _, r2 = _regressao_log(range(1, len(freqs) + 1), freqs)
+    return {"zipf_expoente": -declive, "zipf_r2": r2}
+
+
+def curva_heaps(palavras: list[str], pontos: int = 60) -> pd.DataFrame:
+    """Crescimento do vocabulário: formas distintas (V) depois de N palavras, em pontos espaçados em log."""
+    n = len(palavras)
+    if n < 2:
+        return pd.DataFrame(columns=["palavras", "vocabulario"])
+    marcas = sorted(set(np.unique(np.geomspace(10, n, pontos).astype(int)).tolist()) | {n})
+    vistos, linhas, i = set(), [], 0
+    for m in marcas:
+        vistos.update(palavras[i:m])
+        i = m
+        linhas.append((m, len(vistos)))
+    return pd.DataFrame(linhas, columns=["palavras", "vocabulario"])
+
+
+def heaps(palavras: list[str]) -> dict:
+    """Lei de Heaps (1978): V(N) = K·N^β, ajustada em escala log-log sobre a curva de crescimento do vocabulário."""
+    curva = curva_heaps(palavras)
+    curva = curva[curva.palavras >= 100]
+    if len(curva) < 5:
+        return {"heaps_beta": float("nan"), "heaps_k": float("nan"), "heaps_r2": float("nan")}
+    declive, origem, r2 = _regressao_log(curva.palavras, curva.vocabulario)
+    return {"heaps_beta": declive, "heaps_k": 10 ** origem, "heaps_r2": r2}
+
+
+def tabela_zipf(contagem, frequencia_minima: int = 5) -> pd.DataFrame:
+    """Posição e frequência das formas usadas no ajuste da lei de Zipf (as que ocorrem pelo menos `frequencia_minima`
+    vezes), para que o gráfico e o indicador assentem exatamente nos mesmos dados."""
+    freqs = sorted(((w, f) for w, f in contagem.items() if f >= frequencia_minima), key=lambda kv: -kv[1])
+    return pd.DataFrame([(r, w, f) for r, (w, f) in enumerate(freqs, start=1)], columns=["posicao", "forma", "frequencia"])
+
+
+# ---------------------------------------------------------------------------
+# Colocações (Dunning, 1993; Church e Hanks, 1990) e palavras-chave por segmento (TF-IDF)
+# ---------------------------------------------------------------------------
+
+def _xlogx(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return np.where(a > 0, a * np.log(a / b), 0.0)
+
+
+def colocacoes(tokens: pd.DataFrame, frequencia_minima: int = 5, n: int = 30) -> pd.DataFrame:
+    """Pares de palavras contíguas (na mesma frase) que ocorrem juntas mais do que o acaso faria prever.
+
+    Ordenadas pela razão de verosimilhança G² (Dunning, 1993); inclui também a informação mútua pontual (PMI;
+    Church e Hanks, 1990). Exclui pares em que as duas palavras são palavras gramaticais (stopwords)."""
+    t = tokens[tokens.alfa][["frase", "minusc", "stop"]].reset_index(drop=True)
+    if len(t) < 2:
+        return pd.DataFrame(columns=["colocacao", "ocorrencias", "g2", "pmi"])
+    mesma = (t.frase.values[1:] == t.frase.values[:-1])
+    pares = pd.DataFrame({"w1": t.minusc.values[:-1][mesma], "w2": t.minusc.values[1:][mesma],
+                          "s1": t.stop.values[:-1][mesma], "s2": t.stop.values[1:][mesma]})
+    total = len(pares)
+    if not total:
+        return pd.DataFrame(columns=["colocacao", "ocorrencias", "g2", "pmi"])
+    f1, f2 = pares.w1.value_counts(), pares.w2.value_counts()
+    c = pares[~(pares.s1 & pares.s2)].groupby(["w1", "w2"]).size().rename("o11").reset_index()
+    c = c[c.o11 >= frequencia_minima]
+    if c.empty:
+        return pd.DataFrame(columns=["colocacao", "ocorrencias", "g2", "pmi"])
+    o11 = c.o11.values.astype(float)
+    r1, c1 = c.w1.map(f1).values.astype(float), c.w2.map(f2).values.astype(float)
+    o12, o21 = r1 - o11, c1 - o11
+    o22 = total - o11 - o12 - o21
+    r2, c2 = total - r1, total - c1
+    e11, e12, e21, e22 = r1 * c1 / total, r1 * c2 / total, r2 * c1 / total, r2 * c2 / total
+    g2 = 2 * (_xlogx(o11, e11) + _xlogx(o12, e12) + _xlogx(o21, e21) + _xlogx(o22, e22))
+    c = c.assign(g2=g2, pmi=np.log2(o11 / e11), atracao=o11 > e11)
+    c = c[c.atracao].sort_values("g2", ascending=False).head(n)
+    return pd.DataFrame({"colocacao": c.w1 + " " + c.w2, "ocorrencias": c.o11.astype(int).values,
+                         "g2": c.g2.values, "pmi": c.pmi.values})
+
+
+def palavras_chave(tokens: pd.DataFrame, segmentos: pd.Series, n: int = 5) -> pd.DataFrame:
+    """Palavras mais características de cada segmento: TF-IDF (Spärck Jones, 1972) com os segmentos como documentos.
+
+    tf = ocorrências do lema no segmento ÷ palavras do segmento; idf = log(segmentos ÷ segmentos onde o lema ocorre).
+    Lemas presentes em todos os segmentos têm idf = 0 e nunca são escolhidos."""
+    t = tokens[tokens.alfa & ~tokens.stop & tokens.pos.isin(["NOUN", "PROPN", "ADJ", "VERB"])].copy()
+    t = t[t.lema.str.len() > 2]
+    t["segmento"] = t.frase.map(segmentos)
+    t = t.dropna(subset=["segmento"])
+    if t.empty:
+        return pd.DataFrame(columns=["segmento", "lema", "ocorrencias", "tfidf"])
+    k = t.segmento.nunique()
+    cont = t.groupby(["segmento", "lema"]).size().rename("ocorrencias").reset_index()
+    tamanho = tokens[tokens.alfa].assign(segmento=lambda x: x.frase.map(segmentos)).groupby("segmento").size()
+    df = cont.groupby("lema").segmento.nunique()
+    cont["tfidf"] = cont.ocorrencias / cont.segmento.map(tamanho) * np.log(k / cont.lema.map(df))
+    cont = cont[(cont.tfidf > 0) & (cont.ocorrencias >= 3)]
+    cont["tfidf"] *= 1000   # por 1000 palavras, para números legíveis
+    top = cont.sort_values(["segmento", "tfidf"], ascending=[True, False]).groupby("segmento").head(n)
+    return top.assign(segmento=top.segmento.astype(int)).reset_index(drop=True)
+
+
+def tempos_verbais(tokens: pd.DataFrame) -> pd.DataFrame:
+    """Formas verbais finitas por tempo e modo (traços morfológicos Universal Dependencies)."""
+    f = tokens[tokens.pos.isin(["VERB", "AUX"]) & (tokens.forma_verbal == "Fin") & (tokens.tempo != "")]
+    if f.empty:
+        return pd.DataFrame(columns=["tempo", "modo", "ocorrencias", "pct"])
+    t = f.groupby(["tempo", "modo"], observed=True).size().rename("ocorrencias").reset_index()
+    t = t[t.ocorrencias > 0]
+    t["pct"] = 100 * t.ocorrencias / t.ocorrencias.sum()
+    t["tempo"] = t.tempo.astype(str).map(NOMES_TEMPOS).fillna(t.tempo.astype(str))
+    t["modo"] = t.modo.astype(str).map(NOMES_MODOS).fillna("não anotado")
+    return t.sort_values("ocorrencias", ascending=False).reset_index(drop=True)
+
+
+NOMES_TEMPOS = {"Pres": "presente", "Past": "passado", "Imp": "imperfeito", "Pqp": "mais-que-perfeito",
+                "Fut": "futuro"}
+NOMES_MODOS = {"Ind": "indicativo", "Sub": "conjuntivo", "Cnd": "condicional", "Imp": "imperativo", "": "não anotado"}
+
+
+def segmentos_das_frases(tokens: pd.DataFrame, k: int) -> pd.Series:
+    """Segmento (1…k) de cada frase, com segmentos com o mesmo número de palavras (igual a `evolucao`)."""
+    palavras = tokens[tokens.alfa].reset_index(drop=True)
+    n = len(palavras)
+    if not n:
+        return pd.Series(dtype=int)
+    k = max(1, min(k, n // 50 or 1))
+    seg = np.minimum((palavras.index * k) // n, k - 1) + 1
+    return pd.Series(seg, index=palavras.frase).groupby(level=0).first()
 
 
 # ---------------------------------------------------------------------------
@@ -408,5 +634,10 @@ def evolucao(tokens: pd.DataFrame, frases: pd.DataFrame, entidades: pd.DataFrame
             "verbos_por_1000": 1000 * (g.pos == "VERB").mean(),
             "dialogo_pct": 100 * np.mean([e_dialogo(paragrafos[i]) for i in pars]) if pars else np.nan,
             "pessoas_por_1000": 1000 * (pessoas.segmento == s).sum() / len(g),
+            "sentimento": fs.sentimento.mean() if "sentimento" in fs else np.nan,
+            "frases_positivas_pct": 100 * (fs.sentimento >= p.sentimento_limiar).sum() / fs.sentimento.notna().sum()
+            if "sentimento" in fs and fs.sentimento.notna().any() else np.nan,
+            "frases_negativas_pct": 100 * (fs.sentimento <= -p.sentimento_limiar).sum() / fs.sentimento.notna().sum()
+            if "sentimento" in fs and fs.sentimento.notna().any() else np.nan,
         })
     return pd.DataFrame(linhas)

@@ -57,7 +57,8 @@ def num(v, casas: int = 1) -> str:
     """Número em formato português: 12 345,6."""
     if v is None or (isinstance(v, float) and v != v):
         return "—"
-    return f"{v:,.{casas}f}".replace(",", " ").replace(".", ",")
+    texto = f"{v:,.{casas}f}".replace(",", " ").replace(".", ",")
+    return "−" + texto[1:] if texto.startswith("-") else texto   # sinal de menos tipográfico
 
 
 def formatador(casas: int = 0):

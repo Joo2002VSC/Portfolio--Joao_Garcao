@@ -36,6 +36,11 @@ Alteráveis em `config/parametros.toml`; os valores usados ficam registados em c
 | `delta_minimo_textos` | 3 |
 | `rede_minimo_mencoes` | 5 |
 | `rede_maximo_personagens` | 40 |
+| `sentimento_limiar` | 0,05 |
+| `sentimento_minimo_palavras` | 3 |
+| `zipf_frequencia_minima` | 5 |
+| `colocacao_frequencia_minima` | 5 |
+| `palavras_chave_por_segmento` | 5 |
 
 ## Dimensão
 
@@ -111,7 +116,7 @@ Alteráveis em `config/parametros.toml`; os valores usados ficam registados em c
 | Indicador | Definição | Fórmula | Unidade | Interpretação | Limitações | Entre línguas | Referências |
 |---|---|---|---|---|---|---|---|
 | **Sílabas por palavra** <br>`silabas_por_palavra` | Estimativa por grupos de vogais, com regras para ditongos (pt) e vogais mudas (fr, en). | — | sílabas | Mais alto = palavras mais longas; entra nas fórmulas de legibilidade. | Estimativa heurística; ver a exatidão medida nos testes. | não | — |
-| **Facilidade de leitura (Flesch adaptado)** <br>`legibilidade` | Índice de Flesch com os coeficientes da adaptação de cada língua. | en: 206,835 − 1,015·PF − 84,6·SP; fr: 207 − 1,015·PF − 73,6·SP; pt: 248,835 − 1,015·PF − 84,6·SP (PF = palavras/frase, SP = sílabas/palavra) | 0–100 (aprox.) | Mais alto = leitura mais fácil. | As adaptações não são equivalentes entre si: não comparar valores de línguas diferentes. A adaptação portuguesa foi calibrada com manuais escolares em português do Brasil e não foi validada para português europeu nem para prosa literária. | não | Flesch, R. (1948); Kandel, L., & Moles, A. (1958); Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996) |
+| **Facilidade de leitura (Flesch adaptado)** <br>`legibilidade` | Índice de Flesch com os coeficientes da adaptação de cada língua. | en: 206,835 − 1,015·PF − 84,6·SP; fr: 207 − 1,015·PF − 73,6·SP; pt: 248,835 − 1,015·PF − 84,6·SP (PF = palavras/frase, SP = sílabas/palavra) | 0–100 (aprox.) | Mais alto = leitura mais fácil. Faixas em português (Martins et al., 1996): 75–100 muito fácil (1.º–4.º ano de escolaridade), 50–75 fácil (5.º–8.º ano), 25–50 razoavelmente difícil (ensino secundário e superior), abaixo de 25 muito difícil (textos académicos). Em inglês e francês, escala de Flesch (1948): 90 muito fácil, 80 fácil, 70 razoavelmente fácil, 60 padrão, 50 razoavelmente difícil, 30 difícil, abaixo muito difícil. O painel resume em «fácil» (pt ≥ 50; en e fr ≥ 60) ou «difícil». | As adaptações não são equivalentes entre si: não comparar valores de línguas diferentes. A adaptação portuguesa foi calibrada com manuais escolares em português do Brasil e não foi validada para português europeu nem para prosa literária; os níveis escolares são os do sistema brasileiro de 1996. O índice só mede a extensão das frases e das palavras: ignora o vocabulário raro, a sintaxe, a ironia e o conhecimento que o texto pressupõe. | não | Flesch, R. (1948); Kandel, L., & Moles, A. (1958); Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996) |
 | **Flesch-Kincaid (nível de escolaridade)** <br>`flesch_kincaid` | Ano de escolaridade norte-americano estimado. Só para inglês. | 0,39·PF + 11,8·SP − 15,59 | ano escolar (EUA) | Mais alto = texto mais exigente. | Calibrado para inglês e para o sistema escolar norte-americano; não aplicável a outras línguas. | não | Kincaid, J. P., Fishburne, R. P., Rogers, R. L., & Chissom, B. S. (1975) |
 
 ## Pontuação
@@ -147,6 +152,57 @@ Alteráveis em `config/parametros.toml`; os valores usados ficam registados em c
 | **Ligações** <br>`ligacoes_na_rede` | Pares de personagens que aparecem no mesmo parágrafo. | — | ligações | Mais alto = mais pares de personagens partilham parágrafos. | Co-ocorrência textual, não relação narrativa comprovada; depende da lista de personagens e do limiar mínimo de menções. | sim | — |
 | **Densidade da rede** <br>`densidade_da_rede` | Ligações existentes ÷ ligações possíveis. | 2L / (n(n − 1)) | 0–1 | Mais alto = elenco mais interligado. | Depende do número de personagens incluídas. | sim | Blondel, V. D., Guillaume, J.-L., Lambiotte, R., & Lefebvre, E. (2008) |
 
+## Tipos de frase
+
+| Indicador | Definição | Fórmula | Unidade | Interpretação | Limitações | Entre línguas | Referências |
+|---|---|---|---|---|---|---|---|
+| **Frases interrogativas** <br>`frases_interrogativas_pct` | Frases cuja pontuação final é «?». | frases terminadas em ? ÷ frases × 100 | % das frases | Mais alto = mais perguntas, em geral associadas ao diálogo. | Depende da segmentação de frases do modelo e da pontuação da edição. Perguntas indiretas não contam. | sim | — |
+| **Frases exclamativas** <br>`frases_exclamativas_pct` | Frases cuja pontuação final é «!». | frases terminadas em ! ÷ frases × 100 | % das frases | Mais alto = mais exclamações, em geral associadas ao diálogo e à expressividade. | Depende da segmentação de frases do modelo e da pontuação da edição. | sim | — |
+
+## Morfologia verbal e pessoa
+
+| Indicador | Definição | Fórmula | Unidade | Interpretação | Limitações | Entre línguas | Referências |
+|---|---|---|---|---|---|---|---|
+| **Verbos no presente** <br>`verbos_presente_pct` | Formas verbais finitas com o traço Tense=Pres. | — | % das formas verbais finitas com tempo anotado | Mais alto = narração ou diálogo mais ancorados no presente. | Depende do analisador morfológico; o presente histórico e o diálogo contam como presente. | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Verbos no passado** <br>`verbos_passado_pct` | Formas verbais finitas no passado (Tense=Past, Imp ou Pqp: pretérito perfeito, imperfeito e mais-que-perfeito). | — | % das formas verbais finitas com tempo anotado | Mais alto = narração no passado, típica do romance. | Cada língua divide os tempos de forma diferente (o inglês não tem imperfeito morfológico). | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Verbos no futuro** <br>`verbos_futuro_pct` | Formas verbais finitas com o traço Tense=Fut. | — | % das formas verbais finitas com tempo anotado | Mais alto = mais projeção, promessa ou hipótese. | Não aplicável ao inglês (futuro com o auxiliar will). O futuro perifrástico (vou fazer) não conta. | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Verbos no conjuntivo** <br>`verbos_conjuntivo_pct` | Formas verbais finitas com o traço Mood=Sub. | — | % das formas verbais finitas com modo anotado | Mais alto = mais hipótese, desejo, dúvida ou subordinação. | Não aplicável ao inglês (sem conjuntivo morfológico distinto no modelo). | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Pronomes de 1.ª pessoa** <br>`pronomes_1a_pessoa_por_1000` | Pronomes pessoais com o traço Person=1 (eu, me, nós…) por 1000 palavras. | — | ocorrências por 1000 palavras | Mais alto = narrador na 1.ª pessoa ou muito diálogo. | Nas línguas de sujeito nulo (português) o sujeito fica muitas vezes implícito no verbo. | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Pronomes de 2.ª pessoa** <br>`pronomes_2a_pessoa_por_1000` | Pronomes pessoais com o traço Person=2 (tu, te, vós, you…) por 1000 palavras. | — | ocorrências por 1000 palavras | Mais alto = mais interpelação direta, sobretudo no diálogo. | As formas de tratamento (você, o senhor) são gramaticalmente de 3.ª pessoa em português. | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Pronomes de 3.ª pessoa** <br>`pronomes_3a_pessoa_por_1000` | Pronomes pessoais com o traço Person=3 (ele, ela, lhe, se…) por 1000 palavras. | — | ocorrências por 1000 palavras | Mais alto = narração centrada em terceiros, típica do narrador heterodiegético. | Inclui pronomes reflexos e clíticos conforme a anotação do modelo. | não | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+
+## Leis do vocabulário
+
+| Indicador | Definição | Fórmula | Unidade | Interpretação | Limitações | Entre línguas | Referências |
+|---|---|---|---|---|---|---|---|
+| **Expoente de Zipf** <br>`zipf_expoente` | Declive (com sinal trocado) da reta ajustada à frequência das formas em função da sua posição, em escala log-log. | f(r) ≈ C · r^−s; s = −declive de log f em log r | adimensional | Próximo de 1 na maior parte dos textos; mais alto = vocabulário mais concentrado nas palavras mais frequentes. | Depende do intervalo de frequências usado no ajuste (só formas com frequência mínima configurável) e da extensão do texto. | não | Zipf, G. K. (1949) |
+| **Ajuste da lei de Zipf (R²)** <br>`zipf_r2` | Coeficiente de determinação da reta de Zipf em escala log-log. | — | 0–1 | Mais perto de 1 = a distribuição segue bem uma lei de potência. | Um R² alto em escala log-log não prova uma lei de potência; serve só para descrever o ajuste. | não | Zipf, G. K. (1949) |
+| **Expoente de Heaps (β)** <br>`heaps_beta` | Ritmo de crescimento do vocabulário à medida que o texto avança. | V(N) ≈ K · N^β, ajustado em escala log-log | adimensional | Entre 0 e 1; mais alto = o livro continua a introduzir palavras novas. | Depende da extensão do texto e da morfologia da língua (línguas com mais flexão têm β maior). | não | Heaps, H. S. (1978) |
+| **Constante de Heaps (K)** <br>`heaps_k` | Fator de escala da lei de Heaps. | V(N) ≈ K · N^β | adimensional | Interpreta-se em conjunto com β; sozinho tem pouco significado. | Muito sensível a β. | não | Heaps, H. S. (1978) |
+| **Ajuste da lei de Heaps (R²)** <br>`heaps_r2` | Coeficiente de determinação do ajuste de Heaps. | — | 0–1 | Mais perto de 1 = o crescimento do vocabulário segue bem uma lei de potência. | Descreve só a qualidade do ajuste. | não | Heaps, H. S. (1978) |
+
+## Sentimento
+
+| Indicador | Definição | Fórmula | Unidade | Interpretação | Limitações | Entre línguas | Referências |
+|---|---|---|---|---|---|---|---|
+| **Sentimento médio** <br>`sentimento_medio` | Média da pontuação «compound» do VADER nas frases com pelo menos 3 palavras. | média das pontuações compound por frase | −1 a +1 | Acima de 0 = vocabulário globalmente positivo; abaixo de 0 = negativo. Valores entre −0,05 e +0,05 são neutros. | Método de léxico e regras criado para redes sociais, não para literatura; não deteta ironia nem distingue a voz do narrador da das personagens; o léxico português foi criado para português do Brasil e cobre mal a ortografia antiga. Não validado com anotação humana neste projeto. Léxicos diferentes por língua. | não | Hutto, C., & Gilbert, E. (2014); rafjaa. (s.d.); Deprez, O., & Ek, T. (2021) |
+| **Frases positivas** <br>`frases_positivas_pct` | Frases com compound ≥ 0,05. | frases com compound ≥ 0,05 ÷ frases pontuadas × 100 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente positivo. | Ver «Sentimento médio». | não | Hutto, C., & Gilbert, E. (2014) |
+| **Frases negativas** <br>`frases_negativas_pct` | Frases com compound ≤ −0,05. | frases com compound ≤ −0,05 ÷ frases pontuadas × 100 | % das frases pontuadas | Proporção de frases com vocabulário predominantemente negativo. | Ver «Sentimento médio». | não | Hutto, C., & Gilbert, E. (2014) |
+| **Frases neutras** <br>`frases_neutras_pct` | Frases com compound entre −0,05 e 0,05. | — | % das frases pontuadas | Inclui frases sem nenhuma palavra do léxico. | Uma cobertura baixa do léxico aumenta esta percentagem. | não | Hutto, C., & Gilbert, E. (2014) |
+| **Cobertura do léxico de sentimento** <br>`cobertura_lexico_pct` | Palavras do texto que existem no léxico de sentimento usado. | — | % das palavras | Indicador de qualidade: abaixo de ~5 %, o sentimento assenta em muito poucas palavras. | Conta formas exatas (sem lematização), como o próprio VADER. | não | — |
+
+## Métodos com tabelas e gráficos
+
+Métodos cujo resultado é uma tabela ou um gráfico, e não um único valor.
+
+| Método | Definição | Fórmula | Interpretação | Limitações | Referências |
+|---|---|---|---|---|---|
+| **Arco de sentimento** | Sentimento médio e proporção de frases positivas e negativas em cada segmento do livro (segmentos com o mesmo número de palavras). | — | Mostra como a polaridade do vocabulário sobe e desce ao longo da narrativa. | Herda as limitações do léxico; com poucos segmentos, as oscilações podem dever-se a episódios isolados. | Reagan, A. J., Mitchell, L., Kiley, D., Danforth, C. M., & Dodds, P. S. (2016); Hutto, C., & Gilbert, E. (2014) |
+| **Colocações** | Pares de palavras contíguas na mesma frase que ocorrem juntas muito mais do que o acaso faria prever; excluem-se os pares formados só por palavras gramaticais. | G² = 2 Σ O·ln(O/E) na tabela de contingência 2×2; PMI = log2(O11 ÷ E11) | G² alto = associação estatisticamente forte; PMI alto = associação exclusiva (mas instável em pares raros). | Formas, não lemas; não distingue expressões fixas de repetições de nomes («Carlos da Maia»). | Dunning, T. (1993); Church, K. W., & Hanks, P. (1990) |
+| **Palavras-chave por segmento** | Lemas de conteúdo mais característicos de cada segmento, por comparação com os outros segmentos do mesmo livro. | tf × log(segmentos ÷ segmentos que contêm o lema) | Sugere os temas, lugares e personagens que dominam cada parte do livro. | Lemas presentes em todos os segmentos nunca aparecem (idf = 0); depende do número de segmentos. | Spärck Jones, K. (1972) |
+| **Tempos e modos verbais** | Distribuição das formas verbais finitas por tempo e modo. | — | Ajuda a caracterizar a narração (passado) e o diálogo (presente, conjuntivo). | Traços morfológicos atribuídos automaticamente pelo spaCy. | Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020) |
+| **Curvas de Zipf e de Heaps** | Frequência em função da posição (Zipf) e crescimento do vocabulário com a extensão do texto (Heaps), em escala log-log. | — | Leis empíricas observadas em quase todos os textos; os desvios dizem algo sobre o estilo e a língua. | Ver os indicadores do grupo. | Zipf, G. K. (1949); Heaps, H. S. (1978) |
+
 ## Exatidão da estimativa de sílabas
 
 As fórmulas de legibilidade dependem do número de sílabas, estimado por regras ortográficas (grupos de vogais, ditongos e hiatos em português, «e» mudo em francês e inglês). A exatidão foi medida em listas anotadas à mão (`tests/silabas_anotadas.json`). As listas de **afinação** foram usadas para desenvolver as regras, pelo que sobrestimam a exatidão; as de **validação** foram escritas depois e não serviram para as ajustar. O viés é a diferença relativa entre o total de sílabas estimado e o anotado.
@@ -167,16 +223,25 @@ As listas são pequenas (20 a 35 palavras): estes valores indicam a ordem de gra
 - Blondel, V. D., Guillaume, J.-L., Lambiotte, R., & Lefebvre, E. (2008). Fast unfolding of communities in large networks. *Journal of Statistical Mechanics: Theory and Experiment, 2008*(10), P10008. https://doi.org/10.1088/1742-5468/2008/10/P10008
 - Brysbaert, M. (2019). How many words do we read per minute? A review and meta-analysis of reading rate. *Journal of Memory and Language, 109*, 104047. https://doi.org/10.1016/j.jml.2019.104047
 - Burrows, J. (2002). 'Delta': A measure of stylistic difference and a guide to likely authorship. *Literary and Linguistic Computing, 17*(3), 267–287. https://doi.org/10.1093/llc/17.3.267
+- Church, K. W., & Hanks, P. (1990). Word association norms, mutual information, and lexicography. *Computational Linguistics, 16*(1), 22–29. https://aclanthology.org/J90-1003
 - Covington, M. A., & McFall, J. D. (2010). Cutting the Gordian knot: The moving-average type–token ratio (MATTR). *Journal of Quantitative Linguistics, 17*(2), 94–100.
+- Deprez, O., & Ek, T. (2021). *vaderSentiment-fr* (Versão 1.3.4) [Software]. PyPI. https://pypi.org/project/vaderSentiment-fr/
+- Dunning, T. (1993). Accurate methods for the statistics of surprise and coincidence. *Computational Linguistics, 19*(1), 61–74. https://aclanthology.org/J93-1003
 - Evert, S., Proisl, T., Jannidis, F., Reger, I., Pielström, S., Schöch, C., & Vitt, T. (2017). Understanding and explaining Delta measures for authorship attribution. *Digital Scholarship in the Humanities, 32*(suppl. 2), ii4–ii16. https://doi.org/10.1093/llc/fqx023
 - Flesch, R. (1948). A new readability yardstick. *Journal of Applied Psychology, 32*(3), 221–233. https://doi.org/10.1037/h0057532
+- Heaps, H. S. (1978). *Information retrieval: Computational and theoretical aspects*. Academic Press.
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
+- Hutto, C., & Gilbert, E. (2014). VADER: A parsimonious rule-based model for sentiment analysis of social media text. *Proceedings of the International AAAI Conference on Web and Social Media, 8*(1), 216–225. https://doi.org/10.1609/icwsm.v8i1.14550
 - Kandel, L., & Moles, A. (1958). Application de l'indice de Flesch à la langue française. *Cahiers d'Études de Radio-Télévision, 19*.
 - Kincaid, J. P., Fishburne, R. P., Rogers, R. L., & Chissom, B. S. (1975). *Derivation of new readability formulas (Automated Readability Index, Fog Count and Flesch Reading Ease Formula) for Navy enlisted personnel* (Research Branch Report 8-75). Naval Technical Training Command.
 - Liu, H. (2008). Dependency distance as a metric of language comprehension difficulty. *Journal of Cognitive Science, 9*(2), 159–191. https://hdl.handle.net/10371/70907
 - Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996). *Readability formulas applied to textbooks in Brazilian Portuguese* (Notas do ICMSC-USP, Série Computação, 28). ICMSC-USP.
 - McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods, 42*(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
 - Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020). Universal Dependencies v2: An evergrowing multilingual treebank collection. In *Proceedings of the 12th Language Resources and Evaluation Conference* (pp. 4034–4043). European Language Resources Association. https://aclanthology.org/2020.lrec-1.497
+- Reagan, A. J., Mitchell, L., Kiley, D., Danforth, C. M., & Dodds, P. S. (2016). The emotional arcs of stories are dominated by six basic shapes. *EPJ Data Science, 5*(1). https://doi.org/10.1140/epjds/s13688-016-0093-1
+- Spärck Jones, K. (1972). A statistical interpretation of term specificity and its application in retrieval. *Journal of Documentation, 28*(1), 11–21. https://doi.org/10.1108/eb026526
 - Tweedie, F. J., & Baayen, R. H. (1998). How variable may a constant be? Measures of lexical richness in perspective. *Computers and the Humanities, 32*(5), 323–352. https://doi.org/10.1023/A:1001749303137
 - Ure, J. (1971). Lexical density and register differentiation. In G. E. Perren & J. L. M. Trim (Eds.), *Applications of linguistics* (pp. 443–452). Cambridge University Press.
 - Yule, G. U. (1944). *The statistical study of literary vocabulary*. Cambridge University Press.
+- Zipf, G. K. (1949). *Human behavior and the principle of least effort*. Addison-Wesley.
+- rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA

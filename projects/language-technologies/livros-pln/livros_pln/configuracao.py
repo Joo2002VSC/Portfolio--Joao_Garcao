@@ -35,6 +35,14 @@ class Parametros:
     # Rede de personagens
     rede_minimo_mencoes: int = 5
     rede_maximo_personagens: int = 40
+    # Sentimento (Hutto e Gilbert, 2014: compound ≥ 0,05 positivo; ≤ −0,05 negativo)
+    sentimento_limiar: float = 0.05
+    sentimento_minimo_palavras: int = 3     # frases mais curtas não são pontuadas
+    # Leis do vocabulário
+    zipf_frequencia_minima: int = 5         # o ajuste da lei de Zipf ignora formas mais raras (patamar dos hapax)
+    # Colocações e palavras-chave
+    colocacao_frequencia_minima: int = 5    # ocorrências mínimas de um bigrama
+    palavras_chave_por_segmento: int = 5
 
 
 def carregar(ficheiro: Path = FICHEIRO) -> Parametros:

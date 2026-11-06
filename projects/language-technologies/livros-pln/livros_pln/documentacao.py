@@ -83,6 +83,15 @@ def gerar() -> str:
                      f"{_celula(i.unidade)} | {_celula(i.interpretacao)} | {_celula(i.limitacoes)} | "
                      f"{'sim' if i.entre_linguas else 'não'} | {refs} |")
         l.append("")
+    l += ["## Métodos com tabelas e gráficos", "",
+          "Métodos cujo resultado é uma tabela ou um gráfico, e não um único valor.", "",
+          "| Método | Definição | Fórmula | Interpretação | Limitações | Referências |", "|---|---|---|---|---|---|"]
+    for k, i in catalogo.METODOS.items():
+        refs = "; ".join(catalogo.REFERENCIAS[r].split(" (")[0] + " (" + catalogo.REFERENCIAS[r].split(" (")[1]
+                         .split(")")[0] + ")" for r in i.referencias) or "—"
+        l.append(f"| **{_celula(i.nome)}** | {_celula(i.definicao)} | {_celula(i.formula)} | {_celula(i.interpretacao)} | "
+                 f"{_celula(i.limitacoes)} | {refs} |")
+    l.append("")
     l += _silabas()
     l += ["## Referências", ""] + [f"- {r}" for r in sorted(catalogo.REFERENCIAS.values())] + [""]
     return "\n".join(l)
