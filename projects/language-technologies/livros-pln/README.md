@@ -2,7 +2,7 @@
 
 **Análise computacional de livros: dá-se um livro (ficheiro ou link) e devolve metadados, indicadores de processamento de linguagem natural, análise de sentimento, rede de personagens e um painel interativo.**
 
-**[Abrir o painel de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)** · [Painel de *Alice's Adventures in Wonderland* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/carroll-alice/painel.html) · [Comparação entre livros ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/painel.html) · [Repositório do projeto ↗](https://github.com/Joo2002VSC/livros-pln)
+**[Ver os livros analisados ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/)** · [Painel de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html) · [Painel de *Alice's Adventures in Wonderland* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/carroll-alice/painel.html) · [Comparação entre livros ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/painel.html) · [Repositório do projeto ↗](https://github.com/Joo2002VSC/livros-pln)
 
 🇵🇹 [Português](#-português) · 🇬🇧 [English](#-english)
 
@@ -46,6 +46,7 @@ Projeto pessoal em Python, na interseção entre as Humanidades Digitais e o pro
 
 - [`demo/`](./demo): cópia estática dos painéis de *Os Maias*, de *Alice's Adventures in Wonderland* e da comparação, gerada pela versão 3.4.1 a 6 de novembro de 2026, para abrir diretamente no portefólio. Os livros são do domínio público (Project Gutenberg).
 - [`capturas/`](./capturas): imagens do painel usadas neste README.
+- `index.html`: abre a lista dos livros analisados (`demo/painel.html`) quando se visita a pasta do projeto no GitHub Pages.
 
 O código, os testes, a documentação dos indicadores e os resultados sempre atualizados estão no [repositório próprio](https://github.com/Joo2002VSC/livros-pln), que fica à parte porque o GitHub Actions faz commits automáticos de resultados.
 

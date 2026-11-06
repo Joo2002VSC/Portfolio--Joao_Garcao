@@ -22,7 +22,7 @@ HTML · CSS · JavaScript (SVG) · Python · [Ouvrir le tableau de bord ↗](htt
 ### [Livros-PLN](./projects/language-technologies/livros-pln)
 
 Analyse computationnelle de livres en portugais, français et anglais : diversité lexicale, syntaxe, lisibilité (« facile » ou « difficile »), sentiment, collocations, lois de Zipf et de Heaps et réseau de personnages en 3D. Chaque indicateur est accompagné d'une définition, de ses limites et d'une référence, et les résultats sont présentés dans un tableau de bord interactif, des rapports et des fichiers Excel.
-Python · spaCy · pandas · Plotly · GitHub Actions · [Ouvrir le tableau de bord de *Os Maias* ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/demo/livros/eca-de-queiros-os-maias/painel.html)
+Python · spaCy · pandas · Plotly · GitHub Actions · [Voir les livres analysés ↗](https://joo2002vsc.github.io/Portfolio--Joao_Garcao/projects/language-technologies/livros-pln/)
 
 ### Comptes du Vitória SC
 
