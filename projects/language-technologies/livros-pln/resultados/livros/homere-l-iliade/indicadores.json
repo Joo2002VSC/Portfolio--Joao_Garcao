@@ -15,6 +15,296 @@
   },
   "forma": "prosa",
   "metodo_sentimento": "VADER-FR (VADER adaptado ao francês) 1.3.4",
+  "metodo_emocoes": "NRC EmoLex v0.92 (tradução automática do inglês (Google Translate, 2022) — experimental)",
+  "lexico_emocoes": {
+    "ficheiro": "French-NRC-EmoLex.txt",
+    "entradas": 5002,
+    "multipalavra_ignoradas": 497,
+    "origem": "tradução automática do inglês (Google Translate, 2022) — experimental",
+    "versao": "NRC EmoLex v0.92 (traduções de agosto de 2022)"
+  },
+  "tonalidade": {
+    "tom": "misto",
+    "rotulo": "Emocionalmente misto",
+    "media": 0.036413673922175496,
+    "ic": [
+      0.020806255559406694,
+      0.05157836352938989
+    ],
+    "segmentos": 24,
+    "fortes_positivas_pct": 15.399434883123556,
+    "fortes_negativas_pct": 11.494991009504238,
+    "intensidade": 0.3036756614436168,
+    "variabilidade": 0.04005744709630058,
+    "razoes": [
+      "15,4 % de frases fortemente positivas e 11,5 % fortemente negativas (|polaridade| ≥ 0,5): ambas acima de 10 %; intervalo de confiança a 95 % da polaridade média dos 24 segmentos: [0,021; 0,052]"
+    ]
+  },
+  "emocoes": {
+    "estado": "valido",
+    "motivo": null,
+    "dominante": "medo",
+    "presenca_pct": {
+      "alegria": 28.13,
+      "tristeza": 41.16,
+      "medo": 45.52,
+      "raiva": 39.37,
+      "aversao": 20.95,
+      "surpresa": 24.61,
+      "confianca": 44.44,
+      "antecipacao": 36.25
+    },
+    "mudancas": [
+      {
+        "segmento": 23,
+        "rotulo": "Chant 23",
+        "variacao": 0.114
+      }
+    ]
+  },
+  "divisao": {
+    "metodo": "capítulos",
+    "segmentos": 24,
+    "rotulos": [
+      "Chant 1",
+      "Chant 2",
+      "Chant 3",
+      "Chant 4",
+      "Chant 5",
+      "Chant 6",
+      "Chant 7",
+      "Chant 8",
+      "Chant 9",
+      "Chant 10",
+      "Chant 11",
+      "Chant 12",
+      "Chant 13",
+      "Chant 14",
+      "Chant 15",
+      "Chant 16",
+      "Chant 17",
+      "Chant 18",
+      "Chant 19",
+      "Chant 20",
+      "Chant 21",
+      "Chant 22",
+      "Chant 23",
+      "Chant 24"
+    ]
+  },
+  "genero": {
+    "metodo": "regras transparentes (exploratório, sem validação estatística)",
+    "formas": [
+      {
+        "chave": "prosa",
+        "nome": "Prosa narrativa",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "texto em prosa (deteção pela extensão das linhas)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "verso",
+        "nome": "Verso",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "texto em verso (deteção pela extensão das linhas)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "teatro",
+        "nome": "Teatro",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "parágrafos que abrem com o nome de uma personagem (0,0 % ≥ 20 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "epistolar",
+        "nome": "Narrativa epistolar",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "generos": [
+      {
+        "chave": "romance",
+        "nome": "Romance",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "138 883 palavras ≥ 40 000 (convenção SFWA)",
+            "cumprido": true,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "ensaio",
+        "nome": "Ensaio",
+        "pontuacao": 0.3333333333333333,
+        "criterios": [
+          {
+            "criterio": "prosa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "pouco discurso direto (49,1 % < 5 %)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucas personagens (40 < 5 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "novela",
+        "nome": "Novela",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "138 883 palavras entre 17 500 e 40 000 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "conto",
+        "nome": "Conto",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "138 883 palavras < 17 500 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "epopeia",
+        "nome": "Epopeia",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema longo (138 883 palavras ≥ 10 000)",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "narração na 3.ª pessoa (1,1 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "muitas personagens (40 ≥ 10 na rede)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "poesia_lirica",
+        "nome": "Poesia lírica",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema curto ou coletânea (138 883 palavras < 10 000)",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "primeira pessoa predominante (1,1 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "forma_principal": "Prosa narrativa",
+    "principal": "Romance",
+    "alternativas": [],
+    "tracos": [
+      "Muito discurso direto (49,1 % das frases)."
+    ],
+    "nao_inferidos": [
+      "Tragédia",
+      "Comédia",
+      "Drama",
+      "Autobiografia",
+      "Biografia",
+      "Memórias",
+      "Literatura de viagem",
+      "Literatura histórica",
+      "Literatura filosófica",
+      "Literatura religiosa"
+    ],
+    "bibliografico": {
+      "genero": "Epopeia (tradução francesa em prosa)",
+      "fonte": "Project Gutenberg n.º 14285 (assunto LoC: «Epic poetry, Greek -- Translations into French»)",
+      "estado": "proposto",
+      "concorda": false,
+      "nota": "A inferência avalia o texto analisado (a forma desta edição e a sua extensão); o género bibliográfico refere-se à obra. Uma tradução em prosa de um poema, ou uma obra mais curta do que a convenção de extensão, produzem esta divergência sem que nenhuma das duas esteja errada."
+    },
+    "medidas": {
+      "teatro_pct": 0.0,
+      "cartas_pct": 0.0,
+      "pronomes_1a_narracao_por_1000": 1.0702082393140353,
+      "pronomes_3a_narracao_por_1000": 73.12230030301076
+    }
+  },
   "metodo_personagens": "dicionário (homere-l-iliade.json)",
   "personagens_principais": [
     "Zeus",
@@ -118,10 +408,36 @@
     "frases_negativas_pct": 32.4942,
     "frases_neutras_pct": 25.4945,
     "cobertura_lexico_pct": 7.6762,
+    "emocoes_intensidade_por_1000": 263.132,
+    "emocoes_entropia": 0.9711,
+    "emocoes_cobertura_pct": 17.238,
+    "emocoes_negadas_pct": 5.1064,
+    "alegria_tristeza_razao": 0.6019,
+    "emocao_alegria_por_1000": 23.8104,
+    "emocao_tristeza_por_1000": 39.5593,
+    "emocao_medo_por_1000": 48.0609,
+    "emocao_raiva_por_1000": 40.0581,
+    "emocao_aversao_por_1000": 16.6145,
+    "emocao_surpresa_por_1000": 19.1598,
+    "emocao_confianca_por_1000": 43.9898,
+    "emocao_antecipacao_por_1000": 31.8792,
+    "frases_ambivalentes_pct": 45.3342,
+    "discurso_direto_frases_pct": 49.0706,
+    "concordancia_lexicos": 0.353,
+    "polaridade_intensidade": 0.3037,
+    "polaridade_segmentos_desvio": 0.0401,
+    "frases_fortes_positivas_pct": 15.3994,
+    "frases_fortes_negativas_pct": 11.495,
+    "tonalidade_ic_inferior": 0.0208,
+    "tonalidade_ic_superior": 0.0516,
+    "tonalidade": "misto",
+    "emocao_dominante": "medo",
+    "capitulos": 24,
     "personagens_na_rede": 40,
     "ligacoes_na_rede": 456,
     "densidade_da_rede": 0.5846,
-    "personagem_principal": "Zeus"
+    "personagem_principal": "Zeus",
+    "genero_inferido": "Romance"
   },
   "estados": {
     "flesch_kincaid": {
@@ -160,7 +476,16 @@
     "sentimento_minimo_palavras": 3,
     "zipf_frequencia_minima": 5,
     "colocacao_frequencia_minima": 5,
-    "palavras_chave_por_segmento": 5
+    "palavras_chave_por_segmento": 5,
+    "emocoes_janela_negacao": 3,
+    "capitulo_minimo_palavras": 300,
+    "blocos_sem_capitulos": 20,
+    "tom_limiar": 0.05,
+    "tom_forte": 0.5,
+    "tom_minimo_forte_pct": 10.0,
+    "tom_minimo_frases": 300,
+    "tom_cobertura_minima": 3.0,
+    "tom_bootstrap": 2000
   },
   "ambiente": {
     "python": "3.12.16",
@@ -195,14 +520,14 @@
     }
   },
   "processamento": {
-    "versao": "3.7.0",
-    "versao_codigo": "21a51a760a9b",
-    "commit": "30adc18",
+    "versao": "3.8.1",
+    "versao_codigo": "4fed474e64a6",
+    "commit": "3645d4a",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "3a108117f86b015c",
     "hash_dicionario": "282b5f38a8fcaeca",
-    "data": "2026-11-06 13:55 UTC",
-    "duracao_s": 22.7
+    "data": "2026-11-06 15:16 UTC",
+    "duracao_s": 28.9
   },
   "graficos": [
     "rede.png",

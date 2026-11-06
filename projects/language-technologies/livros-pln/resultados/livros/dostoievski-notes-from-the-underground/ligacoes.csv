@@ -1,0 +1,16 @@
+origem,destino,peso
+Simonov,Trudolyubov,9
+Zverkov,Ferfitchkin,9
+Simonov,Zverkov,8
+Zverkov,Trudolyubov,7
+Ferfitchkin,Trudolyubov,6
+Simonov,Ferfitchkin,6
+Apollon,Liza,4
+Simonov,Apollon,3
+Anton Antonitch Syetotchkin,Simonov,2
+Simonov,Liza,2
+Anton Antonitch Syetotchkin,Ferfitchkin,1
+Zverkov,Liza,1
+Zverkov,Apollon,1
+Ferfitchkin,Apollon,1
+Trudolyubov,Apollon,1

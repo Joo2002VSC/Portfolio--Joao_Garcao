@@ -1,8 +1,8 @@
 # Resultados
 
-Gerado automaticamente por livros_pln 3.7.0 (código `21a51a760a9b`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
+Gerado automaticamente por livros_pln 3.8.1 (código `4fed474e64a6`). Não editar à mão: estes ficheiros são reescritos sempre que o código ou os parâmetros mudam. A data, o commit e as versões dos modelos de cada livro estão no respetivo relatório.
 
-**5 livros · 535 697 palavras** · 2 em português, 2 em francês, 1 em inglês
+**6 livros · 580 050 palavras** · 2 em português, 2 em inglês, 2 em francês
 
 **[Painel interativo de comparação](painel.html)** · [`indicadores.csv`](indicadores.csv) · [`indicadores.xlsx`](indicadores.xlsx) (uma linha por livro; o Excel inclui o dicionário de indicadores)
 
@@ -15,6 +15,9 @@ Os livros estão agrupados por língua: a maior parte dos indicadores só é com
 | Livro | Autor | Ano | Palavras | MTLD | Frase mediana | Profundidade | Densidade lexical (%) | Legibilidade |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Alice's Adventures in Wonderland](livros/carroll-alice/README.md) | Lewis Carroll | 1865 | 26 594 | 73,3 | 12 | 4,14 | 42,0 | 80 |
+| [Notes from the Underground](livros/dostoievski-notes-from-the-underground/README.md) | Fyodor Dostoyevsky | 1864 | 44 353 | 69,5 | 13 | 4,11 | 41,9 | 71 |
+
+Entre os livros em inglês, o MTLD mais alto é o de *Alice's Adventures in Wonderland* (73,3).
 
 ### Francês
 
@@ -55,7 +58,7 @@ Entre os livros em português, o MTLD mais alto é o de *Os Lusíadas* (151,2).
 
 Distância estilística a partir da frequência das palavras mais frequentes (sobretudo palavras gramaticais), calculada só entre livros da mesma língua. Uma distância pequena indica semelhança no uso dessas palavras; não é prova de autoria.
 
-- **Inglês**: *não aplicável* (1 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
+- **Inglês**: *não aplicável* (2 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 
 - **Francês**: *não aplicável* (2 livro(s) nesta língua; são precisos pelo menos 3 para calcular z-scores).
 

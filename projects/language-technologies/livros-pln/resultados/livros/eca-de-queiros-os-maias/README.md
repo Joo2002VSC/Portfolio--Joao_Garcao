@@ -293,6 +293,58 @@ Método: LeIA (VADER adaptado ao português) 0.0.1, com léxico e regras (Hutto 
 
 </details>
 
+### Tonalidade emocional (experimental)
+
+**Tonalidade neutra**. Intervalo de confiança a 95 % da polaridade média dos 18 segmentos: [−0,011; 0,011], inteiramente entre −0,050 e +0,050; 9,3 % de frases fortemente positivas e 9,0 % fortemente negativas (|polaridade| ≥ 0,5).
+
+Classificação interpretativa: polaridade por frase do método de sentimento, média por capítulo e intervalo de confiança a 95 % por bootstrap dos capítulos. Positivo/negativo: intervalo inteiro acima de +0,05 / abaixo de −0,05; misto: pelo menos 10 % de frases fortemente positivas e 10 % fortemente negativas; neutro: intervalo entre −0,05 e +0,05; indeterminado nos restantes casos. Não validada com anotação humana.
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Intensidade da polaridade** | 0,239 | 0 a 1 | Distingue um livro neutro por ausência de emoção (valor baixo) de um livro neutro por equilíbrio entre frases muito positivas e muito negativas (valor alto). |
+| **Oscilação entre capítulos** | 0,026 | desvio-padrão | Valores altos indicam capítulos com tonalidades muito diferentes; baixos, uma tonalidade estável. |
+| **Frases fortemente positivas** | 9,3 | % das frases pontuadas | Momentos de vocabulário claramente positivo. |
+| **Frases fortemente negativas** | 9,0 | % das frases pontuadas | Momentos de vocabulário claramente negativo. |
+| **Polaridade média: limite inferior (IC 95 %)** | −0,011 | −1 a +1 | Com o limite superior, mostra a incerteza da tonalidade: um intervalo largo pede prudência. |
+| **Polaridade média: limite superior (IC 95 %)** | 0,011 | −1 a +1 | Ver o limite inferior. |
+| **Frases ambivalentes** | 21,0 | % das frases | Mistura de valências na mesma frase (por exemplo, «uma alegria triste»). |
+| **Concordância entre léxicos** | 0,41 | −1 a +1 | Verificação de convergência entre dois léxicos independentes: valores baixos pedem mais prudência na leitura da tonalidade. Não é uma validação: nenhum dos léxicos foi comparado com anotação humana aqui. |
+| **Frases em discurso direto** | 48,0 | % das frases | Permite separar as emoções do discurso direto (personagens) das da narração. |
+
+### Emoções (léxico NRC, modelo de Plutchik)
+
+Léxico: NRC EmoLex v0.92 (tradução automática do inglês (Google Translate, 2022) — experimental). Emoção mais frequente: **confianca**. Por capítulo, por fase (início, desenvolvimento, conclusão) e por canal (narração e discurso direto): [`emocoes-por-capitulo.csv`](emocoes-por-capitulo.csv), [`emocoes-por-fase.csv`](emocoes-por-fase.csv), [`emocoes-narracao-dialogo.csv`](emocoes-narracao-dialogo.csv).
+
+| Indicador | Valor | Unidade / escala | Interpretação |
+| --- | --- | --- | --- |
+| **Intensidade emocional** | 172,3 | ocorrências por 1000 palavras | Quanto do vocabulário está associado a alguma emoção. |
+| **Diversidade emocional** | 0,986 | 0 a 1 | 1 = as oito emoções com o mesmo peso; perto de 0 = uma emoção domina. |
+| **Cobertura do léxico de emoções** | 11,8 | % das palavras | Indicador de qualidade: com cobertura baixa, as emoções assentam em poucas palavras. |
+| **Palavras emocionais negadas** | 4,2 | % das palavras do léxico | Indicador do efeito da regra de negação. |
+| **Razão alegria / tristeza** | 0,90 | razão | Acima de 1 = mais vocabulário de alegria do que de tristeza. |
+| **Alegria** | 22,33 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de alegria (modelo de Plutchik). |
+| **Tristeza** | 24,70 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de tristeza (modelo de Plutchik). |
+| **Medo** | 21,23 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de medo (modelo de Plutchik). |
+| **Raiva** | 18,76 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de raiva (modelo de Plutchik). |
+| **Aversão** | 14,23 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de aversão (modelo de Plutchik). |
+| **Surpresa** | 14,81 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de surpresa (modelo de Plutchik). |
+| **Confiança** | 28,80 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de confiança (modelo de Plutchik). |
+| **Antecipação** | 27,49 | ocorrências por 1000 palavras | Intensidade relativa do vocabulário de antecipação (modelo de Plutchik). |
+
+### Género literário inferido (exploratório)
+
+Forma: **Prosa narrativa**. Género inferido: **Romance**. Género bibliográfico (proposto): **Romance** — fonte: Project Gutenberg n.º 40409 (assunto LoC: «Portugal -- Fiction»); subtítulo «Episódios da vida romântica».
+
+- Muito discurso direto (48,0 % das frases).
+
+| Categoria | Pontuação de regras | Critérios |
+| --- | --- | --- |
+| Prosa narrativa | 1,00 | ✓ texto em prosa (deteção pela extensão das linhas); ✓ poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %) |
+| Romance | 1,00 | ✓ prosa narrativa; ✓ 203 558 palavras ≥ 40 000 (convenção SFWA) |
+| Ensaio | 0,33 | ✓ prosa; ✗ pouco discurso direto (48,0 % < 5 %); ✗ poucas personagens (35 < 5 na rede) |
+
+Regras transparentes sobre indicadores do texto; a pontuação é a fração dos critérios cumpridos (0 se falhar um critério essencial), não uma probabilidade. Limiares de extensão: regras dos prémios Nebula (SFWA). O género bibliográfico não entra no cálculo.
+
 ## 11. Outros conceitos de PLN
 
 ### Tipos de frase
@@ -418,6 +470,28 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 
 ## 14. Limitações metodológicas
 
+- **Intensidade da polaridade**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá.
+- **Oscilação entre capítulos**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá. Depende do número e da extensão dos capítulos.
+- **Frases fortemente positivas**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá.
+- **Frases fortemente negativas**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá.
+- **Polaridade média: limite inferior (IC 95 %)**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá. O bootstrap por capítulos supõe que os capítulos são comparáveis entre si.
+- **Polaridade média: limite superior (IC 95 %)**: Classificação interpretativa e experimental: não foi validada com anotação humana neste projeto. Assenta na polaridade do vocabulário (léxico e regras), que não deteta ironia nem metáforas e não distingue o narrador das personagens. Não mede o que o autor sentiu nem o que o leitor sentirá.
+- **Frases ambivalentes**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Concordância entre léxicos**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Frases em discurso direto**: Heurística tipográfica: depende das convenções da edição; as falas inseridas a meio de um parágrafo e o discurso indireto livre não são separados.
+- **Intensidade emocional**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Diversidade emocional**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Cobertura do léxico de emoções**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Palavras emocionais negadas**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Razão alegria / tristeza**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Alegria**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Tristeza**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Medo**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Raiva**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Aversão**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Surpresa**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Confiança**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
+- **Antecipação**: Léxico de associações palavra–emoção: conta palavras, não emoções vividas. Em português e em francês, o léxico é uma tradução automática do inglês (experimental); traduções erradas ou ambíguas e a polissemia afetam os valores. A negação é tratada por uma regra simples (janela de 3 palavras); a ironia não. Léxicos diferentes por língua: compare só obras da mesma língua.
 - **MTLD**: Pouco fiável abaixo de cerca de 100 palavras; valores de línguas diferentes não são comparáveis (a morfologia altera o número de formas).
 - **HD-D**: Não aplicável a textos com menos de 42 palavras; não comparável entre línguas.
 - **MATTR**: Depende da janela escolhida; não aplicável a textos com menos de W palavras.
@@ -468,6 +542,7 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Covington, M. A., & McFall, J. D. (2010). Cutting the Gordian knot: The moving-average type–token ratio (MATTR). *Journal of Quantitative Linguistics, 17*(2), 94–100.
 - Deprez, O., & Ek, T. (2021). *vaderSentiment-fr* (Versão 1.3.4) [Software]. PyPI. https://pypi.org/project/vaderSentiment-fr/
 - Dunning, T. (1993). Accurate methods for the statistics of surprise and coincidence. *Computational Linguistics, 19*(1), 61–74. https://aclanthology.org/J93-1003
+- Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*. Chapman & Hall.
 - Flesch, R. (1948). A new readability yardstick. *Journal of Applied Psychology, 32*(3), 221–233. https://doi.org/10.1037/h0057532
 - Heaps, H. S. (1978). *Information retrieval: Computational and theoretical aspects*. Academic Press.
 - Hutto, C., & Gilbert, E. (2014). VADER: A parsimonious rule-based model for sentiment analysis of social media text. *Proceedings of the International AAAI Conference on Web and Social Media, 8*(1), 216–225. https://doi.org/10.1609/icwsm.v8i1.14550
@@ -475,8 +550,11 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - Liu, H. (2008). Dependency distance as a metric of language comprehension difficulty. *Journal of Cognitive Science, 9*(2), 159–191. https://hdl.handle.net/10371/70907
 - Martins, T. B. F., Ghiraldelo, C. M., Nunes, M. G. V., & Oliveira Jr., O. N. (1996). *Readability formulas applied to textbooks in Brazilian Portuguese* (Notas do ICMSC-USP, Série Computação, 28). ICMSC-USP.
 - McCarthy, P. M., & Jarvis, S. (2010). MTLD, vocd-D, and HD-D: A validation study of sophisticated approaches to lexical diversity assessment. *Behavior Research Methods, 42*(2), 381–392. https://doi.org/10.3758/BRM.42.2.381
+- Mohammad, S. M., & Turney, P. D. (2013). Crowdsourcing a word–emotion association lexicon. *Computational Intelligence, 29*(3), 436–465.
 - Nivre, J., de Marneffe, M.-C., Ginter, F., Hajič, J., Manning, C. D., Pyysalo, S., Schuster, S., Tyers, F., & Zeman, D. (2020). Universal Dependencies v2: An evergrowing multilingual treebank collection. In *Proceedings of the 12th Language Resources and Evaluation Conference* (pp. 4034–4043). European Language Resources Association. https://aclanthology.org/2020.lrec-1.497
+- Plutchik, R. (1980). *Emotion: A psychoevolutionary synthesis*. Harper & Row.
 - Reagan, A. J., Mitchell, L., Kiley, D., Danforth, C. M., & Dodds, P. S. (2016). The emotional arcs of stories are dominated by six basic shapes. *EPJ Data Science, 5*(1). https://doi.org/10.1140/epjds/s13688-016-0093-1
+- Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal, 27*(3), 379–423.
 - Spärck Jones, K. (1972). A statistical interpretation of term specificity and its application in retrieval. *Journal of Documentation, 28*(1), 11–21. https://doi.org/10.1108/eb026526
 - Tweedie, F. J., & Baayen, R. H. (1998). How variable may a constant be? Measures of lexical richness in perspective. *Computers and the Humanities, 32*(5), 323–352. https://doi.org/10.1023/A:1001749303137
 - Ure, J. (1971). Lexical density and register differentiation. In G. E. Perren & J. L. M. Trim (Eds.), *Applications of linguistics* (pp. 443–452). Cambridge University Press.
@@ -485,4 +563,4 @@ Comentários gerados automaticamente a partir dos valores; descrevem o texto, n�
 - rafjaa. (s.d.). *LeIA: Léxico para Inferência Adaptada* [Software]. GitHub. https://github.com/rafjaa/LeIA
 - Honnibal, M., Montani, I., Van Landeghem, S., & Boyd, A. (2020). *spaCy: Industrial-strength natural language processing in Python* [Software]. Zenodo. https://doi.org/10.5281/zenodo.1212303
 
-<sub>Processado em 2026-11-06 13:55 UTC · livros_pln 3.7.0 · código `21a51a760a9b` · commit `30adc18` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>
+<sub>Processado em 2026-11-06 15:16 UTC · livros_pln 3.8.1 · código `4fed474e64a6` · commit `3645d4a` · Python 3.12.16 · spaCy 3.8.18 · pt_core_news_lg 3.8.0</sub>

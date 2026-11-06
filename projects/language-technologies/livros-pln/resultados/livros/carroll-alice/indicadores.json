@@ -15,6 +15,284 @@
   },
   "forma": "prosa",
   "metodo_sentimento": "VADER (vaderSentiment) 3.3.2",
+  "metodo_emocoes": "NRC EmoLex v0.92 (anotação humana (crowdsourcing), em inglês)",
+  "lexico_emocoes": {
+    "ficheiro": "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+    "entradas": 6453,
+    "multipalavra_ignoradas": 0,
+    "origem": "anotação humana (crowdsourcing), em inglês",
+    "versao": "NRC EmoLex v0.92"
+  },
+  "tonalidade": {
+    "tom": "indeterminado",
+    "rotulo": "Indeterminado",
+    "media": 0.03581011351701872,
+    "ic": [
+      0.017647712801915988,
+      0.0533842615439918
+    ],
+    "segmentos": 12,
+    "fortes_positivas_pct": 12.602179836512262,
+    "fortes_negativas_pct": 9.809264305177113,
+    "intensidade": 0.2768134196185286,
+    "variabilidade": 0.03194096055532381,
+    "razoes": [
+      "intervalo de confiança a 95 % da polaridade média dos 12 segmentos: [0,018; 0,053], que atravessa o limiar de ±0,050; 12,6 % de frases fortemente positivas e 9,8 % fortemente negativas (|polaridade| ≥ 0,5)"
+    ]
+  },
+  "emocoes": {
+    "estado": "valido",
+    "motivo": null,
+    "dominante": "antecipacao",
+    "presenca_pct": {
+      "alegria": 20.39,
+      "tristeza": 19.02,
+      "medo": 19.14,
+      "raiva": 17.78,
+      "aversao": 12.12,
+      "surpresa": 18.33,
+      "confianca": 25.73,
+      "antecipacao": 29.09
+    },
+    "mudancas": [
+      {
+        "segmento": 5,
+        "rotulo": "CHAPTER V. Advice from a Caterpillar",
+        "variacao": -0.0953
+      }
+    ]
+  },
+  "divisao": {
+    "metodo": "capítulos",
+    "segmentos": 12,
+    "rotulos": [
+      "CHAPTER I. Down the Rabbit-Hole",
+      "CHAPTER II. The Pool of Tears",
+      "CHAPTER III. A Caucus-Race and a Long Tale",
+      "CHAPTER IV. The Rabbit Sends in a Little Bill",
+      "CHAPTER V. Advice from a Caterpillar",
+      "CHAPTER VI. Pig and Pepper",
+      "CHAPTER VII. A Mad Tea-Party",
+      "CHAPTER VIII. The Queen's Croquet-Ground",
+      "CHAPTER IX. The Mock Turtle's Story",
+      "CHAPTER X. The Lobster Quadrille",
+      "CHAPTER XI. Who Stole the Tarts?",
+      "CHAPTER XII"
+    ]
+  },
+  "genero": {
+    "metodo": "regras transparentes (exploratório, sem validação estatística)",
+    "formas": [
+      {
+        "chave": "prosa",
+        "nome": "Prosa narrativa",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "texto em prosa (deteção pela extensão das linhas)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "poucos parágrafos com nome de personagem antes da fala (1,6 % < 20 %)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "verso",
+        "nome": "Verso",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "texto em verso (deteção pela extensão das linhas)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "teatro",
+        "nome": "Teatro",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "parágrafos que abrem com o nome de uma personagem (1,6 % ≥ 20 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "epistolar",
+        "nome": "Narrativa epistolar",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "generos": [
+      {
+        "chave": "novela",
+        "nome": "Novela",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "26 594 palavras entre 17 500 e 40 000 (convenção SFWA)",
+            "cumprido": true,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "ensaio",
+        "nome": "Ensaio",
+        "pontuacao": 0.3333333333333333,
+        "criterios": [
+          {
+            "criterio": "prosa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "pouco discurso direto (50,5 % < 5 %)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucas personagens (9 < 5 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "romance",
+        "nome": "Romance",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "26 594 palavras ≥ 40 000 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "conto",
+        "nome": "Conto",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "26 594 palavras < 17 500 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "epopeia",
+        "nome": "Epopeia",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema longo (26 594 palavras ≥ 10 000)",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "narração na 3.ª pessoa (7,8 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "muitas personagens (9 ≥ 10 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "poesia_lirica",
+        "nome": "Poesia lírica",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema curto ou coletânea (26 594 palavras < 10 000)",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "primeira pessoa predominante (7,8 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "forma_principal": "Prosa narrativa",
+    "principal": "Novela",
+    "alternativas": [],
+    "tracos": [
+      "Muito discurso direto (50,5 % das frases)."
+    ],
+    "nao_inferidos": [
+      "Tragédia",
+      "Comédia",
+      "Drama",
+      "Autobiografia",
+      "Biografia",
+      "Memórias",
+      "Literatura de viagem",
+      "Literatura histórica",
+      "Literatura filosófica",
+      "Literatura religiosa"
+    ],
+    "bibliografico": {
+      "genero": "Ficção de fantasia infantojuvenil",
+      "fonte": "Project Gutenberg n.º 11 (assuntos LoC: «Fantasy fiction», «Children's stories»)",
+      "estado": "proposto",
+      "concorda": true,
+      "nota": null
+    },
+    "medidas": {
+      "teatro_pct": 1.5931372549019607,
+      "cartas_pct": 0.0,
+      "pronomes_1a_narracao_por_1000": 7.819495015818062,
+      "pronomes_3a_narracao_por_1000": 91.74476213215543
+    }
+  },
   "metodo_personagens": "automático (NER)",
   "personagens_principais": [
     "Alice",
@@ -117,10 +395,36 @@
     "frases_negativas_pct": 26.9755,
     "frases_neutras_pct": 39.782,
     "cobertura_lexico_pct": 6.6932,
+    "emocoes_intensidade_por_1000": 133.3257,
+    "emocoes_entropia": 0.9801,
+    "emocoes_cobertura_pct": 10.0671,
+    "emocoes_negadas_pct": 6.321,
+    "alegria_tristeza_razao": 1.1193,
+    "emocao_alegria_por_1000": 16.8038,
+    "emocao_tristeza_por_1000": 15.013,
+    "emocao_medo_por_1000": 16.1561,
+    "emocao_raiva_por_1000": 14.5557,
+    "emocao_aversao_por_1000": 8.8401,
+    "emocao_surpresa_por_1000": 14.289,
+    "emocao_confianca_por_1000": 21.7574,
+    "emocao_antecipacao_por_1000": 25.9107,
+    "frases_ambivalentes_pct": 19.3989,
+    "discurso_direto_frases_pct": 50.5283,
+    "concordancia_lexicos": 0.4083,
+    "polaridade_intensidade": 0.2768,
+    "polaridade_segmentos_desvio": 0.0319,
+    "frases_fortes_positivas_pct": 12.6022,
+    "frases_fortes_negativas_pct": 9.8093,
+    "tonalidade_ic_inferior": 0.0176,
+    "tonalidade_ic_superior": 0.0534,
+    "tonalidade": "indeterminado",
+    "emocao_dominante": "antecipacao",
+    "capitulos": 12,
     "personagens_na_rede": 9,
     "ligacoes_na_rede": 14,
     "densidade_da_rede": 0.3889,
-    "personagem_principal": "Alice"
+    "personagem_principal": "Alice",
+    "genero_inferido": "Novela"
   },
   "estados": {
     "verbos_futuro_pct": {
@@ -163,7 +467,16 @@
     "sentimento_minimo_palavras": 3,
     "zipf_frequencia_minima": 5,
     "colocacao_frequencia_minima": 5,
-    "palavras_chave_por_segmento": 5
+    "palavras_chave_por_segmento": 5,
+    "emocoes_janela_negacao": 3,
+    "capitulo_minimo_palavras": 300,
+    "blocos_sem_capitulos": 20,
+    "tom_limiar": 0.05,
+    "tom_forte": 0.5,
+    "tom_minimo_forte_pct": 10.0,
+    "tom_minimo_frases": 300,
+    "tom_cobertura_minima": 3.0,
+    "tom_bootstrap": 2000
   },
   "ambiente": {
     "python": "3.12.16",
@@ -195,14 +508,14 @@
     }
   },
   "processamento": {
-    "versao": "3.7.0",
-    "versao_codigo": "21a51a760a9b",
-    "commit": "30adc18",
+    "versao": "3.8.1",
+    "versao_codigo": "4fed474e64a6",
+    "commit": "3645d4a",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "5ce9042c0d8536b0",
     "hash_dicionario": null,
-    "data": "2026-11-06 13:55 UTC",
-    "duracao_s": 6.2
+    "data": "2026-11-06 15:15 UTC",
+    "duracao_s": 9.1
   },
   "graficos": [
     "rede.png",

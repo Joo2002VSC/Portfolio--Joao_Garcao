@@ -15,6 +15,276 @@
   },
   "forma": "verso",
   "metodo_sentimento": "LeIA (VADER adaptado ao português) 0.0.1",
+  "metodo_emocoes": "NRC EmoLex v0.92 (tradução automática do inglês (Google Translate, 2022) — experimental)",
+  "lexico_emocoes": {
+    "ficheiro": "Portuguese-NRC-EmoLex.txt",
+    "entradas": 5169,
+    "multipalavra_ignoradas": 259,
+    "origem": "tradução automática do inglês (Google Translate, 2022) — experimental",
+    "versao": "NRC EmoLex v0.92 (traduções de agosto de 2022)"
+  },
+  "tonalidade": {
+    "tom": "misto",
+    "rotulo": "Emocionalmente misto",
+    "media": 0.022141620257882234,
+    "ic": [
+      0.005249758490226848,
+      0.041541199140398014
+    ],
+    "segmentos": 10,
+    "fortes_positivas_pct": 13.112617309697603,
+    "fortes_negativas_pct": 11.261730969760167,
+    "intensidade": 0.2786191866527633,
+    "variabilidade": 0.03180972447954147,
+    "razoes": [
+      "13,1 % de frases fortemente positivas e 11,3 % fortemente negativas (|polaridade| ≥ 0,5): ambas acima de 10 %; intervalo de confiança a 95 % da polaridade média dos 10 segmentos: [0,005; 0,042]"
+    ]
+  },
+  "emocoes": {
+    "estado": "valido",
+    "motivo": null,
+    "dominante": "confianca",
+    "presenca_pct": {
+      "alegria": 27.8,
+      "tristeza": 27.64,
+      "medo": 32.64,
+      "raiva": 27.43,
+      "aversao": 20.6,
+      "surpresa": 19.08,
+      "confianca": 38.88,
+      "antecipacao": 35.99
+    },
+    "mudancas": []
+  },
+  "divisao": {
+    "metodo": "capítulos",
+    "segmentos": 10,
+    "rotulos": [
+      "Canto Primeiro",
+      "Canto Segundo",
+      "Canto Terceiro",
+      "Canto Quarto",
+      "Canto Quinto",
+      "Canto Sexto",
+      "Canto Sétimo",
+      "Canto Oitavo",
+      "Canto Nono",
+      "Canto Décimo"
+    ]
+  },
+  "genero": {
+    "metodo": "regras transparentes (exploratório, sem validação estatística)",
+    "formas": [
+      {
+        "chave": "verso",
+        "nome": "Verso",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "texto em verso (deteção pela extensão das linhas)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "prosa",
+        "nome": "Prosa narrativa",
+        "pontuacao": 0.5,
+        "criterios": [
+          {
+            "criterio": "texto em prosa (deteção pela extensão das linhas)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "teatro",
+        "nome": "Teatro",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "parágrafos que abrem com o nome de uma personagem (0,0 % ≥ 20 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "epistolar",
+        "nome": "Narrativa epistolar",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "generos": [
+      {
+        "chave": "epopeia",
+        "nome": "Epopeia",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "poema longo (54 694 palavras ≥ 10 000)",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "narração na 3.ª pessoa (2,4 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "muitas personagens (14 ≥ 10 na rede)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "romance",
+        "nome": "Romance",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "54 694 palavras ≥ 40 000 (convenção SFWA)",
+            "cumprido": true,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "novela",
+        "nome": "Novela",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "54 694 palavras entre 17 500 e 40 000 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "conto",
+        "nome": "Conto",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "54 694 palavras < 17 500 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "poesia_lirica",
+        "nome": "Poesia lírica",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "poema curto ou coletânea (54 694 palavras < 10 000)",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "primeira pessoa predominante (2,4 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "ensaio",
+        "nome": "Ensaio",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "pouco discurso direto (60,2 % < 5 %)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucas personagens (14 < 5 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "forma_principal": "Verso",
+    "principal": "Epopeia",
+    "alternativas": [],
+    "tracos": [
+      "Muito discurso direto (60,2 % das frases)."
+    ],
+    "nao_inferidos": [
+      "Tragédia",
+      "Comédia",
+      "Drama",
+      "Autobiografia",
+      "Biografia",
+      "Memórias",
+      "Literatura de viagem",
+      "Literatura histórica",
+      "Literatura filosófica",
+      "Literatura religiosa"
+    ],
+    "bibliografico": {
+      "genero": "Epopeia",
+      "fonte": "Project Gutenberg n.º 3333 (assunto LoC: «Epic poetry, Portuguese»)",
+      "estado": "proposto",
+      "concorda": true,
+      "nota": null
+    },
+    "medidas": {
+      "teatro_pct": 0.0,
+      "cartas_pct": 0.0,
+      "pronomes_1a_narracao_por_1000": 2.407773669275088,
+      "pronomes_3a_narracao_por_1000": 25.453607360908073
+    }
+  },
   "metodo_personagens": "dicionário (camoes-os-lusiadas.json)",
   "personagens_principais": [
     "Vasco da Gama",
@@ -118,10 +388,36 @@
     "frases_negativas_pct": 29.7185,
     "frases_neutras_pct": 38.5558,
     "cobertura_lexico_pct": 6.381,
+    "emocoes_intensidade_por_1000": 248.1171,
+    "emocoes_entropia": 0.9808,
+    "emocoes_cobertura_pct": 16.9825,
+    "emocoes_negadas_pct": 4.862,
+    "alegria_tristeza_razao": 0.9981,
+    "emocao_alegria_por_1000": 29.3828,
+    "emocao_tristeza_por_1000": 29.4386,
+    "emocao_medo_por_1000": 36.4495,
+    "emocao_raiva_por_1000": 29.2154,
+    "emocao_aversao_por_1000": 20.5122,
+    "emocao_surpresa_por_1000": 18.1132,
+    "emocao_confianca_por_1000": 46.343,
+    "emocao_antecipacao_por_1000": 38.6625,
+    "frases_ambivalentes_pct": 35.2803,
+    "discurso_direto_frases_pct": 60.183,
+    "concordancia_lexicos": 0.387,
+    "polaridade_intensidade": 0.2786,
+    "polaridade_segmentos_desvio": 0.0318,
+    "frases_fortes_positivas_pct": 13.1126,
+    "frases_fortes_negativas_pct": 11.2617,
+    "tonalidade_ic_inferior": 0.0052,
+    "tonalidade_ic_superior": 0.0415,
+    "tonalidade": "misto",
+    "emocao_dominante": "confianca",
+    "capitulos": 10,
     "personagens_na_rede": 14,
     "ligacoes_na_rede": 23,
     "densidade_da_rede": 0.2527,
-    "personagem_principal": "Vasco da Gama"
+    "personagem_principal": "Vasco da Gama",
+    "genero_inferido": "Epopeia"
   },
   "estados": {
     "flesch_kincaid": {
@@ -166,7 +462,16 @@
     "sentimento_minimo_palavras": 3,
     "zipf_frequencia_minima": 5,
     "colocacao_frequencia_minima": 5,
-    "palavras_chave_por_segmento": 5
+    "palavras_chave_por_segmento": 5,
+    "emocoes_janela_negacao": 3,
+    "capitulo_minimo_palavras": 300,
+    "blocos_sem_capitulos": 20,
+    "tom_limiar": 0.05,
+    "tom_forte": 0.5,
+    "tom_minimo_forte_pct": 10.0,
+    "tom_minimo_frases": 300,
+    "tom_cobertura_minima": 3.0,
+    "tom_bootstrap": 2000
   },
   "ambiente": {
     "python": "3.12.16",
@@ -201,14 +506,14 @@
     }
   },
   "processamento": {
-    "versao": "3.7.0",
-    "versao_codigo": "21a51a760a9b",
-    "commit": "30adc18",
+    "versao": "3.8.1",
+    "versao_codigo": "4fed474e64a6",
+    "commit": "3645d4a",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "5c00f8f33b8d88ee",
     "hash_dicionario": "56dac80cec2cdb17",
-    "data": "2026-11-06 13:54 UTC",
-    "duracao_s": 10.6
+    "data": "2026-11-06 15:15 UTC",
+    "duracao_s": 13.6
   },
   "graficos": [
     "rede.png",

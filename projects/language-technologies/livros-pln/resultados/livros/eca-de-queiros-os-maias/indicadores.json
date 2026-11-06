@@ -15,6 +15,284 @@
   },
   "forma": "prosa",
   "metodo_sentimento": "LeIA (VADER adaptado ao português) 0.0.1",
+  "metodo_emocoes": "NRC EmoLex v0.92 (tradução automática do inglês (Google Translate, 2022) — experimental)",
+  "lexico_emocoes": {
+    "ficheiro": "Portuguese-NRC-EmoLex.txt",
+    "entradas": 5169,
+    "multipalavra_ignoradas": 259,
+    "origem": "tradução automática do inglês (Google Translate, 2022) — experimental",
+    "versao": "NRC EmoLex v0.92 (traduções de agosto de 2022)"
+  },
+  "tonalidade": {
+    "tom": "neutro",
+    "rotulo": "Tonalidade neutra",
+    "media": 0.0007018110325977699,
+    "ic": [
+      -0.01128680692445031,
+      0.011465169461356962
+    ],
+    "segmentos": 18,
+    "fortes_positivas_pct": 9.308421264869951,
+    "fortes_negativas_pct": 8.999260703004234,
+    "intensidade": 0.23909640432824789,
+    "variabilidade": 0.025966181390908366,
+    "razoes": [
+      "intervalo de confiança a 95 % da polaridade média dos 18 segmentos: [−0,011; 0,011], inteiramente entre −0,050 e +0,050; 9,3 % de frases fortemente positivas e 9,0 % fortemente negativas (|polaridade| ≥ 0,5)"
+    ]
+  },
+  "emocoes": {
+    "estado": "valido",
+    "motivo": null,
+    "dominante": "confianca",
+    "presenca_pct": {
+      "alegria": 18.49,
+      "tristeza": 20.37,
+      "medo": 18.31,
+      "raiva": 16.31,
+      "aversao": 13.03,
+      "surpresa": 13.74,
+      "confianca": 22.92,
+      "antecipacao": 22.67
+    },
+    "mudancas": []
+  },
+  "divisao": {
+    "metodo": "capítulos",
+    "segmentos": 18,
+    "rotulos": [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+      "X",
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII"
+    ]
+  },
+  "genero": {
+    "metodo": "regras transparentes (exploratório, sem validação estatística)",
+    "formas": [
+      {
+        "chave": "prosa",
+        "nome": "Prosa narrativa",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "texto em prosa (deteção pela extensão das linhas)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "verso",
+        "nome": "Verso",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "texto em verso (deteção pela extensão das linhas)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "teatro",
+        "nome": "Teatro",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "parágrafos que abrem com o nome de uma personagem (0,0 % ≥ 20 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "epistolar",
+        "nome": "Narrativa epistolar",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "generos": [
+      {
+        "chave": "romance",
+        "nome": "Romance",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "203 558 palavras ≥ 40 000 (convenção SFWA)",
+            "cumprido": true,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "ensaio",
+        "nome": "Ensaio",
+        "pontuacao": 0.3333333333333333,
+        "criterios": [
+          {
+            "criterio": "prosa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "pouco discurso direto (48,0 % < 5 %)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucas personagens (35 < 5 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "novela",
+        "nome": "Novela",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "203 558 palavras entre 17 500 e 40 000 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "conto",
+        "nome": "Conto",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "203 558 palavras < 17 500 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "epopeia",
+        "nome": "Epopeia",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema longo (203 558 palavras ≥ 10 000)",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "narração na 3.ª pessoa (0,2 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "muitas personagens (35 ≥ 10 na rede)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "poesia_lirica",
+        "nome": "Poesia lírica",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema curto ou coletânea (203 558 palavras < 10 000)",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "primeira pessoa predominante (0,2 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "forma_principal": "Prosa narrativa",
+    "principal": "Romance",
+    "alternativas": [],
+    "tracos": [
+      "Muito discurso direto (48,0 % das frases)."
+    ],
+    "nao_inferidos": [
+      "Tragédia",
+      "Comédia",
+      "Drama",
+      "Autobiografia",
+      "Biografia",
+      "Memórias",
+      "Literatura de viagem",
+      "Literatura histórica",
+      "Literatura filosófica",
+      "Literatura religiosa"
+    ],
+    "bibliografico": {
+      "genero": "Romance",
+      "fonte": "Project Gutenberg n.º 40409 (assunto LoC: «Portugal -- Fiction»); subtítulo «Episódios da vida romântica»",
+      "estado": "proposto",
+      "concorda": true,
+      "nota": null
+    },
+    "medidas": {
+      "teatro_pct": 0.017364125716270187,
+      "cartas_pct": 0.0,
+      "pronomes_1a_narracao_por_1000": 0.2398129459021963,
+      "pronomes_3a_narracao_por_1000": 12.683440249938382
+    }
+  },
   "metodo_personagens": "dicionário (eca-de-queiros-os-maias.json)",
   "personagens_principais": [
     "Carlos da Maia",
@@ -118,10 +396,36 @@
     "frases_negativas_pct": 30.5935,
     "frases_neutras_pct": 42.8725,
     "cobertura_lexico_pct": 6.1997,
+    "emocoes_intensidade_por_1000": 172.347,
+    "emocoes_entropia": 0.9864,
+    "emocoes_cobertura_pct": 11.7897,
+    "emocoes_negadas_pct": 4.2005,
+    "alegria_tristeza_razao": 0.9042,
+    "emocao_alegria_por_1000": 22.3303,
+    "emocao_tristeza_por_1000": 24.6966,
+    "emocao_medo_por_1000": 21.232,
+    "emocao_raiva_por_1000": 18.7558,
+    "emocao_aversao_por_1000": 14.2329,
+    "emocao_surpresa_por_1000": 14.807,
+    "emocao_confianca_por_1000": 28.8002,
+    "emocao_antecipacao_por_1000": 27.4922,
+    "frases_ambivalentes_pct": 21.0348,
+    "discurso_direto_frases_pct": 48.0183,
+    "concordancia_lexicos": 0.4128,
+    "polaridade_intensidade": 0.2391,
+    "polaridade_segmentos_desvio": 0.026,
+    "frases_fortes_positivas_pct": 9.3084,
+    "frases_fortes_negativas_pct": 8.9993,
+    "tonalidade_ic_inferior": -0.0113,
+    "tonalidade_ic_superior": 0.0115,
+    "tonalidade": "neutro",
+    "emocao_dominante": "confianca",
+    "capitulos": 18,
     "personagens_na_rede": 35,
     "ligacoes_na_rede": 310,
     "densidade_da_rede": 0.521,
-    "personagem_principal": "Carlos da Maia"
+    "personagem_principal": "Carlos da Maia",
+    "genero_inferido": "Romance"
   },
   "estados": {
     "flesch_kincaid": {
@@ -160,7 +464,16 @@
     "sentimento_minimo_palavras": 3,
     "zipf_frequencia_minima": 5,
     "colocacao_frequencia_minima": 5,
-    "palavras_chave_por_segmento": 5
+    "palavras_chave_por_segmento": 5,
+    "emocoes_janela_negacao": 3,
+    "capitulo_minimo_palavras": 300,
+    "blocos_sem_capitulos": 20,
+    "tom_limiar": 0.05,
+    "tom_forte": 0.5,
+    "tom_minimo_forte_pct": 10.0,
+    "tom_minimo_frases": 300,
+    "tom_cobertura_minima": 3.0,
+    "tom_bootstrap": 2000
   },
   "ambiente": {
     "python": "3.12.16",
@@ -195,14 +508,14 @@
     }
   },
   "processamento": {
-    "versao": "3.7.0",
-    "versao_codigo": "21a51a760a9b",
-    "commit": "30adc18",
+    "versao": "3.8.1",
+    "versao_codigo": "4fed474e64a6",
+    "commit": "3645d4a",
     "codificacao": "utf-8-sig",
     "hash_ficheiro": "843d9f5f2fdf6fb8",
     "hash_dicionario": "66c19fc9e56d37ab",
-    "data": "2026-11-06 13:55 UTC",
-    "duracao_s": 28.0
+    "data": "2026-11-06 15:16 UTC",
+    "duracao_s": 34.4
   },
   "graficos": [
     "rede.png",

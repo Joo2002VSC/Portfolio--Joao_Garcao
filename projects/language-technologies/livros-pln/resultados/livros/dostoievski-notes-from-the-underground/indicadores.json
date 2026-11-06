@@ -1,0 +1,538 @@
+{
+  "id": "dostoievski-notes-from-the-underground",
+  "ficheiro": "dostoievski-notes-from-the-underground.txt",
+  "formato": "txt",
+  "titulo": "Notes from the Underground",
+  "autor": "Fyodor Dostoyevsky",
+  "ano": "1864",
+  "lingua": "en",
+  "lingua_nome": "inglês",
+  "modelo_spacy": "en_core_web_md",
+  "confianca_lingua": {
+    "pt": 0.0348,
+    "fr": 0.0006,
+    "en": 0.3905
+  },
+  "forma": "prosa",
+  "metodo_sentimento": "VADER (vaderSentiment) 3.3.2",
+  "metodo_emocoes": "NRC EmoLex v0.92 (anotação humana (crowdsourcing), em inglês)",
+  "lexico_emocoes": {
+    "ficheiro": "NRC-Emotion-Lexicon-Wordlevel-v0.92.txt",
+    "entradas": 6453,
+    "multipalavra_ignoradas": 0,
+    "origem": "anotação humana (crowdsourcing), em inglês",
+    "versao": "NRC EmoLex v0.92"
+  },
+  "tonalidade": {
+    "tom": "misto",
+    "rotulo": "Emocionalmente misto",
+    "media": 0.04183627561795983,
+    "ic": [
+      -0.005281717865223789,
+      0.09260239546639833
+    ],
+    "segmentos": 21,
+    "fortes_positivas_pct": 15.459723352318958,
+    "fortes_negativas_pct": 14.686737184703011,
+    "intensidade": 0.32210895036615134,
+    "variabilidade": 0.11784169104547834,
+    "razoes": [
+      "15,5 % de frases fortemente positivas e 14,7 % fortemente negativas (|polaridade| ≥ 0,5): ambas acima de 10 %; intervalo de confiança a 95 % da polaridade média dos 21 segmentos: [−0,005; 0,093]"
+    ]
+  },
+  "emocoes": {
+    "estado": "valido",
+    "motivo": null,
+    "dominante": "confianca",
+    "presenca_pct": {
+      "alegria": 26.31,
+      "tristeza": 27.74,
+      "medo": 28.59,
+      "raiva": 28.32,
+      "aversao": 22.06,
+      "surpresa": 20.98,
+      "confianca": 33.5,
+      "antecipacao": 32.19
+    },
+    "mudancas": [
+      {
+        "segmento": 6,
+        "rotulo": "VI",
+        "variacao": 0.3696
+      }
+    ]
+  },
+  "divisao": {
+    "metodo": "capítulos",
+    "segmentos": 21,
+    "rotulos": [
+      "PART I Underground · I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+      "X",
+      "XI",
+      "PART II À Propos of the Wet Snow · I",
+      "II",
+      "III",
+      "IV",
+      "V",
+      "VI",
+      "VII",
+      "VIII",
+      "IX",
+      "X"
+    ]
+  },
+  "genero": {
+    "metodo": "regras transparentes (exploratório, sem validação estatística)",
+    "formas": [
+      {
+        "chave": "prosa",
+        "nome": "Prosa narrativa",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "texto em prosa (deteção pela extensão das linhas)",
+            "cumprido": true,
+            "essencial": false
+          },
+          {
+            "criterio": "poucos parágrafos com nome de personagem antes da fala (0,0 % < 20 %)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "verso",
+        "nome": "Verso",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "texto em verso (deteção pela extensão das linhas)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "teatro",
+        "nome": "Teatro",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "parágrafos que abrem com o nome de uma personagem (0,0 % ≥ 20 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "epistolar",
+        "nome": "Narrativa epistolar",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "capítulos que abrem com uma saudação de carta (0,0 % ≥ 50 %)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "generos": [
+      {
+        "chave": "romance",
+        "nome": "Romance",
+        "pontuacao": 1.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "44 353 palavras ≥ 40 000 (convenção SFWA)",
+            "cumprido": true,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "ensaio",
+        "nome": "Ensaio",
+        "pontuacao": 0.3333333333333333,
+        "criterios": [
+          {
+            "criterio": "prosa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "pouco discurso direto (30,2 % < 5 %)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "poucas personagens (7 < 5 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "novela",
+        "nome": "Novela",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "44 353 palavras entre 17 500 e 40 000 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "conto",
+        "nome": "Conto",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "prosa narrativa",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "44 353 palavras < 17 500 (convenção SFWA)",
+            "cumprido": false,
+            "essencial": true
+          }
+        ]
+      },
+      {
+        "chave": "epopeia",
+        "nome": "Epopeia",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema longo (44 353 palavras ≥ 10 000)",
+            "cumprido": true,
+            "essencial": true
+          },
+          {
+            "criterio": "narração na 3.ª pessoa (70,9 pronomes de 1.ª pessoa por 1000 palavras na narração < 30)",
+            "cumprido": false,
+            "essencial": false
+          },
+          {
+            "criterio": "muitas personagens (7 ≥ 10 na rede)",
+            "cumprido": false,
+            "essencial": false
+          }
+        ]
+      },
+      {
+        "chave": "poesia_lirica",
+        "nome": "Poesia lírica",
+        "pontuacao": 0.0,
+        "criterios": [
+          {
+            "criterio": "verso",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "poema curto ou coletânea (44 353 palavras < 10 000)",
+            "cumprido": false,
+            "essencial": true
+          },
+          {
+            "criterio": "primeira pessoa predominante (70,9 pronomes de 1.ª pessoa por 1000 palavras na narração ≥ 30)",
+            "cumprido": true,
+            "essencial": false
+          }
+        ]
+      }
+    ],
+    "forma_principal": "Prosa narrativa",
+    "principal": "Romance",
+    "alternativas": [],
+    "tracos": [
+      "Narração na 1.ª pessoa (70,9 pronomes de 1.ª pessoa por 1000 palavras na narração): compatível com romance na 1.ª pessoa, memórias ou autobiografia, que o conteúdo sozinho não distingue.",
+      "Muito discurso direto (30,2 % das frases)."
+    ],
+    "nao_inferidos": [
+      "Tragédia",
+      "Comédia",
+      "Drama",
+      "Autobiografia",
+      "Biografia",
+      "Memórias",
+      "Literatura de viagem",
+      "Literatura histórica",
+      "Literatura filosófica",
+      "Literatura religiosa"
+    ],
+    "bibliografico": {
+      "genero": "Ficção política",
+      "fonte": "Project Gutenberg n.º 600 (assuntos LoC: «Political fiction», «Russia -- History -- 1801-1917 -- Fiction»)",
+      "estado": "proposto",
+      "concorda": true,
+      "nota": null
+    },
+    "medidas": {
+      "teatro_pct": 0.0,
+      "cartas_pct": 0.0,
+      "pronomes_1a_narracao_por_1000": 70.90903822191312,
+      "pronomes_3a_narracao_por_1000": 57.92691761569446
+    }
+  },
+  "metodo_personagens": "dicionário (dostoievski-notes-from-the-underground.json)",
+  "personagens_principais": [
+    "Simonov",
+    "Zverkov",
+    "Ferfitchkin",
+    "Trudolyubov",
+    "Apollon",
+    "Liza",
+    "Anton Antonitch Syetotchkin"
+  ],
+  "metadados": {
+    "titulo": "Notes from the Underground",
+    "autor": "Fyodor Dostoyevsky",
+    "ano": "1864",
+    "idioma": "Inglês",
+    "fonte": "Project Gutenberg, n.º 600 (tradução de Constance Garnett)"
+  },
+  "indicadores": {
+    "palavras": 44353,
+    "frases": 2581,
+    "paragrafos": 525,
+    "tempo_leitura_horas": 3.106,
+    "vocabulario": 4757,
+    "lemas_distintos": 3791,
+    "ttr": 0.1073,
+    "mattr": 0.4624,
+    "mtld": 69.5245,
+    "hdd": 0.8633,
+    "yule_k": 88.316,
+    "hapax_pct": 47.9924,
+    "densidade_lexical_pct": 41.8867,
+    "palavra_media_letras": 4.1773,
+    "frase_media": 17.1844,
+    "frase_mediana": 13.0,
+    "frase_p25": 7.0,
+    "frase_p75": 23.0,
+    "frase_desvio_padrao": 15.3398,
+    "frase_maxima": 186,
+    "frases_longas_pct": 13.4831,
+    "paragrafo_medio": 84.4819,
+    "profundidade_media": 4.1108,
+    "distancia_dependencia": 2.6179,
+    "subordinadas_por_frase": 1.148,
+    "silabas_por_palavra": 1.4018,
+    "dialogo_pct": 60.5714,
+    "legibilidade": 70.8025,
+    "flesch_kincaid": 7.6529,
+    "virgula_por_1000": 81.6179,
+    "ponto_por_1000": 42.6803,
+    "ponto_e_virgula_por_1000": 6.6737,
+    "dois_pontos_por_1000": 2.0517,
+    "exclamacao_por_1000": 6.4257,
+    "interrogacao_por_1000": 6.7414,
+    "reticencias_por_1000": 4.1936,
+    "travessao_por_1000": 4.1936,
+    "aspas_por_1000": 20.1114,
+    "parenteses_por_1000": 1.3528,
+    "pos_noun_por_1000": 142.3804,
+    "pos_verb_por_1000": 132.3699,
+    "pos_adj_por_1000": 64.8209,
+    "pos_adv_por_1000": 79.2957,
+    "pos_pron_por_1000": 177.3499,
+    "pos_propn_por_1000": 11.4536,
+    "pos_det_por_1000": 74.0423,
+    "pos_adp_por_1000": 113.8593,
+    "pos_cconj_por_1000": 45.3182,
+    "pos_sconj_por_1000": 35.5557,
+    "pos_aux_por_1000": 82.7227,
+    "pos_num_por_1000": 7.5305,
+    "pronomes_pessoais_por_1000": 145.2438,
+    "modais_por_1000": 22.8395,
+    "frases_interrogativas_pct": 10.8485,
+    "frases_exclamativas_pct": 10.0736,
+    "verbos_presente_pct": 44.581,
+    "verbos_passado_pct": 55.419,
+    "verbos_futuro_pct": null,
+    "verbos_conjuntivo_pct": null,
+    "pronomes_1a_pessoa_por_1000": 68.3832,
+    "pronomes_2a_pessoa_por_1000": 17.8342,
+    "pronomes_3a_pessoa_por_1000": 57.7188,
+    "zipf_expoente": 1.1083,
+    "zipf_r2": 0.9928,
+    "heaps_beta": 0.7035,
+    "heaps_k": 2.7582,
+    "heaps_r2": 0.999,
+    "entidades_pessoa": 45,
+    "entidades_lugar": 23,
+    "entidades_organizacao": 19,
+    "entidades_por_1000": 7.305,
+    "legibilidade_escala": "razoavelmente fácil",
+    "legibilidade_leitura": "fácil",
+    "legibilidade_nivel": null,
+    "versos": null,
+    "estrofes": null,
+    "versos_por_estrofe": null,
+    "sentimento_medio": 0.0153,
+    "frases_positivas_pct": 34.7844,
+    "frases_negativas_pct": 31.8959,
+    "frases_neutras_pct": 33.3198,
+    "cobertura_lexico_pct": 9.0186,
+    "emocoes_intensidade_por_1000": 188.7301,
+    "emocoes_entropia": 0.9914,
+    "emocoes_cobertura_pct": 13.0194,
+    "emocoes_negadas_pct": 6.9307,
+    "alegria_tristeza_razao": 0.9261,
+    "emocao_alegria_por_1000": 22.4892,
+    "emocao_tristeza_por_1000": 24.2847,
+    "emocao_medo_por_1000": 24.9062,
+    "emocao_raiva_por_1000": 24.699,
+    "emocao_aversao_por_1000": 18.8983,
+    "emocao_surpresa_por_1000": 15.5376,
+    "emocao_confianca_por_1000": 30.2465,
+    "emocao_antecipacao_por_1000": 27.6684,
+    "frases_ambivalentes_pct": 26.0905,
+    "discurso_direto_frases_pct": 30.2164,
+    "concordancia_lexicos": 0.5365,
+    "polaridade_intensidade": 0.3221,
+    "polaridade_segmentos_desvio": 0.1178,
+    "frases_fortes_positivas_pct": 15.4597,
+    "frases_fortes_negativas_pct": 14.6867,
+    "tonalidade_ic_inferior": -0.0053,
+    "tonalidade_ic_superior": 0.0926,
+    "tonalidade": "misto",
+    "emocao_dominante": "confianca",
+    "capitulos": 21,
+    "personagens_na_rede": 7,
+    "ligacoes_na_rede": 15,
+    "densidade_da_rede": 0.7143,
+    "personagem_principal": "Simonov",
+    "genero_inferido": "Romance"
+  },
+  "estados": {
+    "verbos_futuro_pct": {
+      "estado": "nao_aplicavel",
+      "motivo": "o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo"
+    },
+    "verbos_conjuntivo_pct": {
+      "estado": "nao_aplicavel",
+      "motivo": "o inglês forma o futuro e o conjuntivo com auxiliares ou formas iguais às do presente, sem traço morfológico próprio no modelo"
+    },
+    "versos": {
+      "estado": "nao_aplicavel",
+      "motivo": "texto em prosa"
+    },
+    "estrofes": {
+      "estado": "nao_aplicavel",
+      "motivo": "texto em prosa"
+    },
+    "versos_por_estrofe": {
+      "estado": "nao_aplicavel",
+      "motivo": "texto em prosa"
+    }
+  },
+  "qualidade": [],
+  "parametros": {
+    "janela_mattr": 500,
+    "limiar_mtld": 0.72,
+    "minimo_fator_mtld": 10,
+    "amostra_hdd": 42,
+    "minimo_mtld": 100,
+    "minimo_texto": 1000,
+    "frase_longa": 30,
+    "segmentos": 10,
+    "palavras_por_minuto": 238,
+    "delta_palavras_frequentes": 150,
+    "delta_minimo_textos": 3,
+    "rede_minimo_mencoes": 5,
+    "rede_maximo_personagens": 40,
+    "sentimento_limiar": 0.05,
+    "sentimento_minimo_palavras": 3,
+    "zipf_frequencia_minima": 5,
+    "colocacao_frequencia_minima": 5,
+    "palavras_chave_por_segmento": 5,
+    "emocoes_janela_negacao": 3,
+    "capitulo_minimo_palavras": 300,
+    "blocos_sem_capitulos": 20,
+    "tom_limiar": 0.05,
+    "tom_forte": 0.5,
+    "tom_minimo_forte_pct": 10.0,
+    "tom_minimo_frases": 300,
+    "tom_cobertura_minima": 3.0,
+    "tom_bootstrap": 2000
+  },
+  "ambiente": {
+    "python": "3.12.16",
+    "bibliotecas": {
+      "spacy": "3.8.18",
+      "pandas": "3.1.1",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "networkx": "3.7",
+      "matplotlib": "3.11.2",
+      "plotly": "7.1.0",
+      "ebooklib": "0.21",
+      "beautifulsoup4": "4.15.0",
+      "vaderSentiment": "3.3.2",
+      "leia-br": "0.0.1",
+      "vaderSentiment-fr": "1.3.4"
+    },
+    "modelo": {
+      "nome": "en_core_web_md",
+      "versao": "3.8.0",
+      "spacy": ">=3.8.0,<3.9.0",
+      "exatidao": {
+        "etiquetas_finas": 0.9731,
+        "dependencias_las": 0.8998,
+        "dependencias_uas": 0.9184,
+        "frases_f": 0.9063,
+        "entidades_f": 0.8473
+      }
+    }
+  },
+  "processamento": {
+    "versao": "3.8.1",
+    "versao_codigo": "4fed474e64a6",
+    "commit": "3645d4a",
+    "codificacao": "utf-8-sig",
+    "hash_ficheiro": "6ce7d6ff7288263f",
+    "hash_dicionario": "e763e5522d9f003f",
+    "data": "2026-11-06 15:15 UTC",
+    "duracao_s": 10.2
+  },
+  "graficos": [
+    "rede.png",
+    "classes-gramaticais.png",
+    "frequencias.png",
+    "extensao-frases.png",
+    "evolucao.png",
+    "entidades.png",
+    "sentimento.png",
+    "zipf-heaps.png"
+  ]
+}
